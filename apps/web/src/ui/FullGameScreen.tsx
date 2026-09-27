@@ -9,7 +9,7 @@ import {
   versusGameRecordResult,
   versusGameState,
 } from '@chess-kids/core';
-import { useAppStore, useServices } from '../app/store.ts';
+import { useAppStore, useRoute, useServices } from '../app/store.ts';
 import { animalImage } from './art/animal-images.ts';
 import { VersusStep } from './lesson/VersusStep.tsx';
 import type { BossPlaySession } from './lesson/BossStep.tsx';
@@ -45,7 +45,7 @@ const FULL_GAME_LESSON: Lesson = {
 };
 
 /** A full game vs `level` (1 Mouse .. 5 Bear): the same rules/position as World 4's `first-game`
- * boss, built at runtime instead of from content so any unlocked level can play it (M3.5). */
+ * boss, built at runtime instead of from content so any unlocked level can play it. */
 function fullGameDef(level: number): VersusMiniGame {
   return {
     mode: 'versus',
@@ -69,7 +69,7 @@ function fullGameDef(level: number): VersusMiniGame {
 }
 
 /**
- * Play's "Full game" button (M3.5): the same versus UI World 4's `first-game` boss uses
+ * Play's "Full game" button: the same versus UI World 4's `first-game` boss uses
  * (`VersusStep`, reused as-is), at a level the kid picked on the Play screen. Unlike a lesson's
  * boss or a standalone mini-game session, a full game keeps no `MiniGameProgress`/`Attempt` — only
  * a `GameRecord` (`domain-model.md` §2), whether finished normally or left mid-game.
@@ -78,7 +78,7 @@ export function FullGameScreen(): JSX.Element {
   const { t } = useTranslation();
   const services = useServices();
   const profile = useAppStore((state) => state.profile);
-  const level = useAppStore((state) => state.fullGameLevel);
+  const route = useRoute('full-game');
   const exitFullGame = useAppStore((state) => state.exitFullGame);
   const updateAutomaticLevel = useAppStore((state) => state.updateAutomaticLevel);
   const checkForCelebrations = useAppStore((state) => state.checkForCelebrations);
@@ -86,12 +86,13 @@ export function FullGameScreen(): JSX.Element {
   const [current, setCurrent] = useState<VersusState | null>(null);
   const [confirmLeave, setConfirmLeave] = useState(false);
 
-  const botLevel = bot.BOT_LEVELS.find((entry) => entry.level === level);
-  const botName = t(`boss.versus.bot-name.${botLevel?.name ?? 'mouse'}`);
-
-  if (!profile) {
+  if (!profile || !route) {
     return <BlankScreen />;
   }
+  const level = route.level;
+
+  const botLevel = bot.BOT_LEVELS.find((entry) => entry.level === level);
+  const botName = t(`boss.versus.bot-name.${botLevel?.name ?? 'mouse'}`);
 
   const game = fullGameDef(level);
 

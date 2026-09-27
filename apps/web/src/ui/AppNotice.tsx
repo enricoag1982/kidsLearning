@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import type { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAppStore, useServices } from '../app/store.ts';
+import { useAppStore, useRoute, useServices } from '../app/store.ts';
 import { Owl } from './ds/Owl.tsx';
 
 /**
- * 5-minute warning banner (M7.1, app-structure.md §13 "5-min warning"): the store's
+ * 5-minute warning banner (app-structure.md §13 "5-min warning"): the store's
  * `timeNoticeVisible` (`checkTimeNotice`) decides whether it shows — this component only re-runs
  * that check on every screen change (mounted once in `App.tsx` alongside `TimeTracker`/
  * `AppUpdater`; `TimeTracker`'s own minute tick runs the other trigger). "Screen change" includes
@@ -20,7 +20,7 @@ export function AppNotice(): JSX.Element | null {
   const { t } = useTranslation();
   const services = useServices();
   const screen = useAppStore((state) => state.screen);
-  const lessonId = useAppStore((state) => state.lessonId);
+  const lessonId = useRoute('lesson')?.lessonId ?? null;
   const stepIndex = useAppStore((state) => state.stepIndex);
   const visible = useAppStore((state) => state.timeNoticeVisible);
   const checkTimeNotice = useAppStore((state) => state.checkTimeNotice);

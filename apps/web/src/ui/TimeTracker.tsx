@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { recordSessionMinutes } from '@chess-kids/core';
 import type { Screen } from '../app/store.ts';
 import { useAppStore, useServices } from '../app/store.ts';
+import { ROUTE_META } from '../app/routes.ts';
 
 /** One real minute — the log records played time in whole minutes (domain-model.md §2 `SessionLog`). */
 const TICK_MS = 60_000;
@@ -12,29 +13,16 @@ const IDLE_LIMIT_MS = 2 * 60_000;
  * in the password/settings screens. */
 const INPUT_EVENTS = ['pointerdown', 'keydown'] as const;
 
-/** Screens where a kid profile is actively playing or browsing (app-structure.md's time controls
- * table: "lessons, practice, play, Home / Journey / Den browsing" all count) — everything except
- * onboarding, the picker, and the parent gate/area, where no kid activity is happening. */
+/** Screens where a kid profile is actively playing or browsing (`ROUTE_META`'s `tracked` flag). */
 function isTrackedScreen(screen: Screen): boolean {
-  return (
-    screen !== 'loading' &&
-    screen !== 'first-run' &&
-    screen !== 'new-player' &&
-    screen !== 'picker' &&
-    screen !== 'password' &&
-    screen !== 'parent' &&
-    screen !== 'time-limit'
-  );
+  return ROUTE_META[screen].tracked;
 }
 
 /**
- * Foreground time tracker (M5.2, domain-model.md §3.3 "what counts"): while a kid profile is on a
+ * Foreground time tracker (domain-model.md §3.3 "what counts"): while a kid profile is on a
  * tracked screen, adds one minute to today's `SessionLog` every real minute the tab is visible
- * (`document.hidden`) and the kid has touched/typed something within the last
- * {@link IDLE_LIMIT_MS} — paused otherwise, so a phone left open in a pocket or a background tab
- * never racks up play time. Renders nothing; mounted once in `App.tsx` alongside `Celebration`.
- * Replaces the earlier Today-session-only lump-sum recording (M4.4): every kid-mode screen counts
- * now, not only a Today session, matching the decision table's own "Home / Journey / Den browsing".
+ * and the kid has touched/typed something within the last {@link IDLE_LIMIT_MS} — paused
+ * otherwise, so a phone left in a pocket never racks up play time. Renders nothing.
  */
 export function TimeTracker(): null {
   const services = useServices();
@@ -77,8 +65,8 @@ export function TimeTracker(): null {
       if (!isTrackedScreen(screenRef.current) || document.hidden) return;
       if (Date.now() - lastInputRef.current > IDLE_LIMIT_MS) return;
       void recordSessionMinutes(services.deps, profileId, 1, services.deps.clock.now());
-      // M7.1 5-minute warning: the other trigger (`AppNotice.tsx` runs the "screen change" one) —
-      // catches the threshold being crossed while sitting still on an already-calm screen.
+      // The other 5-minute-warning trigger (`AppNotice.tsx` runs "screen change"): catches the
+      // threshold being crossed while sitting still on an already-calm screen.
       void checkTimeNotice('tick');
     }, TICK_MS);
     return () => {

@@ -1,0 +1,255 @@
+import type { AssessmentScore, ConceptTask, Lesson, ParentUnlockTarget } from '@chess-kids/core';
+import {
+  getLessonProgress,
+  lessonStatus,
+  loadPracticeTasks,
+  loadWarmUp,
+  parentUnlock,
+  planPlacement,
+  planTestOutLesson,
+  planTestOutWorld,
+  scorePlacementWorld,
+  scoreTestOut,
+  submitAssessment,
+} from '@chess-kids/core';
+import type { Route } from '../routes.ts';
+import type { AppGet, AppSet } from '../store.ts';
+
+export interface LearnSlice {
+  readonly stepIndex: number;
+
+  /**
+   * Journey tap: opens `lessonId` (available / complete / mastered only — a no-op for a locked
+   * one, which the Journey screen intercepts with a spoken "Finish … first" line instead). A
+   * complete/mastered lesson restarts at the story; otherwise resumes at its saved step.
+   */
+  readonly startLesson: (lessonId: string) => Promise<void>;
+  readonly goToStep: (index: number) => void;
+  /**
+   * Leaves the lesson screen (top-bar Close) for Home or the Journey, whichever it was opened
+   * from (read off the stack, one level below); a Today-session lesson (`route.today`) abandons
+   * the whole session instead (`leaveToday` — "the kid can leave any time", domain-model.md §3.3).
+   */
+  readonly exitLesson: () => void;
+  /**
+   * The lesson-complete screen's "Continue": a Today-session lesson advances to the session's next
+   * activity (`advanceToday`); otherwise identical to `exitLesson`.
+   */
+  readonly completeLessonActivity: () => Promise<void>;
+  /**
+   * Journey locked-tap sheet "Yes, test me!" for a locked lesson (domain-model.md §3.2): plans a
+   * lesson test-out run (`planTestOutLesson`) and opens the runner (screen `assessment`).
+   */
+  readonly startTestOutLesson: (lessonId: string, worldId: string) => void;
+  /** Same, for a locked world (`planTestOutWorld`): all its lessons at once. */
+  readonly startTestOutWorld: (worldId: string) => void;
+  /**
+   * The assessment runner's `onDone`: scores the run (`scoreTestOut`) and applies a pass
+   * (`submitAssessment`) — masters every lesson in scope, unlocks it. Does not change screen; the
+   * runner shows the pass/fail result itself, then calls `exitAssessment`.
+   */
+  readonly submitAssessmentRun: (results: readonly boolean[]) => Promise<AssessmentScore>;
+  /** Leaves the assessment screen (Close, or the result screen's Continue) back to the Journey. */
+  readonly exitAssessment: () => void;
+  /** Placement offer screen "No, start at World 1": straight to Home, nothing tested. */
+  readonly declinePlacement: () => void;
+  /** Placement offer screen "Yes": plans the whole placement test (`planPlacement`) and opens the
+   * first Basics world's run (screen `placement`); straight to Home if there is nothing to test. */
+  readonly acceptPlacement: () => void;
+  /**
+   * One placement world's `onDone`: scores it (`scorePlacementWorld`) and applies a pass
+   * (`submitAssessment`) — same effect as a world test-out, `masteredVia: 'placement'`. Does not
+   * advance the placement route's `index` itself; the screen reads the outcome and calls
+   * `advancePlacementWorld` (pass, more worlds left) or `finishPlacement` (fail, or nothing left).
+   */
+  readonly submitPlacementWorldRun: (
+    worldId: string,
+    results: readonly boolean[],
+  ) => Promise<AssessmentScore>;
+  /** Moves the placement run to its next Basics world. */
+  readonly advancePlacementWorld: () => void;
+  /** Ends the placement run (all worlds done, a world failed, or the kid closed it early — "can be
+   * skipped any time, keeps what passed") and returns Home, refreshing progress. */
+  readonly finishPlacement: () => void;
+  /** Parent area "Unlock" list: unlocks one lesson or world directly for `profileId`
+   * (domain-model.md §3.2 "Parent unlock", `masteredVia: 'parent'`). */
+  readonly parentUnlockTarget: (profileId: string, target: ParentUnlockTarget) => Promise<void>;
+  /** Practice's "Daily warm-up" card: loads today's warm-up tasks and opens the task-run screen
+   * (a no-op if nothing is due — the card is disabled by then, but this guards a stale click). */
+  readonly startPracticeWarmUp: () => Promise<void>;
+  /** Practice topic tap: loads that concept's review tasks and opens the task-run screen. */
+  readonly startPracticeTopic: (conceptId: string) => Promise<void>;
+  /** Leaves the Practice task run back to the topic list, refreshing progress. */
+  readonly exitPracticeRun: () => void;
+}
+
+/** Enters `lessonId` via `enter` (`navigate` to open fresh, `replace` for a Today session moving
+ * from one activity to the next). Shared by `startLesson` and `enterTodayActivity`. */
+export async function enterLesson(
+  get: AppGet,
+  lessonId: string,
+  options?: { readonly today?: true; readonly enter?: (route: Route) => Promise<void> },
+): Promise<void> {
+  const { profile, journey, services } = get();
+  if (!profile) return;
+  const lesson: Lesson | undefined = services.deps.content.lesson(lessonId);
+  if (!lesson) return;
+  if (journey?.statuses.get(lessonId) === 'locked') return;
+  const saved = await getLessonProgress(services.deps, profile.id, lessonId);
+  const status = lessonStatus(lesson, saved);
+  const startStep = status === 'complete' || status === 'mastered' ? 0 : saved.resumeStep;
+  const enter = options?.enter ?? get().navigate;
+  await enter({ name: 'lesson', lessonId, startStep, ...(options?.today ? { today: true } : {}) });
+}
+
+export function createLearnSlice(set: AppSet, get: AppGet): LearnSlice {
+  return {
+    stepIndex: 0,
+
+    async startLesson(lessonId: string) {
+      await enterLesson(get, lessonId);
+    },
+
+    goToStep(index: number) {
+      set({ stepIndex: index });
+    },
+
+    exitLesson() {
+      const { stack } = get();
+      const top = stack[stack.length - 1];
+      set({ stepIndex: 0 });
+      if (top?.name === 'lesson' && top.today) {
+        get().leaveToday();
+      } else {
+        void get().back(stack[stack.length - 2]?.name === 'home' ? 'home' : undefined, {
+          gate: stack[stack.length - 2]?.name === 'home',
+        });
+      }
+      void get().refreshProgress();
+    },
+
+    async completeLessonActivity() {
+      const { stack } = get();
+      const top = stack[stack.length - 1];
+      set({ stepIndex: 0 });
+      if (top?.name === 'lesson' && top.today) {
+        await get().advanceToday();
+      } else {
+        const landsOnHome = stack[stack.length - 2]?.name === 'home';
+        await get().back(landsOnHome ? 'home' : undefined, { gate: landsOnHome });
+      }
+      void get().refreshProgress();
+    },
+
+    startTestOutLesson(lessonId: string, worldId: string) {
+      const { journey, services } = get();
+      const lesson = journey?.lessons.find((entry) => entry.id === lessonId);
+      if (!lesson) return;
+      const tasks = planTestOutLesson(lesson, services.deps.random);
+      if (tasks.length === 0) return;
+      void get().navigate({
+        name: 'assessment',
+        scope: { type: 'lesson', lessonId, worldId },
+        tasks,
+      });
+    },
+
+    startTestOutWorld(worldId: string) {
+      const { journey, services } = get();
+      if (!journey) return;
+      const world = journey.worlds.find((entry) => entry.world.id === worldId)?.world;
+      if (!world) return;
+      const tasks = planTestOutWorld(world, journey.lessons, services.deps.random);
+      if (tasks.length === 0) return;
+      void get().navigate({ name: 'assessment', scope: { type: 'world', worldId }, tasks });
+    },
+
+    async submitAssessmentRun(results: readonly boolean[]) {
+      const { profile, stack, services } = get();
+      const score = scoreTestOut(results);
+      const top = stack[stack.length - 1];
+      if (!profile || top?.name !== 'assessment') return score;
+      await submitAssessment(services.deps, {
+        profileId: profile.id,
+        kind: 'test-out',
+        scope: top.scope,
+        results,
+        score,
+      });
+      return score;
+    },
+
+    exitAssessment() {
+      void get().back();
+      void get().refreshProgress();
+    },
+
+    declinePlacement() {
+      void get().back('home', { gate: true });
+    },
+
+    acceptPlacement() {
+      const { journey, services } = get();
+      if (!journey) {
+        void get().back();
+        return;
+      }
+      const plan = planPlacement(journey.catalog, journey.lessons, services.deps.random);
+      if (plan.length === 0) {
+        void get().back();
+        return;
+      }
+      void get().replace({ name: 'placement', plan, index: 0 });
+    },
+
+    async submitPlacementWorldRun(worldId: string, results: readonly boolean[]) {
+      const { profile, services } = get();
+      const score = scorePlacementWorld(results);
+      if (!profile) return score;
+      await submitAssessment(services.deps, {
+        profileId: profile.id,
+        kind: 'placement',
+        scope: { type: 'world', worldId },
+        results,
+        score,
+      });
+      return score;
+    },
+
+    advancePlacementWorld() {
+      const top = get().stack[get().stack.length - 1];
+      if (top?.name !== 'placement') return;
+      void get().replace({ name: 'placement', plan: top.plan, index: top.index + 1 });
+    },
+
+    finishPlacement() {
+      void get().back('home', { gate: true });
+      void get().refreshProgress();
+    },
+
+    async parentUnlockTarget(profileId: string, target) {
+      const { services } = get();
+      await parentUnlock(services.deps, profileId, target);
+    },
+
+    async startPracticeWarmUp() {
+      const { profile, services } = get();
+      if (!profile) return;
+      const tasks: readonly ConceptTask[] = await loadWarmUp(services.deps, profile.id);
+      if (tasks.length === 0) return;
+      await get().navigate({ name: 'practice-run', conceptId: null, tasks });
+    },
+
+    async startPracticeTopic(conceptId: string) {
+      const { profile, services } = get();
+      if (!profile) return;
+      const tasks = await loadPracticeTasks(services.deps, profile.id, conceptId);
+      await get().navigate({ name: 'practice-run', conceptId, tasks });
+    },
+
+    exitPracticeRun() {
+      void get().back();
+      void get().refreshProgress();
+    },
+  };
+}

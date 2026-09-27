@@ -3,14 +3,14 @@ import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { starsToday } from '@chess-kids/core';
 import type { TimeLimitReason } from '@chess-kids/core';
-import { useAppStore, useServices } from '../app/store.ts';
+import { useAppStore, useRoute, useServices } from '../app/store.ts';
 import { NarratedBubble } from './ds/NarratedBubble.tsx';
 import { StarsPill } from './StarsPill.tsx';
 import { tapClass } from './ds/tap.ts';
 import { Screen } from './ds/Screen.tsx';
 import { useAsync } from './ds/useAsync.ts';
 
-/** `TimeLimitStatus.reason` -> the title/body text this screen shows (M5.2 "limit"; M7.1
+/** `TimeLimitStatus.reason` -> the title/body text this screen shows ("limit";
  * "late"/"early", app-structure.md §13 "Allowed hours"). Falls back to the daily-limit text for
  * `null` (should not normally happen — this screen only ever shows once the gate found a reason —
  * but keeps the component total). `playFrom` fills the "early" body's `{{time}}`. */
@@ -34,7 +34,7 @@ function timeLimitText(
 }
 
 /**
- * "See you tomorrow" screen (M5.2, app-structure.md's time controls table; M7.1 widens it to
+ * "See you tomorrow" screen (app-structure.md's time controls table, widened to
  * allowed hours): shown instead of the activity/Home the kid was headed to once the activity gate
  * finds them blocked (`store.ts`'s `gated`) — over the daily limit, or outside allowed hours.
  * Owl, spoken, today's stars; **Switch player** (back to the picker) or **Parent: more time** (the
@@ -46,7 +46,7 @@ export function TimeLimitScreen(): JSX.Element {
   const { t } = useTranslation();
   const services = useServices();
   const profile = useAppStore((state) => state.profile);
-  const timeLimitStatus = useAppStore((state) => state.timeLimitStatus);
+  const timeLimitStatus = useRoute('time-limit')?.status ?? null;
   const goToPasswordScreen = useAppStore((state) => state.goToPasswordScreen);
   const switchPlayerFromTimeLimit = useAppStore((state) => state.switchPlayerFromTimeLimit);
   const { value: stars } = useAsync(
