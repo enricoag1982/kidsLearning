@@ -1,11 +1,10 @@
-import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import type {
   ExerciseDef,
   ExerciseState,
   Lesson,
-  Piece,
   SeriesGameState,
   SeriesMiniGame,
 } from '@chess-kids/core';
@@ -15,23 +14,20 @@ import {
   recordBossResult,
   seriesResult,
   seriesStars,
-  starsFor,
   startSeries,
 } from '@chess-kids/core';
 import { useAppStore, useServices } from '../../app/store.ts';
 import { tContent } from '../../content-text.ts';
+import { ExercisePlay } from '../../kinds/ExercisePlay.tsx';
+import { useExerciseSession } from '../../kinds/session.ts';
 import { Board } from '../board/Board.tsx';
 import { isClassicOnlyContext, showPieceBadges } from '../board/piece-style.ts';
 import { ReplayButton } from '../ds/ReplayButton.tsx';
 import { SpeechBubble } from '../ds/SpeechBubble.tsx';
 import { StarsRow } from '../StarsRow.tsx';
-import { useIsStackedLayout } from '../useMediaQuery.ts';
-import { useInstructionNarration, useNarratedText } from '../ds/useNarratedText.ts';
+import { useNarratedText } from '../ds/useNarratedText.ts';
 import type { BossPlaySession } from './BossStep.tsx';
 import { SECONDARY_BUTTON } from './button-styles.ts';
-import { createExerciseReducer, initExerciseState } from './exercise-reducer.ts';
-import { exerciseInstructionText, exerciseNote } from './exercise-text.ts';
-import { buildExercisePlayArea } from './exercise-play-area.tsx';
 import { GameLayout } from './GameLayout.tsx';
 import { NextButton } from './NextButton.tsx';
 
@@ -85,62 +81,52 @@ function SeriesRound({
   onNext,
 }: SeriesRoundProps): JSX.Element {
   const { t } = useTranslation();
-  const services = useServices();
   const hintsEnabled = useAppStore((state) => state.activeProfileSettings.hints);
   const pieceStyle = useAppStore((state) => state.activeProfileSettings.pieceStyle);
-  const isStacked = useIsStackedLayout();
-  const reducer = useMemo(() => createExerciseReducer(services.rules), [services.rules]);
-  const [state, dispatch] = useReducer(reducer, exercise, initExerciseState);
-  const [selectedPiece, setSelectedPiece] = useState<Piece | null>(null);
 
-  const solved = state.core.solved;
-  const stars = starsFor(state.core);
-  const instructionText = exerciseInstructionText(t, exercise);
-  const note = exerciseNote(t, state.feedback, character, stars);
-  const replay = useInstructionNarration(services.narrator, instructionText, note?.text);
-
-  const { board, belowBoard, controls } = buildExercisePlayArea({
-    t,
-    rules: services.rules,
-    exercise,
+  // No save (a series round scores only as part of the series' total mistakes) and the check ring
+  // stays off, as today (`showCheck: false` — refactor-v4.md follow-up F6).
+  const {
     state,
     dispatch,
-    selectedPiece,
-    onSelectPiece: setSelectedPiece,
-    isStacked,
-    showHint: hintsEnabled,
-    pieceBadges: showPieceBadges(pieceStyle, isClassicOnlyContext({ worldId })),
-  });
+    solved,
+    instruction: instructionText,
+    note,
+    replay,
+  } = useExerciseSession(exercise, { character, showCheck: false });
 
   // Live running total: mistakes already folded in from earlier rounds, plus this round's own
   // errors and hint level so far (folded in for real once it is solved — see `completeRound`).
   const liveMistakes = priorMistakes + state.core.errors + state.core.hintLevel;
 
-  const panel = (
+  const top = (
     <>
       <SpeechBubble text={instructionText} note={note} />
       <ReplayButton onClick={replay} label={t('exercise.replay')} />
       <SeriesCounters current={roundNumber} total={totalRounds} mistakes={liveMistakes} />
-      {solved ? (
-        <div className="mt-auto flex flex-col items-center gap-4">
-          <NextButton
-            onClick={() => {
-              onNext(state.core);
-            }}
-            className="w-full"
-          />
-        </div>
-      ) : (
-        <div className="mt-auto flex flex-col gap-4">{controls}</div>
-      )}
     </>
   );
 
+  const done = solved ? (
+    <div className="mt-auto flex flex-col items-center gap-4">
+      <NextButton
+        onClick={() => {
+          onNext(state.core);
+        }}
+        className="w-full"
+      />
+    </div>
+  ) : null;
+
   return (
-    <GameLayout
-      board={board}
-      panel={panel}
-      belowBoard={solved ? undefined : (belowBoard ?? undefined)}
+    <ExercisePlay
+      def={exercise}
+      state={state}
+      dispatch={dispatch}
+      showHint={hintsEnabled}
+      pieceBadges={showPieceBadges(pieceStyle, isClassicOnlyContext({ worldId }))}
+      top={top}
+      done={done}
     />
   );
 }

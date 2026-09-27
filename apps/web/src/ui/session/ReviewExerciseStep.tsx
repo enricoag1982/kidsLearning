@@ -1,24 +1,13 @@
-import { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import type { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { ConceptTask, ExerciseState, Piece } from '@chess-kids/core';
-import {
-  chessJsRules,
-  isInCheck,
-  kingSquare,
-  recordReviewResult,
-  starsFor,
-} from '@chess-kids/core';
+import type { ConceptTask, ExerciseState } from '@chess-kids/core';
+import { recordReviewResult } from '@chess-kids/core';
 import { useAppStore, useServices } from '../../app/store.ts';
+import { ExercisePlay } from '../../kinds/ExercisePlay.tsx';
+import { useExerciseSession } from '../../kinds/session.ts';
 import { ReplayButton } from '../ds/ReplayButton.tsx';
 import { SpeechBubble } from '../ds/SpeechBubble.tsx';
 import { StarsRow } from '../StarsRow.tsx';
-import { useIsStackedLayout } from '../useMediaQuery.ts';
-import { useInstructionNarration } from '../ds/useNarratedText.ts';
-import { createExerciseReducer, initExerciseState } from '../lesson/exercise-reducer.ts';
-import { exerciseInstructionText, exerciseNote } from '../lesson/exercise-text.ts';
-import { buildExercisePlayArea } from '../lesson/exercise-play-area.tsx';
-import { GameLayout } from '../lesson/GameLayout.tsx';
 import { NextButton } from '../lesson/NextButton.tsx';
 
 export interface ReviewExerciseStepProps {
@@ -48,88 +37,61 @@ export function ReviewExerciseStep({
   const { t } = useTranslation();
   const services = useServices();
   const profile = useAppStore((state) => state.profile);
-  const isStacked = useIsStackedLayout();
   const exercise = task.exercise;
   const lesson = services.deps.content.lesson(task.lessonId);
-
-  const reducer = useMemo(() => createExerciseReducer(services.rules), [services.rules]);
-  const [state, dispatch] = useReducer(reducer, exercise, initExerciseState);
-  const [selectedPiece, setSelectedPiece] = useState<Piece | null>(null);
-
-  // A lazy `useState` initializer (not a direct `Date.now()` call) keeps render pure.
-  const [startedAt] = useState(() => Date.now());
-  const savedRef = useRef(false);
-  const [saved, setSaved] = useState(false);
-
-  const solved = state.core.solved;
-  const stars = starsFor(state.core);
-
-  const displayedPosition = state.pendingReply ? state.pendingReply.position : state.core.position;
-  const checkSquare = isInCheck(displayedPosition, chessJsRules)
-    ? kingSquare(displayedPosition, displayedPosition.toMove)
-    : undefined;
-
-  useEffect(() => {
-    if (!solved || savedRef.current || !profile) return;
-    savedRef.current = true;
-    const correct = state.core.errors === 0 && state.core.hintLevel === 0;
-    const save = onRecord
-      ? onRecord(state.core, correct)
-      : recordReviewResult(services.deps, {
-          profileId: profile.id,
-          task,
-          state: state.core,
-          durationMs: Date.now() - startedAt,
-          reviewSource,
-        }).then(() => undefined);
-    void save.then(() => {
-      setSaved(true);
-    });
-  }, [solved, profile, services.deps, task, state.core, startedAt, reviewSource, onRecord]);
-
   const character = lesson?.character ?? 'owl';
-  const instructionText = exerciseInstructionText(t, exercise);
-  const note = exerciseNote(t, state.feedback, character, stars);
-  // Instruction spoken once; each note spoken alone, never with the instruction re-read (owner
-  // report 2026-09-26) — see `useInstructionNarration`.
-  const replay = useInstructionNarration(services.narrator, instructionText, note?.text);
 
-  const { board, belowBoard, controls } = buildExercisePlayArea({
-    t,
-    rules: services.rules,
-    exercise,
+  const {
     state,
     dispatch,
-    selectedPiece,
-    onSelectPiece: setSelectedPiece,
-    isStacked,
+    solved,
+    stars,
+    saved,
+    instruction: instructionText,
+    note,
+    replay,
     checkSquare,
-    showHint,
+  } = useExerciseSession(exercise, {
+    character,
+    save: (core, ms) => {
+      if (!profile) return undefined;
+      const correct = core.errors === 0 && core.hintLevel === 0;
+      return onRecord
+        ? onRecord(core, correct)
+        : recordReviewResult(services.deps, {
+            profileId: profile.id,
+            task,
+            state: core,
+            durationMs: ms,
+            reviewSource,
+          }).then(() => undefined);
+    },
   });
 
-  const panel = (
+  const top = (
     <>
       <SpeechBubble text={instructionText} note={note} />
       <ReplayButton onClick={replay} label={t('exercise.replay')} className="w-full" />
-      {solved ? (
-        <div className="mt-auto flex flex-col items-center gap-4">
-          <StarsRow earned={stars} animate />
-          {saved && <NextButton onClick={onNext} className="w-full" />}
-        </div>
-      ) : (
-        <div className="mt-auto flex flex-col gap-4">{controls}</div>
-      )}
     </>
   );
 
-  if (exercise.type === 'choice' && !exercise.showBoard) {
-    return <div className="flex min-h-0 flex-1 flex-col gap-4">{panel}</div>;
-  }
+  const done = solved ? (
+    <div className="mt-auto flex flex-col items-center gap-4">
+      <StarsRow earned={stars} animate />
+      {saved && <NextButton onClick={onNext} className="w-full" />}
+    </div>
+  ) : null;
+
   return (
-    <GameLayout
-      board={board}
-      panel={panel}
-      belowBoard={solved ? undefined : (belowBoard ?? undefined)}
+    <ExercisePlay
+      def={exercise}
+      state={state}
+      dispatch={dispatch}
+      checkSquare={checkSquare}
+      showHint={showHint}
+      pieceBadges={false}
+      top={top}
+      done={done}
     />
   );
 }

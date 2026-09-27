@@ -1,16 +1,19 @@
-import { narrowStep, widen } from '../adapt.ts';
 import type { ChessKind } from '../index.ts';
-import { moveCountStars, moveHint, playMove } from '../static-move.ts';
+import { moveCountStars, moveHint, playMove, undo } from '../static-move.ts';
 import { initState } from '../../state.ts';
 import type { MoveAction } from '../base.ts';
 import type { CollectStarsDef } from '../../types.ts';
-import type { MoveOutcome } from '../static-move.ts';
+import type { MoveOutcome, UndoAction, UndoOutcome } from '../static-move.ts';
 
 export type { CollectStarsDef } from '../../types.ts';
 export type { MoveOutcome } from '../static-move.ts';
 export type { MoveAction } from '../base.ts';
 
-export const collectStarsKind: ChessKind<CollectStarsDef, MoveAction, MoveOutcome> = {
+export const collectStarsKind: ChessKind<
+  CollectStarsDef,
+  MoveAction | UndoAction,
+  MoveOutcome | UndoOutcome
+> = {
   type: 'collect-stars',
   input: 'static-move',
 
@@ -19,12 +22,15 @@ export const collectStarsKind: ChessKind<CollectStarsDef, MoveAction, MoveOutcom
   },
 
   act(state, action, ctx) {
-    return narrowStep(playMove(widen(state), ctx, action.move));
+    if (action.type === 'undo') {
+      return { state: undo(state), outcome: { kind: 'undone' } };
+    }
+    return playMove(state, ctx, action.move);
   },
 
   hint(state, level, ctx) {
     const bumped = { ...state, hintLevel: level };
-    return { state: bumped, hint: moveHint(widen(bumped), ctx, level) };
+    return { state: bumped, hint: moveHint(bumped, ctx, level) };
   },
 
   stars(state) {

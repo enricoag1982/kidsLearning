@@ -3,17 +3,20 @@ import { describe, expect, it } from 'vitest';
 import { chessJsRules } from '../../../chess/chessjs-rules.ts';
 import { parseDiagram } from '../../../chess/diagram.ts';
 import { createVariantRules } from '../../../variant/rules.ts';
-import {
-  exerciseMoves,
-  playMove,
-  requestHint,
-  starsFor,
-  startExercise,
-  undo,
-} from '../../engine.ts';
+import { exerciseMoves, requestHint, starsFor } from '../index.ts';
+import { initState } from '../../state.ts';
+import type { ExerciseState, ExerciseStateOf } from '../../state.ts';
+import { playMove, undo } from '../static-move.ts';
 import type { CollectStarsDef } from '../../types.ts';
+import { collectStarsKind } from './kind.ts';
 
 const rules = createVariantRules(chessJsRules);
+
+/** `requestHint` dispatches generically; this test drives one exercise type throughout, so it
+ * narrows the result back to call the type-specific helpers below. */
+function narrow(state: ExerciseState): ExerciseStateOf<CollectStarsDef> {
+  return state as ExerciseStateOf<CollectStarsDef>;
+}
 
 describe('collect-stars', () => {
   const position = parseDiagram(
@@ -39,7 +42,7 @@ describe('collect-stars', () => {
   };
 
   it('solves optimally in 2 moves for 3 stars', () => {
-    let state = startExercise(def);
+    let state = initState(def);
     const first = playMove(state, rules, { from: 'a1', to: 'a8' });
     state = first.state;
     expect(first.outcome).toMatchObject({ kind: 'moved', collected: ['a8'] });
@@ -54,7 +57,7 @@ describe('collect-stars', () => {
   });
 
   it('gives 2 stars for a 4-move (sub-optimal) solve', () => {
-    let state = startExercise(def);
+    let state = initState(def);
     state = playMove(state, rules, { from: 'a1', to: 'a2' }).state; // wasted move
     state = playMove(state, rules, { from: 'a2', to: 'a8' }).state; // collects a8
     state = playMove(state, rules, { from: 'a8', to: 'b8' }).state; // wasted move
@@ -67,7 +70,7 @@ describe('collect-stars', () => {
   });
 
   it('restores the star and move count on undo', () => {
-    let state = startExercise(def);
+    let state = initState(def);
     state = playMove(state, rules, { from: 'a1', to: 'a8' }).state;
     expect(state.moves).toBe(1);
     expect(state.position.markers.stars).not.toContain('a8');
@@ -80,12 +83,23 @@ describe('collect-stars', () => {
   });
 
   it('is a no-op when there is nothing to undo', () => {
-    const state = startExercise(def);
+    const state = initState(def);
     expect(undo(state)).toEqual(state);
   });
 
+  it('kind.act(undo) matches the engine facade (C2: UndoAction outcome is "undone")', () => {
+    const played = collectStarsKind.act(
+      collectStarsKind.init(def),
+      { type: 'move', move: { from: 'a1', to: 'a8' } },
+      rules,
+    );
+    const undone = collectStarsKind.act(played.state, { type: 'undo' }, rules);
+    expect(undone.outcome).toEqual({ kind: 'undone' });
+    expect(undone.state).toEqual(undo(played.state));
+  });
+
   it('counts an illegal attempt as an error without touching stars or moves', () => {
-    let state = startExercise(def);
+    let state = initState(def);
     const result = playMove(state, rules, { from: 'a1', to: 'b2' }); // rook cannot move diagonally
 
     expect(result.outcome).toEqual({ kind: 'illegal' });
@@ -96,18 +110,18 @@ describe('collect-stars', () => {
   });
 
   it('walks the hint ladder from piece to target to move', () => {
-    let state = startExercise(def);
+    let state = initState(def);
 
     const hint1 = requestHint(state, rules);
-    state = hint1.state;
+    state = narrow(hint1.state);
     expect(hint1.hint).toEqual({ kind: 'squares', level: 1, squares: ['a1'] });
 
     const hint2 = requestHint(state, rules);
-    state = hint2.state;
+    state = narrow(hint2.state);
     expect(hint2.hint).toEqual({ kind: 'squares', level: 2, squares: ['a8'] });
 
     const hint3 = requestHint(state, rules);
-    state = hint3.state;
+    state = narrow(hint3.state);
     expect(hint3.hint).toEqual({
       kind: 'squares',
       level: 3,
@@ -121,10 +135,10 @@ describe('collect-stars', () => {
   });
 
   it('caps stars at 1 after a level-3 hint even with an optimal solve', () => {
-    let state = startExercise(def);
-    state = requestHint(state, rules).state;
-    state = requestHint(state, rules).state;
-    state = requestHint(state, rules).state;
+    let state = initState(def);
+    state = narrow(requestHint(state, rules).state);
+    state = narrow(requestHint(state, rules).state);
+    state = narrow(requestHint(state, rules).state);
     expect(state.hintLevel).toBe(3);
 
     state = playMove(state, rules, { from: 'a1', to: 'a8' }).state;
@@ -135,8 +149,8 @@ describe('collect-stars', () => {
   });
 
   it('caps stars at 2 after a level-1 hint even with an optimal solve', () => {
-    let state = startExercise(def);
-    state = requestHint(state, rules).state;
+    let state = initState(def);
+    state = narrow(requestHint(state, rules).state);
     expect(state.hintLevel).toBe(1);
 
     state = playMove(state, rules, { from: 'a1', to: 'a8' }).state;
@@ -146,7 +160,7 @@ describe('collect-stars', () => {
   });
 
   it('exposes legal kid moves and none once solved', () => {
-    let state = startExercise(def);
+    let state = initState(def);
     expect(exerciseMoves(state, rules, 'a1')).toHaveLength(14);
 
     state = playMove(state, rules, { from: 'a1', to: 'a8' }).state;

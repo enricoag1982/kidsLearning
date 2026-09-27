@@ -250,6 +250,23 @@ export type {
   SeriesGameState,
   VersusState,
   StaticGoalSource,
+  ExerciseFeedback,
+  ExerciseNoteKind,
+  ExerciseNoteCtx,
+  ExerciseNote,
+  Resolve,
+  ModeType,
+  MiniGameState,
+  MoveOutcome,
+  UndoAction,
+  UndoOutcome,
+} from './domain/exercise/index.ts';
+export {
+  EXERCISE_NOTES,
+  exerciseNote,
+  isEasierOfferNote,
+  MINI_GAME_MODES,
+  modeOf,
 } from './domain/exercise/index.ts';
 
 // Exercise-kind registry: the only exercise-type dispatch (`domain/exercise/kinds/index.ts`).
@@ -282,19 +299,10 @@ export { EXERCISE_KINDS, kindOf } from './domain/exercise/index.ts';
 export {
   staticGoalExercise,
   startExercise,
-  exerciseMoves,
-  playMove,
-  toggleSquare,
-  submitSelection,
   selectSquaresAnswer,
-  answerYesNo,
-  answerChoice,
-  placePiece,
   setupPalette,
-  undo,
   requestHint,
   starsFor,
-  playMateInN,
   solve,
   optimalMoves,
   kingSquare,
