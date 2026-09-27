@@ -21,6 +21,9 @@ import { CharacterIcon, OwlIcon } from './art/characters.tsx';
 import { StarsRow } from './StarsRow.tsx';
 import { TestOutSheet } from './TestOutSheet.tsx';
 import { useMediaQuery } from './useMediaQuery.ts';
+import { CheckIcon, CrownIcon, FlagIcon, LockIcon } from './ds/icons.tsx';
+import { tapClass } from './ds/tap.ts';
+import { BlankScreen, Screen, ScreenHeader } from './ds/Screen.tsx';
 
 /** Pastel tint per habitat (app-structure.md §8: one habitat per world), for the map panel. */
 const HABITAT_COLOR: Readonly<Record<Habitat, string>> = {
@@ -50,90 +53,6 @@ function ratingStars(earned: number, max: number): 1 | 2 | 3 {
   if (percent >= 0.9) return 3;
   if (percent >= 0.6) return 2;
   return 1;
-}
-
-function BackIcon(): JSX.Element {
-  return (
-    <svg
-      width="30"
-      height="30"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.4}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M15 18l-6-6 6-6" />
-    </svg>
-  );
-}
-
-function LockIcon(): JSX.Element {
-  return (
-    <svg
-      width="28"
-      height="28"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x="5" y="11" width="14" height="10" rx="2" />
-      <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-    </svg>
-  );
-}
-
-function CheckIcon(): JSX.Element {
-  return (
-    <svg
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={3}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M5 13l4 4L19 7" />
-    </svg>
-  );
-}
-
-function FlagIcon(): JSX.Element {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M6 3v18" stroke="#6E4A07" strokeWidth={2} strokeLinecap="round" />
-      <path d="M6 4h13l-4 4 4 4H6z" fill="#E9A92B" />
-    </svg>
-  );
-}
-
-/** World boss node icon: outline while its boss is available, filled gold once it is won. */
-function CrownIcon({ filled }: { readonly filled: boolean }): JSX.Element {
-  return (
-    <svg
-      width="30"
-      height="30"
-      viewBox="0 0 24 24"
-      fill={filled ? '#E9A92B' : 'none'}
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M4 18h16l1-9-5 4-4-6-4 6-5-4z" />
-      <path d="M4 18v2h16v-2" />
-    </svg>
-  );
 }
 
 /** A point in a 0–100 normalized coordinate space, matching the map's `viewBox`. */
@@ -228,7 +147,7 @@ export function JourneyScreen(): JSX.Element {
   >(null);
 
   if (!journey) {
-    return <main className="min-h-dvh bg-cream" />;
+    return <BlankScreen />;
   }
 
   const worldId = selectedWorldId ?? defaultWorldId(journey);
@@ -322,16 +241,8 @@ export function JourneyScreen(): JSX.Element {
   );
 
   return (
-    <main className="flex min-h-dvh flex-col gap-4 bg-cream px-4 py-5 sm:px-8 sm:py-6">
-      <div className="flex items-center gap-4">
-        <button
-          type="button"
-          aria-label={tContent(t, 'journey:ui.back')}
-          onClick={goToHome}
-          className="tap-raised flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-card text-ink"
-        >
-          <BackIcon />
-        </button>
+    <Screen kind="page">
+      <ScreenHeader action="back" actionLabel={tContent(t, 'journey:ui.back')} onAction={goToHome}>
         <div className="flex min-w-0 flex-1 flex-col">
           <span className="truncate font-display text-2xl text-ink sm:text-3xl">{worldTitle}</span>
           <span className="text-sm text-muted sm:text-base">
@@ -340,7 +251,7 @@ export function JourneyScreen(): JSX.Element {
               ` · ${tContent(t, 'journey:ui.world-stars', { earned: worldTotals.earned, max: worldTotals.max })}`}
           </span>
         </div>
-      </div>
+      </ScreenHeader>
 
       <div className="flex min-h-0 flex-1 flex-col gap-4 lg:flex-row lg:gap-6">
         <div className="flex gap-2 overflow-x-auto pb-1 lg:w-64 lg:flex-none lg:flex-col lg:overflow-visible lg:pb-0">
@@ -391,7 +302,7 @@ export function JourneyScreen(): JSX.Element {
           {current?.status === 'locked' && (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/10 px-8 text-center">
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white text-muted">
-                <LockIcon />
+                <LockIcon size={28} />
               </div>
               <span className="max-w-xs text-base font-semibold text-muted">
                 {tContent(t, 'journey:ui.locked-world-message')}
@@ -401,7 +312,11 @@ export function JourneyScreen(): JSX.Element {
                 onClick={() => {
                   offerTestOutWorld(current.world);
                 }}
-                className="tap-raised tap-go flex h-16 items-center justify-center rounded-2xl bg-go px-6 font-display text-base font-semibold text-white"
+                className={tapClass(
+                  'custom',
+                  'go',
+                  'flex h-16 items-center justify-center rounded-2xl px-6 font-display text-base font-semibold',
+                )}
               >
                 {tContent(t, 'journey:ui.show-you-know-it')}
               </button>
@@ -448,7 +363,11 @@ export function JourneyScreen(): JSX.Element {
                       : characterName(t, lesson.character);
                   offerTestOutLesson(lockedMessage.lessonId, lockedMessage.worldId, name);
                 }}
-                className="tap-raised tap-go flex h-16 items-center justify-center rounded-2xl bg-go font-display text-base font-semibold text-white"
+                className={tapClass(
+                  'custom',
+                  'go',
+                  'flex h-16 items-center justify-center rounded-2xl font-display text-base font-semibold',
+                )}
               >
                 {tContent(t, 'journey:ui.show-you-know-it')}
               </button>
@@ -473,7 +392,7 @@ export function JourneyScreen(): JSX.Element {
           )}
         </div>
       </div>
-    </main>
+    </Screen>
   );
 }
 
@@ -498,9 +417,13 @@ function WorldRow({
     <button
       type="button"
       onClick={onSelect}
-      className={`tap-raised flex h-16 min-w-[180px] flex-shrink-0 items-center gap-3 rounded-2xl px-3 lg:min-w-0 lg:w-full ${
-        selected ? 'tap-border-go bg-white' : muted ? 'bg-[#F3EDE0]' : 'bg-card'
-      }`}
+      className={tapClass(
+        'custom',
+        'none',
+        `flex h-16 min-w-[180px] flex-shrink-0 items-center gap-3 rounded-2xl px-3 lg:min-w-0 lg:w-full ${
+          selected ? 'tap-border-go bg-white' : muted ? 'bg-[#F3EDE0]' : 'bg-card'
+        }`,
+      )}
     >
       <span
         className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-sm font-extrabold ${
@@ -523,7 +446,7 @@ function WorldRow({
       )}
       {status === 'locked' && (
         <span className="flex-shrink-0 text-muted">
-          <LockIcon />
+          <LockIcon size={28} />
         </span>
       )}
       {status === 'coming-soon' && (
@@ -684,7 +607,7 @@ function LessonNode({
         className={`relative flex flex-shrink-0 items-center justify-center rounded-full border-4 border-cream ${size} ${colors}`}
       >
         {status === 'locked' ? (
-          <LockIcon />
+          <LockIcon size={28} />
         ) : isWorldOne ? (
           <span className="h-12 w-12">
             <OwlIcon />
@@ -756,7 +679,7 @@ function BossNode({
         className={`relative flex flex-shrink-0 items-center justify-center rounded-full border-4 border-cream ${size} ${colors}`}
       >
         {status === 'locked' ? (
-          <LockIcon />
+          <LockIcon size={28} />
         ) : (
           <span className="h-12 w-12">
             <CrownIcon filled={status === 'won'} />

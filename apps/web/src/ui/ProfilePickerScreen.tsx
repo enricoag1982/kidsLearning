@@ -1,44 +1,9 @@
 import type { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppStore } from '../app/store.ts';
-import { avatarBackground } from './art/avatar-meta.ts';
-import { AvatarIcon } from './art/avatars.tsx';
-
-function LockIcon(): JSX.Element {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x="5" y="11" width="14" height="10" rx="2" />
-      <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-    </svg>
-  );
-}
-
-function PlusIcon(): JSX.Element {
-  return (
-    <svg
-      width="40"
-      height="40"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.4}
-      strokeLinecap="round"
-      aria-hidden="true"
-    >
-      <path d="M12 5v14M5 12h14" />
-    </svg>
-  );
-}
+import { LockIcon, PlusIcon } from './ds/icons.tsx';
+import { tapClass } from './ds/tap.ts';
+import { AvatarBadge } from './ds/AvatarBadge.tsx';
 
 /** Profile picker (kid style): app start whenever a parent lock exists (app-structure.md §3). */
 export function ProfilePickerScreen(): JSX.Element {
@@ -61,14 +26,16 @@ export function ProfilePickerScreen(): JSX.Element {
             onClick={() => {
               void selectProfileAndHome(profile.id);
             }}
-            className="tap-raised flex w-40 flex-col items-center gap-3 rounded-3xl bg-card p-5 sm:w-52"
+            className={tapClass(
+              'custom',
+              'none',
+              'flex w-40 flex-col items-center gap-3 rounded-3xl bg-card p-5 sm:w-52',
+            )}
           >
-            <span
+            <AvatarBadge
+              avatar={profile.avatar}
               className="h-24 w-24 overflow-hidden rounded-full p-3 sm:h-32 sm:w-32"
-              style={{ backgroundColor: avatarBackground(profile.avatar) }}
-            >
-              <AvatarIcon avatar={profile.avatar} />
-            </span>
+            />
             <span className="font-display text-xl font-semibold text-ink sm:text-2xl">
               {profile.nickname}
             </span>
@@ -94,7 +61,7 @@ export function ProfilePickerScreen(): JSX.Element {
         onClick={() => {
           goToPasswordScreen();
         }}
-        className="tap-raised flex h-16 items-center gap-3 rounded-2xl bg-card px-5 text-ink"
+        className={tapClass('custom', 'neutral', 'flex h-16 items-center gap-3 rounded-2xl px-5')}
       >
         <LockIcon />
         <span className="flex flex-col items-start">

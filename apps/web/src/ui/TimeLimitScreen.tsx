@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { starsToday } from '@chess-kids/core';
 import type { TimeLimitReason } from '@chess-kids/core';
 import { useAppStore, useServices } from '../app/store.ts';
-import { ReplayButton } from './ReplayButton.tsx';
-import { SpeechBubble } from './SpeechBubble.tsx';
+import { NarratedBubble } from './ds/NarratedBubble.tsx';
 import { StarsPill } from './StarsPill.tsx';
-import { useNarratedText } from './useNarratedText.ts';
+import { tapClass } from './ds/tap.ts';
+import { Screen } from './ds/Screen.tsx';
+import { useAsync } from './ds/useAsync.ts';
 
 /** `TimeLimitStatus.reason` -> the title/body text this screen shows (M5.2 "limit"; M7.1
  * "late"/"early", app-structure.md §13 "Allowed hours"). Falls back to the daily-limit text for
@@ -49,41 +49,29 @@ export function TimeLimitScreen(): JSX.Element {
   const timeLimitStatus = useAppStore((state) => state.timeLimitStatus);
   const goToPasswordScreen = useAppStore((state) => state.goToPasswordScreen);
   const switchPlayerFromTimeLimit = useAppStore((state) => state.switchPlayerFromTimeLimit);
-  const [stars, setStars] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (!profile) return;
-    let cancelled = false;
-    void starsToday(services.deps, profile.id, services.deps.clock.now()).then((count) => {
-      if (!cancelled) setStars(count);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [services, profile]);
+  const { value: stars } = useAsync(
+    () => starsToday(services.deps, profile?.id ?? '', services.deps.clock.now()),
+    [services, profile],
+    !!profile,
+  );
 
   const { title: titleText, body: bubbleText } = timeLimitText(
     t,
     timeLimitStatus?.reason ?? null,
     timeLimitStatus?.playFrom ?? null,
   );
-  const replay = useNarratedText(services.narrator, bubbleText);
-
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center gap-8 bg-cream px-4 py-8 text-center sm:px-10">
+    <Screen kind="center" className="gap-8 px-4 py-8 sm:px-10">
       <h1 className="font-display text-4xl text-ink sm:text-5xl">{titleText}</h1>
 
-      {stars !== null && stars > 0 && (
+      {stars !== undefined && stars > 0 && (
         <div className="flex items-center gap-2">
           <StarsPill count={stars} />
           <span className="text-sm font-bold text-muted">{t('time-limit.stars-today')}</span>
         </div>
       )}
 
-      <div className="flex w-full max-w-md flex-col items-stretch gap-3">
-        <SpeechBubble text={bubbleText} />
-        <ReplayButton onClick={replay} label={t('exercise.replay')} />
-      </div>
+      <NarratedBubble text={bubbleText} layout="stack" />
 
       <div className="flex w-full max-w-md flex-col gap-4">
         <button
@@ -91,7 +79,7 @@ export function TimeLimitScreen(): JSX.Element {
           onClick={() => {
             void switchPlayerFromTimeLimit();
           }}
-          className="tap-raised tap-go h-20 rounded-[2rem] bg-go font-display text-xl font-semibold text-white sm:text-2xl"
+          className={tapClass('block', 'go')}
         >
           {t('home.switch-player')}
         </button>
@@ -100,11 +88,11 @@ export function TimeLimitScreen(): JSX.Element {
           onClick={() => {
             goToPasswordScreen('more-time');
           }}
-          className="tap-raised h-20 rounded-[2rem] bg-card font-display text-xl font-semibold text-ink sm:text-2xl"
+          className={tapClass('block')}
         >
           {t('time-limit.more-time')}
         </button>
       </div>
-    </main>
+    </Screen>
   );
 }

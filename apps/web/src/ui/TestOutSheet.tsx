@@ -1,9 +1,8 @@
 import type { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useServices } from '../app/store.ts';
 import { tContent } from '../content-text.ts';
-import { ReplayButton } from './ReplayButton.tsx';
-import { SpeechBubble } from './SpeechBubble.tsx';
+import { NarratedBubble } from './ds/NarratedBubble.tsx';
+import { tapClass } from './ds/tap.ts';
 
 export interface TestOutSheetProps {
   /** The offer question, already resolved (e.g. "Want to show me you already know Rhino?"). */
@@ -20,12 +19,6 @@ export interface TestOutSheetProps {
  */
 export function TestOutSheet({ bodyText, onYes, onNo }: TestOutSheetProps): JSX.Element {
   const { t } = useTranslation();
-  const services = useServices();
-
-  function replay(): void {
-    services.narrator.cancel();
-    void services.narrator.speak(bodyText);
-  }
 
   return (
     <div
@@ -35,22 +28,27 @@ export function TestOutSheet({ bodyText, onYes, onNo }: TestOutSheetProps): JSX.
       className="fixed inset-0 z-20 flex items-end justify-center bg-black/40 px-4 pb-4 sm:items-center sm:pb-0"
     >
       <div className="flex w-full max-w-md flex-col gap-5 rounded-[2rem] border-2 border-line bg-card p-6">
-        <div className="flex w-full flex-col items-stretch gap-3">
-          <SpeechBubble text={bodyText} />
-          <ReplayButton onClick={replay} label={t('exercise.replay')} />
-        </div>
+        <NarratedBubble text={bodyText} layout="column" speak="replay-only" />
         <div className="flex flex-col gap-3">
           <button
             type="button"
             onClick={onYes}
-            className="tap-raised tap-go flex h-16 items-center justify-center rounded-2xl bg-go font-display text-lg font-semibold text-white"
+            className={tapClass(
+              'custom',
+              'go',
+              'flex h-16 items-center justify-center rounded-2xl font-display text-lg font-semibold',
+            )}
           >
             {tContent(t, 'journey:ui.test-out-yes')}
           </button>
           <button
             type="button"
             onClick={onNo}
-            className="tap-raised flex h-16 items-center justify-center rounded-2xl bg-card font-display text-lg font-semibold text-ink"
+            className={tapClass(
+              'custom',
+              'neutral',
+              'flex h-16 items-center justify-center rounded-2xl font-display text-lg font-semibold',
+            )}
           >
             {tContent(t, 'journey:ui.test-out-no')}
           </button>

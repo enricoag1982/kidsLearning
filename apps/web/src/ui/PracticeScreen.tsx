@@ -4,48 +4,11 @@ import type { ConceptStats, Lesson } from '@chess-kids/core';
 import { isDue, isWeak, lessonStatus } from '@chess-kids/core';
 import { useAppStore, useServices } from '../app/store.ts';
 import { avatarName, tContent } from '../content-text.ts';
-import { avatarBackground } from './art/avatar-meta.ts';
-import { AvatarIcon } from './art/avatars.tsx';
-import { ReplayButton } from './ReplayButton.tsx';
-import { SpeechBubble } from './SpeechBubble.tsx';
-import { useNarratedText } from './useNarratedText.ts';
-
-function BackIcon(): JSX.Element {
-  return (
-    <svg
-      width="30"
-      height="30"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.4}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M15 18l-6-6 6-6" />
-    </svg>
-  );
-}
-
-function WarmUpIcon(): JSX.Element {
-  return (
-    <svg
-      width="34"
-      height="34"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#B8561A"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M12 3v3M5.6 5.6l2.1 2.1M3 12h3M18.9 5.6l-2.1 2.1M21 12h-3" />
-      <circle cx={12} cy={16} r={5} />
-    </svg>
-  );
-}
+import { NarratedBubble } from './ds/NarratedBubble.tsx';
+import { WarmUpIcon } from './ds/icons.tsx';
+import { tapClass } from './ds/tap.ts';
+import { BlankScreen, Screen, ScreenHeader } from './ds/Screen.tsx';
+import { AvatarBadge } from './ds/AvatarBadge.tsx';
 
 /** One topic's last-10 accuracy, as a row of filled/empty dots (never red — errors are orange, not shown per-dot). */
 function AccuracyDots({ recent }: { readonly recent: readonly boolean[] }): JSX.Element {
@@ -110,10 +73,9 @@ export function PracticeScreen(): JSX.Element {
   const startPracticeTopic = useAppStore((state) => state.startPracticeTopic);
 
   const bubbleText = t('practice.owl-line');
-  const replay = useNarratedText(services.narrator, bubbleText);
 
   if (!profile || !journey) {
-    return <main className="min-h-dvh bg-cream" />;
+    return <BlankScreen />;
   }
 
   const now = services.deps.clock.now();
@@ -137,36 +99,29 @@ export function PracticeScreen(): JSX.Element {
   );
 
   return (
-    <main className="flex min-h-dvh flex-col gap-4 bg-cream px-4 py-5 sm:px-8 sm:py-6">
-      <div className="flex items-center gap-4">
-        <button
-          type="button"
-          aria-label={t('practice.back')}
-          onClick={goToHome}
-          className="tap-raised flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-card text-ink"
-        >
-          <BackIcon />
-        </button>
-        <h1 className="flex-grow truncate font-display text-2xl text-ink sm:text-3xl">
-          {t('practice.title')}
-        </h1>
+    <Screen kind="page">
+      <ScreenHeader
+        action="back"
+        actionLabel={t('practice.back')}
+        onAction={goToHome}
+        title={t('practice.title')}
+      >
         <div className="flex items-center gap-2">
-          <div
-            role="img"
-            aria-label={t('home.avatar-alt', { name: avatarName(t, profile.avatar) })}
+          <AvatarBadge
+            avatar={profile.avatar}
+            label={t('home.avatar-alt', { name: avatarName(t, profile.avatar) })}
             className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-full p-1.5"
-            style={{ backgroundColor: avatarBackground(profile.avatar) }}
-          >
-            <AvatarIcon avatar={profile.avatar} />
-          </div>
+          />
           <span className="font-display text-lg text-ink sm:text-xl">{profile.nickname}</span>
         </div>
-      </div>
+      </ScreenHeader>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <SpeechBubble text={bubbleText} avatarClassName="h-12 w-12" bubbleClassName="text-lg" />
-        <ReplayButton onClick={replay} label={t('exercise.replay')} />
-      </div>
+      <NarratedBubble
+        text={bubbleText}
+        layout="row"
+        avatarClassName="h-12 w-12"
+        bubbleClassName="text-lg"
+      />
 
       <button
         type="button"
@@ -174,7 +129,11 @@ export function PracticeScreen(): JSX.Element {
         onClick={() => {
           void startPracticeWarmUp();
         }}
-        className="tap-raised flex items-center gap-4 rounded-[2rem] bg-card p-5 text-left disabled:cursor-default disabled:opacity-70"
+        className={tapClass(
+          'custom',
+          'none',
+          'flex items-center gap-4 rounded-[2rem] bg-card p-5 text-left disabled:cursor-default disabled:opacity-70',
+        )}
       >
         <span className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-[#FBE3D2]">
           <WarmUpIcon />
@@ -214,7 +173,11 @@ export function PracticeScreen(): JSX.Element {
                           total: stats ? stats.recent.length : 0,
                         })}`
                   }
-                  className="tap-raised flex w-full items-center justify-between gap-4 rounded-3xl bg-card p-4 text-left"
+                  className={tapClass(
+                    'custom',
+                    'none',
+                    'flex w-full items-center justify-between gap-4 rounded-3xl bg-card p-4 text-left',
+                  )}
                 >
                   <div className="flex flex-col gap-1">
                     <span className="font-display text-lg text-ink sm:text-xl">{title}</span>
@@ -231,6 +194,6 @@ export function PracticeScreen(): JSX.Element {
           })}
         </ul>
       )}
-    </main>
+    </Screen>
   );
 }

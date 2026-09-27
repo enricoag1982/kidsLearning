@@ -12,11 +12,14 @@ import {
 } from '@chess-kids/core';
 import type { FriendBoardMode, FriendOpponentChoice } from '../app/store.ts';
 import { useAppStore, useServices } from '../app/store.ts';
-import { avatarBackground } from './art/avatar-meta.ts';
-import { AvatarIcon } from './art/avatars.tsx';
 import { Board } from './board/Board.tsx';
 import type { BoardHighlights } from './board/Board.tsx';
 import { isClassicOnlyContext, showPieceBadges } from './board/piece-style.ts';
+import { GuestIcon } from './ds/icons-lazy.tsx';
+import { tapClass } from './ds/tap.ts';
+import { BlankScreen } from './ds/Screen.tsx';
+import { ConfirmDialog } from './ds/ConfirmDialog.tsx';
+import { AvatarBadge } from './ds/AvatarBadge.tsx';
 
 /** Standard starting position, castling rights included — same as `FullGameScreen`'s vs-computer one. */
 const FULL_GAME_START_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
@@ -66,15 +69,6 @@ function SquareArea({ children }: { readonly children: ReactNode }): JSX.Element
   );
 }
 
-function GuestIcon(): JSX.Element {
-  return (
-    <svg viewBox="0 0 100 100" aria-hidden="true" className="h-full w-full">
-      <circle cx={50} cy={38} r={20} fill="#B7C2CB" />
-      <path d="M18 88c0-20 14-32 32-32s32 12 32 32Z" fill="#B7C2CB" />
-    </svg>
-  );
-}
-
 /** One local player, as the friend game screen displays it (both sides read alike). */
 type PlayerDisplay =
   | {
@@ -92,14 +86,20 @@ function toLocalPlayer(player: PlayerDisplay): LocalPlayer {
 }
 
 function PlayerAvatar({ player }: { readonly player: PlayerDisplay }): JSX.Element {
+  if (player.kind === 'profile') {
+    return (
+      <AvatarBadge
+        avatar={player.avatar}
+        className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-full p-1.5"
+      />
+    );
+  }
   return (
     <span
       className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-full p-1.5"
-      style={{
-        backgroundColor: player.kind === 'profile' ? avatarBackground(player.avatar) : '#EDEFF1',
-      }}
+      style={{ backgroundColor: '#EDEFF1' }}
     >
-      {player.kind === 'profile' ? <AvatarIcon avatar={player.avatar} /> : <GuestIcon />}
+      <GuestIcon />
     </span>
   );
 }
@@ -202,15 +202,11 @@ function PlayerStrip({
             type="button"
             onClick={onTakeBack}
             disabled={!canTakeBack}
-            className="tap-raised flex h-16 items-center justify-center rounded-2xl bg-card px-4 font-display text-base font-semibold text-ink disabled:opacity-40"
+            className={tapClass('wide', 'neutral', 'disabled:opacity-40')}
           >
             {t('friend-play.take-back')}
           </button>
-          <button
-            type="button"
-            onClick={onStop}
-            className="tap-raised flex h-16 items-center justify-center rounded-2xl bg-card px-4 font-display text-base font-semibold text-ink"
-          >
+          <button type="button" onClick={onStop} className={tapClass('wide')}>
             {t('friend-play.stop')}
           </button>
         </div>
@@ -219,18 +215,10 @@ function PlayerStrip({
           <div className="flex flex-col items-end gap-2">
             <p className="font-display text-base font-semibold text-ink">{resultText}</p>
             <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={onPlayAgain}
-                className="tap-raised flex h-16 items-center justify-center rounded-2xl bg-card px-4 font-display text-base font-semibold text-ink"
-              >
+              <button type="button" onClick={onPlayAgain} className={tapClass('wide')}>
                 {t('play-again')}
               </button>
-              <button
-                type="button"
-                onClick={onBackToPlay}
-                className="tap-raised tap-go flex h-16 items-center justify-center rounded-2xl bg-go px-4 font-display text-base font-semibold text-white"
-              >
+              <button type="button" onClick={onBackToPlay} className={tapClass('wide', 'go')}>
                 {t('play.back-to-play')}
               </button>
             </div>
@@ -439,67 +427,32 @@ function FriendMatch({
       )}
 
       {takeBackAsk && (
-        <div
-          role="alertdialog"
-          aria-label={t('friend-play.take-back-ask-title')}
-          className="fixed inset-0 z-10 flex items-center justify-center bg-black/30 px-4"
-        >
-          <div className="flex w-full max-w-sm flex-col items-center gap-4 rounded-3xl border-2 border-line bg-card p-6 text-center">
-            <p className="font-display text-xl text-ink">
-              {t('friend-play.take-back-ask', { name: toMovePlayer.nickname })}
-            </p>
-            <div className="flex w-full gap-3">
-              <button
-                type="button"
-                onClick={() => {
-                  respondTakeBack(false);
-                }}
-                className="tap-raised flex h-14 flex-1 items-center justify-center rounded-2xl bg-card font-display text-lg font-semibold text-ink"
-              >
-                {t('exercise.no')}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  respondTakeBack(true);
-                }}
-                className="tap-raised tap-go flex h-14 flex-1 items-center justify-center rounded-2xl bg-go font-display text-lg font-semibold text-white"
-              >
-                {t('exercise.yes')}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmDialog
+          title={t('friend-play.take-back-ask-title')}
+          message={t('friend-play.take-back-ask', { name: toMovePlayer.nickname })}
+          cancelLabel={t('exercise.no')}
+          confirmLabel={t('exercise.yes')}
+          confirmTone="go"
+          onCancel={() => {
+            respondTakeBack(false);
+          }}
+          onConfirm={() => {
+            respondTakeBack(true);
+          }}
+        />
       )}
 
       {confirmStop && (
-        <div
-          role="alertdialog"
-          aria-label={t('boss.versus.stop-game-title')}
-          className="fixed inset-0 z-10 flex items-center justify-center bg-black/30 px-4"
-        >
-          <div className="flex w-full max-w-sm flex-col items-center gap-4 rounded-3xl border-2 border-line bg-card p-6 text-center">
-            <p className="font-display text-xl text-ink">{t('boss.versus.stop-game-title')}</p>
-            <div className="flex w-full gap-3">
-              <button
-                type="button"
-                onClick={() => {
-                  setConfirmStop(false);
-                }}
-                className="tap-raised flex h-14 flex-1 items-center justify-center rounded-2xl bg-card font-display text-lg font-semibold text-ink"
-              >
-                {t('boss.versus.stop-game-cancel')}
-              </button>
-              <button
-                type="button"
-                onClick={confirmStopNow}
-                className="tap-raised tap-today flex h-14 flex-1 items-center justify-center rounded-2xl bg-today font-display text-lg font-semibold text-white"
-              >
-                {t('boss.versus.stop-game-confirm')}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmDialog
+          title={t('boss.versus.stop-game-title')}
+          cancelLabel={t('boss.versus.stop-game-cancel')}
+          confirmLabel={t('boss.versus.stop-game-confirm')}
+          confirmTone="today"
+          onCancel={() => {
+            setConfirmStop(false);
+          }}
+          onConfirm={confirmStopNow}
+        />
       )}
     </main>
   );
@@ -520,12 +473,12 @@ export function FriendGameScreen(): JSX.Element {
   const exitFriendGame = useAppStore((state) => state.exitFriendGame);
 
   if (!profile) {
-    return <main className="min-h-dvh bg-cream" />;
+    return <BlankScreen />;
   }
   const gameId = friendSetup.gameId ?? 'full';
   const def = gameDefFor(gameId, services.deps.content);
   if (!def) {
-    return <main className="min-h-dvh bg-cream" />;
+    return <BlankScreen />;
   }
 
   const opponent = resolveOpponent(friendSetup.opponent, profiles, t('friend-play.guest'));

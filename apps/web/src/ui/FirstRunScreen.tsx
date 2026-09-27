@@ -5,55 +5,33 @@ import { isValidPassword, setupParentPassword } from '@chess-kids/core';
 import { useAppStore, useServices } from '../app/store.ts';
 import { PrivacyDialog, PrivacyLink } from './parent/PrivacyPolicy.tsx';
 import { PARENT_INPUT, PARENT_NOTE, PARENT_PRIMARY_BUTTON } from './parent/parent-styles.ts';
-import { Owl } from './Owl.tsx';
-import { ReplayButton } from './ReplayButton.tsx';
-import { SpeechBubble } from './SpeechBubble.tsx';
-import { useNarratedText } from './useNarratedText.ts';
+import { Owl } from './ds/Owl.tsx';
+import { NarratedBubble } from './ds/NarratedBubble.tsx';
+import { LockIcon } from './ds/icons.tsx';
+import { tapClass } from './ds/tap.ts';
+import { Screen } from './ds/Screen.tsx';
 
 type Step = 'welcome' | 'password' | 'saved';
-
-function LockIcon(): JSX.Element {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x="5" y="11" width="14" height="10" rx="2" />
-      <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-    </svg>
-  );
-}
 
 /** Step 1 (kid style): Owl explains a grown-up helps set things up first. */
 function Welcome({ onNext }: { readonly onNext: () => void }): JSX.Element {
   const { t } = useTranslation();
-  const services = useServices();
   const text = t('first-run.welcome.owl');
-  const replay = useNarratedText(services.narrator, text);
 
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center gap-8 bg-cream px-4 py-8 text-center sm:px-10">
+    <Screen kind="center" className="gap-8 px-4 py-8 sm:px-10">
       <h1 className="font-display text-2xl text-ink sm:text-3xl">{t('app.title')}</h1>
       <Owl className="h-24 w-24" />
-      <div className="flex w-full max-w-md flex-col items-stretch gap-3">
-        <SpeechBubble text={text} bubbleClassName="text-xl sm:text-2xl text-center" />
-        <ReplayButton onClick={replay} label={t('exercise.replay')} className="self-center" />
-      </div>
-      <button
-        type="button"
-        onClick={onNext}
-        className="tap-raised tap-go flex h-16 w-full max-w-sm items-center justify-center rounded-[2rem] bg-go px-8 font-display text-xl font-semibold text-white sm:h-20 sm:text-2xl"
-      >
+      <NarratedBubble
+        text={text}
+        layout="stack"
+        bubbleClassName="text-xl sm:text-2xl text-center"
+        replayClassName="self-center"
+      />
+      <button type="button" onClick={onNext} className={tapClass('hero', 'go')}>
         {t('first-run.welcome.primary')}
       </button>
-    </main>
+    </Screen>
   );
 }
 
@@ -83,7 +61,7 @@ function PasswordStep({ onSaved }: { readonly onSaved: (location: string) => voi
   }
 
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center bg-cream px-4 py-8 sm:px-10">
+    <Screen kind="form" className="px-4 py-8 sm:px-10">
       <form
         onSubmit={(event) => {
           void onSubmit(event);
@@ -150,7 +128,7 @@ function PasswordStep({ onSaved }: { readonly onSaved: (location: string) => voi
           }}
         />
       )}
-    </main>
+    </Screen>
   );
 }
 
@@ -166,7 +144,7 @@ function SavedStep({
   const { t } = useTranslation();
 
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center bg-cream px-4 py-8 sm:px-10">
+    <Screen kind="form" className="px-4 py-8 sm:px-10">
       <div className="flex w-full max-w-sm flex-col gap-4 rounded-2xl border border-line bg-card p-6">
         <h1 className="text-lg font-extrabold text-ink">{t('first-run.saved.title')}</h1>
         <p className="text-sm text-muted">{t('first-run.saved.body', { location })}</p>
@@ -174,7 +152,7 @@ function SavedStep({
           {t('first-run.saved.primary')}
         </button>
       </div>
-    </main>
+    </Screen>
   );
 }
 

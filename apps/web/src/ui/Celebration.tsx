@@ -3,9 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useAppStore, useServices } from '../app/store.ts';
 import { tContent } from '../content-text.ts';
 import { BadgeIcon } from './BadgeIcon.tsx';
-import { ReplayButton } from './ReplayButton.tsx';
-import { SpeechBubble } from './SpeechBubble.tsx';
-import { useNarratedText } from './useNarratedText.ts';
+import { NarratedBubble } from './ds/NarratedBubble.tsx';
+import { tapClass } from './ds/tap.ts';
 
 /**
  * Full-screen badge celebration (rewards.md §1 "Rare celebrations"), shown over whichever screen
@@ -29,7 +28,6 @@ export function Celebration(): JSX.Element | null {
   const tierLabel = activeCelebration?.tier ? t(`tier.${activeCelebration.tier}`) : undefined;
 
   const bubbleText = t('celebration.owl-line', { name: badgeName });
-  const replay = useNarratedText(services.narrator, activeCelebration ? bubbleText : '');
 
   if (!activeCelebration || !badgeDef) {
     return null;
@@ -53,17 +51,23 @@ export function Celebration(): JSX.Element | null {
           )}
         </div>
 
-        <div className="flex w-full flex-col items-stretch gap-3">
-          <SpeechBubble text={bubbleText} avatarClassName="h-12 w-12" bubbleClassName="text-lg" />
-          <ReplayButton onClick={replay} label={t('exercise.replay')} />
-        </div>
+        <NarratedBubble
+          text={bubbleText}
+          layout="column"
+          avatarClassName="h-12 w-12"
+          bubbleClassName="text-lg"
+        />
 
         <button
           type="button"
           onClick={() => {
             void dismissCelebration();
           }}
-          className="tap-raised tap-go mt-2 h-16 w-full max-w-xs rounded-3xl bg-go font-display text-xl font-semibold text-white"
+          className={tapClass(
+            'custom',
+            'go',
+            'mt-2 h-16 w-full max-w-xs rounded-3xl font-display text-xl font-semibold',
+          )}
         >
           {t('celebration.continue')}
         </button>

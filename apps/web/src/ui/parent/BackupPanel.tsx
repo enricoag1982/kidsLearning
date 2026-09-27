@@ -7,7 +7,9 @@ import type { ChildImportChoice, ImportChangeSummary, ImportPlan } from '@chess-
 import { importMerged, planImport, previewChildChange } from '@chess-kids/core/merge';
 import { useServices } from '../../app/store.ts';
 import { sendBackupToOtherDevice } from '../../adapters/share-backup.ts';
-import { ChevronLeftIcon } from './parent-icons.tsx';
+import { ChevronLeftIcon } from '../ds/icons-lazy.tsx';
+import { ScreenHeader } from '../ds/Screen.tsx';
+import { ParentSection } from '../ds/parent.tsx';
 import {
   PARENT_INFO_PANEL,
   PARENT_INPUT,
@@ -169,20 +171,16 @@ export function BackupScreen({ onBack, onImported }: BackupScreenProps): JSX.Ele
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          onClick={onBack}
-          aria-label={t('parent.back')}
-          className="tap-raised flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-card text-ink"
-        >
-          <ChevronLeftIcon />
-        </button>
-        <h2 className="flex-1 text-base font-extrabold text-ink">{t('parent.backup-title')}</h2>
-      </div>
+      <ScreenHeader
+        look="parent"
+        action="back"
+        actionLabel={t('parent.back')}
+        onAction={onBack}
+        icon={<ChevronLeftIcon />}
+        title={t('parent.backup-title')}
+      />
 
-      <section className="flex flex-col gap-3 rounded-xl border border-line bg-card p-4">
-        <h3 className="text-sm font-extrabold text-ink">{t('parent.backup.share-heading')}</h3>
+      <ParentSection title={t('parent.backup.share-heading')}>
         <p className="text-sm text-muted">{t('parent.backup.share-body')}</p>
         <button
           type="button"
@@ -195,10 +193,9 @@ export function BackupScreen({ onBack, onImported }: BackupScreenProps): JSX.Ele
           {t('parent.backup.share-button')}
         </button>
         {shareNote && <p className={PARENT_NOTE}>{shareNote}</p>}
-      </section>
+      </ParentSection>
 
-      <section className="flex flex-col gap-3 rounded-xl border border-line bg-card p-4">
-        <h3 className="text-sm font-extrabold text-ink">{t('parent.backup.export-heading')}</h3>
+      <ParentSection title={t('parent.backup.export-heading')}>
         <p className="text-sm text-muted">{t('parent.backup.export-body')}</p>
         <button
           type="button"
@@ -210,10 +207,9 @@ export function BackupScreen({ onBack, onImported }: BackupScreenProps): JSX.Ele
         >
           {t('parent.backup.export-button')}
         </button>
-      </section>
+      </ParentSection>
 
-      <section className="flex flex-col gap-3 rounded-xl border border-line bg-card p-4">
-        <h3 className="text-sm font-extrabold text-ink">{t('parent.backup.import-heading')}</h3>
+      <ParentSection title={t('parent.backup.import-heading')}>
         <p className="text-sm text-muted">{t('parent.backup.import-body')}</p>
 
         <input
@@ -321,7 +317,7 @@ export function BackupScreen({ onBack, onImported }: BackupScreenProps): JSX.Ele
         )}
 
         {done && <p className={PARENT_NOTE}>{t('parent.backup.import-done')}</p>}
-      </section>
+      </ParentSection>
     </div>
   );
 }

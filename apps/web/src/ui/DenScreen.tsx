@@ -14,12 +14,12 @@ import { useAppStore, useServices } from '../app/store.ts';
 import { tContent } from '../content-text.ts';
 import { BadgeIcon } from './BadgeIcon.tsx';
 import { CharacterIcon } from './art/characters.tsx';
-import { SpeechBubble } from './SpeechBubble.tsx';
-import { ReplayButton } from './ReplayButton.tsx';
+import { NarratedBubble } from './ds/NarratedBubble.tsx';
 import { StarsPill } from './StarsPill.tsx';
 import { StreakPill } from './StreakPill.tsx';
-import { InfoPill } from './primitives.tsx';
-import { useNarratedText } from './useNarratedText.ts';
+import { InfoPill } from './ds/primitives.tsx';
+import { tapClass } from './ds/tap.ts';
+import { BlankScreen, Screen, ScreenHeader } from './ds/Screen.tsx';
 
 /** Badge categories, in rewards.md §3 catalogue order. */
 const BADGE_CATEGORIES: readonly BadgeCategory[] = ['milestone', 'skill', 'play', 'habit'];
@@ -65,24 +65,6 @@ const RANK_GLYPH: Readonly<Record<string, string>> = {
   king: '♔',
 };
 
-function BackIcon(): JSX.Element {
-  return (
-    <svg
-      width="30"
-      height="30"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.4}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M15 18l-6-6 6-6" />
-    </svg>
-  );
-}
-
 /** The next rank's unlock condition, in words (own condition for `done`/`locked`, "You are here" for `current`). */
 function rankNote(t: TFunction, catalog: TracksCatalog, entry: RankLadderEntry): string {
   if (entry.state === 'current') return t('den.rank-current');
@@ -113,10 +95,9 @@ export function DenScreen(): JSX.Element {
   const markBadgeSeen = useAppStore((state) => state.markBadgeSeen);
 
   const bubbleText = t('den.owl-line');
-  const replay = useNarratedText(services.narrator, bubbleText);
 
   if (!profile || !journey) {
-    return <main className="min-h-dvh bg-cream" />;
+    return <BlankScreen />;
   }
 
   const friends = animalFriends(journey.lessons, progress);
@@ -146,26 +127,22 @@ export function DenScreen(): JSX.Element {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col gap-4 bg-cream px-4 py-5 sm:px-8 sm:py-6">
-      <div className="flex items-center gap-4">
-        <button
-          type="button"
-          aria-label={tContent(t, 'journey:ui.back')}
-          onClick={goToHome}
-          className="tap-raised flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-card text-ink"
-        >
-          <BackIcon />
-        </button>
-        <h1 className="flex-grow truncate font-display text-2xl text-ink sm:text-3xl">
-          {t('den.title', { name: profile.nickname })}
-        </h1>
+    <Screen kind="page">
+      <ScreenHeader
+        action="back"
+        actionLabel={tContent(t, 'journey:ui.back')}
+        onAction={goToHome}
+        title={t('den.title', { name: profile.nickname })}
+      >
         <StarsPill count={stars} />
-      </div>
+      </ScreenHeader>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <SpeechBubble text={bubbleText} avatarClassName="h-12 w-12" bubbleClassName="text-lg" />
-        <ReplayButton onClick={replay} label={t('exercise.replay')} />
-      </div>
+      <NarratedBubble
+        text={bubbleText}
+        layout="row"
+        avatarClassName="h-12 w-12"
+        bubbleClassName="text-lg"
+      />
 
       <div className="flex flex-wrap gap-2">
         <InfoPill
@@ -321,9 +298,13 @@ export function DenScreen(): JSX.Element {
                         onClick={() => {
                           tapBadge(def, display, name);
                         }}
-                        className={`tap-raised relative flex min-h-16 w-full flex-col items-center gap-1 rounded-2xl px-2 py-3 text-center ${
-                          display.earned ? 'bg-white' : 'bg-[#F3EDE0]'
-                        }`}
+                        className={tapClass(
+                          'custom',
+                          'none',
+                          `relative flex min-h-16 w-full flex-col items-center gap-1 rounded-2xl px-2 py-3 text-center ${
+                            display.earned ? 'bg-white' : 'bg-[#F3EDE0]'
+                          }`,
+                        )}
                       >
                         {display.isNew && (
                           <span
@@ -352,6 +333,6 @@ export function DenScreen(): JSX.Element {
           );
         })}
       </div>
-    </main>
+    </Screen>
   );
 }

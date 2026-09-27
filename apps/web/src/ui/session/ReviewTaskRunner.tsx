@@ -2,23 +2,7 @@ import { useState } from 'react';
 import type { JSX } from 'react';
 import type { ConceptTask, ExerciseState } from '@chess-kids/core';
 import { ReviewExerciseStep } from './ReviewExerciseStep.tsx';
-
-function CloseIcon(): JSX.Element {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.6}
-      strokeLinecap="round"
-      aria-hidden="true"
-    >
-      <path d="M6 6l12 12M18 6L6 18" />
-    </svg>
-  );
-}
+import { BlankScreen, Screen, ScreenHeader } from '../ds/Screen.tsx';
 
 /** Dots mirroring the lesson's `StageDots`, sized for a short (3–5 task) review run. */
 function TaskDots({
@@ -87,7 +71,7 @@ export function ReviewTaskRunner({
   const task = tasks[index];
 
   if (!task) {
-    return <main className="min-h-dvh bg-cream" />;
+    return <BlankScreen />;
   }
 
   function advance(): void {
@@ -100,21 +84,13 @@ export function ReviewTaskRunner({
   }
 
   return (
-    <main className="flex h-dvh flex-col gap-3 overflow-y-auto bg-cream px-3 py-3 sm:px-8 sm:py-6">
-      <div className="flex items-center gap-3 sm:gap-4">
-        <button
-          type="button"
-          aria-label={closeAriaLabel}
-          onClick={onClose}
-          className="tap-raised flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-card text-ink"
-        >
-          <CloseIcon />
-        </button>
+    <Screen kind="game">
+      <ScreenHeader look="game" action="close" actionLabel={closeAriaLabel} onAction={onClose}>
         <div className="min-w-0 flex-1 truncate text-center font-display text-lg font-semibold text-ink sm:text-xl">
           {headerText(index + 1, tasks.length)}
         </div>
         <div className="h-16 w-16 flex-shrink-0" aria-hidden="true" />
-      </div>
+      </ScreenHeader>
 
       <TaskDots current={index} total={tasks.length} />
 
@@ -128,6 +104,6 @@ export function ReviewTaskRunner({
           onRecord={onRecord ? (state, correct) => onRecord(task, state, correct) : undefined}
         />
       </div>
-    </main>
+    </Screen>
   );
 }

@@ -1,23 +1,6 @@
 import type { JSX } from 'react';
-
-function ReplayIcon(): JSX.Element {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M4 9v6h4l5 4V5L8 9H4z" />
-      <path d="M16 8.5a5 5 0 0 1 0 7" />
-    </svg>
-  );
-}
+import { ReplayIcon } from './icons.tsx';
+import { tapClass } from './tap.ts';
 
 export interface ReplayButtonProps {
   readonly onClick: () => void;
@@ -33,7 +16,7 @@ export function ReplayButton({ onClick, label, className = '' }: ReplayButtonPro
     <button
       type="button"
       onClick={onClick}
-      className={`tap-raised flex h-16 min-w-16 shrink-0 items-center justify-center gap-2 rounded-2xl bg-card px-4 font-semibold text-ink ${className}`}
+      className={`${tapClass('custom', 'neutral', 'flex h-16 min-w-16 shrink-0 items-center justify-center gap-2 rounded-2xl px-4 font-semibold')} ${className}`}
     >
       <ReplayIcon />
       {label}

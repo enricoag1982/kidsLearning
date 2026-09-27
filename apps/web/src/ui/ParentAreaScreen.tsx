@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { JSX, SubmitEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ChildOverview } from '@chess-kids/core';
@@ -9,40 +9,21 @@ import {
   isValidPassword,
 } from '@chess-kids/core';
 import { useAppStore, useServices } from '../app/store.ts';
-import { avatarBackground } from './art/avatar-meta.ts';
-import { AvatarIcon } from './art/avatars.tsx';
 import { RankPill } from './RankPill.tsx';
 import { BackupScreen } from './parent/BackupPanel.tsx';
 import { ChildReportScreen } from './parent/ChildReport.tsx';
 import { ChildSettingsScreen } from './parent/ChildSettings.tsx';
-import { ChevronRightIcon } from './parent/parent-icons.tsx';
-import { PrivacyScreen } from './parent/PrivacyPolicy.tsx';
+import { PrivacyScreen } from './parent/PrivacyScreen.tsx';
 import {
   PARENT_INPUT,
   PARENT_NOTE,
   PARENT_PRIMARY_BUTTON,
   PARENT_SECONDARY_BUTTON,
-  PARENT_TAPPABLE_ROW,
 } from './parent/parent-styles.ts';
-
-function LockIcon(): JSX.Element {
-  return (
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x="5" y="11" width="14" height="10" rx="2" />
-      <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-    </svg>
-  );
-}
+import { ChevronRightIcon, LockIcon } from './ds/icons.tsx';
+import { useAsync } from './ds/useAsync.ts';
+import { AvatarBadge } from './ds/AvatarBadge.tsx';
+import { PARENT_TAPPABLE_ROW } from './ds/parent-styles-lazy.ts';
 
 function ChangePasswordForm({ onDone }: { readonly onDone: () => void }): JSX.Element {
   const { t } = useTranslation();
@@ -123,12 +104,10 @@ function ChildOverviewCard({
   return (
     <li>
       <button type="button" onClick={onOpen} className={PARENT_TAPPABLE_ROW}>
-        <span
+        <AvatarBadge
+          avatar={overview.profile.avatar}
           className="h-11 w-11 flex-shrink-0 overflow-hidden rounded-full p-1.5"
-          style={{ backgroundColor: avatarBackground(overview.profile.avatar) }}
-        >
-          <AvatarIcon avatar={overview.profile.avatar} />
-        </span>
+        />
         <span className="flex flex-1 flex-col gap-1">
           <span className="flex items-center gap-2">
             <span className="text-base font-extrabold text-ink">{overview.profile.nickname}</span>
@@ -169,7 +148,6 @@ export function ParentAreaScreen(): JSX.Element {
   const goToPicker = useAppStore((state) => state.goToPicker);
   const refreshProfiles = useAppStore((state) => state.refreshProfiles);
   const startNewPlayer = useAppStore((state) => state.startNewPlayer);
-  const [overviews, setOverviews] = useState<Readonly<Record<string, ChildOverview>>>({});
   const [changingPassword, setChangingPassword] = useState(false);
   const [codeFileLocation, setCodeFileLocation] = useState<string | null>(null);
   const [view, setView] = useState<ParentView>({ kind: 'overview' });
@@ -178,21 +156,17 @@ export function ParentAreaScreen(): JSX.Element {
   // child's stats can change on the Report/Settings screens (reset, an import) without the
   // `profiles` array reference changing at all, and the Overview must show fresh numbers each time
   // it is shown again, not just the ones from when it first mounted.
-  useEffect(() => {
-    if (view.kind !== 'overview') return;
-    let cancelled = false;
-    void Promise.all(
-      profiles.map(
-        async (profile) =>
-          [profile.id, await buildChildOverview(services.deps, profile.id)] as const,
-      ),
-    ).then((entries) => {
-      if (!cancelled) setOverviews(Object.fromEntries(entries));
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [profiles, services, view.kind]);
+  const { value: overviews = {} } = useAsync(
+    () =>
+      Promise.all(
+        profiles.map(
+          async (profile) =>
+            [profile.id, await buildChildOverview(services.deps, profile.id)] as const,
+        ),
+      ).then((entries) => Object.fromEntries(entries)),
+    [profiles, services],
+    view.kind === 'overview',
+  );
 
   const settingsProfile =
     view.kind === 'settings'

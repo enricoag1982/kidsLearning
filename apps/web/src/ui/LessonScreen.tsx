@@ -20,23 +20,7 @@ import { StepPills } from './lesson/StepPills.tsx';
 import { StoryStep } from './lesson/StoryStep.tsx';
 import { StarsPill } from './StarsPill.tsx';
 import { useIsCompact } from './useMediaQuery.ts';
-
-function CloseIcon(): JSX.Element {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.6}
-      strokeLinecap="round"
-      aria-hidden="true"
-    >
-      <path d="M6 6l12 12M18 6L6 18" />
-    </svg>
-  );
-}
+import { BlankScreen, Screen, ScreenHeader } from './ds/Screen.tsx';
 
 /** Exercise stage dots + "N of M", shown only while working through the scored exercises. */
 function StageDots({
@@ -108,7 +92,7 @@ export function LessonScreen(): JSX.Element {
   }, [step?.kind, checkForCelebrations]);
 
   if (!lesson || !step || !profile) {
-    return <main className="min-h-dvh bg-cream" />;
+    return <BlankScreen />;
   }
 
   if (step.kind === 'complete') {
@@ -174,16 +158,13 @@ export function LessonScreen(): JSX.Element {
         : undefined;
 
   return (
-    <main className="flex h-dvh flex-col gap-3 overflow-y-auto bg-cream px-3 py-3 sm:px-8 sm:py-6">
-      <div className="flex items-center gap-3 sm:gap-4">
-        <button
-          type="button"
-          aria-label={t('lesson.close')}
-          onClick={exitLesson}
-          className="tap-raised flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-card text-ink"
-        >
-          <CloseIcon />
-        </button>
+    <Screen kind="game">
+      <ScreenHeader
+        look="game"
+        action="close"
+        actionLabel={t('lesson.close')}
+        onAction={exitLesson}
+      >
         <div className="min-w-0 flex-1 overflow-x-auto">
           {phase &&
             (isCompact ? (
@@ -198,7 +179,7 @@ export function LessonScreen(): JSX.Element {
             ))}
         </div>
         <StarsPill count={stars} />
-      </div>
+      </ScreenHeader>
 
       {step.kind === 'exercise' && (
         <StageDots current={step.index} total={lesson.exercises.length} showLabel={!isCompact} />
@@ -231,6 +212,6 @@ export function LessonScreen(): JSX.Element {
           />
         )}
       </div>
-    </main>
+    </Screen>
   );
 }

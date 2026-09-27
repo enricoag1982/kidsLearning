@@ -4,38 +4,11 @@ import { friendGameOptions } from '@chess-kids/core';
 import type { FriendBoardMode, FriendOpponentChoice } from '../app/store.ts';
 import { useAppStore, useServices } from '../app/store.ts';
 import { tContent } from '../content-text.ts';
-import { avatarBackground } from './art/avatar-meta.ts';
-import { AvatarIcon } from './art/avatars.tsx';
-import { SpeechBubble } from './SpeechBubble.tsx';
-import { ReplayButton } from './ReplayButton.tsx';
-import { useNarratedText } from './useNarratedText.ts';
-
-function BackIcon(): JSX.Element {
-  return (
-    <svg
-      width="30"
-      height="30"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.4}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M15 18l-6-6 6-6" />
-    </svg>
-  );
-}
-
-function GuestIcon(): JSX.Element {
-  return (
-    <svg viewBox="0 0 100 100" aria-hidden="true" className="h-full w-full">
-      <circle cx={50} cy={38} r={20} fill="#B7C2CB" />
-      <path d="M18 88c0-20 14-32 32-32s32 12 32 32Z" fill="#B7C2CB" />
-    </svg>
-  );
-}
+import { NarratedBubble } from './ds/NarratedBubble.tsx';
+import { GuestIcon } from './ds/icons-lazy.tsx';
+import { tapClass } from './ds/tap.ts';
+import { BlankScreen, Screen, ScreenHeader } from './ds/Screen.tsx';
+import { AvatarBadge } from './ds/AvatarBadge.tsx';
 
 /** A picked/unpicked chip button, ≥64px tall (kid touch target, `docs/screens.md` §1). */
 function ChoiceChip({
@@ -52,9 +25,11 @@ function ChoiceChip({
       type="button"
       aria-pressed={selected}
       onClick={onClick}
-      className={`tap-raised flex h-16 min-h-16 items-center justify-center rounded-2xl px-5 font-display text-lg font-semibold ${
-        selected ? 'tap-go bg-go text-white' : 'bg-card text-ink'
-      }`}
+      className={tapClass(
+        'custom',
+        selected ? 'go' : 'neutral',
+        'flex h-16 min-h-16 items-center justify-center rounded-2xl px-5 font-display text-lg font-semibold',
+      )}
     >
       {label}
     </button>
@@ -80,10 +55,9 @@ export function FriendSetupScreen(): JSX.Element {
   const goToPlay = useAppStore((state) => state.goToPlay);
 
   const bubbleText = t('friend-play.setup-owl-line');
-  const replay = useNarratedText(services.narrator, bubbleText);
 
   if (!profile || !journey) {
-    return <main className="min-h-dvh bg-cream" />;
+    return <BlankScreen />;
   }
 
   const otherProfiles = profiles.filter((candidate) => candidate.id !== profile.id);
@@ -109,25 +83,20 @@ export function FriendSetupScreen(): JSX.Element {
   const canStart = friendSetup.opponent !== null && friendSetup.gameId !== null;
 
   return (
-    <main className="flex min-h-dvh flex-col gap-4 bg-cream px-4 py-5 sm:px-8 sm:py-6">
-      <div className="flex items-center gap-4">
-        <button
-          type="button"
-          aria-label={tContent(t, 'journey:ui.back')}
-          onClick={goToPlay}
-          className="tap-raised flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-card text-ink"
-        >
-          <BackIcon />
-        </button>
-        <h1 className="flex-grow truncate font-display text-2xl text-ink sm:text-3xl">
-          {t('friend-play.setup-title')}
-        </h1>
-      </div>
+    <Screen kind="page">
+      <ScreenHeader
+        action="back"
+        actionLabel={tContent(t, 'journey:ui.back')}
+        onAction={goToPlay}
+        title={t('friend-play.setup-title')}
+      />
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <SpeechBubble text={bubbleText} avatarClassName="h-12 w-12" bubbleClassName="text-lg" />
-        <ReplayButton onClick={replay} label={t('exercise.replay')} />
-      </div>
+      <NarratedBubble
+        text={bubbleText}
+        layout="row"
+        avatarClassName="h-12 w-12"
+        bubbleClassName="text-lg"
+      />
 
       <section className="flex flex-col gap-3">
         <h2 className="font-display text-xl text-ink">{t('friend-play.second-player-heading')}</h2>
@@ -140,18 +109,20 @@ export function FriendSetupScreen(): JSX.Element {
                 onClick={() => {
                   chooseOpponent({ kind: 'profile', profileId: candidate.id });
                 }}
-                className={`tap-raised flex w-28 flex-col items-center gap-2 rounded-3xl p-3 ${
-                  isOpponentSelected({ kind: 'profile', profileId: candidate.id })
-                    ? 'tap-border-go bg-white'
-                    : 'bg-card'
-                }`}
+                className={tapClass(
+                  'custom',
+                  'none',
+                  `flex w-28 flex-col items-center gap-2 rounded-3xl p-3 ${
+                    isOpponentSelected({ kind: 'profile', profileId: candidate.id })
+                      ? 'tap-border-go bg-white'
+                      : 'bg-card'
+                  }`,
+                )}
               >
-                <span
+                <AvatarBadge
+                  avatar={candidate.avatar}
                   className="h-16 w-16 overflow-hidden rounded-full p-2"
-                  style={{ backgroundColor: avatarBackground(candidate.avatar) }}
-                >
-                  <AvatarIcon avatar={candidate.avatar} />
-                </span>
+                />
                 <span className="truncate font-display text-base font-semibold text-ink">
                   {candidate.nickname}
                 </span>
@@ -165,9 +136,13 @@ export function FriendSetupScreen(): JSX.Element {
               onClick={() => {
                 chooseOpponent({ kind: 'guest' });
               }}
-              className={`tap-raised flex w-28 flex-col items-center gap-2 rounded-3xl p-3 ${
-                isOpponentSelected({ kind: 'guest' }) ? 'tap-border-go bg-white' : 'bg-card'
-              }`}
+              className={tapClass(
+                'custom',
+                'none',
+                `flex w-28 flex-col items-center gap-2 rounded-3xl p-3 ${
+                  isOpponentSelected({ kind: 'guest' }) ? 'tap-border-go bg-white' : 'bg-card'
+                }`,
+              )}
             >
               <span className="h-16 w-16 overflow-hidden rounded-full bg-[#EDEFF1] p-2">
                 <GuestIcon />
@@ -251,10 +226,14 @@ export function FriendSetupScreen(): JSX.Element {
         type="button"
         disabled={!canStart}
         onClick={startFriendGame}
-        className="tap-raised tap-go mt-auto flex h-20 items-center justify-center gap-3 rounded-3xl bg-go px-6 font-display text-2xl font-semibold text-white disabled:cursor-default disabled:bg-[#DDE8F6] disabled:text-muted"
+        className={tapClass(
+          'next',
+          'go',
+          'mt-auto disabled:cursor-default disabled:bg-[#DDE8F6] disabled:text-muted',
+        )}
       >
         {t('friend-play.start')}
       </button>
-    </main>
+    </Screen>
   );
 }

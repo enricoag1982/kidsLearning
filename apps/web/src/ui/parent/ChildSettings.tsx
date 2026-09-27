@@ -30,12 +30,18 @@ import { useAppStore, useServices } from '../../app/store.ts';
 import { sendBackupToOtherDevice } from '../../adapters/share-backup.ts';
 import { AVATARS, avatarBackground } from '../art/avatar-meta.ts';
 import { AvatarIcon } from '../art/avatars.tsx';
-import { ChevronLeftIcon } from './parent-icons.tsx';
+import { ChevronLeftIcon } from '../ds/icons-lazy.tsx';
+import { tapClass } from '../ds/tap.ts';
+import { ScreenHeader } from '../ds/Screen.tsx';
+import { ParentConfirmDialog, ParentSection } from '../ds/parent.tsx';
 import {
   PARENT_CHIP,
   PARENT_CHIP_LOCKED,
   PARENT_CHIP_SELECTED,
   PARENT_DANGER_BUTTON,
+} from '../ds/parent-styles-lazy.ts';
+import { AvatarBadge } from '../ds/AvatarBadge.tsx';
+import {
   PARENT_INPUT,
   PARENT_NOTE,
   PARENT_PRIMARY_BUTTON,
@@ -55,7 +61,11 @@ function AvatarPicker({ onPick }: { readonly onPick: (avatar: string) => void })
           onClick={() => {
             onPick(id);
           }}
-          className="tap-raised flex h-11 w-11 items-center justify-center overflow-hidden rounded-full p-1.5"
+          className={tapClass(
+            'custom',
+            'none',
+            'flex h-11 w-11 items-center justify-center overflow-hidden rounded-full p-1.5',
+          )}
           style={{ backgroundColor: avatarBackground(id) }}
         >
           <AvatarIcon avatar={id} />
@@ -98,43 +108,32 @@ function PasswordConfirmDialog({
   }
 
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      className="fixed inset-0 z-10 flex items-center justify-center bg-black/40 p-4"
+    <ParentConfirmDialog
+      title={title}
+      body={body}
+      cancelLabel={t('parent.cancel')}
+      confirmLabel={confirmLabel}
+      onCancel={onCancel}
+      onSubmit={(event) => {
+        void onSubmit(event);
+      }}
+      confirmDisabled={busy}
     >
-      <form
-        onSubmit={(event) => {
-          void onSubmit(event);
-        }}
-        className="flex w-full max-w-sm flex-col gap-4 rounded-2xl bg-card p-6"
-      >
-        <h2 className="text-base font-extrabold text-ink">{title}</h2>
-        <p className="text-sm text-muted">{body}</p>
-        <label className="flex flex-col gap-1 text-sm font-bold text-ink">
-          {t('parent.password-label')}
-          <input
-            type="password"
-            value={password}
-            onChange={(event) => {
-              setPassword(event.target.value);
-            }}
-            className={PARENT_INPUT}
-            autoComplete="current-password"
-            autoFocus
-          />
-        </label>
-        {error && <p className={PARENT_NOTE}>{error}</p>}
-        <div className="flex justify-end gap-3">
-          <button type="button" onClick={onCancel} className={PARENT_SECONDARY_BUTTON}>
-            {t('parent.cancel')}
-          </button>
-          <button type="submit" disabled={busy} className={PARENT_DANGER_BUTTON}>
-            {confirmLabel}
-          </button>
-        </div>
-      </form>
-    </div>
+      <label className="flex flex-col gap-1 text-sm font-bold text-ink">
+        {t('parent.password-label')}
+        <input
+          type="password"
+          value={password}
+          onChange={(event) => {
+            setPassword(event.target.value);
+          }}
+          className={PARENT_INPUT}
+          autoComplete="current-password"
+          autoFocus
+        />
+      </label>
+      {error && <p className={PARENT_NOTE}>{error}</p>}
+    </ParentConfirmDialog>
   );
 }
 
@@ -149,26 +148,14 @@ function DeleteConfirmDialog({
 }): JSX.Element {
   const { t } = useTranslation();
   return (
-    <div
-      role="dialog"
-      aria-modal="true"
-      className="fixed inset-0 z-10 flex items-center justify-center bg-black/40 p-4"
-    >
-      <div className="flex w-full max-w-sm flex-col gap-4 rounded-2xl bg-card p-6">
-        <h2 className="text-base font-extrabold text-ink">
-          {t('parent.delete-confirm-title', { name: profile.nickname })}
-        </h2>
-        <p className="text-sm text-muted">{t('parent.delete-confirm-body')}</p>
-        <div className="flex justify-end gap-3">
-          <button type="button" onClick={onCancel} className={PARENT_SECONDARY_BUTTON}>
-            {t('parent.delete-cancel')}
-          </button>
-          <button type="button" onClick={onConfirm} className={PARENT_DANGER_BUTTON}>
-            {t('parent.delete-confirm')}
-          </button>
-        </div>
-      </div>
-    </div>
+    <ParentConfirmDialog
+      title={t('parent.delete-confirm-title', { name: profile.nickname })}
+      body={t('parent.delete-confirm-body')}
+      cancelLabel={t('parent.delete-cancel')}
+      confirmLabel={t('parent.delete-confirm')}
+      onCancel={onCancel}
+      onConfirm={onConfirm}
+    />
   );
 }
 
@@ -309,7 +296,11 @@ function ToggleRow({
       onClick={() => {
         onChange(!checked);
       }}
-      className="tap-raised flex min-h-[44px] items-center justify-between gap-3 rounded-xl bg-card px-4 py-2 text-left"
+      className={tapClass(
+        'custom',
+        'none',
+        'flex min-h-[44px] items-center justify-between gap-3 rounded-xl bg-card px-4 py-2 text-left',
+      )}
     >
       <span className="text-sm font-bold text-ink">{label}</span>
       <span
@@ -452,28 +443,21 @@ export function ChildSettingsScreen({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          onClick={onBack}
-          aria-label={t('parent.back')}
-          className="tap-raised flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-card text-ink"
-        >
-          <ChevronLeftIcon />
-        </button>
-        <h2 className="flex-1 text-base font-extrabold text-ink">
-          {t('parent.settings-title', { name: profile.nickname })}
-        </h2>
-      </div>
+      <ScreenHeader
+        look="parent"
+        action="back"
+        actionLabel={t('parent.back')}
+        onAction={onBack}
+        icon={<ChevronLeftIcon />}
+        title={t('parent.settings-title', { name: profile.nickname })}
+      />
 
-      <section className="flex flex-col gap-3 rounded-xl border border-line bg-card p-4">
+      <ParentSection>
         <div className="flex items-center gap-3">
-          <span
+          <AvatarBadge
+            avatar={profile.avatar}
             className="h-11 w-11 flex-shrink-0 overflow-hidden rounded-full p-1.5"
-            style={{ backgroundColor: avatarBackground(profile.avatar) }}
-          >
-            <AvatarIcon avatar={profile.avatar} />
-          </span>
+          />
           {renaming ? (
             <input
               type="text"
@@ -542,10 +526,10 @@ export function ChildSettingsScreen({
             {t('parent.change-avatar')}
           </button>
         </div>
-      </section>
+      </ParentSection>
 
       {settings && (
-        <section className="flex flex-col gap-4 rounded-xl border border-line bg-card p-4">
+        <ParentSection gap={4}>
           <div className="flex flex-col gap-3">
             <h3 className="text-sm font-extrabold text-ink">{t('parent.daily-limit-heading')}</h3>
             <ToggleRow
@@ -690,16 +674,14 @@ export function ChildSettingsScreen({
               ))}
             </div>
           </div>
-        </section>
+        </ParentSection>
       )}
 
-      <section className="flex flex-col gap-3 rounded-xl border border-line bg-card p-4">
-        <h3 className="text-sm font-extrabold text-ink">{t('parent.unlock-lessons-worlds')}</h3>
+      <ParentSection title={t('parent.unlock-lessons-worlds')}>
         <UnlockPanel profileId={profile.id} />
-      </section>
+      </ParentSection>
 
-      <section className="flex flex-col gap-3 rounded-xl border border-line bg-card p-4">
-        <h3 className="text-sm font-extrabold text-ink">{t('parent.backup-heading')}</h3>
+      <ParentSection title={t('parent.backup-heading')}>
         <div className="flex flex-wrap gap-3">
           <button
             type="button"
@@ -723,7 +705,7 @@ export function ChildSettingsScreen({
           </button>
         </div>
         {shareNote && <p className={PARENT_NOTE}>{shareNote}</p>}
-      </section>
+      </ParentSection>
 
       <section className="flex flex-col gap-3 rounded-xl border border-today p-4">
         <h3 className="text-sm font-extrabold text-[#8C4012]">{t('parent.danger-heading')}</h3>

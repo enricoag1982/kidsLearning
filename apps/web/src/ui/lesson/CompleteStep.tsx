@@ -5,6 +5,8 @@ import { lessonStars } from '@chess-kids/core';
 import { useAppStore, useServices } from '../../app/store.ts';
 import { tContent } from '../../content-text.ts';
 import { StarsRow } from '../StarsRow.tsx';
+import { NewGameIcon } from '../ds/icons.tsx';
+import { tapClass } from '../ds/tap.ts';
 
 export interface CompleteStepProps {
   readonly lesson: Lesson;
@@ -12,25 +14,6 @@ export interface CompleteStepProps {
   readonly onPlayAgain: () => void;
   /** Back to Home. */
   readonly onContinue: () => void;
-}
-
-function NewGameIcon(): JSX.Element {
-  return (
-    <svg
-      width="32"
-      height="32"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#2E7D5B"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x={3} y={3} width={18} height={18} rx={3} />
-      <path d="M3 12h18M12 3v18" />
-    </svg>
-  );
 }
 
 /** Reward stars (1–3) from the percentage of the lesson's max stars actually earned. */
@@ -75,18 +58,10 @@ export function CompleteStep({ lesson, onPlayAgain, onContinue }: CompleteStepPr
       )}
 
       <div className="mt-auto flex w-full max-w-lg gap-4 pt-6">
-        <button
-          type="button"
-          onClick={onPlayAgain}
-          className="tap-raised h-20 flex-1 rounded-3xl bg-card font-display text-xl font-semibold text-ink"
-        >
+        <button type="button" onClick={onPlayAgain} className={tapClass('cta')}>
           {t('play-again')}
         </button>
-        <button
-          type="button"
-          onClick={onContinue}
-          className="tap-raised tap-go h-20 flex-1 rounded-3xl bg-go font-display text-xl font-semibold text-white"
-        >
+        <button type="button" onClick={onContinue} className={tapClass('cta', 'go')}>
           {t('continue')}
         </button>
       </div>

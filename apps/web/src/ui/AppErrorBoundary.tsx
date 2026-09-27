@@ -1,8 +1,8 @@
 import { Component } from 'react';
 import type { ErrorInfo, JSX, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Owl } from './Owl.tsx';
-import { TapButton } from './primitives.tsx';
+import { Owl } from './ds/Owl.tsx';
+import { TapButton } from './ds/primitives.tsx';
 
 /** What a child (or the parent helping) sees instead of a blank page when the app cannot start or
  * a screen crashes: Owl, a short message, the error text (small, for the parent to
@@ -16,8 +16,8 @@ function AppErrorScreen({ message }: { readonly message: string }): JSX.Element 
       <h1 className="font-display text-2xl text-ink">{t('app-error.title')}</h1>
       <p className="max-w-md text-base text-ink">{t('app-error.body')}</p>
       <TapButton
-        variant="primary"
-        role="go"
+        look="primary"
+        tone="go"
         className="w-64 flex-none"
         onClick={() => {
           window.location.reload();

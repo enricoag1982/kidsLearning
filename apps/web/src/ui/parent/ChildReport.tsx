@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import type { JSX, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
@@ -6,10 +5,12 @@ import type { ChildReport, GameRecord, Lesson, Profile } from '@chess-kids/core'
 import { bot, buildChildReport } from '@chess-kids/core';
 import { useServices } from '../../app/store.ts';
 import { tContent } from '../../content-text.ts';
-import { avatarBackground } from '../art/avatar-meta.ts';
-import { AvatarIcon } from '../art/avatars.tsx';
 import { RankPill } from '../RankPill.tsx';
-import { ChevronLeftIcon, ChevronRightIcon } from './parent-icons.tsx';
+import { ChevronRightIcon } from '../ds/icons.tsx';
+import { ChevronLeftIcon } from '../ds/icons-lazy.tsx';
+import { ScreenHeader } from '../ds/Screen.tsx';
+import { useAsync } from '../ds/useAsync.ts';
+import { AvatarBadge } from '../ds/AvatarBadge.tsx';
 import { PARENT_INFO_PANEL, PARENT_NOTE, PARENT_SECONDARY_BUTTON } from './parent-styles.ts';
 
 const DATE_FORMAT = new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric' });
@@ -126,20 +127,13 @@ export function ChildReportScreen({
 }: ChildReportScreenProps): JSX.Element {
   const { t } = useTranslation();
   const services = useServices();
-  const [report, setReport] = useState<ChildReport | null>(null);
-
   // The caller remounts this component with `key={profileId}` (`ParentAreaScreen.tsx`) when the
-  // report opens for a different child, so `report` always starts fresh at `null` — no need for a
-  // synchronous `setReport(null)` reset inside the effect body for a `profileId` change.
-  useEffect(() => {
-    let cancelled = false;
-    void buildChildReport(services.deps, profileId).then((loaded) => {
-      if (!cancelled) setReport(loaded);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [services, profileId]);
+  // report opens for a different child, so `report` always starts fresh (no stale previous child's
+  // data) for a `profileId` change.
+  const { value: report } = useAsync(
+    () => buildChildReport(services.deps, profileId),
+    [services, profileId],
+  );
 
   const profilesById = new Map(profiles.map((profile) => [profile.id, profile]));
   const lessons = services.deps.content.lessons();
@@ -148,23 +142,19 @@ export function ChildReportScreen({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          onClick={onBack}
-          aria-label={t('parent.back')}
-          className="tap-raised flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-card text-ink"
-        >
-          <ChevronLeftIcon />
-        </button>
+      <ScreenHeader
+        look="parent"
+        action="back"
+        actionLabel={t('parent.back')}
+        onAction={onBack}
+        icon={<ChevronLeftIcon />}
+      >
         {report && (
           <>
-            <span
+            <AvatarBadge
+              avatar={report.profile.avatar}
               className="h-11 w-11 flex-shrink-0 overflow-hidden rounded-full p-1.5"
-              style={{ backgroundColor: avatarBackground(report.profile.avatar) }}
-            >
-              <AvatarIcon avatar={report.profile.avatar} />
-            </span>
+            />
             <div className="flex flex-1 flex-col">
               <span className="text-base font-extrabold text-ink">{report.profile.nickname}</span>
               <RankPill rank={report.rank} compact />
@@ -179,7 +169,7 @@ export function ChildReportScreen({
           {t('parent.settings')}
           <ChevronRightIcon />
         </button>
-      </div>
+      </ScreenHeader>
 
       {!report ? (
         <p className={PARENT_INFO_PANEL}>{t('parent.report.loading')}</p>

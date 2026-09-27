@@ -13,23 +13,8 @@ import { useAppStore, useServices } from '../app/store.ts';
 import { animalImage } from './art/animal-images.ts';
 import { VersusStep } from './lesson/VersusStep.tsx';
 import type { BossPlaySession } from './lesson/BossStep.tsx';
-
-function CloseIcon(): JSX.Element {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.6}
-      strokeLinecap="round"
-      aria-hidden="true"
-    >
-      <path d="M6 6l12 12M18 6L6 18" />
-    </svg>
-  );
-}
+import { BlankScreen, Screen, ScreenHeader } from './ds/Screen.tsx';
+import { ConfirmDialog } from './ds/ConfirmDialog.tsx';
 
 /** Standard starting position, castling rights included (same as content's `first-game.yaml`). */
 const START_FEN = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
@@ -105,7 +90,7 @@ export function FullGameScreen(): JSX.Element {
   const botName = t(`boss.versus.bot-name.${botLevel?.name ?? 'mouse'}`);
 
   if (!profile) {
-    return <main className="min-h-dvh bg-cream" />;
+    return <BlankScreen />;
   }
 
   const game = fullGameDef(level);
@@ -163,16 +148,13 @@ export function FullGameScreen(): JSX.Element {
   };
 
   return (
-    <main className="flex h-dvh flex-col gap-3 overflow-y-auto bg-cream px-3 py-3 sm:px-8 sm:py-6">
-      <div className="flex items-center gap-3 sm:gap-4">
-        <button
-          type="button"
-          aria-label={t('play.close')}
-          onClick={requestLeave}
-          className="tap-raised flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-card text-ink"
-        >
-          <CloseIcon />
-        </button>
+    <Screen kind="game">
+      <ScreenHeader
+        look="game"
+        action="close"
+        actionLabel={t('play.close')}
+        onAction={requestLeave}
+      >
         <img
           src={animalImage(botLevel?.name ?? 'mouse')}
           alt=""
@@ -182,7 +164,7 @@ export function FullGameScreen(): JSX.Element {
         <span className="min-w-0 flex-1 truncate font-display text-xl text-ink sm:text-2xl">
           {t('play.full-game-vs', { name: botName })}
         </span>
-      </div>
+      </ScreenHeader>
 
       <div className="flex min-h-0 flex-1 flex-col">
         <VersusStep
@@ -195,34 +177,17 @@ export function FullGameScreen(): JSX.Element {
       </div>
 
       {confirmLeave && (
-        <div
-          role="alertdialog"
-          aria-label={t('boss.versus.stop-game-title')}
-          className="fixed inset-0 z-10 flex items-center justify-center bg-black/30 px-4"
-        >
-          <div className="flex w-full max-w-sm flex-col items-center gap-4 rounded-3xl border-2 border-line bg-card p-6 text-center">
-            <p className="font-display text-xl text-ink">{t('boss.versus.stop-game-title')}</p>
-            <div className="flex w-full gap-3">
-              <button
-                type="button"
-                onClick={() => {
-                  setConfirmLeave(false);
-                }}
-                className="tap-raised flex h-14 flex-1 items-center justify-center rounded-2xl bg-card font-display text-lg font-semibold text-ink"
-              >
-                {t('boss.versus.stop-game-cancel')}
-              </button>
-              <button
-                type="button"
-                onClick={confirmedLeave}
-                className="tap-raised tap-today flex h-14 flex-1 items-center justify-center rounded-2xl bg-today font-display text-lg font-semibold text-white"
-              >
-                {t('boss.versus.stop-game-confirm')}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmDialog
+          title={t('boss.versus.stop-game-title')}
+          cancelLabel={t('boss.versus.stop-game-cancel')}
+          confirmLabel={t('boss.versus.stop-game-confirm')}
+          confirmTone="today"
+          onCancel={() => {
+            setConfirmLeave(false);
+          }}
+          onConfirm={confirmedLeave}
+        />
       )}
-    </main>
+    </Screen>
   );
 }

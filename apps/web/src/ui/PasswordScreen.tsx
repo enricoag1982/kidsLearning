@@ -10,29 +10,13 @@ import {
   PARENT_PRIMARY_BUTTON,
   PARENT_SECONDARY_BUTTON,
 } from './parent/parent-styles.ts';
+import { LockIcon } from './ds/icons.tsx';
+import { Screen } from './ds/Screen.tsx';
+import { useAsync } from './ds/useAsync.ts';
 
 const MAX_ATTEMPTS = 5;
 /** How often the countdown re-reads the clock while locked. */
 const TICK_MS = 500;
-
-function LockIcon(): JSX.Element {
-  return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x="5" y="11" width="14" height="10" rx="2" />
-      <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-    </svg>
-  );
-}
 
 /** Grown-ups gate (parent style): non-functional.md §3 — 5 wrong attempts → 1-minute wait. */
 export function PasswordScreen(): JSX.Element {
@@ -44,16 +28,14 @@ export function PasswordScreen(): JSX.Element {
   const passwordPurpose = useAppStore((state) => state.passwordPurpose);
 
   const [input, setInput] = useState('');
-  const [fileLocation, setFileLocation] = useState<string | null>(null);
   const [wrongAttempts, setWrongAttempts] = useState<number | null>(null);
   const [lockedUntil, setLockedUntil] = useState<string | null>(null);
   const [, tick] = useState(0);
 
-  useEffect(() => {
-    void services.deps.parentLock.get().then((lock) => {
-      setFileLocation(lock?.fileLocation ?? null);
-    });
-  }, [services]);
+  const { value: fileLocation } = useAsync(
+    () => services.deps.parentLock.get().then((lock) => lock?.fileLocation ?? null),
+    [services],
+  );
 
   // Ticks every 500ms while locked, clearing the lock once its time is up (from the interval
   // callback, not the effect body itself, so this is an external-system subscription, not a
@@ -102,7 +84,7 @@ export function PasswordScreen(): JSX.Element {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col items-center justify-center bg-cream px-4 py-8 sm:px-10">
+    <Screen kind="form" className="px-4 py-8 sm:px-10">
       <form
         onSubmit={(event) => {
           void onSubmit(event);
@@ -110,7 +92,7 @@ export function PasswordScreen(): JSX.Element {
         className="flex w-full max-w-sm flex-col gap-4 rounded-2xl border border-line bg-card p-6"
       >
         <div className="flex items-center gap-2 text-ink">
-          <LockIcon />
+          <LockIcon size={24} />
           <h1 className="text-lg font-extrabold">{t('password-screen.title')}</h1>
         </div>
 
@@ -158,6 +140,6 @@ export function PasswordScreen(): JSX.Element {
           {t('password-screen.back')}
         </button>
       </form>
-    </main>
+    </Screen>
   );
 }

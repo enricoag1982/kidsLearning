@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { JSX } from 'react';
 import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
@@ -13,91 +13,13 @@ import { useAppStore, useServices } from '../app/store.ts';
 import { avatarName, tContent } from '../content-text.ts';
 import { firstLessonsByCharacter, unlockLabel } from './lesson-character-labels.ts';
 import { animalImage } from './art/animal-images.ts';
-import { avatarBackground } from './art/avatar-meta.ts';
-import { AvatarIcon } from './art/avatars.tsx';
 import { OwlIcon } from './art/characters.tsx';
-import { SpeechBubble } from './SpeechBubble.tsx';
-import { ReplayButton } from './ReplayButton.tsx';
-import { useNarratedText } from './useNarratedText.ts';
-
-function BackIcon(): JSX.Element {
-  return (
-    <svg
-      width="30"
-      height="30"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2.4}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M15 18l-6-6 6-6" />
-    </svg>
-  );
-}
-
-function LockIcon(): JSX.Element {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x={5} y={11} width={14} height={10} rx={2} />
-      <path d="M8 11V8a4 4 0 0 1 8 0v3" />
-    </svg>
-  );
-}
-
-function ComputerIcon(): JSX.Element {
-  return (
-    <svg
-      width="34"
-      height="34"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#2F5E9E"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect x={4} y={7} width={16} height={12} rx={3} />
-      <path d="M12 3v4" />
-      <circle cx={9} cy={13} r={1} fill="#2F5E9E" />
-      <circle cx={15} cy={13} r={1} fill="#2F5E9E" />
-    </svg>
-  );
-}
-
-function FriendIcon(): JSX.Element {
-  return (
-    <svg
-      width="34"
-      height="34"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#B8561A"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <circle cx={9} cy={8} r={3.5} />
-      <path d="M2.5 20a6.5 6.5 0 0 1 13 0" />
-      <path d="M16 4.5a3.5 3.5 0 0 1 0 7" />
-      <path d="M18 14a6 6 0 0 1 3.5 6" />
-    </svg>
-  );
-}
+import { NarratedBubble } from './ds/NarratedBubble.tsx';
+import { ComputerIcon, FriendIcon, LockIcon } from './ds/icons.tsx';
+import { tapClass } from './ds/tap.ts';
+import { BlankScreen, Screen, ScreenHeader } from './ds/Screen.tsx';
+import { useAsync } from './ds/useAsync.ts';
+import { AvatarBadge } from './ds/AvatarBadge.tsx';
 
 /** The Play screen's vs Computer condition text for a locked level (docs/computer-opponent.md §3). */
 function levelConditionText(t: TFunction, condition: ComputerLevelCondition): string {
@@ -131,26 +53,16 @@ export function PlayScreen(): JSX.Element {
   // `null` = no manual pick yet this session: the level chips default to the profile's stored
   // "Automatic level" suggestion (`docs/computer-opponent.md` §5), loaded once below.
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
-  const [storedSuggestion, setStoredSuggestion] = useState<number | undefined>(undefined);
   const bubbleText = t('play.owl-line');
-  const replay = useNarratedText(services.narrator, bubbleText);
-
-  useEffect(() => {
-    if (!profile) return;
-    let cancelled = false;
-    void services.deps.settings.get().then((settings) => {
-      if (!cancelled) {
-        setStoredSuggestion(settings.suggestedLevels[profile.id]);
-      }
-    });
-    return () => {
-      cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [profile?.id]);
+  const { value: storedSuggestion } = useAsync(
+    () =>
+      services.deps.settings.get().then((settings) => settings.suggestedLevels[profile?.id ?? '']),
+    [services, profile?.id],
+    !!profile,
+  );
 
   if (!profile || !journey) {
-    return <main className="min-h-dvh bg-cream" />;
+    return <BlankScreen />;
   }
 
   const games = unlockedMiniGames(journey.lessons, services.deps.content.minigames(), progress);
@@ -245,36 +157,29 @@ export function PlayScreen(): JSX.Element {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col gap-4 bg-cream px-4 py-5 sm:px-8 sm:py-6">
-      <div className="flex items-center gap-4">
-        <button
-          type="button"
-          aria-label={tContent(t, 'journey:ui.back')}
-          onClick={goToHome}
-          className="tap-raised flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-card text-ink"
-        >
-          <BackIcon />
-        </button>
-        <h1 className="flex-grow truncate font-display text-2xl text-ink sm:text-3xl">
-          {t('play.title')}
-        </h1>
+    <Screen kind="page">
+      <ScreenHeader
+        action="back"
+        actionLabel={tContent(t, 'journey:ui.back')}
+        onAction={goToHome}
+        title={t('play.title')}
+      >
         <div className="flex items-center gap-2">
-          <div
-            role="img"
-            aria-label={t('home.avatar-alt', { name: avatarName(t, profile.avatar) })}
+          <AvatarBadge
+            avatar={profile.avatar}
+            label={t('home.avatar-alt', { name: avatarName(t, profile.avatar) })}
             className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-full p-1.5"
-            style={{ backgroundColor: avatarBackground(profile.avatar) }}
-          >
-            <AvatarIcon avatar={profile.avatar} />
-          </div>
+          />
           <span className="font-display text-lg text-ink sm:text-xl">{profile.nickname}</span>
         </div>
-      </div>
+      </ScreenHeader>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <SpeechBubble text={bubbleText} avatarClassName="h-12 w-12" bubbleClassName="text-lg" />
-        <ReplayButton onClick={replay} label={t('exercise.replay')} />
-      </div>
+      <NarratedBubble
+        text={bubbleText}
+        layout="row"
+        avatarClassName="h-12 w-12"
+        bubbleClassName="text-lg"
+      />
 
       {/* Both cards below are flat, no border (docs/screens.md §1 "Cards that contain buttons",
           v1.1.0 part B, the rule's own named example): each wraps raised level chips/buttons, so a
@@ -308,13 +213,17 @@ export function PlayScreen(): JSX.Element {
                     onClick={() => {
                       selectLevel(status);
                     }}
-                    className={`tap-raised flex flex-col items-start gap-0.5 rounded-2xl px-4 py-2 text-left ${
-                      status.locked
-                        ? 'tap-locked bg-[#F3EDE0] text-muted'
-                        : selected
-                          ? 'tap-info bg-info text-white'
-                          : 'bg-[#EEF3FA] text-[#24497D]'
-                    }`}
+                    className={tapClass(
+                      'custom',
+                      'none',
+                      `flex flex-col items-start gap-0.5 rounded-2xl px-4 py-2 text-left ${
+                        status.locked
+                          ? 'tap-locked bg-[#F3EDE0] text-muted'
+                          : selected
+                            ? 'tap-info bg-info text-white'
+                            : 'bg-[#EEF3FA] text-[#24497D]'
+                      }`,
+                    )}
                   >
                     <span className="flex items-center gap-1.5" aria-hidden="true">
                       <img
@@ -330,7 +239,7 @@ export function PlayScreen(): JSX.Element {
                     <span className="flex items-center gap-1 text-xs font-bold" aria-hidden="true">
                       {status.locked ? (
                         <>
-                          <LockIcon />
+                          <LockIcon size={18} />
                           {condition}
                         </>
                       ) : status.games > 0 ? (
@@ -355,9 +264,13 @@ export function PlayScreen(): JSX.Element {
             onClick={() => {
               startFullGame(effectiveLevel);
             }}
-            className="tap-raised tap-info flex h-16 items-center justify-center gap-2 rounded-2xl bg-info px-4 font-display text-lg font-semibold text-white disabled:cursor-default disabled:bg-[#DDE8F6] disabled:text-muted"
+            className={tapClass(
+              'custom',
+              'info',
+              'flex h-16 items-center justify-center gap-2 rounded-2xl px-4 font-display text-lg font-semibold disabled:cursor-default disabled:bg-[#DDE8F6] disabled:text-muted',
+            )}
           >
-            {!fullGameUnlocked && <LockIcon />}
+            {!fullGameUnlocked && <LockIcon size={18} />}
             {fullGameUnlocked ? t('play.full-game') : t('play.full-game-locked')}
           </button>
         </div>
@@ -382,13 +295,17 @@ export function PlayScreen(): JSX.Element {
                 : `${t('play.vs-friend')}, ${t('play.vs-friend-locked')}`
             }
             onClick={activateFriend}
-            className={`tap-raised flex h-16 items-center justify-center gap-2 rounded-2xl px-4 font-display text-lg font-semibold ${
-              friendUnlocked
-                ? 'tap-today bg-today text-white'
-                : 'tap-locked bg-[#F3EDE0] text-muted'
-            }`}
+            className={tapClass(
+              'custom',
+              'none',
+              `flex h-16 items-center justify-center gap-2 rounded-2xl px-4 font-display text-lg font-semibold ${
+                friendUnlocked
+                  ? 'tap-today bg-today text-white'
+                  : 'tap-locked bg-[#F3EDE0] text-muted'
+              }`,
+            )}
           >
-            {!friendUnlocked && <LockIcon />}
+            {!friendUnlocked && <LockIcon size={18} />}
             {friendUnlocked ? t('play.vs-friend') : t('play.vs-friend-locked')}
           </button>
         </div>
@@ -417,9 +334,13 @@ export function PlayScreen(): JSX.Element {
                 onClick={() => {
                   activateGame(minigame, unlocked);
                 }}
-                className={`tap-raised flex min-h-24 w-full flex-col justify-between gap-2 rounded-[1.5rem] p-3 text-left ${
-                  unlocked ? 'bg-card text-ink' : 'tap-locked bg-[#F3EDE0] text-muted'
-                }`}
+                className={tapClass(
+                  'custom',
+                  'none',
+                  `flex min-h-24 w-full flex-col justify-between gap-2 rounded-[1.5rem] p-3 text-left ${
+                    unlocked ? 'bg-card text-ink' : 'tap-locked bg-[#F3EDE0] text-muted'
+                  }`,
+                )}
               >
                 <span className="font-display text-base font-semibold leading-tight sm:text-lg">
                   {title}
@@ -430,7 +351,7 @@ export function PlayScreen(): JSX.Element {
                   </span>
                 ) : (
                   <span className="flex items-center gap-1.5 text-xs font-bold">
-                    <LockIcon />
+                    <LockIcon size={18} />
                     {condition}
                   </span>
                 )}
@@ -448,6 +369,6 @@ export function PlayScreen(): JSX.Element {
           <p className="font-display text-lg text-ink">{lockedMessage ?? levelUpBanner}</p>
         </div>
       )}
-    </main>
+    </Screen>
   );
 }

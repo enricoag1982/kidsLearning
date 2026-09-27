@@ -1,13 +1,13 @@
 import type { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import { animalFriends, totalStars } from '@chess-kids/core';
-import { useAppStore, useServices } from '../app/store.ts';
+import { useAppStore } from '../app/store.ts';
 import { characterName, tContent } from '../content-text.ts';
 import { CharacterIcon } from './art/characters.tsx';
-import { ReplayButton } from './ReplayButton.tsx';
-import { SpeechBubble } from './SpeechBubble.tsx';
+import { NarratedBubble } from './ds/NarratedBubble.tsx';
 import { StarsRow } from './StarsRow.tsx';
-import { useNarratedText } from './useNarratedText.ts';
+import { tapClass } from './ds/tap.ts';
+import { BlankScreen } from './ds/Screen.tsx';
 
 /**
  * Today session's closing screen (domain-model.md §3.3 "session summary"): stars earned this
@@ -16,7 +16,6 @@ import { useNarratedText } from './useNarratedText.ts';
  */
 export function SessionSummaryScreen(): JSX.Element {
   const { t } = useTranslation();
-  const services = useServices();
   const journey = useAppStore((state) => state.journey);
   const progress = useAppStore((state) => state.progress);
   const startTotalStars = useAppStore((state) => state.todaySessionStartTotalStars);
@@ -25,10 +24,9 @@ export function SessionSummaryScreen(): JSX.Element {
   const finishToday = useAppStore((state) => state.finishToday);
 
   const bubbleText = t('session.summary-closing');
-  const replay = useNarratedText(services.narrator, bubbleText);
 
   if (!journey) {
-    return <main className="min-h-dvh bg-cream" />;
+    return <BlankScreen />;
   }
 
   const starsEarned = Math.max(0, totalStars(progress) - startTotalStars);
@@ -83,15 +81,21 @@ export function SessionSummaryScreen(): JSX.Element {
         </div>
       ))}
 
-      <div className="flex flex-col items-center gap-3 sm:flex-row">
-        <SpeechBubble text={bubbleText} avatarClassName="h-12 w-12" bubbleClassName="text-lg" />
-        <ReplayButton onClick={replay} label={t('exercise.replay')} />
-      </div>
+      <NarratedBubble
+        text={bubbleText}
+        layout="center-row"
+        avatarClassName="h-12 w-12"
+        bubbleClassName="text-lg"
+      />
 
       <button
         type="button"
         onClick={finishToday}
-        className="tap-raised tap-go mt-auto h-20 w-full max-w-lg rounded-3xl bg-go font-display text-xl font-semibold text-white"
+        className={tapClass(
+          'custom',
+          'go',
+          'mt-auto h-20 w-full max-w-lg rounded-3xl font-display text-xl font-semibold',
+        )}
       >
         {t('session.summary-done')}
       </button>

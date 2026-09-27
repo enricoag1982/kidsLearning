@@ -1,124 +1,59 @@
-import { useEffect, useState } from 'react';
 import type { CSSProperties, JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isDue, lessonStatus, totalStars } from '@chess-kids/core';
 import { useAppStore, useServices } from '../app/store.ts';
 import { avatarName, characterName, tContent } from '../content-text.ts';
 import { characterPieceOrNull } from './art/character-meta.ts';
-import { avatarBackground } from './art/avatar-meta.ts';
-import { AvatarIcon } from './art/avatars.tsx';
 import { InstallBanner } from './InstallBanner.tsx';
 import { RankPill } from './RankPill.tsx';
-import { ReplayButton } from './ReplayButton.tsx';
-import { SpeechBubble } from './SpeechBubble.tsx';
+import { ReplayButton } from './ds/ReplayButton.tsx';
+import { SpeechBubble } from './ds/SpeechBubble.tsx';
 import { StarsPill } from './StarsPill.tsx';
 import { StreakPill } from './StreakPill.tsx';
-import { useNarratedText } from './useNarratedText.ts';
+import { useNarratedText } from './ds/useNarratedText.ts';
+import { PlayIcon, Svg, SwitchPlayerIcon } from './ds/icons.tsx';
+import { tapClass } from './ds/tap.ts';
+import { BlankScreen, RoundIconButton } from './ds/Screen.tsx';
+import { AvatarBadge } from './ds/AvatarBadge.tsx';
+import { useAsync } from './ds/useAsync.ts';
 
-function PlayIcon(): JSX.Element {
-  return (
-    <svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M7 4l13 8-13 8z" fill="currentColor" />
-    </svg>
-  );
-}
-
-function SwitchPlayerIcon(): JSX.Element {
-  return (
-    <svg
-      width="28"
-      height="28"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <circle cx="9" cy="8" r="3.5" />
-      <path d="M2.5 20a6.5 6.5 0 0 1 13 0" />
-      <path d="M16 4.5a3.5 3.5 0 0 1 0 7" />
-      <path d="M18 14a6 6 0 0 1 3.5 6" />
-    </svg>
-  );
-}
-
+// Home's own tile icons (design-r2-web.md PR B: "Home tile icons stay in HomeScreen on the same
+// base") — one-off shapes only Home uses, built on the shared `Svg` icon base.
 function JourneyIcon(): JSX.Element {
   return (
-    <svg
-      width="32"
-      height="32"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#2E7D5B"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
+    <Svg size={32} stroke="#2E7D5B">
       <path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2-6-2z" />
       <path d="M9 4v14" />
       <path d="M15 6v14" />
-    </svg>
+    </Svg>
   );
 }
 
 function PracticeTileIcon(): JSX.Element {
   return (
-    <svg
-      width="32"
-      height="32"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#B8561A"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
+    <Svg size={32} stroke="#B8561A">
       <path d="M12 3v3M5.6 5.6l2.1 2.1M3 12h3M18.9 5.6l-2.1 2.1M21 12h-3" />
       <circle cx={12} cy={16} r={5} />
-    </svg>
+    </Svg>
   );
 }
 
 function PlayTileIcon(): JSX.Element {
   return (
-    <svg
-      width="32"
-      height="32"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#B8561A"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
+    <Svg size={32} stroke="#B8561A">
       <rect x={3} y={3} width={18} height={18} rx={3} />
       <path d="M3 12h18M12 3v18" />
-    </svg>
+    </Svg>
   );
 }
 
 function DenTileIcon(): JSX.Element {
   return (
-    <svg
-      width="32"
-      height="32"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#5B3F7A"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
+    <Svg size={32} stroke="#5B3F7A">
       <path d="M3 11l9-7 9 7" />
       <path d="M5 10v10h14V10" />
       <path d="M10 20v-5h4v5" />
-    </svg>
+    </Svg>
   );
 }
 
@@ -152,7 +87,11 @@ function HomeTile({
           '--tap-ledge': ledge,
         } as CSSProperties
       }
-      className="tap-raised flex min-h-24 flex-col items-center justify-center gap-2 rounded-[2rem] py-4"
+      className={tapClass(
+        'custom',
+        'none',
+        'flex min-h-24 flex-col items-center justify-center gap-2 rounded-[2rem] py-4',
+      )}
     >
       <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white sm:h-16 sm:w-16">
         {icon}
@@ -177,19 +116,12 @@ export function HomeScreen(): JSX.Element {
   const goToPractice = useAppStore((state) => state.goToPractice);
   const goToPlay = useAppStore((state) => state.goToPlay);
   const goToDen = useAppStore((state) => state.goToDen);
-  const [offlineReady, setOfflineReady] = useState(false);
-
-  useEffect(() => {
-    // jsdom (unit tests) and some browsers have no `serviceWorker`; skip the status line there.
-    if (!('serviceWorker' in navigator)) return;
-    let cancelled = false;
-    void navigator.serviceWorker.ready.then(() => {
-      if (!cancelled) setOfflineReady(true);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  // jsdom (unit tests) and some browsers have no `serviceWorker`; skip the status line there.
+  const { value: offlineReady = false } = useAsync(
+    () => navigator.serviceWorker.ready.then(() => true),
+    [],
+    'serviceWorker' in navigator,
+  );
 
   const next = journey?.next ?? null;
   const nextProgress = next ? progress.find((entry) => entry.lessonId === next.id) : undefined;
@@ -226,7 +158,7 @@ export function HomeScreen(): JSX.Element {
 
   if (!profile || !journey) {
     // First render before `init()` resolves; a blank cream screen for an instant beats a flash.
-    return <main className="min-h-dvh bg-cream" />;
+    return <BlankScreen />;
   }
 
   const showStartButton = nextStep !== null || hasWarmUp;
@@ -246,30 +178,25 @@ export function HomeScreen(): JSX.Element {
 
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div
-            role="img"
-            aria-label={t('home.avatar-alt', { name: avatarName(t, profile.avatar) })}
+          <AvatarBadge
+            avatar={profile.avatar}
+            label={t('home.avatar-alt', { name: avatarName(t, profile.avatar) })}
             className="h-14 w-14 flex-shrink-0 overflow-hidden rounded-full p-2 sm:h-16 sm:w-16"
-            style={{ backgroundColor: avatarBackground(profile.avatar) }}
-          >
-            <AvatarIcon avatar={profile.avatar} />
-          </div>
+          />
           <span className="font-display text-2xl text-ink sm:text-3xl">{profile.nickname}</span>
         </div>
         <div className="flex flex-wrap items-center justify-end gap-3">
           {streak && streak.current >= 2 && <StreakPill days={streak.current} />}
           <RankPill rank={journey.rank} />
           <StarsPill count={stars} />
-          <button
-            type="button"
-            aria-label={t('home.switch-player')}
+          <RoundIconButton
+            label={t('home.switch-player')}
             onClick={() => {
               void goToPicker();
             }}
-            className="tap-raised flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-card text-ink"
           >
             <SwitchPlayerIcon />
-          </button>
+          </RoundIconButton>
         </div>
       </div>
 
@@ -286,7 +213,11 @@ export function HomeScreen(): JSX.Element {
             onClick={() => {
               void startToday();
             }}
-            className="tap-raised tap-today flex h-28 flex-col items-center justify-center gap-1 rounded-[2rem] bg-today px-8 text-white sm:h-36 sm:w-96"
+            className={tapClass(
+              'custom',
+              'today',
+              'flex h-28 flex-col items-center justify-center gap-1 rounded-[2rem] px-8 sm:h-36 sm:w-96',
+            )}
           >
             <span className="flex items-center gap-3 font-display text-2xl font-semibold sm:text-3xl">
               <PlayIcon />
