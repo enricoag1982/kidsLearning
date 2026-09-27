@@ -1,0 +1,27 @@
+import { narrowStep, widen } from '../adapt.ts';
+import type { ChessKind } from '../index.ts';
+import { moveCountStars, moveHint, playMove } from '../static-move.ts';
+import { initState } from '../../state.ts';
+import type { CollectStarsDef, MoveAction, MoveOutcome } from './def.ts';
+
+export const collectStarsKind: ChessKind<CollectStarsDef, MoveAction, MoveOutcome> = {
+  type: 'collect-stars',
+  input: 'static-move',
+
+  init(def) {
+    return initState(def);
+  },
+
+  act(state, action, ctx) {
+    return narrowStep(playMove(widen(state), ctx, action.move));
+  },
+
+  hint(state, level, ctx) {
+    const bumped = { ...state, hintLevel: level };
+    return { state: bumped, hint: moveHint(widen(bumped), ctx, level) };
+  },
+
+  stars(state) {
+    return moveCountStars(state.moves, state.def.stars3, state.def.stars2, state.hintLevel);
+  },
+};

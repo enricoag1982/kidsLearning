@@ -11,15 +11,12 @@ export type {
   ExerciseDef,
 } from './types.ts';
 
-export type {
-  ExerciseState,
-  MoveOutcome,
-  SelectionResult,
-  PlaceOutcome,
-  PalettePiece,
-  Hint,
-  MateInNOutcome,
-} from './engine.ts';
+export type { ExerciseState } from './engine.ts';
+export type { MoveOutcome } from './kinds/static-move.ts';
+export type { MateInNOutcome } from './kinds/mate-in-n/def.ts';
+export type { Hint } from './hint.ts';
+export type { SelectionResult } from './kinds/select-squares/def.ts';
+export type { PlaceOutcome, PalettePiece } from './kinds/setup/def.ts';
 export {
   startExercise,
   exerciseMoves,
@@ -40,8 +37,33 @@ export {
 export type { SolverMove } from './solver.ts';
 export { solve, optimalMoves } from './solver.ts';
 
+// Exercise-kind registry (`kinds/index.ts`): the only exercise-type dispatch. `ExerciseKind` /
+// `ExerciseStateOf` (`kind.ts` / `state.ts`) are subject-free and move to `platform-core` in R4.
+export type { ExerciseProgress, ExerciseKind, Step, TextKeyRef, KindInput } from './kind.ts';
+export type { ExerciseStateOf } from './state.ts';
+export type {
+  ExerciseType,
+  DefOf,
+  ExerciseAction,
+  ChessKind,
+  ActionOf,
+  OutcomeOf,
+  AnyExerciseKind,
+} from './kinds/index.ts';
+export { EXERCISE_KINDS, kindOf } from './kinds/index.ts';
+export type { MoveAction, AnswerOutcome } from './kinds/base.ts';
+export type {
+  ToggleAction,
+  SubmitAction,
+  SelectSquaresAction,
+  SelectOutcome,
+} from './kinds/select-squares/def.ts';
+export type { AnswerYesNoAction } from './kinds/yes-no/def.ts';
+export type { AnswerChoiceAction } from './kinds/choice/def.ts';
+export type { PlaceAction } from './kinds/setup/def.ts';
+
+export { kingSquare } from '../chess/facts/pieces.ts';
 export {
-  kingSquare,
   isAttacked,
   isDefended,
   isHanging,
@@ -53,7 +75,10 @@ export {
   isInsufficientMaterial,
   canCastle,
   canEnPassant,
-} from './facts.ts';
+} from '../chess/facts/position.ts';
+
+export type { StaticGoalSource } from './modes/static/def.ts';
+export { staticGoalExercise } from './modes/static/def.ts';
 
 export type { StaticCaptureGameDef, MiniGameGoal, GameState, GameOutcome } from './minigame.ts';
 export { startStaticCaptureGame, playGameMove, gameResult, gameStars } from './minigame.ts';

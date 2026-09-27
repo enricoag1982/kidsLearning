@@ -207,6 +207,25 @@ export {
   toFen,
   FenError,
   chessJsRules,
+  PIECE_BY_LETTER,
+} from './domain/chess/index.ts';
+
+// Chess facts (`domain/chess/facts/`): pure predicates/derivations shared by the exercise engine,
+// solver and content build — subject-free, moves to `platform-core` in R4.
+export type { Goal, ReplayedLine, FailedReplay, ReplayResult } from './domain/chess/index.ts';
+export {
+  enemyCount,
+  piecesEqual,
+  hasKing,
+  hasPieceOf,
+  normalizeSan,
+  sameSan,
+  findMoveBySan,
+  givesCheck,
+  castlingMoves,
+  enPassantMoves,
+  doubleStepBefore,
+  replaySanLine,
 } from './domain/chess/index.ts';
 
 export type { VariantRules } from './domain/variant/index.ts';
@@ -229,8 +248,38 @@ export type {
   GameState,
   SeriesGameState,
   VersusState,
+  StaticGoalSource,
 } from './domain/exercise/index.ts';
+
+// Exercise-kind registry: the only exercise-type dispatch (`domain/exercise/kinds/index.ts`).
+export type {
+  ExerciseProgress,
+  ExerciseKind,
+  Step,
+  TextKeyRef,
+  KindInput,
+  ExerciseStateOf,
+  ExerciseType,
+  DefOf,
+  ExerciseAction,
+  ChessKind,
+  ActionOf,
+  OutcomeOf,
+  AnyExerciseKind,
+  MoveAction,
+  AnswerOutcome,
+  ToggleAction,
+  SubmitAction,
+  SelectSquaresAction,
+  SelectOutcome,
+  AnswerYesNoAction,
+  AnswerChoiceAction,
+  PlaceAction,
+} from './domain/exercise/index.ts';
+export { EXERCISE_KINDS, kindOf } from './domain/exercise/index.ts';
+
 export {
+  staticGoalExercise,
   startExercise,
   exerciseMoves,
   playMove,

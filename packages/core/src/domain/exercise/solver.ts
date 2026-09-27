@@ -1,5 +1,7 @@
 import type { Move } from '../chess/rules.ts';
 import type { Piece, Position, Square } from '../chess/types.ts';
+import type { Goal } from '../chess/facts/goals.ts';
+import { isGoalReached } from '../chess/facts/goals.ts';
 import type { VariantRules } from '../variant/rules.ts';
 import { applyKidMove } from './apply-move.ts';
 import type { ExerciseDef } from './types.ts';
@@ -8,16 +10,6 @@ import type { ExerciseDef } from './types.ts';
 export interface SolverMove {
   readonly from: Square;
   readonly to: Square;
-}
-
-type Goal = 'collect-stars' | 'capture';
-
-function isGoalReached(position: Position, goal: Goal): boolean {
-  if (goal === 'collect-stars') {
-    return position.markers.stars.length === 0;
-  }
-  const kidColor = position.toMove;
-  return !Object.values(position.pieces).some((piece) => piece.color !== kidColor);
 }
 
 /**
@@ -106,7 +98,8 @@ export function solve(
   goal: Goal,
   maxDepth = 12,
 ): SolverMove[] | null {
-  if (isGoalReached(position, goal)) {
+  const kidColor = position.toMove;
+  if (isGoalReached(position, goal, kidColor)) {
     return [];
   }
 
@@ -131,7 +124,7 @@ export function solve(
     for (const node of frontier) {
       for (const move of legalMoves(node.position)) {
         const nextPosition = applyForSearch(node.position, move, rules);
-        if (isGoalReached(nextPosition, goal)) {
+        if (isGoalReached(nextPosition, goal, kidColor)) {
           return pathTo({
             position: nextPosition,
             move: { from: move.from, to: move.to },
@@ -151,9 +144,14 @@ export function solve(
   return null;
 }
 
+/** True for the two exercise types that are also a static-opponent `Goal` (`staticGoalExercise`'s domain). */
+function isGoalType(type: ExerciseDef['type']): type is Goal {
+  return type === 'collect-stars' || type === 'capture';
+}
+
 /** Shortest solve length for `def` (collect-stars / capture only); `null` when unsolvable. Used by content tests. */
 export function optimalMoves(def: ExerciseDef, rules: VariantRules): number | null {
-  if (def.type !== 'collect-stars' && def.type !== 'capture') {
+  if (!isGoalType(def.type)) {
     return null;
   }
   const line = solve(def.position, rules, def.type);
