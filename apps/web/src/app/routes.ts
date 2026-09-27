@@ -23,7 +23,7 @@ export type PlainRouteName =
   | 'today-summary'
   | 'placement-offer';
 
-/** Every top-level screen name (`v4 refactor-v4.md` R2 PR C: replaces the old `Screen` union). */
+/** Every top-level screen name. */
 export type RouteName =
   | PlainRouteName
   | 'password'
@@ -35,10 +35,8 @@ export type RouteName =
   | 'placement'
   | 'time-limit';
 
-/** A navigable place in the app: the route stack's own frames (`app/slices/nav.ts`) carry these —
- * no more origin fields or flat copies of a screen's own data on the store. `today` marks a
- * lesson/mini-game opened as a Today-session activity (`startToday`): `exitLesson`/`exitMiniGame`
- * abandon the whole session instead of a plain back(). */
+/** A navigable place in the app, carried on the route stack (`app/slices/nav.ts`). `today` marks a
+ * Today-session activity: `exitLesson`/`exitMiniGame` abandon the whole session, not a plain back(). */
 export type Route =
   | { readonly name: PlainRouteName }
   | { readonly name: 'password'; readonly purpose: 'parent-area' | 'more-time' }
@@ -68,19 +66,16 @@ export type Route =
   | {
       readonly name: 'time-limit';
       readonly status: TimeLimitStatus | null;
-      /** The blocked navigation, replayed by `grantMoreTimeAndResume` without re-gating once the
-       * parent grants more time — data, not a closure (a `pendingActivity` function could not
-       * survive `setRoute`/devtools/a future persisted stack). */
+      /** The blocked navigation, replayed by `grantMoreTimeAndResume` once granted, unchecked. */
       readonly resume: NavOp | null;
     };
 
-/** One requested stack change (`app/slices/nav.ts`): `navigate`/`replace`/`back`/`reset` each build
- * one of these, and it is what a gate remembers as `time-limit`'s `resume`. */
+/** One requested stack change (`app/slices/nav.ts`): `navigate`/`replace`/`back` each build one of
+ * these, and it is what a gate remembers as `time-limit`'s `resume`. */
 export type NavOp =
   | { readonly op: 'push'; readonly route: Route }
   | { readonly op: 'replace'; readonly route: Route }
-  | { readonly op: 'back'; readonly to?: RouteName; readonly gate?: boolean }
-  | { readonly op: 'reset'; readonly routes: readonly Route[] };
+  | { readonly op: 'back'; readonly to?: RouteName; readonly gate?: boolean };
 
 interface RouteMeta {
   /** Counted by `TimeTracker` while a profile is active. */
@@ -94,8 +89,7 @@ interface RouteMeta {
   readonly gated?: true;
 }
 
-/** Per-route flags, replacing `store.ts`'s `CALM_SCREENS`/`isCalmScreen`, `TimeTracker`'s
- * `isTrackedScreen`, and `AppUpdater`'s `isSafeUpdateScreen`. */
+/** Per-route flags read by `TimeTracker`, `AppNotice` and `AppUpdater`. */
 export const ROUTE_META: Readonly<Record<RouteName, RouteMeta>> = {
   loading: { tracked: false },
   'first-run': { tracked: false },

@@ -1,6 +1,6 @@
 import type { AnimalFriend, TodaySessionPlan } from '@chess-kids/core';
 import { animalFriends, checkRewards, loadTodaySession, totalStars } from '@chess-kids/core';
-import type { AppGet, AppSet } from '../store.ts';
+import { backAndRefresh, type SliceCreator } from '../store.ts';
 import { enterLesson } from './learn.ts';
 
 export interface TodaySlice {
@@ -15,10 +15,8 @@ export interface TodaySlice {
   /** `journey.rank.id` snapshotted at `startToday`, so the summary can show a rank-up. */
   readonly todaySessionStartRankId: string | null;
 
-  /**
-   * Home's "Start today" (domain-model.md §3.3): plans the session (`loadTodaySession`), snapshots
-   * stars/friends/rank for the summary, and opens its first activity. No-op without a profile.
-   */
+  /** Home's "Start today" (domain-model.md §3.3): plans the session (`loadTodaySession`), snapshots
+   * stars/friends/rank for the summary, and opens its first activity. No-op without a profile. */
   readonly startToday: () => Promise<void>;
   /** Moves to the Today session's next activity, or the summary once there is none left. */
   readonly advanceToday: () => Promise<void>;
@@ -28,24 +26,17 @@ export interface TodaySlice {
   readonly finishToday: () => void;
 }
 
-export function createTodaySlice(set: AppSet, get: AppGet): TodaySlice {
-  /**
-   * Opens a Today session's activity at `index` (`todayPlan.activities`), or the summary once
-   * `index` runs past the end. Shared by `startToday`/`advanceToday`. `index === 0` pushes (the
-   * session's first activity, on top of Home); every later activity replaces the current one in
-   * place, so "back" never unwinds through the whole session. Each activity is its own gate
-   * checkpoint (`navigate`/`replace` both check `ROUTE_META`'s gated routes) — the session pauses
-   * at "See you tomorrow" instead of continuing once the limit is reached between two activities.
-   */
+export const createTodaySlice: SliceCreator<TodaySlice> = (set, get) => {
+  /** Opens the Today activity at `index`, or the summary past the end. `index === 0` pushes; every
+   * later activity replaces, so "back" never unwinds the whole session. */
   async function enterTodayActivity(index: number): Promise<void> {
     const { services } = get();
     const plan = get().todayPlan;
     const activity = plan?.activities[index];
     const enter = index === 0 ? get().navigate : get().replace;
     if (!plan || !activity) {
-      // rewards.md §4 "session ended" event: folds the session into the streak/badges one more
-      // time (picks up anything only true once the whole session is done, e.g. Warm-up Champ) —
-      // played minutes are already logged continuously by `TimeTracker`, not tallied here.
+      // rewards.md §4 "session ended": folds the session into streak/badges one more time; played
+      // minutes are already logged continuously by `TimeTracker`, not tallied here.
       const { profile } = get();
       if (profile) {
         await checkRewards(services.deps, profile.id);
@@ -72,6 +63,11 @@ export function createTodaySlice(set: AppSet, get: AppGet): TodaySlice {
       return;
     }
     await enter({ name: 'minigame', miniGameId, today: true });
+  }
+
+  function exitToday(): void {
+    set({ todayPlan: null, todayActivityIndex: 0 });
+    backAndRefresh(get, 'home', { gate: true })();
   }
 
   return {
@@ -108,16 +104,7 @@ export function createTodaySlice(set: AppSet, get: AppGet): TodaySlice {
       await enterTodayActivity(get().todayActivityIndex + 1);
     },
 
-    leaveToday() {
-      set({ todayPlan: null, todayActivityIndex: 0 });
-      void get().back('home', { gate: true });
-      void get().refreshProgress();
-    },
-
-    finishToday() {
-      set({ todayPlan: null, todayActivityIndex: 0 });
-      void get().back('home', { gate: true });
-      void get().refreshProgress();
-    },
+    leaveToday: exitToday,
+    finishToday: exitToday,
   };
-}
+};

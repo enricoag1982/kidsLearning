@@ -1,15 +1,11 @@
-import type {
-  ConceptStats,
-  EarnedBadge,
-  GameRecord,
-  Journey,
-  LessonProgress,
-  MiniGameProgress,
-  Profile,
-  ProfileSettings,
-  Streak,
-} from '@chess-kids/core';
 import {
+  type ConceptStats,
+  type GameRecord,
+  type Journey,
+  type LessonProgress,
+  type MiniGameProgress,
+  type Profile,
+  type ProfileSettings,
   createProfile,
   DEFAULT_PROFILE_SETTINGS,
   getProfileSettings,
@@ -21,18 +17,16 @@ import {
   selectProfile,
 } from '@chess-kids/core';
 import { requestPersistentStorageIfNeeded } from '../../adapters/persistent-storage.ts';
-import type { AppGet, AppSet } from '../store.ts';
-import { loadRewards } from './rewards.ts';
+import type { AppGet, AppSet, SliceCreator } from '../store.ts';
+import { loadRewards, type RewardsSlice } from './rewards.ts';
 
 export interface ProfileSlice {
   /** Every profile on this device (picker tiles, parent area's children list). */
   readonly profiles: readonly Profile[];
   /** The kid currently playing (Home / Lesson); `null` outside those screens. */
   readonly profile: Profile | null;
-  /** `profile`'s own parent-set settings (app-structure.md §11), loaded alongside it —
-   * `ExerciseStep`'s Hint button and `PlayScreen`'s computer-level default both read this;
-   * `DEFAULT_PROFILE_SETTINGS` outside a selected profile. Voice is applied as a side effect at
-   * load time (`services.setVoiceEnabled`), not read from here (`gated-narrator.ts` owns it). */
+  /** `profile`'s own parent-set settings (app-structure.md §11); `DEFAULT_PROFILE_SETTINGS`
+   * outside a selected profile. Voice is applied at load time, not read from here. */
   readonly activeProfileSettings: ProfileSettings;
   readonly progress: readonly LessonProgress[];
   /** This profile's standalone mini-game progress (Play screen's best-stars tiles). */
@@ -54,23 +48,18 @@ export interface ProfileSlice {
   readonly selectProfileAndHome: (profileId: string) => Promise<void>;
   /** Re-reads the profiles list without changing screen (parent area, after rename/avatar/delete/add). */
   readonly refreshProfiles: () => Promise<void>;
-  /**
-   * Re-reads saved progress (lesson + mini-game) and the derived Journey from storage, e.g. after
-   * a lesson or a standalone mini-game session updates it.
-   */
+  /** Re-reads saved progress (lesson + mini-game) and the derived Journey from storage, e.g. after
+   * a lesson or a standalone mini-game session updates it. */
   readonly refreshProgress: () => Promise<void>;
 }
 
-/** The per-profile data `activateProfile`/`refreshProgress` load and apply together. */
-interface ProfileData {
-  readonly progress: readonly LessonProgress[];
-  readonly miniGameProgress: readonly MiniGameProgress[];
-  readonly gameRecords: readonly GameRecord[];
-  readonly conceptStats: readonly ConceptStats[];
-  readonly journey: Journey | null;
-  readonly earnedBadges: readonly EarnedBadge[];
-  readonly streak: Streak | null;
-}
+/** The per-profile data `activateProfile`/`refreshProgress` load and apply together — the same
+ * fields `ProfileSlice` and `RewardsSlice` already declare. */
+type ProfileData = Pick<
+  ProfileSlice,
+  'progress' | 'miniGameProgress' | 'gameRecords' | 'conceptStats' | 'journey'
+> &
+  Pick<RewardsSlice, 'earnedBadges' | 'streak'>;
 
 /** One profile's progress/journey/rewards, loaded in parallel — the shared read behind
  * `activateProfile` and `refreshProgress`. */
@@ -96,13 +85,8 @@ async function loadProfileData(get: AppGet, profileId: string): Promise<ProfileD
   };
 }
 
-/**
- * Makes `profile` the one playing — the one profile-load path shared by the M1-upgrade path
- * (`finishFirstRun`), `finishNewPlayer`, and `selectProfileAndHome` (previously 4 near-identical
- * copies): applies `settings`'s voice/nickname side effects (app-structure.md §11 "Settings effect
- * now"), loads its progress data (`loadProfileData`), and resets the celebration queue for this
- * sitting. Leaves `screen`/`profiles` to the caller — they differ per entry point.
- */
+/** Makes `profile` the one playing: settings side effects, progress load, celebration reset.
+ * Shared by `finishFirstRun`, `finishNewPlayer`, `selectProfileAndHome`. */
 async function activateProfile(
   set: AppSet,
   get: AppGet,
@@ -122,7 +106,24 @@ async function activateProfile(
   });
 }
 
-export function createProfileSlice(set: AppSet, get: AppGet): ProfileSlice {
+/** Re-reads the profiles list and stores it; the shared body behind `refreshProfiles` and every
+ * other call site that just needs a fresh list applied. */
+export async function reloadProfiles(set: AppSet, get: AppGet): Promise<readonly Profile[]> {
+  const profiles = await listProfiles(get().services.deps);
+  set({ profiles });
+  return profiles;
+}
+
+/** Selects `profile` and lands on Home; shared by `selectProfileAndHome` and `finishFirstRun`. */
+async function selectAndGoHome(set: AppSet, get: AppGet, profile: Profile): Promise<void> {
+  const { services } = get();
+  await selectProfile(services.deps, profile.id);
+  const settings = await getProfileSettings(services.deps, profile.id);
+  await activateProfile(set, get, profile, settings);
+  get().reset({ name: 'home' });
+}
+
+export const createProfileSlice: SliceCreator<ProfileSlice> = (set, get) => {
   return {
     profiles: [],
     profile: null,
@@ -134,22 +135,15 @@ export function createProfileSlice(set: AppSet, get: AppGet): ProfileSlice {
     journey: null,
 
     async finishFirstRun() {
-      const { services } = get();
-      const profiles = await listProfiles(services.deps);
+      const profiles = await reloadProfiles(set, get);
       if (profiles.length === 0) {
-        set({ profiles });
         void get().navigate({ name: 'new-player' });
         return;
       }
       const [only] = profiles;
       if (profiles.length === 1 && only) {
-        // M1-upgrade path: an existing single profile with no parent lock yet skips profile
-        // creation and goes straight to Home.
-        await selectProfile(services.deps, only.id);
-        const settings = await getProfileSettings(services.deps, only.id);
-        await activateProfile(set, get, only, settings);
-        set({ profiles });
-        get().reset({ name: 'home' });
+        // A single existing profile with no parent lock yet skips creation, straight to Home.
+        await selectAndGoHome(set, get, only);
         return;
       }
       await get().goToPicker();
@@ -158,46 +152,32 @@ export function createProfileSlice(set: AppSet, get: AppGet): ProfileSlice {
     async finishNewPlayer(nickname: string, avatar: string) {
       const { services } = get();
       const profile = await createProfile(services.deps, nickname, avatar);
-      // Storage eviction (non-functional.md §1): asks once, on whichever
-      // profile creation happens first on this device — a no-op every time after (see
-      // `requestPersistentStorageIfNeeded`'s own doc comment).
+      // Storage eviction (non-functional.md §1): a no-op after the first profile on this device.
       await requestPersistentStorageIfNeeded(services.deps);
-      // Where the wizard returns to (picker vs parent area's "Add child") is read straight off the
-      // stack — `startNewPlayer` pushed 'new-player' on top of whichever it was.
+      // Return target (picker vs parent area) is read off the stack: 'new-player' sits on top.
       const { stack } = get();
       const returnsToParent = stack[stack.length - 2]?.name === 'parent';
       if (returnsToParent) {
-        const profiles = await listProfiles(services.deps);
-        set({ profiles });
+        await reloadProfiles(set, get);
         void get().back();
         return;
       }
       await selectProfile(services.deps, profile.id);
-      // A brand-new profile has no stored settings yet: DEFAULT_PROFILE_SETTINGS applies as-is
-      // (voice on), no need to round-trip `getProfileSettings` for a row that cannot exist yet.
+      // A brand-new profile has no stored settings yet; defaults apply as-is (voice on).
       await activateProfile(set, get, profile, DEFAULT_PROFILE_SETTINGS);
-      const profiles = await listProfiles(services.deps);
-      set({ profiles });
-      // app-structure.md §3 / domain-model.md §3.2: offered once, right after creating a new
-      // player (not when a parent added a child from the parent area — that path stays on
-      // `finishNewPlayer`'s own early return above, straight back to 'parent').
+      await reloadProfiles(set, get);
+      // domain-model.md §3.2: placement offered once, right after creating a new player.
       get().reset({ name: 'home' }, { name: 'placement-offer' });
     },
 
     async selectProfileAndHome(profileId: string) {
-      const { services } = get();
-      const profile = await services.deps.profiles.get(profileId);
+      const profile = await get().services.deps.profiles.get(profileId);
       if (!profile) return;
-      await selectProfile(services.deps, profileId);
-      const settings = await getProfileSettings(services.deps, profileId);
-      await activateProfile(set, get, profile, settings);
-      get().reset({ name: 'home' });
+      await selectAndGoHome(set, get, profile);
     },
 
     async refreshProfiles() {
-      const { services } = get();
-      const profiles = await listProfiles(services.deps);
-      set({ profiles });
+      await reloadProfiles(set, get);
     },
 
     async refreshProgress() {
@@ -206,4 +186,4 @@ export function createProfileSlice(set: AppSet, get: AppGet): ProfileSlice {
       set(await loadProfileData(get, profile.id));
     },
   };
-}
+};
