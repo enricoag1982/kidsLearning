@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { act, fireEvent, render, screen } from '@testing-library/react';
-import App from './App.tsx';
+import { act, fireEvent, screen } from '@testing-library/react';
 import type { AppUpdate } from '@learn/platform-web/adapters/app-update.ts';
 import { fixtureContentSource, fixtureLesson } from '@learn/subject-chess/web/testing/fixtures.ts';
-import { createTestServices } from './testing/test-services.ts';
-import { pickProfileFromPicker, seedReturningProfile } from './testing/app-test-helpers.ts';
-import { renderApp } from './testing/render-app.tsx';
+import { createTestServices } from '@learn/subject-chess/web/testing/test-services.ts';
+import {
+  pickProfileFromPicker,
+  seedReturningProfile,
+} from '@learn/subject-chess/web/testing/app-test-helpers.ts';
+import { renderApp, renderAppRaw } from '@learn/subject-chess/web/testing/render-app.tsx';
 
 describe('App', () => {
   it('picker → Home: title visible, offline status hidden until a service worker is ready', async () => {
@@ -61,7 +63,7 @@ describe('App', () => {
       },
       onUpdateReady: () => () => undefined,
     };
-    render(<App services={services} appUpdate={appUpdate} />);
+    renderAppRaw(services, { appUpdate });
 
     await screen.findByRole('heading', { name: "Who's playing today?" });
     await pickProfileFromPicker('Mia');
@@ -100,7 +102,7 @@ describe('App', () => {
         return () => undefined;
       },
     };
-    render(<App services={services} appUpdate={appUpdate} />);
+    renderAppRaw(services, { appUpdate });
     await screen.findByRole('heading', { name: "Who's playing today?" });
     await pickProfileFromPicker('Mia');
     await screen.findByRole('heading', { level: 1, name: 'Chess for Kids' });

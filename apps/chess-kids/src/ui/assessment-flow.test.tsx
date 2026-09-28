@@ -1,14 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import type { ContentSource, Track, TracksCatalog, World } from '@learn/platform-core';
 import type { Lesson } from '@learn/subject-chess';
 import type { YesNoDef } from '@learn/subject-chess';
 import { parseDiagram } from '@learn/subject-chess';
-import App from '../App.tsx';
 import { fixtureExercise, fixtureLesson } from '@learn/subject-chess/web/testing/fixtures.ts';
-import { pickProfileFromPicker, seedReturningProfile } from '../testing/app-test-helpers.ts';
-import { renderApp } from '../testing/render-app.tsx';
-import { createTestServices } from '../testing/test-services.ts';
+import {
+  pickProfileFromPicker,
+  seedReturningProfile,
+} from '@learn/subject-chess/web/testing/app-test-helpers.ts';
+import { renderApp, renderAppRaw } from '@learn/subject-chess/web/testing/render-app.tsx';
+import { createTestServices } from '@learn/subject-chess/web/testing/test-services.ts';
 
 // Two worlds, three lessons: w1 (no boss) = l1 (Rhino, collect-stars) -> l2 (Elephant, yes-no);
 // w2 (no boss) = l3 (Lioness, yes-no). Distinct characters keep every Journey node's accessible
@@ -220,7 +222,7 @@ describe('Placement (M4.5)', () => {
   it('offered once after creating a new player; declining goes straight to Home', async () => {
     const { contentSource } = buildFixture();
     const services = createTestServices(contentSource);
-    render(<App services={services} />);
+    renderAppRaw(services);
 
     await completeOnboardingToPlacementOffer('Mia');
     fireEvent.click(screen.getByRole('button', { name: 'No, start at World 1' }));
@@ -231,7 +233,7 @@ describe('Placement (M4.5)', () => {
   it('passes World 1, fails World 2 (no penalty), summary, Home; Journey reflects it', async () => {
     const { contentSource, l1, l3 } = buildFixture();
     const services = createTestServices(contentSource);
-    render(<App services={services} />);
+    renderAppRaw(services);
 
     await completeOnboardingToPlacementOffer('Mia');
     fireEvent.click(screen.getByRole('button', { name: 'Yes, test me!' }));
@@ -283,7 +285,7 @@ describe('Placement (M4.5)', () => {
   it('closing mid-run ("Leave") skips the rest, keeping what already passed', async () => {
     const { contentSource, l1 } = buildFixture();
     const services = createTestServices(contentSource);
-    render(<App services={services} />);
+    renderAppRaw(services);
 
     await completeOnboardingToPlacementOffer('Mia');
     fireEvent.click(screen.getByRole('button', { name: 'Yes, test me!' }));
@@ -303,7 +305,7 @@ describe('Parent unlock (M4.5)', () => {
     const { contentSource, l2 } = buildFixture();
     const services = createTestServices(contentSource);
     const profile = await seedReturningProfile(services, 'Mia');
-    render(<App services={services} />);
+    renderAppRaw(services);
 
     fireEvent.click(await screen.findByRole('button', { name: /Grown-ups/ }));
     fireEvent.change(await screen.findByLabelText('Parent code'), { target: { value: '1234' } });
@@ -344,7 +346,7 @@ describe('Parent unlock (M4.5)', () => {
     const { contentSource, l3 } = buildFixture();
     const services = createTestServices(contentSource);
     const profile = await seedReturningProfile(services, 'Mia');
-    render(<App services={services} />);
+    renderAppRaw(services);
 
     fireEvent.click(await screen.findByRole('button', { name: /Grown-ups/ }));
     fireEvent.change(await screen.findByLabelText('Parent code'), { target: { value: '1234' } });

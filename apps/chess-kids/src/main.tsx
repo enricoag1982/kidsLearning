@@ -5,11 +5,12 @@ import '@fontsource-variable/fredoka';
 import '@fontsource-variable/nunito';
 import './index.css';
 import './app-i18n.ts';
-import App from './App.tsx';
-import { AppErrorBoundary } from './ui/AppErrorBoundary.tsx';
+import { CHESS_APP_CONFIG } from '@learn/subject-chess';
+import { chessWeb } from '@learn/subject-chess/web/chess-pack.ts';
+import App from '@learn/platform-web/App.tsx';
+import { AppErrorBoundary } from '@learn/platform-web/ui/AppErrorBoundary.tsx';
 import { createAppUpdate } from '@learn/platform-web/adapters/app-update.ts';
-import { chessWeb } from './chess-pack.ts';
-import type { SubjectWeb } from './app/subject.ts';
+import type { SubjectWeb } from '@learn/platform-web/app/subject.ts';
 
 /** Widened from `chessWeb`'s own literal-keyed `dev` so a dynamic `location.hash` can index it;
  * `chessWeb.dev` itself is `undefined` outside a dev build (`chess-pack.ts`). */
@@ -38,7 +39,7 @@ if (devScreen) {
     );
   });
 } else if (import.meta.env.DEV && location.hash.startsWith('#lesson=')) {
-  void import('./dev/LessonPreview.tsx').then(({ LessonPreview }) => {
+  void import('@learn/subject-chess/web/dev/LessonPreview.tsx').then(({ LessonPreview }) => {
     root.render(
       <StrictMode>
         <LessonPreview />
@@ -49,7 +50,7 @@ if (devScreen) {
   root.render(
     <StrictMode>
       <AppErrorBoundary>
-        <App appUpdate={appUpdate} />
+        <App appUpdate={appUpdate} pack={chessWeb} app={CHESS_APP_CONFIG} />
       </AppErrorBoundary>
     </StrictMode>,
   );
