@@ -113,6 +113,7 @@ export type {
 export type { AppDeps } from './app/use-cases.ts';
 export {
   loadProgress,
+  loadGameRecords,
   getLessonProgress,
   recordAttempt,
   recordExerciseResult,
@@ -199,6 +200,7 @@ export type {
   ExerciseStateBase,
   HintBase,
   MiniGameBase,
+  MiniGameStateBase,
 } from './domain/subject.ts';
 export type { SubjectRuntime } from './domain/runtime.ts';
 export { createSubjectRuntime } from './domain/runtime.ts';
