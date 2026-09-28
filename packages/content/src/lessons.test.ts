@@ -5,14 +5,24 @@ import {
   createVariantRules,
   optimalMoves,
   staticGoalExercise,
+  type CompiledContent,
 } from '@chess-kids/core/chess';
 import { describe, expect, it } from 'vitest';
-import { loadLocales } from './load.ts';
+import { chessContent } from './chess-content.ts';
+import { loadLocales, mergeLocales } from './load.ts';
 import { loadContent } from './lesson-load.ts';
 
 const packageDir = join(dirname(fileURLToPath(import.meta.url)), '..');
-const locales = loadLocales(join(packageDir, 'locales'));
-const content = loadContent(join(packageDir, 'lessons'), join(packageDir, 'minigames'), locales);
+const locales = mergeLocales(
+  loadLocales(join(packageDir, 'locales')),
+  loadLocales(join(packageDir, 'chess', 'locales')),
+);
+const content = loadContent<CompiledContent>(
+  join(packageDir, 'lessons'),
+  join(packageDir, 'minigames'),
+  locales,
+  chessContent,
+);
 const rules = createVariantRules(chessJsRules);
 
 describe('real content', () => {

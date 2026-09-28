@@ -1,20 +1,25 @@
 import { join } from 'node:path';
-import type { BadgeDef, TracksCatalog } from '@chess-kids/core';
-import type { CompiledContent } from '@chess-kids/core/chess';
+import type { BadgeDef, CompiledContent, TracksCatalog } from '@chess-kids/core';
 import { loadBadges } from './badges-load.ts';
-import { ContentError, compareToReference, loadLocales, type Locales } from './load.ts';
+import {
+  ContentError,
+  compareToReference,
+  loadLocales,
+  mergeLocales,
+  type Locales,
+} from './load.ts';
 import { loadContent } from './lesson-load.ts';
+import type { SubjectContent } from './subject.ts';
 import { loadTracks } from './tracks-load.ts';
 import { buildVoiceInventory, type VoiceInventory } from './voice-texts.ts';
 
-/** Every value `scripts/build.ts` and `scripts/voice-texts.ts` write to `dist/`, computed once. */
-export interface CompiledAll {
+/** Every value `scripts/build.ts` and `scripts/voice-texts.ts` write to `dist/`, computed once. `C`
+ * is the subject's own concrete content bundle (chess: exercises/demos with real board positions),
+ * inferred from the caller's own declared type — same idiom as `loadContent`'s own `C`. */
+export interface CompiledAll<C extends CompiledContent = CompiledContent> {
   /** Per-language, per-namespace locale trees — one `dist/locales/<lang>.json` per key. */
   readonly locales: Locales;
-  /** The subject's own concrete content (chess: exercises/demos with real board positions) — a
-   * build artifact, not a platform port, so unlike `ContentSource` (`packages/core`) it stays
-   * concretely typed rather than generic. */
-  readonly content: CompiledContent;
+  readonly content: C;
   readonly tracks: TracksCatalog;
   /** The subject's own extra `dist/` outputs, by file name (chess: `'bot-book.json'` ->
    * `bot.BotBook`), supplied by the caller so this file stays subject-free. */
@@ -27,30 +32,39 @@ export interface CompiledAll {
 /** Runs the whole content pipeline in memory — `scripts/build.ts`'s own compile steps, extracted so
  * both that script and `content-snapshot.test.ts` share one implementation. `extraOutputs` builds
  * each of the subject's own extra `dist/` files from `packageDir` (chess: `bot-book.json`). */
-export function compileAll(
+export function compileAll<C extends CompiledContent = CompiledContent>(
   packageDir: string,
   extraOutputs: Readonly<Record<string, (root: string) => unknown>>,
-): CompiledAll {
+  subject: SubjectContent,
+): CompiledAll<C> {
   const localesDir = join(packageDir, 'locales');
+  const chessLocalesDir = join(packageDir, 'chess', 'locales');
   const lessonsDir = join(packageDir, 'lessons');
   const minigamesDir = join(packageDir, 'minigames');
   const tracksPath = join(packageDir, 'tracks.yaml');
   const badgesPath = join(packageDir, 'badges.yaml');
 
-  const locales = loadLocales(localesDir);
+  const locales = mergeLocales(loadLocales(localesDir), loadLocales(chessLocalesDir));
 
   const referenceIssues = compareToReference(locales);
   if (referenceIssues.length > 0) {
     throw new ContentError(referenceIssues);
   }
 
-  const content = loadContent(lessonsDir, minigamesDir, locales);
+  const content = loadContent<C>(lessonsDir, minigamesDir, locales, subject);
   const tracks = loadTracks(tracksPath, locales, content.minigames, content.lessons);
   const resolvedExtraOutputs = Object.fromEntries(
     Object.entries(extraOutputs).map(([name, build]) => [name, build(packageDir)]),
   );
-  const badges = loadBadges(badgesPath, locales, tracks, content.lessons, content.minigames);
-  const voiceTexts = buildVoiceInventory(locales, content, tracks, badges);
+  const badges = loadBadges(
+    badgesPath,
+    locales,
+    tracks,
+    content.lessons,
+    content.minigames,
+    subject.badges,
+  );
+  const voiceTexts = buildVoiceInventory(locales, content, tracks, badges, subject);
 
   return { locales, content, tracks, extraOutputs: resolvedExtraOutputs, badges, voiceTexts };
 }

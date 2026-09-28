@@ -1,6 +1,7 @@
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { stringify } from 'yaml';
+import { chessContent } from './chess-content.ts';
 import { loadLocales } from './load.ts';
 import { loadContent } from './lesson-load.ts';
 import {
@@ -152,7 +153,12 @@ describe('loadContent', () => {
       expect(issuesOf()).toEqual([]);
 
       const locales = loadLocales(join(dir, 'locales'));
-      const content = loadContent(join(dir, 'lessons'), join(dir, 'minigames'), locales);
+      const content = loadContent(
+        join(dir, 'lessons'),
+        join(dir, 'minigames'),
+        locales,
+        chessContent,
+      );
       const lesson = content.lessons.find((entry) => entry.id === 'demo-lesson');
       if (lesson === undefined) {
         throw new Error('demo-lesson not found');
@@ -241,6 +247,30 @@ describe('loadContent', () => {
     expect(issuesOf()).toEqual([]);
   });
 
+  it('reports a choice option referencing a missing text key (kind content textKeys)', () => {
+    writeLesson({
+      exercises: [
+        validChoiceExercise({
+          options: [
+            { id: 'rook', text: 'no-such-option-key' },
+            { id: 'pawn', piece: 'P' },
+          ],
+        }),
+      ],
+    });
+    writeMiniGame();
+    writeDefaultLocales();
+
+    const issues = issuesOf();
+    expect(
+      issues.some(
+        (issue) =>
+          issue.includes('missing text key "lessons:no-such-option-key"') &&
+          issue.includes('option "rook"'),
+      ),
+    ).toBe(true);
+  });
+
   describe('YAML defaults', () => {
     it('defaults exercise text to id', () => {
       writeLesson({ exercises: [validExercise({ text: undefined })] });
@@ -249,7 +279,12 @@ describe('loadContent', () => {
 
       expect(issuesOf()).toEqual([]);
       const locales = loadLocales(join(dir, 'locales'));
-      const content = loadContent(join(dir, 'lessons'), join(dir, 'minigames'), locales);
+      const content = loadContent(
+        join(dir, 'lessons'),
+        join(dir, 'minigames'),
+        locales,
+        chessContent,
+      );
       expect(content.lessons[0]?.exercises[0]?.textKey).toBe('lessons:demo-01');
     });
 
@@ -260,7 +295,12 @@ describe('loadContent', () => {
 
       expect(issuesOf()).toEqual([]);
       const locales = loadLocales(join(dir, 'locales'));
-      const content = loadContent(join(dir, 'lessons'), join(dir, 'minigames'), locales);
+      const content = loadContent(
+        join(dir, 'lessons'),
+        join(dir, 'minigames'),
+        locales,
+        chessContent,
+      );
       expect(content.lessons[0]?.world).toBe('w1');
     });
 
@@ -271,7 +311,12 @@ describe('loadContent', () => {
 
       expect(issuesOf()).toEqual([]);
       const locales = loadLocales(join(dir, 'locales'));
-      const content = loadContent(join(dir, 'lessons'), join(dir, 'minigames'), locales);
+      const content = loadContent(
+        join(dir, 'lessons'),
+        join(dir, 'minigames'),
+        locales,
+        chessContent,
+      );
       expect(content.lessons[0]?.titleKey).toBe('lessons:demo-lesson.title');
       expect(content.lessons[0]?.storyKey).toBe('lessons:demo-lesson.story');
     });
@@ -291,7 +336,12 @@ describe('loadContent', () => {
 
       expect(issuesOf()).toEqual([]);
       const locales = loadLocales(join(dir, 'locales'));
-      const content = loadContent(join(dir, 'lessons'), join(dir, 'minigames'), locales);
+      const content = loadContent(
+        join(dir, 'lessons'),
+        join(dir, 'minigames'),
+        locales,
+        chessContent,
+      );
       expect(content.lessons[0]?.demo.textKey).toBe('lessons:demo-lesson.demo');
     });
 
@@ -302,7 +352,12 @@ describe('loadContent', () => {
 
       expect(issuesOf()).toEqual([]);
       const locales = loadLocales(join(dir, 'locales'));
-      const content = loadContent(join(dir, 'lessons'), join(dir, 'minigames'), locales);
+      const content = loadContent(
+        join(dir, 'lessons'),
+        join(dir, 'minigames'),
+        locales,
+        chessContent,
+      );
       expect(content.minigames[0]?.titleKey).toBe('lessons:mg1.title');
       expect(content.minigames[0]?.goalKey).toBe('lessons:mg1.goal');
     });

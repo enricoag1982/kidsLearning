@@ -32,12 +32,11 @@ export type { SessionLog } from './domain/session-log.ts';
 
 export { minutesUntilEnd, shouldWarn } from './domain/time-policy.ts';
 
-export type { PieceStyleSetting, ProfileSettings } from './domain/profile-settings.ts';
+export type { ProfileSettings } from './domain/profile-settings.ts';
 export {
   DAILY_LIMIT_OPTIONS,
   PLAY_UNTIL_OPTIONS,
   PLAY_FROM_OPTIONS,
-  DEFAULT_PROFILE_SETTINGS,
 } from './domain/profile-settings.ts';
 
 export type { ConceptStats, ConceptTask } from './domain/review.ts';
@@ -179,7 +178,7 @@ export type {
 } from './domain/exercise/kind.ts';
 
 // The `series` mini-game mode: subject-free, rounds of any exercise type.
-export type { SeriesGameState } from './domain/exercise/modes/series/def.ts';
+export type { SeriesGameDef, SeriesGameState } from './domain/exercise/modes/series/def.ts';
 export {
   startSeries,
   currentRound,
@@ -190,6 +189,13 @@ export {
 
 // `SubjectCore`/`AppConfig` and `createSubjectRuntime`: a subject's kind/mode registries + app
 // identifiers, injected via `AppDeps.subject`/`AppDeps.app`, never imported directly.
-export type { AnyKind, AnyMode, SubjectCore, AppConfig } from './domain/subject.ts';
+export type {
+  AnyKind,
+  AnyMode,
+  SubjectCore,
+  AppConfig,
+  ExerciseDefBase,
+  MiniGameBase,
+} from './domain/subject.ts';
 export type { SubjectRuntime } from './domain/runtime.ts';
 export { createSubjectRuntime } from './domain/runtime.ts';
