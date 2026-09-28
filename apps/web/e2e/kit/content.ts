@@ -1,15 +1,15 @@
-import type { TracksCatalog, World } from '@chess-kids/core';
-import type { CompiledContent, Lesson, MiniGame } from '@chess-kids/core/chess';
+import type { TracksCatalog, World } from '@learn/platform-core';
+import type { CompiledContent, Lesson, MiniGame } from '@learn/subject-chess';
 import {
   findWorld as coreFindWorld,
   mainTrackLessons,
   nextLesson,
   worldLessons,
-} from '@chess-kids/core';
+} from '@learn/platform-core';
 // Node's ESM loader requires this attribute for a JSON import; the content build validates the
 // shape (see `bundled-content-source.ts`), so the cast below is a type conversion, not a check.
-import rawContent from '@chess-kids/content/content.json' with { type: 'json' };
-import rawTracks from '@chess-kids/content/tracks.json' with { type: 'json' };
+import rawContent from '@learn/subject-chess/dist/content.json' with { type: 'json' };
+import rawTracks from '@learn/subject-chess/dist/tracks.json' with { type: 'json' };
 import { characterPieceOrNull } from '../../src/ui/art/character-meta.ts';
 import { contentText, interpolate } from './i18n.ts';
 

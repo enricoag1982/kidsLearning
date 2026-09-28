@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
-import type { TracksCatalog } from '@chess-kids/core';
-import type { CompiledContent } from '@chess-kids/core/chess';
-import type { CollectStarsDef } from '@chess-kids/core/chess';
-import { lessonSteps } from '@chess-kids/core';
-import rawContent from '@chess-kids/content/content.json' with { type: 'json' };
-import rawTracks from '@chess-kids/content/tracks.json' with { type: 'json' };
+import type { TracksCatalog } from '@learn/platform-core';
+import type { CompiledContent } from '@learn/subject-chess';
+import type { CollectStarsDef } from '@learn/subject-chess';
+import { lessonSteps } from '@learn/platform-core';
+import rawContent from '@learn/subject-chess/dist/content.json' with { type: 'json' };
+import rawTracks from '@learn/subject-chess/dist/tracks.json' with { type: 'json' };
 import {
   clickSquare,
   completeFirstRun,
