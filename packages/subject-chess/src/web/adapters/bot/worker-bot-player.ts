@@ -5,8 +5,7 @@ import { chessJsRules } from '../../../core/chess/chessjs-rules.ts';
 import { bot } from '../../../chess.ts';
 import type { BotRequest, BotResponse } from './protocol.ts';
 
-/** In-thread fallback: the same search, run on the caller's own thread. The search and the opening
- * book load on first use (lazy chunks, never at first paint). */
+/** In-thread fallback: search and opening book load on first use (lazy chunks). */
 async function chooseMoveInThread(
   state: game.GameState,
   level: number,
