@@ -28,14 +28,21 @@ export interface Where {
  * YAML into the fields prepended (`head`) and appended (`tail`) to every exercise definition, plus
  * an optional semantic check on the compiled def (chess: a kid piece must sit on the board). */
 export interface StimulusContent {
+  /** Cross-field check of a parsed exercise's own stimulus fields (chess: one of `board` / `fen`). */
+  refine?(raw: object, ctx: z.RefinementCtx): void;
   compile(raw: object, at: Where): { readonly head: object; readonly tail: object } | null;
   check?(def: object, at: Where): void;
+}
+
+/** The demo field the generic loader reads: the spoken text's key (default `<lesson-id>.demo`). */
+export interface DemoYamlBase {
+  readonly text?: string;
 }
 
 /** A subject's own lesson demo: its schema, how to compile it, and an optional semantic check
  * (chess: a kid piece must sit on the board). */
 export interface DemoContent {
-  readonly schema: z.ZodType;
+  readonly schema: z.ZodType<DemoYamlBase>;
   compile(raw: unknown, textKey: string, at: Where): { readonly textKey: string } | null;
   check?(demo: object, at: Where): void;
 }
@@ -66,6 +73,8 @@ export interface SubjectContent {
   readonly demo: DemoContent;
   readonly badges: BadgesContent;
   readonly characters: Readonly<Record<string, { readonly topicKey: string }>>;
+  /** Extra `dist/` files by name, each built from the content root (chess: `bot-book.json`). */
+  readonly extraOutputs?: Readonly<Record<string, (root: string) => unknown>>;
   /** `all`: the already-compiled content, for domains only it bounds (chess: which characters need
    * a hint/note text). */
   voiceTemplates(

@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { composeDefaultSettings } from '@learn/platform-core/domain/profile-settings';
-import { newProfile } from '@learn/platform-core/domain/profile';
-import { newLessonProgress, recordExerciseStars } from '@learn/platform-core/domain/progress';
-import type { GameRecord, LessonProgress } from '@learn/platform-core/domain/progress';
-import type { AppConfig } from '@learn/platform-core/domain/subject';
+import { composeDefaultSettings } from '../domain/profile-settings.ts';
+import { newProfile } from '../domain/profile.ts';
+import { newLessonProgress, recordExerciseStars } from '../domain/progress.ts';
+import type { GameRecord, LessonProgress } from '../domain/progress.ts';
+import type { AppConfig } from '../domain/subject.ts';
 import {
   makeGameRecordRepo,
   makeProfileRepo,
@@ -14,13 +14,11 @@ import {
   makeClock as buildClock,
   makeBackupFileWriter,
   makeBackupImporter,
-} from '@learn/platform-core/testing';
-import {
   makeExercise as buildExercise,
   makeLesson as buildLesson,
   makeContentSource,
   makeDeps as buildDeps,
-} from '../../testing/index.ts';
+} from '../testing/index.ts';
 import {
   BackupValidationError,
   backupFileName,
@@ -29,9 +27,9 @@ import {
   exportBackup,
   importBackup,
   parseBackupFile,
-} from '@learn/platform-core/backup';
-import type { BackupFile } from '@learn/platform-core/backup';
-import type { AppDeps } from '@learn/platform-core/app/use-cases';
+} from './backup.ts';
+import type { BackupFile } from './backup.ts';
+import type { AppDeps } from './use-cases.ts';
 
 const NOW = new Date('2026-01-10T12:00:00.000Z');
 
@@ -106,7 +104,7 @@ describe('buildBackupFile', () => {
 
     const file = await buildBackupFile(deps);
 
-    expect(file.app).toBe('chess-kids');
+    expect(file.app).toBe('test-app');
     expect(file.schemaVersion).toBe(5);
     expect(file.exportedAt).toBe(NOW.toISOString());
     expect(file.profiles.map((p) => p.id)).toEqual(['p1', 'p2']);
@@ -162,7 +160,7 @@ describe('exportBackup', () => {
     await exportBackup(deps);
 
     expect(writer.writes).toHaveLength(1);
-    expect(writer.writes[0]?.filename).toBe('chess-kids-backup-2026-01-10.json');
+    expect(writer.writes[0]?.filename).toBe('test-app-backup-2026-01-10.json');
     const parsed = JSON.parse(writer.writes[0]?.contents ?? '{}') as BackupFile;
     expect(parsed.profiles).toHaveLength(2);
   });
@@ -174,7 +172,7 @@ describe('exportBackup', () => {
 
     await exportBackup(deps, ['p1']);
 
-    expect(writer.writes[0]?.filename).toBe('chess-kids-backup-mia-2026-01-10.json');
+    expect(writer.writes[0]?.filename).toBe('test-app-backup-mia-2026-01-10.json');
   });
 
   it('throws without deps.backupFileWriter wired up', async () => {

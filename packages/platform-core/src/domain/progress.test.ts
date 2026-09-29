@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { makeProgress } from '@learn/platform-core/testing';
-import { makeExercise as buildExercise, makeLesson as buildLesson } from '../../testing/index.ts';
+import {
+  makeProgress,
+  makeExercise as buildExercise,
+  makeLesson as buildLesson,
+} from '../testing/index.ts';
 import {
   lessonStars,
   lessonStatus,
@@ -12,7 +15,7 @@ import {
   withoutSkippedPhase,
   withResumeStep,
   withSkippedPhase,
-} from '@learn/platform-core/domain/progress';
+} from './progress.ts';
 
 function makeExercise(id: string) {
   return buildExercise({ id });

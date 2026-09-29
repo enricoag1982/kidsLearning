@@ -1,5 +1,6 @@
 // Chess's `stimulus`/`demo` content: the concrete values the platform's compile pipeline plugs in
 // for this app. Chess-bound.
+import { join } from 'node:path';
 import type { Stars } from '@learn/platform-core';
 import {
   bot,
@@ -19,6 +20,7 @@ import {
 } from '../chess.ts';
 import { z } from 'zod';
 import { chessCore } from '../chess.ts';
+import { loadBotBook } from './bot-book-load.ts';
 import {
   checkExactlyOnePosition,
   compilePosition,
@@ -75,6 +77,8 @@ function checkLastMove(
 
 /** Chess's stimulus: a board position (the "head") plus an optional last move (the "tail"). */
 export const chessStimulus: StimulusContent = {
+  refine: checkExactlyOnePosition,
+
   compile(raw, at) {
     const r = raw as StimulusYaml;
     const position = compilePosition(r, { where: `${at.where}.board`, issues: at.issues });
@@ -110,10 +114,9 @@ function compileHighlight(raw: string): DemoHighlight {
 /**
  * A lesson's demo: position, spoken text, and its board highlight — either `legal-moves <square>`
  * (most lessons: every square that piece can reach) or `squares [<sq> …]` (World 1: an explicit
- * list, e.g. a row/diagonal or a corner; zero squares highlights nothing). Exported by its own
- * concrete type too, so `lesson-schema.ts` keeps `LessonYaml`'s fields precisely inferred.
+ * list, e.g. a row/diagonal or a corner; zero squares highlights nothing).
  */
-export const chessDemoSchema = z
+const chessDemoSchema = z
   .object({
     ...positionFields,
     /** Locale key for the demo's spoken text; defaults to `<lesson-id>.demo` when absent. */
@@ -358,7 +361,7 @@ export function chessVoiceTemplates(
   exerciseNoteTemplates(add, r, all);
 }
 
-/** Chess's whole `SubjectContent`: the one value `compile-all.ts` and every script/test that loads
+/** Chess's whole `SubjectContent`: the one value `compileAll` and every script/test that loads
  * real content inject into the platform's otherwise subject-free YAML → JSON pipeline. */
 export const chessContent: SubjectContent = {
   kinds: EXERCISE_KIND_CONTENT,
@@ -367,5 +370,6 @@ export const chessContent: SubjectContent = {
   demo: chessDemo,
   badges: chessBadges,
   characters: chessCore.characters,
+  extraOutputs: { 'bot-book.json': (root) => loadBotBook(join(root, 'bot-book.yaml')) },
   voiceTemplates: chessVoiceTemplates,
 };

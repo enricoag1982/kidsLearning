@@ -3,21 +3,21 @@ import { join } from 'node:path';
 import type { CompiledContent, ExerciseDefBase, Lesson, MiniGame } from '@learn/platform-core';
 import { parse as parseYaml } from 'yaml';
 import type { z, ZodError } from 'zod';
-import { compileExercises } from '@learn/platform-content/kinds/compile-exercise';
-import { ContentError, type Locales } from '@learn/platform-content/load';
-import {
-  makeMiniGameCompileContext,
-  type ModeVerifyContext,
-} from '@learn/platform-content/modes/mode-content';
-import type { LocaleTree } from '@learn/platform-content/schema';
-import type { SubjectContent } from '@learn/platform-content/subject';
-import { lessonSchema, miniGameSchema } from './lesson-schema.ts';
+import { compileExercises } from './kinds/compile-exercise.ts';
+import { createLessonSchemas } from './lesson-schema.ts';
+import { ContentError, type Locales } from './load.ts';
+import { makeMiniGameCompileContext, type ModeVerifyContext } from './modes/mode-content.ts';
+import type { LocaleTree } from './schema.ts';
+import type { SubjectContent } from './subject.ts';
+
+type LessonSchemas = ReturnType<typeof createLessonSchemas>;
 
 function compileLessonFile(
   filePath: string,
   relPath: string,
   worldName: string,
   content: SubjectContent,
+  schemas: LessonSchemas,
   issues: string[],
 ): Lesson | null {
   let raw: string;
@@ -36,7 +36,7 @@ function compileLessonFile(
     return null;
   }
 
-  const result = lessonSchema.safeParse(parsed);
+  const result = schemas.lessonSchema.safeParse(parsed);
   if (!result.success) {
     issues.push(...formatZodIssues(relPath, result.error));
     return null;
@@ -100,6 +100,7 @@ function compileMiniGameFile(
   filePath: string,
   relPath: string,
   content: SubjectContent,
+  schemas: LessonSchemas,
   issues: string[],
 ): MiniGame | null {
   let raw: string;
@@ -118,7 +119,7 @@ function compileMiniGameFile(
     return null;
   }
 
-  const result = miniGameSchema.safeParse(parsed);
+  const result = schemas.miniGameSchema.safeParse(parsed);
   if (!result.success) {
     issues.push(...formatZodIssues(relPath, result.error));
     return null;
@@ -284,12 +285,13 @@ function validateSemantics(
 }
 
 /** One issue, formatted `<file>: <path>: <message>`. A mini-game's `mode` makes its schema a union:
- * `invalid_union` is flattened into every branch's own issues instead of one generic line. */
+ * `invalid_union` is flattened into every branch's own issues; an unknown discriminator has none. */
 function formatZodIssue(relPath: string, issue: z.core.$ZodIssue): string[] {
   if (issue.code === 'invalid_union') {
-    return issue.errors.flatMap((branchIssues) =>
+    const branchLines = issue.errors.flatMap((branchIssues) =>
       branchIssues.flatMap((branchIssue) => formatZodIssue(relPath, branchIssue)),
     );
+    if (branchLines.length > 0) return branchLines;
   }
   const path = issue.path.length > 0 ? issue.path.join('.') : '(root)';
   return [`${relPath}: ${path}: ${issue.message}`];
@@ -326,6 +328,7 @@ export function loadContent<C extends CompiledContent = CompiledContent>(
   const issues: string[] = [];
   const lessons: Lesson[] = [];
   const minigames: MiniGame[] = [];
+  const schemas = createLessonSchemas(content);
 
   for (const worldName of readEntries(lessonsDir, issues, 'lessons directory')) {
     const worldPath = join(lessonsDir, worldName);
@@ -346,6 +349,7 @@ export function loadContent<C extends CompiledContent = CompiledContent>(
         relPath,
         worldName,
         content,
+        schemas,
         issues,
       );
       if (lesson !== null) {
@@ -360,7 +364,13 @@ export function loadContent<C extends CompiledContent = CompiledContent>(
       issues.push(`${relPath}: invalid file name (expected <id>.yaml)`);
       continue;
     }
-    const minigame = compileMiniGameFile(join(minigamesDir, fileName), relPath, content, issues);
+    const minigame = compileMiniGameFile(
+      join(minigamesDir, fileName),
+      relPath,
+      content,
+      schemas,
+      issues,
+    );
     if (minigame !== null) {
       minigames.push(minigame);
     }

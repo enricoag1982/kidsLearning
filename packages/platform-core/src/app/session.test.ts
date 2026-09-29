@@ -1,30 +1,21 @@
 import { describe, expect, it } from 'vitest';
 
-import type { Track, TracksCatalog, World } from '@learn/platform-core/domain/journey';
+import type { Track, TracksCatalog, World } from '../domain/journey.ts';
+import { newLessonProgress, recordExerciseStars, withResumeStep } from '../domain/progress.ts';
+import type { LessonProgress, MiniGameProgress } from '../domain/progress.ts';
+import type { ConceptStats } from '../domain/review.ts';
 import {
-  newLessonProgress,
-  recordExerciseStars,
-  withResumeStep,
-} from '@learn/platform-core/domain/progress';
-import type { LessonProgress, MiniGameProgress } from '@learn/platform-core/domain/progress';
-import type { ConceptStats } from '@learn/platform-core/domain/review';
-import { makeProgressRepo as buildProgressRepo, seededRandom } from '@learn/platform-core/testing';
-import {
-  EMPTY_POSITION,
+  makeProgressRepo as buildProgressRepo,
+  seededRandom,
   makeExercise as buildExercise,
   makeLesson as buildLesson,
   makeMiniGame as buildMiniGame,
   makeContentSource,
   makeDeps as buildDeps,
-} from '../../testing/index.ts';
-import {
-  loadPracticeTasks,
-  loadTodaySession,
-  loadWarmUp,
-  planTodaySession,
-} from '@learn/platform-core/app/session';
-import type { ContentSource } from '@learn/platform-core/app/ports';
-import type { AppDeps } from '@learn/platform-core/app/use-cases';
+} from '../testing/index.ts';
+import { loadPracticeTasks, loadTodaySession, loadWarmUp, planTodaySession } from './session.ts';
+import type { ContentSource } from './ports.ts';
+import type { AppDeps } from './use-cases.ts';
 
 const NOW = new Date('2026-02-01T00:00:00.000Z');
 
@@ -80,7 +71,6 @@ const MG1 = buildMiniGame({
   titleKey: 'fixtures:mg1.title',
   goalKey: 'fixtures:mg1.goal',
   unlockAfter: 'l1',
-  position: EMPTY_POSITION,
   par: 5,
 });
 const MG2 = { ...MG1, id: 'mg2', unlockAfter: 'l2', titleKey: 'fixtures:mg2.title' };
