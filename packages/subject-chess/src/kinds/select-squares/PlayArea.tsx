@@ -1,14 +1,14 @@
 import type { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { ActionOf, DefOf, ExerciseStateOf, Hint } from '../../chess.ts';
+import type { Hint } from '../../core/exercise/hint.ts';
 import { checkSquareFor, useSurfacePieceBadges } from '../../web/chess-pack.ts';
 import { Board } from '../../web/ui/board/Board.tsx';
 import { PRIMARY_BUTTON } from '@learn/platform-web/ui/lesson/button-styles.ts';
 import { ExerciseControls } from '@learn/platform-web/kinds/ExerciseControls.tsx';
 import { ExerciseFrame } from '@learn/platform-web/kinds/ExercisePlay.tsx';
 import { panelBody } from '@learn/platform-web/kinds/panel-body.tsx';
+import type { ChessPlayAreaProps } from '../../web/kinds/move-ui.ts';
 import { hintSquares } from '../../web/kinds/move-ui.ts';
-import type { PlayAreaProps } from '@learn/platform-web/kinds/kind-ui.ts';
 import type { SelectSquaresExtra } from './ui.ts';
 
 export function PlayArea({
@@ -19,12 +19,7 @@ export function PlayArea({
   surface,
   top,
   done,
-}: PlayAreaProps<
-  DefOf<'select-squares'>,
-  ExerciseStateOf<DefOf<'select-squares'>>,
-  ActionOf<'select-squares'>,
-  SelectSquaresExtra
->): JSX.Element {
+}: ChessPlayAreaProps<'select-squares', SelectSquaresExtra>): JSX.Element {
   const { t } = useTranslation();
   const pieceBadges = useSurfacePieceBadges(surface);
   const solved = state.core.solved;

@@ -17,11 +17,6 @@ export const HABITATS = [
 
 export type Habitat = (typeof HABITATS)[number];
 
-/** True if `value` is one of the fixed habitat ids. */
-export function isHabitat(value: string): value is Habitat {
-  return (HABITATS as readonly string[]).includes(value);
-}
-
 /** One world in a track: one habitat, `lessons[]` are derived from compiled content (`worldLessons`). */
 export interface World {
   readonly id: string;
@@ -116,6 +111,15 @@ export function findWorld(catalog: TracksCatalog, worldId: string): World | unde
     }
   }
   return undefined;
+}
+
+/** Every world's `order`, by world id, across all tracks. */
+export function worldOrderById(catalog: TracksCatalog): Map<string, number> {
+  return new Map(
+    catalog.tracks.flatMap((track) =>
+      track.worlds.map((world) => [world.id, world.order] as const),
+    ),
+  );
 }
 
 function findTrack(catalog: TracksCatalog, world: World): Track | undefined {

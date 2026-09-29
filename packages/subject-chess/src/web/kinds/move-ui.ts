@@ -1,7 +1,29 @@
-import type { Hint, Move, MoveOutcome, Square, VariantRules } from '../../chess.ts';
+import type { Hint } from '../../core/exercise/hint.ts';
+import type { Move } from '../../core/chess/rules.ts';
+import type { MoveOutcome } from '../../kinds/static-move.ts';
+import type { Square } from '../../core/chess/types.ts';
+import type { VariantRules } from '../../core/variant/rules.ts';
+import type { ExerciseState, ExerciseStateOf } from '../../core/exercise/state.ts';
 import type { ExerciseDefBase, ExerciseStateBase } from '@learn/platform-core';
-import type { ExerciseState } from '../../chess.ts';
-import type { UiPatch } from '@learn/platform-web/kinds/kind-ui.ts';
+import type { ExerciseKindUI, PlayAreaProps, UiPatch } from '@learn/platform-web/kinds/kind-ui.ts';
+import type { ActionOf, DefOf, ExerciseType, OutcomeOf } from '../../kinds/index.ts';
+
+/** One exercise type's `ExerciseKindUI`, its def / state / action / outcome types taken from the core registry. */
+export type ChessKindUI<T extends ExerciseType, Extra extends object> = ExerciseKindUI<
+  DefOf<T>,
+  ExerciseStateOf<DefOf<T>>,
+  ActionOf<T>,
+  OutcomeOf<T>,
+  Extra
+>;
+
+/** One exercise type's `PlayArea` props, likewise. */
+export type ChessPlayAreaProps<T extends ExerciseType, Extra extends object> = PlayAreaProps<
+  DefOf<T>,
+  ExerciseStateOf<DefOf<T>>,
+  ActionOf<T>,
+  Extra
+>;
 
 /** A move's endpoints, for the board's slide / bounce-back highlight. */
 export interface FromTo {

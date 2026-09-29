@@ -1,14 +1,8 @@
 import { z } from 'zod';
 import { composeDefaultSettings, isValidProfileSettings } from '../domain/profile-settings.ts';
 import { localDayString } from '../domain/streak.ts';
-import type { AssessmentResult, Unlock } from '../domain/assessment.ts';
-import type { EarnedBadge } from '../domain/badges.ts';
-import type { ProfileSettings } from '../domain/profile-settings.ts';
 import type { Profile } from '../domain/profile.ts';
-import type { Attempt, GameRecord, LessonProgress, MiniGameProgress } from '../domain/progress.ts';
-import type { ConceptStats } from '../domain/review.ts';
-import type { SessionLog } from '../domain/session-log.ts';
-import type { Streak } from '../domain/streak.ts';
+import type { MergeableProfileData } from '../domain/merge.ts';
 import type { AppConfig, SettingsBackupShape } from '../domain/subject.ts';
 import type { BackupFileWriter, BackupImporter } from './ports.ts';
 import type { AppDeps } from './use-cases.ts';
@@ -19,19 +13,7 @@ z.config({ jitless: true });
 
 /** One profile's full backed-up data: every stored record this app keeps for a child, except its
  * `Profile` row (kept alongside, once, in `BackupFile.profiles`) and the parent password. */
-export interface ProfileBackupData {
-  readonly settings: ProfileSettings;
-  readonly lessonProgress: readonly LessonProgress[];
-  readonly attempts: readonly Attempt[];
-  readonly miniGameProgress: readonly MiniGameProgress[];
-  readonly conceptStats: readonly ConceptStats[];
-  readonly gameRecords: readonly GameRecord[];
-  readonly earnedBadges: readonly EarnedBadge[];
-  readonly streak?: Streak;
-  readonly sessionLogs: readonly SessionLog[];
-  readonly assessmentResults: readonly AssessmentResult[];
-  readonly unlocks: readonly Unlock[];
-}
+export type ProfileBackupData = MergeableProfileData;
 
 /** The backup file itself: one JSON file for either every profile on the device ("Export") or a
  * single one ("Export per child" — same format, `profiles`/`data` just hold the one). */
@@ -228,7 +210,7 @@ function requireBackupFileWriter(deps: AppDeps): BackupFileWriter {
 }
 
 /** `deps.backupImporter`, or a clear error if this `AppDeps` has not wired it up. */
-function requireBackupImporter(deps: AppDeps): BackupImporter {
+export function requireBackupImporter(deps: AppDeps): BackupImporter {
   if (deps.backupImporter === undefined) {
     throw new Error('AppDeps.backupImporter is not wired up');
   }
@@ -402,34 +384,4 @@ export async function parseBackupFile(deps: AppDeps, raw: string): Promise<Backu
   }
 
   return file;
-}
-
-/** The parent-area Import preview text's own numbers ("2 children, 1,234 stars"). */
-export interface BackupSummary {
-  readonly profileCount: number;
-  readonly totalStars: number;
-}
-
-function lessonStarsSum(bestStars: Readonly<Record<string, 1 | 2 | 3>>): number {
-  return Object.values(bestStars).reduce((sum: number, stars) => sum + stars, 0);
-}
-
-/** `{ profileCount, totalStars }` for `file` — every profile's stars, exercises + boss, summed. */
-export function backupSummary(file: BackupFile): BackupSummary {
-  const totalStars = Object.values(file.data).reduce((sum, data) => {
-    const lessonTotal = data.lessonProgress.reduce(
-      (lessonSum, progress) => lessonSum + lessonStarsSum(progress.bestStars) + progress.bossStars,
-      0,
-    );
-    return sum + lessonTotal;
-  }, 0);
-  return { profileCount: file.profiles.length, totalStars };
-}
-
-/** Parent area "Import": validates `raw`, then atomically replaces every stored record with `raw`'s
- * own. Returns the preview summary so the UI can show what was restored. */
-export async function importBackup(deps: AppDeps, raw: string): Promise<BackupSummary> {
-  const file = await parseBackupFile(deps, raw);
-  await requireBackupImporter(deps).replaceAll(file);
-  return backupSummary(file);
 }

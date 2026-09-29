@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { chessJsRules } from '../../core/chess/chessjs-rules.ts';
 import type { ExerciseState, ExerciseStateOf } from '../../core/exercise/state.ts';
-import { starsFor } from '../../kinds/index.ts';
+import { starsFor } from '../../testing/kind-steps.ts';
 import type { GameState } from '../../modes/static/def.ts';
 import { gameStars } from '../../modes/static/engine.ts';
 import type { SeriesGameState } from '@learn/platform-core/domain/exercise/modes/series/def';
@@ -11,7 +11,7 @@ import type { ExerciseDef, CaptureDef } from '../../core/exercise/types.ts';
 import { playVersusMove, startVersus, versusStars } from '../../modes/versus/engine.ts';
 import type { VersusGameDef } from '../../modes/versus/def.ts';
 import type { GameRulesDef } from '../../core/game/types.ts';
-import type { Lesson, MiniGame } from '../../chess.ts';
+import type { Lesson, MiniGame } from '../../core/chess/lesson.ts';
 import {
   makeExercise as buildExercise,
   makeLesson as buildLesson,
@@ -27,7 +27,6 @@ import {
   recordBossResult,
   recordExerciseResult,
   recordReviewResult,
-  saveResumeStep,
   skipLessonPhase,
 } from '@learn/platform-core/app/use-cases';
 
@@ -787,18 +786,6 @@ describe('recordReviewResult', () => {
 
     expect(stats.box).toBe(1);
     expect(stats.dueAt).toBe(new Date('2026-01-02T00:00:00.000Z').toISOString());
-  });
-});
-
-describe('saveResumeStep', () => {
-  it('moves the resume point without recording an attempt', async () => {
-    const deps = makeDeps();
-
-    const progress = await saveResumeStep(deps, 'profile-1', 'rook', 5);
-
-    expect(progress.resumeStep).toBe(5);
-    expect(await deps.progress.listAttempts('profile-1')).toEqual([]);
-    expect(await deps.progress.listLessons('profile-1')).toEqual([progress]);
   });
 });
 

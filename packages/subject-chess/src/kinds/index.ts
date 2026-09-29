@@ -1,6 +1,4 @@
 // The exercise-kind registry — the only place exercise-type dispatch happens in `packages/core`.
-import type { Move } from '../core/chess/rules.ts';
-import type { Square } from '../core/chess/types.ts';
 import type { VariantRules } from '../core/variant/rules.ts';
 import type { Hint } from '../core/exercise/hint.ts';
 import type { ExerciseKind } from '@learn/platform-core/domain/exercise/kind';
@@ -21,7 +19,6 @@ import type { UndoAction } from './static-move.ts';
 import type { AnswerYesNoAction } from './yes-no/kind.ts';
 import { yesNoKind } from './yes-no/kind.ts';
 
-export type { ExerciseDef } from '../core/exercise/types.ts';
 export type ExerciseType = ExerciseDef['type'];
 export type DefOf<T extends ExerciseType> = Extract<ExerciseDef, { readonly type: T }>;
 
@@ -72,30 +69,4 @@ export function kindOf(def: ExerciseDef): AnyExerciseKind {
 /** Starts a fresh exercise at its authored position. */
 export function startExercise(def: ExerciseDef): ExerciseState {
   return kindOf(def).init(def);
-}
-
-/** Legal kid moves right now (collect-stars / capture / best-move / mate-in-n only; `[]` otherwise or once solved). */
-export function exerciseMoves(state: ExerciseState, rules: VariantRules, from?: Square): Move[] {
-  const { input } = kindOf(state.def);
-  if (state.solved || (input !== 'static-move' && input !== 'real-move')) {
-    return [];
-  }
-  return rules.legalMoves(state.position, { staticOpponent: true }, from);
-}
-
-/** Advances the hint ladder by one level (capped at 3) and returns the hint for that level. */
-export function requestHint(
-  state: ExerciseState,
-  rules: VariantRules,
-): { readonly state: ExerciseState; readonly hint: Hint } {
-  const level = (state.hintLevel < 3 ? state.hintLevel + 1 : 3) as 1 | 2 | 3;
-  return kindOf(state.def).hint(state, level, rules);
-}
-
-/** Stars earned so far; `0` until solved. */
-export function starsFor(state: ExerciseState): 0 | 1 | 2 | 3 {
-  if (!state.solved) {
-    return 0;
-  }
-  return kindOf(state.def).stars(state);
 }
