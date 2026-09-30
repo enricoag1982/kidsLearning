@@ -54,7 +54,7 @@ export interface Lesson<
   readonly world: string;
   readonly order: number;
   readonly concept: string;
-  /** Character id (e.g. `rhino`); display name at `characters:<character>.name`. */
+  /** Character id (e.g. `rook`); display name at `characters:<character>.name`. */
   readonly character: string;
   readonly titleKey: string;
   readonly storyKey: string;
@@ -109,20 +109,25 @@ export interface SubjectCore<Ctx = unknown, F = unknown> {
     game: MiniGameBase,
     state: MiniGameStateBase,
   ): Omit<RecordGameInput, 'profileId'> | null;
-  /** Lesson characters that double as an "animal friend" once their lesson is done (`rhino` → `piece.r`), in
+  /** Lesson characters that double as a "friend" once their lesson is done (`rook` → `piece.r`), in
    * `animalFriends` order; an absent id (Owl) is never a friend. */
   readonly characters: Readonly<Record<string, { readonly topicKey: string }>>;
   /** The subject's settings-slot fields as an opaque bag: `defaults` composes into `ProfileSettings`, `isValid` checks a
    * stored one, `loadBackupShape` (dynamic import) supplies the zod fields for `app/backup.ts`. */
   readonly settings: {
     readonly defaults: Readonly<Record<string, unknown>>;
+    /** Fields an older version stored and this one no longer has: a stored one loads, is ignored, and is dropped on the next save. */
+    readonly retired?: readonly string[];
+    /** Constant fields every exported profile's settings carry, write-only (import ignores them): an older version's importer
+     * still requires them, so it still accepts files from this build. */
+    readonly legacyExport?: Readonly<Record<string, unknown>>;
     isValid(s: Readonly<Record<string, unknown>>): boolean;
     loadBackupShape(): Promise<SettingsBackupShape>;
   };
   /** Every feedback kind's note, keyed by `ExerciseFeedbackBase['kind']`: the subject's own kinds plus the
    * platform-shaped ones (tap-first, wrong-answer, hint, solved). */
   readonly notes: Readonly<Record<string, AnyNoteEntry>>;
-  /** Extra note vars for `character` beyond `{name, stars}` (chess: `{ piece }`). */
+  /** Extra note vars for `character` beyond `{name, stars}` (chess: none). */
   noteVars(character: string): Readonly<Record<string, string>>;
 }
 

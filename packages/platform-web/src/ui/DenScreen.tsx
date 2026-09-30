@@ -177,9 +177,10 @@ export function DenScreen(): JSX.Element {
             {friends.map((friend) => {
               const characterLabel = tContent(t, `characters:${friend.character}.name`);
               const pieceLabel = tContent(t, friend.topicKey);
+              const labels = { character: characterLabel, piece: pieceLabel };
               const name = friend.earned
-                ? t('den.friend-name', { character: characterLabel })
-                : t('den.friend-name-locked', { character: characterLabel, piece: pieceLabel });
+                ? t('den.friend-name', labels)
+                : t('den.friend-name-locked', labels);
               return (
                 <li
                   key={friend.character}
@@ -201,11 +202,9 @@ export function DenScreen(): JSX.Element {
                     )}
                   </span>
                   <span className="text-xs font-extrabold text-ink">
-                    {friend.earned
-                      ? characterLabel
-                      : t('den.friend-condition', { piece: pieceLabel })}
+                    {friend.earned ? characterLabel : t('den.friend-condition', labels)}
                   </span>
-                  {friend.earned && (
+                  {friend.earned && pieceLabel !== characterLabel && (
                     <span className="text-xs font-bold text-muted">{pieceLabel}</span>
                   )}
                 </li>

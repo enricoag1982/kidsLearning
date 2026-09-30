@@ -31,7 +31,7 @@
      "sound": true,
      "hints": true,
      "computerLevel": "auto",
-     "pieceStyle": "animal"
+     "pieceStyle": "classic"
     },
     "lessonProgress": [
      {
@@ -786,7 +786,7 @@
      "sound": true,
      "hints": true,
      "computerLevel": "auto",
-     "pieceStyle": "animal"
+     "pieceStyle": "classic"
     },
     "lessonProgress": [],
     "attempts": [],

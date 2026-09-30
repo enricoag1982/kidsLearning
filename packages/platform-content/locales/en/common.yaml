@@ -14,7 +14,6 @@ app-error:
   body: Tap "Try again". If this keeps happening, ask a grown-up to send the text below to the app's maker.
   retry: Try again
 home:
-  owl-next: 'Today you meet {{character}}!'
   owl-next-topic: "Hi! I'm Owl. Today: {{topic}}!"
   owl-resume: Let's keep going!
   owl-world-boss: 'World boss time: {{title}}!'
@@ -282,7 +281,6 @@ session:
   leave: Leave
   summary-title: Great session!
   summary-new-rank: New rank!
-  summary-new-friend: New friend!
   summary-closing: See you tomorrow!
   summary-done: Done
 time-limit:
@@ -330,7 +328,6 @@ practice:
   topic-of: 'Practice {{current}}/{{total}}'
 den:
   title: "{{name}}'s Den"
-  owl-line: Look at all your friends!
   games-won_one: '{{count}} game won'
   games-won_other: '{{count}} games won'
   games-with-friends_one: '{{count}} game with friends'
@@ -341,10 +338,6 @@ den:
   rank-after-world: 'After World {{order}}'
   rank-after-track: 'After {{track}}'
   rank-all-tracks: After all paths
-  friends-heading: Animal friends
-  friend-name: '{{character}}, friend'
-  friend-name-locked: '{{character}}, locked, finish the {{piece}} lesson'
-  friend-condition: 'Finish the {{piece}} lesson'
 badges:
   heading: Badges
   category-milestone: Milestones

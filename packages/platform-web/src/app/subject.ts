@@ -37,12 +37,6 @@ export interface ReportSectionProps {
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- augmented per subject
 export interface SubjectServices {}
 
-/** A board/story/demo surface's own lesson world, for the subject's piece look (chess: the animal
- * badge, off in World 5 and for a review task, `worldId: null`). */
-export interface SurfaceContext {
-  readonly worldId: string | null;
-}
-
 /** One subject's whole web behaviour behind the platform interface (docs/refactor-v4.md §11); a subject omits what it doesn't use. */
 export interface SubjectWeb {
   readonly core: SubjectCore;
@@ -56,12 +50,13 @@ export interface SubjectWeb {
   readonly surface: {
     Story(props: { readonly lesson: Lesson; readonly compact: boolean }): JSX.Element;
     Demo(props: { readonly lesson: Lesson }): JSX.Element;
-    View(props: { state: ExerciseStateBase; surface: SurfaceContext }): JSX.Element;
+    View(props: { state: ExerciseStateBase }): JSX.Element;
   };
-  /** The piece-icon pill under a character's portrait (`CharacterCard`); absent for a subject without one. */
-  CharacterBadge?(props: { readonly character: string }): JSX.Element | null;
-  /** This subject's own art (chess: lesson characters, bot levels), keyed by id; falls back to the
-   * platform's own (avatars, Owl) for an id it doesn't have. */
+  /** A character's portrait drawn by the subject instead of an image (chess: the piece's classic icon), or `null` for one
+   * without (Owl): `CharacterIcon` then falls back to `art`. */
+  characterArt?(character: string): JSX.Element | null;
+  /** This subject's own image art keyed by id; falls back to the platform's own (avatars, Owl, bot levels) for an id it
+   * doesn't have. */
   readonly art: Readonly<Record<string, string>>;
   /** Extra Home tiles (chess: Play), merged with the platform's and sorted by `order`. */
   readonly homeTiles?: readonly HomeTile[];
@@ -70,7 +65,7 @@ export interface SubjectWeb {
     rankGlyph(rankId: string): string;
     Stats?(props: { readonly gameRecords: readonly GameRecord[] }): JSX.Element;
   };
-  /** Lazy parent-area panels (chess: level + piece-style chips, games-played section): a dynamic import, so they stay in the
+  /** Lazy parent-area panels (chess: level chips, games-played section): a dynamic import, so they stay in the
    * lazy parent chunk, not the initial bundle. */
   loadParent?(): Promise<ParentPanels>;
   /** Routes this subject contributes (chess: `play`, `full-game`, `friend-setup`, `friend-game`); the platform's never appear here. */

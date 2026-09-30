@@ -18,7 +18,7 @@ Related: [teaching-process.md](teaching-process.md), [app-structure.md](app-stru
 | Language | TypeScript (strict) | Types enforce layer boundaries; one language end to end |
 | UI | React + Vite | Mature ecosystem, fast builds |
 | Styling / motion | Tailwind CSS + Motion | Consistent design, smooth animations |
-| Board | Own SVG component | Full control: stars, blocked squares, animal badges, arrows, tap-tap; crisp on tablets |
+| Board | Own SVG component | Full control: stars, blocked squares, arrows, tap-tap; crisp on tablets |
 | Chess rules | chess.js (BSD-2) + own variant layer | Standard rules from chess.js; variants (no kings, custom win conditions) in own layer |
 | Computer opponent | Own engine (minimax depth 1–4 + controlled mistakes) in a Web Worker | Weak human-like play for kids; no GPL; UI stays smooth. Details: [computer-opponent.md](computer-opponent.md) |
 | Content | YAML (authoring) → Zod validation → JSON (runtime) | Readable, commentable lessons; app loads plain JSON |
@@ -57,7 +57,7 @@ Workspace `packages/*` + `apps/*`. Direction: app → `subject-*` → `platform-
 |---|---|---|
 | `SubjectCore` | platform-core `domain/subject.ts` | `id`, `context`, `kinds`, `modes`, `characters`, `settings` slot, `notes`, `noteVars`, `rewards?`, `gameRecordOf?`; `createSubjectRuntime(core)` (`domain/runtime.ts`, called by `createServices`) builds the kind + mode registries plus the platform `series` mode |
 | `SubjectContent` | platform-content `subject.ts` | `kinds`, `modes`, `defaultMode?`, `stimulus`, `demo`, `badges`, `characters`, `voiceTemplates`, `extraOutputs?`; `buildContent({ subject, root, out })` writes `dist/` |
-| `SubjectWeb` | platform-web `app/subject.ts` | `core`, `createServices`, kind / mode UIs, `surface`, `CharacterBadge?`, `art`, `den`, `routes`, `homeTiles?`, `createSlice?`, `loadParent?`, `dev?` |
+| `SubjectWeb` | platform-web `app/subject.ts` | `core`, `createServices`, kind / mode UIs, `surface`, `characterArt?`, `art`, `den`, `routes`, `homeTiles?`, `createSlice?`, `loadParent?`, `dev?` |
 | `AppConfig` | platform-core `domain/subject.ts` | `storagePrefix`, `backupAppId`, file prefixes, `version` |
 
 Chess: `chessCore` (`src/core/chess-core.ts`), `chessContent` (`src/content/chess-content.ts`), `chessWeb` (`src/web/chess-pack.ts`), `CHESS_APP_CONFIG`. Dispatch on exercise `type` / mini-game `mode` only through registries: `EXERCISE_KINDS` (`src/kinds/index.ts`), `MINI_GAME_MODES` (`src/modes/index.ts`), `EXERCISE_SOLUTIONS` (`src/kinds/solutions.ts`, tests only), `EXERCISE_KIND_UI` / `MINI_GAME_MODE_UI` (`src/web/{kinds,modes}/ui-registry.ts`); `dispatch-registries.test.ts` (`platform-web/src`, `subject-chess/src/web`, `subject-math/src/web`, all via `dispatchGuard`) guards it. Math: `mathCore`, `mathContent`, `mathWeb`, `MATH_APP_CONFIG` (prefix `math-demo:`), same registry layout.
