@@ -82,9 +82,9 @@ export interface ShapeRowProps {
   readonly compact?: boolean;
 }
 
-/** The "?" of the gap, smaller in a row of many tokens (its box shrinks with the row). */
+/** The "?" of the gap, smaller in a row of many tokens (its box shrinks with the row; `leading-none` keeps the box square). */
 function gapTextClass(count: number, compact: boolean): string {
-  if (compact) return 'text-xl';
+  if (compact) return count > 6 ? 'text-xs' : count > 4 ? 'text-base' : 'text-xl';
   if (count > 6) return 'text-lg';
   return count > 4 ? 'text-2xl' : 'text-3xl';
 }
@@ -104,7 +104,7 @@ export function ShapeRow({ shapes, compact = false }: ShapeRowProps): JSX.Elemen
             key={index}
             data-gap="true"
             style={side}
-            className={`flex aspect-square w-(--box-side) shrink-0 items-center justify-center rounded-2xl border-2 border-dashed border-edge-neutral font-display font-bold text-muted ${gapTextClass(shapes.length, compact)}`}
+            className={`flex aspect-square min-h-0 w-(--box-side) shrink-0 items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-edge-neutral font-display leading-none font-bold text-muted ${gapTextClass(shapes.length, compact)}`}
           >
             ?
           </span>

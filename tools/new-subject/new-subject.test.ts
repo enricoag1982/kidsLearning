@@ -112,9 +112,9 @@ describe('scaffold', () => {
       writeFileSync(join(template, dir, 'file.json'), '{}');
     }
 
-    scaffold({ root, id: 'logic', name: 'Logic' });
+    scaffold({ root, id: 'music-notes', name: 'Music Notes' });
 
-    const files = listFiles(join(root, 'packages', 'subject-logic'));
+    const files = listFiles(join(root, 'packages', 'subject-music-notes'));
     expect(files.filter((file) => /node_modules|dist|__snapshots__/.test(file))).toEqual([]);
     expect(files).toContain('src/content.test.ts');
   });
@@ -186,12 +186,12 @@ describe('scaffold', () => {
     );
     const before = APP_FILES.map(read);
 
-    expect(() => scaffold({ root, id: 'logic', name: 'Logic' })).toThrow(
+    expect(() => scaffold({ root, id: 'music-notes', name: 'Music Notes' })).toThrow(
       /marker "\/\/ new-subject:entry" not found/,
     );
 
     expect(APP_FILES.map(read)).toEqual(before);
-    expect(existsSync(join(root, 'packages', 'subject-logic'))).toBe(false);
+    expect(existsSync(join(root, 'packages', 'subject-music-notes'))).toBe(false);
   });
 
   it('never touches this repository', () => {

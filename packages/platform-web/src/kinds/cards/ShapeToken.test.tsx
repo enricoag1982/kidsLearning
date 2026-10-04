@@ -218,17 +218,27 @@ describe('ShapeRow at 390 px', () => {
     }
   });
 
-  it('shrinks the "?" of the gap with a crowded row', () => {
-    const textOf = (count: number): string => {
+  it('shrinks the "?" of the gap with a crowded row, and keeps the gap box square whatever the text', () => {
+    const textOf = (count: number, compact = false): string => {
       const shapes = [
         ...Array.from({ length: count - 1 }, (_unused, index) => token(index)),
         'gap' as const,
       ];
-      const { container } = render(<ShapeRow shapes={shapes} />);
+      const { container } = render(<ShapeRow shapes={shapes} compact={compact} />);
       return container.querySelector('[data-gap]')?.className ?? '';
     };
     expect(textOf(3)).toContain('text-3xl');
     expect(textOf(6)).toContain('text-2xl');
     expect(textOf(8)).toContain('text-lg');
+    expect(textOf(3, true)).toContain('text-xl');
+    expect(textOf(6, true)).toContain('text-base');
+    expect(textOf(8, true)).toContain('text-xs');
+    for (const count of [1, 4, 8]) {
+      const classes = textOf(count);
+      expect(classes).toContain('aspect-square');
+      expect(classes).toContain('min-h-0');
+      expect(classes).toContain('overflow-hidden');
+      expect(classes).toContain('leading-none');
+    }
   });
 });
