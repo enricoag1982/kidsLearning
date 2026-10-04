@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
 import i18next from 'i18next';
 import { tContent } from '@learn/platform-web/content-text.ts';
+import { ARRAY_LESSON } from '../testing/array-fixture.ts';
 import { LINE_LESSON } from '../testing/line-fixture.ts';
 import { fixtureLesson } from '../testing/place-value-fixtures.ts';
 import { mathWeb } from '../math-pack.ts';
@@ -12,7 +13,7 @@ describe('the #math playground', () => {
     expect(Object.keys(mathWeb.dev ?? {})).toEqual(['#math']);
   });
 
-  it('lists the number line samples and the place-value fixtures in one screen, a group each', () => {
+  it('lists the number line samples, the place-value fixtures and the array fixtures in one screen, a group each', () => {
     render(<MathPlayground />);
     const names = (group: string) =>
       screen
@@ -23,6 +24,8 @@ describe('the #math playground', () => {
     expect(names('Number line').every((name) => name.startsWith('fx-nl-'))).toBe(true);
     expect(names('Place value')).toHaveLength(5);
     expect(names('Place value').every((name) => name.startsWith('pvfx-'))).toBe(true);
+    expect(names('Arrays')).toHaveLength(6);
+    expect(names('Arrays').every((name) => name.startsWith('fx-ar-'))).toBe(true);
   });
 
   it('has a button for every number line sample (the guided try and the six scored ones) and shows each in its lesson step', async () => {
@@ -107,5 +110,50 @@ describe('the #math playground', () => {
     await screen.findByText('Build 305 with the blocks.');
     expect(screen.queryByRole('button', { name: /Skip/ })).toBeNull();
     expect(document.querySelectorAll('[data-emphasis="true"]')).toHaveLength(0);
+  });
+
+  it('has a button for every array fixture (the guided try and the five scored ones: rows fixed, rows free, the whole grid, a single row, a reason) and shows each in its lesson step', async () => {
+    render(<MathPlayground />);
+    const buttons = screen.getAllByRole('button', { name: /^fx-ar-/ });
+    expect(buttons.map((button) => button.textContent)).toEqual([
+      'fx-ar-guided (guided)',
+      'fx-ar-fixed',
+      'fx-ar-free',
+      'fx-ar-full',
+      'fx-ar-single',
+      'fx-ar-reason',
+    ]);
+
+    const defs = [...ARRAY_LESSON.guided, ...ARRAY_LESSON.exercises];
+    for (const button of buttons) {
+      fireEvent.click(button);
+      const def = defs.find((candidate) => candidate.id === button.textContent.split(' ')[0]);
+      expect(
+        (
+          await screen.findAllByText(tContent(i18next.t, def?.textKey ?? ''), undefined, {
+            timeout: 3000,
+          })
+        ).length,
+      ).toBeGreaterThan(0);
+      expect(screen.getByRole('button', { name: 'Hint' })).toBeTruthy();
+      expect(screen.getByRole('group', { name: 'Dots, 6 by 6' })).toBeTruthy();
+      expect(screen.getAllByTestId(/^grid-cell-/)).toHaveLength(36);
+    }
+  });
+
+  it('plays an array fixture in the real lesson step: tap the corner, Check, praise and stars; a guided try shows Skip', async () => {
+    render(<MathPlayground />);
+    fireEvent.click(screen.getByRole('button', { name: 'fx-ar-guided (guided)' }));
+    await screen.findByText('Make 2 rows of 3 dots. Tap the bottom-right dot.');
+    expect(screen.getByRole('button', { name: /Skip/ })).toBeTruthy();
+
+    fireEvent.click(screen.getByRole('button', { name: 'fx-ar-fixed' }));
+    await screen.findByText('Make 3 rows of 4 dots. Tap the bottom-right dot.');
+    expect(screen.queryByRole('button', { name: /Skip/ })).toBeNull();
+    expect(screen.getByRole<HTMLButtonElement>('button', { name: 'Check' }).disabled).toBe(true);
+    fireEvent.click(await screen.findByTestId('grid-cell-3-2'));
+    fireEvent.click(screen.getByRole('button', { name: 'Check' }));
+    expect(await screen.findByText('Amazing!')).toBeTruthy();
+    expect(screen.getByText('3 rows of 4')).toBeTruthy();
   });
 });

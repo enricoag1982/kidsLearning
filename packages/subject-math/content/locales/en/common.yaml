@@ -27,12 +27,26 @@ math:
     label: 'Number line from {{from}} to {{to}}, a mark every {{step}}'
     marker-at: 'Marker at {{value}}'
     no-marker: No marker yet
+  # The array kind (src/kinds/array): the names a screen reader reads (the board, each dot, the shape after a tap) and the count shown
+  # under the board once hint 2 is asked or the array is right.
+  array:
+    board: 'Dots, {{size}} by {{size}}'
+    cell: 'Row {{row}}, column {{column}}'
+    cell-inside: 'Row {{row}}, column {{column}}, in your array'
+    shape_one: '{{count}} row, {{cols}} in each row'
+    shape_other: '{{count}} rows, {{cols}} in each row'
+    caption_one: '{{count}} row of {{cols}}'
+    caption_other: '{{count}} rows of {{cols}}'
   notes:
     line-wrong: Not there yet. Look at the numbers on the line.
     pv-wrong: Count the blocks in each column again.
+    array-wrong: Count the rows and the dots in each row.
+    array-swapped: Same number, but count the rows again.
   hints:
     line-benchmark: 'Find the middle: {{benchmark}}.'
     line-labels: Read the numbers on every mark.
+    array-rows: Rows go across, like lines in a book.
+    array-row-total: 'Each row has {{cols}}.'
     pv-columns: 'Hundreds, tens and ones: count each column.'
     pv-numeral: The number beside the blocks shows what you built.
     pv-fill: 'Here are the {{place}}. Now finish!'

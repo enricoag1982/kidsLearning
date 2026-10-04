@@ -188,7 +188,18 @@
   },
   "loading": "Loading…",
   "math": {
+   "array": {
+    "board": "Dots, {{size}} by {{size}}",
+    "caption_one": "{{count}} row of {{cols}}",
+    "caption_other": "{{count}} rows of {{cols}}",
+    "cell": "Row {{row}}, column {{column}}",
+    "cell-inside": "Row {{row}}, column {{column}}, in your array",
+    "shape_one": "{{count}} row, {{cols}} in each row",
+    "shape_other": "{{count}} rows, {{cols}} in each row"
+   },
    "hints": {
+    "array-row-total": "Each row has {{cols}}.",
+    "array-rows": "Rows go across, like lines in a book.",
     "line-benchmark": "Find the middle: {{benchmark}}.",
     "line-labels": "Read the numbers on every mark.",
     "pv-columns": "Hundreds, tens and ones: count each column.",
@@ -201,6 +212,8 @@
     "no-marker": "No marker yet"
    },
    "notes": {
+    "array-swapped": "Same number, but count the rows again.",
+    "array-wrong": "Count the rows and the dots in each row.",
     "line-wrong": "Not there yet. Look at the numbers on the line.",
     "pv-wrong": "Count the blocks in each column again."
    },

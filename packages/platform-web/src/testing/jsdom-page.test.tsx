@@ -70,4 +70,23 @@ describe('jsdomPage', () => {
     await page.getByRole('button', { name: 'AGAIN' }).press('x');
     expect(seen).toEqual(['short', 'long']);
   });
+
+  it('clicks the element with the test id, waiting for it to appear', async () => {
+    const clicks: string[] = [];
+    const view = render(<div />);
+    const click = jsdomPage().getByTestId('grid-cell-2-1').click();
+    view.rerender(
+      <button
+        type="button"
+        data-testid="grid-cell-2-1"
+        onClick={() => {
+          clicks.push('cell');
+        }}
+      >
+        Cell
+      </button>,
+    );
+    await click;
+    expect(clicks).toEqual(['cell']);
+  });
 });

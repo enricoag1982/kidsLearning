@@ -1,5 +1,5 @@
 // Math's content behaviour: the card kit's YAML schemas (a `prompt` card, `choice` cards, a `number-entry` pad, the `series` boss)
-// under math's own registries, so math's own kinds (`number-line`; m13.7-m13.8: `place-value`, `array`: schema, compile, verify) and
+// under math's own registries, so math's own kinds (`number-line`, `place-value`, `array`: schema, compile, verify) and
 // the generated-exercise templates of m13.9+ join them here.
 import { CARD_KIND_CONTENT, createCardContent } from '@learn/platform-content/kinds/cards/content';
 import { cardVoiceTemplates } from '@learn/platform-content/kinds/cards/voice';
@@ -12,6 +12,7 @@ import type { SubjectContent } from '@learn/platform-content/subject';
 import type { z } from 'zod';
 import { MATH_CHARACTERS, mathCore } from '../core/math-core.ts';
 import type { DefOf, ExerciseType } from '../kinds/index.ts';
+import { array } from './array.ts';
 import { numberLine } from './number-line.ts';
 import { numberLineVoiceTemplates } from './number-line-voice.ts';
 import { placeValue } from './place-value.ts';
@@ -22,6 +23,7 @@ export const MATH_KIND_CONTENT = {
   ...CARD_KIND_CONTENT,
   'number-line': numberLine,
   'place-value': placeValue,
+  array,
 } as const satisfies {
   readonly [T in ExerciseType]: ExerciseKindContent<DefOf<T>, z.ZodType>;
 };

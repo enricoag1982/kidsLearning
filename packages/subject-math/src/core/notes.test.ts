@@ -12,7 +12,12 @@ const note = (feedback: ExerciseFeedbackBase, offer = false) =>
 
 describe('math notes', () => {
   it('are the card kit notes plus math’s own, in the core', () => {
-    expect(Object.keys(MATH_NOTES).sort()).toEqual(['hint', 'line-wrong', 'pv-wrong']);
+    expect(Object.keys(MATH_NOTES).sort()).toEqual([
+      'array-wrong',
+      'hint',
+      'line-wrong',
+      'pv-wrong',
+    ]);
     expect(Object.keys(mathCore.notes).sort()).toEqual(
       [...new Set([...Object.keys(CARD_NOTES), ...Object.keys(MATH_NOTES)])].sort(),
     );
@@ -73,6 +78,31 @@ describe('math notes', () => {
     expect(mathHintText(r, { kind: 'number-line', level: 1 })).toBe('cards.hint-look');
     expect(mathHintText(r, { kind: 'number-line', level: 2 })).toBe('math.hints.line-labels');
     expect(mathHintText(r, { kind: 'number-line', level: 3 })).toBe('exercise.hint-answer');
+  });
+
+  it('a wrong array says the reason of its shape, else the swapped note, else asks to count again', () => {
+    expect(note({ kind: 'array-wrong' })).toEqual({
+      tone: 'attention',
+      text: 'math.notes.array-wrong',
+    });
+    expect(note({ kind: 'array-wrong', swapped: true })?.text).toBe('math.notes.array-swapped');
+    expect(note({ kind: 'array-wrong', swapped: false })?.text).toBe('math.notes.array-wrong');
+    expect(note({ kind: 'array-wrong', reasonKey: 'lessons:bugs.swap', swapped: true })?.text).toBe(
+      'lessons:bugs.swap',
+    );
+    expect(mathCore.notes['array-wrong']?.error).toBe(true);
+    expect(note({ kind: 'array-wrong' }, true)?.text).toBe(
+      'math.notes.array-wrong exercise.easier-offer',
+    );
+  });
+
+  it('an array hint says rows go across, then the dots of a row, then the answer', () => {
+    expect(mathHintText(r, { kind: 'array', level: 1 })).toBe('math.hints.array-rows');
+    expect(mathHintText(r, { kind: 'array', level: 2, cols: 4 })).toBe(
+      'math.hints.array-row-total {"cols":4}',
+    );
+    expect(mathHintText(r, { kind: 'array', level: 2 })).toBe('cards.hint-look');
+    expect(mathHintText(r, { kind: 'array', level: 3, fillRows: 3 })).toBe('exercise.hint-answer');
   });
 
   it('a card kit hint keeps the kit’s wording, through the same note', () => {
