@@ -178,6 +178,15 @@
    }
   },
   "loading": "Loading…",
+  "math": {
+   "hints": {
+    "line-benchmark": "Find the middle: {{benchmark}}.",
+    "line-labels": "Read the numbers on every mark."
+   },
+   "notes": {
+    "line-wrong": "Not there yet. Look at the numbers on the line."
+   }
+  },
   "new-player": {
    "avatar": {
     "primary": "Let's play!",

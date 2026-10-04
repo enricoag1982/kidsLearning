@@ -100,8 +100,8 @@ async function runActions(
     const { state: next, outcome } = kind.act(before, action, null);
     await driver.perform(page, action, { def, before, outcome, text: contentText });
     state = next;
-    // The entry strip echoes what was typed; waiting for it keeps the next tap off a stale render.
-    if (!next.solved && next.entry !== '') {
+    // The entry strip echoes what was typed (a number-entry's state only); waiting for it keeps the next tap off a stale render.
+    if (!next.solved && 'entry' in next && next.entry !== '') {
       const label = interpolate(contentText('cards.entry-label'), { value: next.entry });
       await expect(page.getByRole('status', { name: label, exact: true })).toBeVisible();
     }

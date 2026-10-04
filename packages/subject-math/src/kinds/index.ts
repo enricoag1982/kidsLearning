@@ -1,5 +1,5 @@
-// The exercise-kind registry: the only place exercise-type dispatch happens. Today the card kit's four kinds, one plain object
-// that math's own kinds join (m13.6-m13.8).
+// The exercise-kind registry: the only place exercise-type dispatch happens. The card kit's four kinds and math's own, one plain
+// object (`number-line` since m13.6; `place-value` and `array` join in m13.7-m13.8).
 import type {
   CardAction,
   CardHint,
@@ -9,14 +9,21 @@ import type {
 import { CARD_KINDS } from '@learn/platform-core/domain/exercise/kinds/cards/kinds';
 import type { ExerciseKind } from '@learn/platform-core/domain/exercise/kind';
 import type { MathExerciseDef } from '../core/types.ts';
+import { numberLineKind } from './number-line/kind.ts';
+import type {
+  NumberLineHint,
+  NumberLineOutcome,
+  NumberLineState,
+  PlaceAction,
+} from './number-line/def.ts';
 
 export type ExerciseType = MathExerciseDef['type'];
 export type DefOf<T extends ExerciseType> = Extract<MathExerciseDef, { readonly type: T }>;
 
-export type MathAction = CardAction;
-export type MathOutcome = CardOutcome;
-export type MathHint = CardHint;
-export type MathState = CardState;
+export type MathAction = CardAction | PlaceAction;
+export type MathOutcome = CardOutcome | NumberLineOutcome;
+export type MathHint = CardHint | NumberLineHint;
+export type MathState = CardState | NumberLineState;
 
 export type AnyMathKind = ExerciseKind<
   MathExerciseDef,
@@ -29,6 +36,7 @@ export type AnyMathKind = ExerciseKind<
 
 export const MATH_KINDS = {
   ...CARD_KINDS,
+  'number-line': numberLineKind,
 } as const satisfies { readonly [T in ExerciseType]: AnyMathKind & { readonly type: T } };
 
 export function kindOf(def: { readonly type: ExerciseType }): AnyMathKind {

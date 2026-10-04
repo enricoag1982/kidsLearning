@@ -3,8 +3,10 @@ import { CARD_KINDS } from '@learn/platform-core/domain/exercise/kinds/cards/kin
 import { CARD_SOLUTIONS } from '@learn/platform-core/domain/exercise/kinds/cards/solutions';
 import { CARD_SAMPLES } from '@learn/platform-core/testing';
 import { MATH_CHARACTERS, mathCore } from '../core/math-core.ts';
+import { MATH_NOTES } from '../core/notes.ts';
 import {
   MATH_SOLUTIONS,
+  NUMBER_LINE_SAMPLES,
   playSolution,
   playWrongThenSolve,
   solutionOf,
@@ -12,10 +14,12 @@ import {
 } from '../testing/index.ts';
 import { MATH_KINDS, kindOf, startExercise } from './index.ts';
 
-const TYPES = ['choice', 'number-entry', 'order', 'true-false'];
+const TYPES = ['choice', 'number-entry', 'number-line', 'order', 'true-false'];
+
+const SAMPLES = [...Object.values(CARD_SAMPLES), ...Object.values(NUMBER_LINE_SAMPLES)];
 
 describe('the math registry', () => {
-  it('is the card kit kinds (same objects), one plain object math adds its own kinds to', () => {
+  it("is the card kit kinds (same objects) plus math's own, one plain object", () => {
     expect(Object.keys(MATH_KINDS).sort()).toEqual(TYPES);
     for (const [type, kind] of Object.entries(CARD_KINDS)) {
       expect(MATH_KINDS[type as keyof typeof CARD_KINDS], type).toBe(kind);
@@ -34,7 +38,15 @@ describe('the math registry', () => {
     expect(mathCore.context).toBeNull();
   });
 
-  it('has a solution for every kind: the card kit solutions (same objects)', () => {
+  it("the core notes are the card kit notes plus math's own (the line note, and a hint note that words the line hints)", () => {
+    expect(mathCore.notes['line-wrong']).toBe(MATH_NOTES['line-wrong']);
+    expect(mathCore.notes['hint']).toBe(MATH_NOTES.hint);
+    for (const kind of ['wrong-answer', 'number-wrong', 'order-wrong', 'solved']) {
+      expect(mathCore.notes[kind], kind).toBeDefined();
+    }
+  });
+
+  it("has a solution for every kind: the card kit solutions (same objects) plus math's own", () => {
     expect(Object.keys(MATH_SOLUTIONS).sort()).toEqual(TYPES);
     for (const [type, solution] of Object.entries(CARD_SOLUTIONS)) {
       expect(MATH_SOLUTIONS[type as keyof typeof CARD_SOLUTIONS], type).toBe(solution);
@@ -42,7 +54,7 @@ describe('the math registry', () => {
   });
 
   it('finds a kind and a solution by the def type and starts a fresh state', () => {
-    for (const def of Object.values(CARD_SAMPLES)) {
+    for (const def of SAMPLES) {
       expect(kindOf(def).type).toBe(def.type);
       expect(solutionOf(def)).toBe(MATH_SOLUTIONS[def.type]);
       expect(startExercise(def)).toMatchObject({
@@ -51,13 +63,13 @@ describe('the math registry', () => {
         solved: false,
         errors: 0,
         hintLevel: 0,
-        entry: '',
       });
     }
+    expect(startExercise(CARD_SAMPLES['number-entry'])).toMatchObject({ entry: '' });
   });
 
   it('plays every sample to 3 stars, and a wrong try costs exactly 1 error', () => {
-    for (const def of Object.values(CARD_SAMPLES)) {
+    for (const def of SAMPLES) {
       const solved = playSolution(def);
       expect(solved, def.type).toMatchObject({ solved: true, errors: 0 });
       expect(starsFor(solved), def.type).toBe(3);
