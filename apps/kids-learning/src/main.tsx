@@ -6,6 +6,7 @@ import '@fontsource-variable/nunito';
 import './index.css';
 import { chessEntry } from '@learn/subject-chess/entry';
 import { mathEntry } from '@learn/subject-math/entry';
+import { codingEntry } from '@learn/subject-coding/entry';
 // new-subject:import
 import { KIDS_APP_CONFIG } from './app-config.ts';
 
@@ -13,6 +14,7 @@ void mountApp({
   subjects: [
     chessEntry,
     mathEntry,
+    codingEntry,
     // new-subject:entry
   ],
   app: KIDS_APP_CONFIG,

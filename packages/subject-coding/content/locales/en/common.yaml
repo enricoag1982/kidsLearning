@@ -2,7 +2,7 @@
 app:
   title: Coding
 home:
-  owl-next: 'Today you meet {{character}}!'
+  owl-next: 'Today {{character}} needs your help!'
 den:
   owl-line: Look at all your friends!
   friends-heading: Your friends

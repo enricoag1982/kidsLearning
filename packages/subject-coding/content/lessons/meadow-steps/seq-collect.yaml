@@ -58,7 +58,7 @@ exercises:
     type: predict
     text: ask-predict
     map: ['S.*.', '.#..', '..*#', '...F']
-    program: [right, right, down, down, down]
+    program: [right, right, down, down]
 variants:
   - id: collect-e1
     type: program

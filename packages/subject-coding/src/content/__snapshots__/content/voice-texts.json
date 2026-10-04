@@ -110,6 +110,11 @@
   "source": "exercise-note"
  },
  {
+  "key": "291d286d1957ffb5",
+  "text": "Today Fox needs your help!",
+  "source": "home"
+ },
+ {
   "key": "2d076874f564970b",
   "text": "Oops, bumped into a rock at step 8! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
@@ -303,11 +308,6 @@
   "key": "6ddfd7aa9f2d693f",
   "text": "You already know Fox!",
   "source": "assessment"
- },
- {
-  "key": "704fdbfbeeed08c4",
-  "text": "Today you meet Fox!",
-  "source": "home"
  },
  {
   "key": "71a69f04a633a5e7",
