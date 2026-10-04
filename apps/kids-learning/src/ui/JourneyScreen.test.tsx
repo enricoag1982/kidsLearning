@@ -73,6 +73,20 @@ describe('JourneyScreen', () => {
   });
 });
 
+describe('JourneyScreen paths heading', () => {
+  it('names the main track: "Paths after Basics" for chess', async () => {
+    const [l1, l2] = twoLessons();
+    const basics: TracksCatalog = {
+      ...CATALOG,
+      tracks: [{ ...TRACK, titleKey: 'journey:tracks.basics' }],
+    };
+    const services = createTestServices(makeContentSource({ lessons: [l1, l2], catalog: basics }));
+    await renderWithStore(<JourneyScreen />, services);
+
+    expect(await screen.findByText('Paths after Basics')).toBeTruthy();
+  });
+});
+
 // A one-lesson world with its own boss: dev fixture only, not the real tracks.yaml (the
 // real World 3 boss arrives from another agent; the lead wires `boss: win-the-queen` at integration).
 const WORLD_BOSS: World = { ...WORLD, boss: 'boss-mg' };

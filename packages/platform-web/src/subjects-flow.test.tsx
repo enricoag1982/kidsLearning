@@ -88,7 +88,9 @@ describe('two subjects in one app', () => {
     await pickMia();
     await screen.findByRole('heading', { level: 1, name: 'What shall we learn?' });
     expect(screen.getAllByTestId(/^subject-tile-/)).toHaveLength(2);
-    expect(screen.getByTestId('subject-tile-a').getAttribute('aria-current')).toBe('true');
+    // Mia has opened no subject yet: none is current, though `a` is the active one.
+    expect(screen.getByTestId('subject-tile-a').getAttribute('aria-current')).toBeNull();
+    expect(screen.getByTestId('subject-tile-b').getAttribute('aria-current')).toBeNull();
 
     fireEvent.click(screen.getByTestId('subject-tile-a'));
     await screen.findByRole('heading', { level: 1, name: 'Title A' });
@@ -96,6 +98,9 @@ describe('two subjects in one app', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Subjects' }));
     await screen.findByRole('heading', { level: 1, name: 'What shall we learn?' });
+    // After the first selection, the chosen subject is the current one.
+    expect(screen.getByTestId('subject-tile-a').getAttribute('aria-current')).toBe('true');
+    expect(screen.getByTestId('subject-tile-b').getAttribute('aria-current')).toBeNull();
     fireEvent.click(screen.getByTestId('subject-tile-b'));
     await declineOffer();
     await screen.findByRole('heading', { level: 1, name: 'Title B' });
