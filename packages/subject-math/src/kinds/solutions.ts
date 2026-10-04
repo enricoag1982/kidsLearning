@@ -2,6 +2,8 @@
 // only by `/testing` and, through it, content tests.
 import type { ExerciseSolution } from '@learn/platform-core/domain/exercise/kind';
 import { CARD_SOLUTIONS } from '@learn/platform-core/domain/exercise/kinds/cards/solutions';
+import type { NumberLineDef, PlaceAction } from './number-line/def.ts';
+import { numberLineSolution, numberLineWrongAction } from './number-line/solution.ts';
 import type { DefOf, ExerciseType, MathAction } from './index.ts';
 
 type MathSolution<
@@ -11,6 +13,10 @@ type MathSolution<
 
 export const MATH_SOLUTIONS = {
   ...CARD_SOLUTIONS,
+  'number-line': {
+    solution: numberLineSolution,
+    wrongAction: numberLineWrongAction,
+  } satisfies MathSolution<NumberLineDef, PlaceAction>,
 } as const satisfies { readonly [T in ExerciseType]: MathSolution<DefOf<T>, MathAction> };
 
 export type AnyMathSolution = MathSolution<DefOf<ExerciseType>, MathAction>;

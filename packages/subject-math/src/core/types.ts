@@ -1,14 +1,17 @@
-// Math's exercise defs, lessons and content: the card kit's four kinds (a prompt card, choice cards, a number pad), no kind of its
-// own yet (`number-line`, `place-value` and `array` join in m13.6-m13.8, each with its def here).
+// Math's exercise defs, lessons and content: the card kit's four kinds (a prompt card, choice cards, a number pad) and math's own
+// (`number-line` since m13.6; `place-value` and `array` join in m13.7-m13.8, each with its def under `kinds/<kind>/def.ts`).
 import type {
   CardDemo,
   CardExerciseDef,
 } from '@learn/platform-core/domain/exercise/kinds/cards/def';
 import type { SeriesGameDef } from '@learn/platform-core/domain/exercise/modes/series/def';
 import type { Lesson, MiniGameBase } from '@learn/platform-core/domain/subject';
+import type { NumberLineDef } from '../kinds/number-line/def.ts';
 
-/** Every exercise a math lesson may hold: the card kit's four kinds. */
-export type MathExerciseDef = CardExerciseDef;
+export type { NumberLineDef, NumberLineHint, PlaceAction } from '../kinds/number-line/def.ts';
+
+/** Every exercise a math lesson may hold: the card kit's four kinds and math's own. */
+export type MathExerciseDef = CardExerciseDef | NumberLineDef;
 
 export type MathLesson = Lesson<MathExerciseDef, CardDemo>;
 

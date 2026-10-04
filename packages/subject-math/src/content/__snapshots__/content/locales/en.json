@@ -178,6 +178,20 @@
    }
   },
   "loading": "Loading…",
+  "math": {
+   "hints": {
+    "line-benchmark": "Find the middle: {{benchmark}}.",
+    "line-labels": "Read the numbers on every mark."
+   },
+   "line": {
+    "label": "Number line from {{from}} to {{to}}, a mark every {{step}}",
+    "marker-at": "Marker at {{value}}",
+    "no-marker": "No marker yet"
+   },
+   "notes": {
+    "line-wrong": "Not there yet. Look at the numbers on the line."
+   }
+  },
   "new-player": {
    "avatar": {
     "primary": "Let's play!",

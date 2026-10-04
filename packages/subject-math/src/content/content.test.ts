@@ -9,6 +9,7 @@ import type { CardFeedback } from '@learn/platform-core/domain/exercise/kinds/ca
 import { exerciseNote } from '@learn/platform-core/domain/notes';
 import type { Resolve } from '@learn/platform-core/domain/notes';
 import { MATH_CHARACTERS, mathCore } from '../core/math-core.ts';
+import type { MathFeedback } from '../core/notes.ts';
 import type { MathContent, MathExerciseDef } from '../core/types.ts';
 import { playSolution, playWrongThenSolve, starsFor } from '../testing/play.ts';
 import { mathContent } from './math-content.ts';
@@ -246,14 +247,33 @@ describe('texts', () => {
 
   it('keeps no text of the retired problem card in the English bundle', () => {
     const common = locales.en?.common as Record<string, unknown> | undefined;
-    expect(common?.math).toBeUndefined();
+    // `math.notes` / `math.hints` are the number line's (m13.6), not the retired card's.
+    const math = (common?.math ?? {}) as Record<string, unknown>;
+    for (const key of [
+      'pad-label',
+      'erase',
+      'entry-label',
+      'hint-dots',
+      'hint-count-on',
+      'hint-count-back',
+    ]) {
+      expect(math[key], `math.${key}`).toBeUndefined();
+    }
     expect(
       (common?.exercise as Record<string, unknown> | undefined)?.['hint-look'],
     ).toBeUndefined();
   });
 
+  it('the number line texts are the spec ones', () => {
+    expect(resolve('math.notes.line-wrong')).toBe(
+      'Not there yet. Look at the numbers on the line.',
+    );
+    expect(resolve('math.hints.line-benchmark', { benchmark: 500 })).toBe('Find the middle: 500.');
+    expect(resolve('math.hints.line-labels')).toBe('Read the numbers on every mark.');
+  });
+
   it('every note the Owl bubble can say resolves, with no placeholder left', () => {
-    const feedback: readonly CardFeedback[] = [
+    const feedback: readonly (CardFeedback | MathFeedback)[] = [
       { kind: 'wrong-answer' },
       { kind: 'number-wrong' },
       { kind: 'order-wrong' },
@@ -263,6 +283,10 @@ describe('texts', () => {
       { kind: 'hint', hint: { kind: 'number-entry', level: 1, reveal: false } },
       { kind: 'hint', hint: { kind: 'number-entry', level: 2, reveal: false, digit: '4' } },
       { kind: 'hint', hint: { kind: 'number-entry', level: 3, reveal: true } },
+      { kind: 'line-wrong' },
+      { kind: 'hint', hint: { kind: 'number-line', level: 1, benchmark: 500 } },
+      { kind: 'hint', hint: { kind: 'number-line', level: 2 } },
+      { kind: 'hint', hint: { kind: 'number-line', level: 3, reveal: 300 } },
     ];
     for (const stars of [1, 2, 3] as const) {
       for (const entry of feedback) {

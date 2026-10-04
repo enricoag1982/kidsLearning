@@ -19,3 +19,14 @@ placement:
   summary-none-body: Every math whiz starts with the first step.
 topic:
   counter: Counter
+math:
+  # The number line kind (src/kinds/number-line): the name a screen reader reads, the notes under the question and the hints.
+  line:
+    label: 'Number line from {{from}} to {{to}}, a mark every {{step}}'
+    marker-at: 'Marker at {{value}}'
+    no-marker: No marker yet
+  notes:
+    line-wrong: Not there yet. Look at the numbers on the line.
+  hints:
+    line-benchmark: 'Find the middle: {{benchmark}}.'
+    line-labels: Read the numbers on every mark.

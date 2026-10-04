@@ -1,6 +1,6 @@
 // Math's content behaviour: the card kit's YAML schemas (a `prompt` card, `choice` cards, a `number-entry` pad, the `series` boss)
-// under math's own registries, so the kinds of m13.6-m13.8 (`number-line`, `place-value`, `array`: schema, compile, verify) and the
-// generated-exercise templates of m13.9+ join them here.
+// under math's own registries, so math's own kinds (`number-line`; m13.7-m13.8: `place-value`, `array`: schema, compile, verify) and
+// the generated-exercise templates of m13.9+ join them here.
 import { CARD_KIND_CONTENT, createCardContent } from '@learn/platform-content/kinds/cards/content';
 import { cardVoiceTemplates } from '@learn/platform-content/kinds/cards/voice';
 import { cardStimulus } from '@learn/platform-content/kinds/cards/stimulus';
@@ -12,10 +12,13 @@ import type { SubjectContent } from '@learn/platform-content/subject';
 import type { z } from 'zod';
 import { MATH_CHARACTERS, mathCore } from '../core/math-core.ts';
 import type { DefOf, ExerciseType } from '../kinds/index.ts';
+import { numberLine } from './number-line.ts';
+import { numberLineVoiceTemplates } from './number-line-voice.ts';
 
-/** The kinds, by `type`: the card kit's four. */
+/** The kinds, by `type`: the card kit's four and math's own. */
 export const MATH_KIND_CONTENT = {
   ...CARD_KIND_CONTENT,
+  'number-line': numberLine,
 } as const satisfies {
   readonly [T in ExerciseType]: ExerciseKindContent<DefOf<T>, z.ZodType>;
 };
@@ -26,9 +29,10 @@ export const mathExerciseSchema = createExerciseSchema(MATH_KIND_CONTENT, cardSt
 export const MATH_TEMPLATES: Readonly<Record<string, AnyExerciseTemplate>> = {};
 
 /** The narrated math texts that are not an exercise or lesson text: the card kit's feedback notes the content uses (over math's note
- * table). Math has no notes of its own yet. */
+ * table), and math's own kinds' notes when the content has such an exercise. */
 const mathVoiceTemplates: SubjectContent['voiceTemplates'] = (add, r, all) => {
   cardVoiceTemplates(mathCore.notes)(add, r, all);
+  numberLineVoiceTemplates(mathCore.notes)(add, r, all);
 };
 
 /** Math's whole `SubjectContent`; `series` is its only mini-game mode, so no mode is a default. */
