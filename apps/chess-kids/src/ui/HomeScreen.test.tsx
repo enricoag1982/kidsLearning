@@ -4,7 +4,6 @@ import { getLessonProgress, nextLesson, withResumeStep } from '@learn/platform-c
 import type { Track, TracksCatalog, World } from '@learn/platform-core';
 import type { MiniGame } from '@learn/subject-chess';
 import { makeContentSource } from '@learn/subject-chess/testing';
-import { chessWeb } from '@learn/subject-chess/web/chess-pack.ts';
 import i18n from 'i18next';
 import { tContent } from '@learn/platform-web/content-text.ts';
 import { createTestServices } from '@learn/subject-chess/web/testing/test-services.ts';
@@ -207,7 +206,7 @@ describe('HomeScreen next step is a world boss', () => {
     const services = createTestServices(
       makeContentSource({ lessons: [lesson], minigames: [BOSS_MINIGAME], catalog: CATALOG_BOSS }),
     );
-    const { store } = await renderWithStore(<HomeScreen />, services, chessWeb);
+    const { store } = await renderWithStore(<HomeScreen />, services);
     const profileId = store.getState().profile?.id ?? '';
 
     const saved = await getLessonProgress(services.deps, profileId, lesson.id);
@@ -255,7 +254,7 @@ describe('HomeScreen install banner (M5.4, non-functional.md §1/§4)', () => {
       Object.assign({}, navigator, { userAgent: IPAD_SAFARI_UA, maxTouchPoints: 5 }),
     );
     const services = createTestServices(fixtureContentSource(fixtureLesson()));
-    await renderWithStore(<HomeScreen />, services, chessWeb);
+    await renderWithStore(<HomeScreen />, services);
 
     await screen.findByText(i18n.t('install-banner.title'));
 
@@ -274,7 +273,7 @@ describe('HomeScreen install banner (M5.4, non-functional.md §1/§4)', () => {
       }),
     );
     const services = createTestServices(fixtureContentSource(fixtureLesson()));
-    await renderWithStore(<HomeScreen />, services, chessWeb);
+    await renderWithStore(<HomeScreen />, services);
 
     await screen.findByRole('heading', { level: 1 });
     expect(screen.queryByText(i18n.t('install-banner.title'))).toBeNull();

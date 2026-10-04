@@ -10,7 +10,6 @@ import {
 import { seedReturningProfile } from '@learn/subject-chess/web/testing/app-test-helpers.ts';
 import { renderApp } from '@learn/subject-chess/web/testing/render-app.tsx';
 import { renderWithStore } from '@learn/platform-web/testing/render-with-store.tsx';
-import { chessWeb } from '@learn/subject-chess/web/chess-pack.ts';
 import { createTestServices } from '@learn/subject-chess/web/testing/test-services.ts';
 import { setRoute } from '@learn/platform-web/app/store.ts';
 import { AppNotice } from '@learn/platform-web/ui/AppNotice.tsx';
@@ -241,7 +240,7 @@ describe('5-minute warning notice (M7.1)', () => {
 
   it('the lesson screen counts as calm only on its own lesson-complete step', async () => {
     const services = makeServices();
-    const { store } = await renderWithStore(<AppNotice />, services, chessWeb);
+    const { store } = await renderWithStore(<AppNotice />, services);
     const profile = store.getState().profile;
     if (!profile) throw new Error('renderWithStore: no profile selected');
     await updateProfileSettings(services.deps, profile.id, { dailyLimitMinutes: 15 });

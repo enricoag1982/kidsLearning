@@ -26,7 +26,7 @@ function notPrefixed(storage: Storage): readonly string[] {
 describe('math demo App', () => {
   it('boots to the first-run screen on an empty storage, under its own key prefix', async () => {
     const storage = createMemoryStorage();
-    render(<App services={testServices(storage)} pack={mathWeb} app={MATH_APP_CONFIG} />);
+    render(<App services={testServices(storage)} />);
 
     await screen.findByRole('heading', { level: 1, name: 'Math for Kids' });
     expect(screen.getByRole('button', { name: 'Start setup' })).toBeTruthy();
@@ -40,7 +40,7 @@ describe('math demo App', () => {
     await setupParentPassword(services.deps, '1234');
     const profile = await createProfile(services.deps, 'Mia', 'fox');
     await selectProfile(services.deps, profile.id);
-    render(<App services={services} pack={mathWeb} app={MATH_APP_CONFIG} />);
+    render(<App services={services} />);
 
     fireEvent.click(await screen.findByRole('button', { name: /Mia/ }));
     await screen.findByRole('heading', { level: 1, name: 'Math for Kids' });

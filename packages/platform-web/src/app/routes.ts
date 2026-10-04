@@ -16,6 +16,7 @@ export type PlainRouteName =
   | 'new-player'
   | 'picker'
   | 'parent'
+  | 'subjects'
   | 'home'
   | 'journey'
   | 'den'
@@ -102,6 +103,7 @@ export const PLATFORM_ROUTE_META: Readonly<Partial<Record<RouteName, RouteMeta>>
   picker: { tracked: false, safeUpdate: true },
   password: { tracked: false },
   parent: { tracked: false },
+  subjects: { tracked: true, calm: true, safeUpdate: true },
   home: { tracked: true, calm: true, safeUpdate: true },
   journey: { tracked: true, calm: true },
   lesson: { tracked: true, gated: true },

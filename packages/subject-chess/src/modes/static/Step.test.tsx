@@ -4,7 +4,6 @@ import type { MiniGame } from '../../core/chess/lesson.ts';
 import { parseDiagram } from '../../core/chess/diagram.ts';
 import { fixtureContentSource, fixtureLesson } from '../../web/testing/fixtures.ts';
 import { renderWithStore } from '@learn/platform-web/testing/render-with-store.tsx';
-import { chessWeb } from '../../web/chess-pack.ts';
 import { createTestServices } from '../../web/testing/test-services.ts';
 import { BossStep } from '@learn/platform-web/modes/BossStep.tsx';
 
@@ -41,7 +40,6 @@ describe('BossStep', () => {
     const { store } = await renderWithStore(
       <BossStep lesson={lesson} game={boss} nextStepIndex={5} />,
       services,
-      chessWeb,
     );
 
     fireEvent.click(screen.getByRole('button', { name: /^a1,/ }));
@@ -79,11 +77,7 @@ describe('BossStep', () => {
     };
     const lesson = fixtureLesson({ boss: boss.id });
     const services = createTestServices(fixtureContentSource(lesson, [boss]));
-    await renderWithStore(
-      <BossStep lesson={lesson} game={boss} nextStepIndex={5} />,
-      services,
-      chessWeb,
-    );
+    await renderWithStore(<BossStep lesson={lesson} game={boss} nextStepIndex={5} />, services);
 
     expect(screen.getByText('Stars 0 of 1')).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: /^a1,/ }));

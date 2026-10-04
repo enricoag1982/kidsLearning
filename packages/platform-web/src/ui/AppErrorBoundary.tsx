@@ -54,3 +54,9 @@ export class AppErrorBoundary extends Component<
     );
   }
 }
+
+/** Child for a start that failed before the app rendered (`mountApp`): throws `error` while rendering, so the boundary above
+ * shows its fallback. */
+export function StartFailed({ error }: { readonly error: unknown }): JSX.Element {
+  throw error instanceof Error ? error : new Error(String(error));
+}

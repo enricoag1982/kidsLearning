@@ -9,5 +9,7 @@ export function i18nOptions(resources: InitOptions['resources']): InitOptions {
     ns: ['common', 'lessons', 'characters', 'journey', 'rewards'],
     defaultNS: 'common',
     interpolation: { escapeValue: false },
+    // A subject switch swaps the resource bundles (`setSubjectLocales`): mounted components re-render on it.
+    react: { bindI18nStore: 'added removed' },
   };
 }

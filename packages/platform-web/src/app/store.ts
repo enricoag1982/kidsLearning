@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react';
 import { create, type StoreApi } from 'zustand';
+import { composeDefaultSettings } from '@learn/platform-core';
 import type { Route, RouteName } from './routes.ts';
 import type { Services } from './services.ts';
 import type { SubjectState, SubjectWeb } from './subject.ts';
@@ -7,6 +8,7 @@ import { createLearnSlice, type LearnSlice } from './slices/learn.ts';
 import { createNavSlice, type NavSlice } from './slices/nav.ts';
 import { createProfileSlice, type ProfileSlice } from './slices/profile.ts';
 import { createRewardsSlice, type RewardsSlice } from './slices/rewards.ts';
+import { createSubjectsSlice, type SubjectsSlice } from './slices/subjects.ts';
 import { createTimeSlice, type TimeSlice } from './slices/time.ts';
 import { createTodaySlice, type TodaySlice } from './slices/today.ts';
 
@@ -16,10 +18,23 @@ export { setRoute } from './slices/nav.ts';
 /** Which top-level screen is showing. `loading` is the instant before `init()` resolves. */
 export type Screen = RouteName;
 
-/** Composed from `app/slices/*.ts` plus the active subject's slice (`pack.createSlice`, chess: `PlaySlice`, via `SubjectState`). */
+/** Composed from `app/slices/*.ts` plus the subjects' own slices (`pack.createSlice`, chess: `PlaySlice`, via `SubjectState`):
+ * the active one's from the start, every other one's from its first activation. */
 export interface AppState
-  extends NavSlice, ProfileSlice, RewardsSlice, TimeSlice, LearnSlice, TodaySlice, SubjectState {
+  extends
+    NavSlice,
+    ProfileSlice,
+    RewardsSlice,
+    TimeSlice,
+    LearnSlice,
+    TodaySlice,
+    SubjectsSlice,
+    SubjectState {
+  /** The active subject's services (`services.app` stays the same across subjects). */
   readonly services: Services;
+  /** The active subject's id: `services.subjectId`. */
+  readonly subjectId: string;
+  /** The active subject's pack: `services.pack`. */
   readonly pack: SubjectWeb;
 }
 
@@ -43,16 +58,19 @@ export function backAndRefresh(
 
 export type AppStore = ReturnType<typeof createAppStore>;
 
-export function createAppStore(services: Services, pack: SubjectWeb) {
+export function createAppStore(services: Services) {
+  const { pack } = services;
   return create<AppState>((set, get) => ({
     services,
+    subjectId: services.subjectId,
     pack,
     ...createNavSlice(set, get),
-    ...createProfileSlice(set, get, pack),
+    ...createProfileSlice(set, get, composeDefaultSettings(services.deps.subject.settings)),
     ...createRewardsSlice(set, get),
     ...createTimeSlice(set, get),
     ...createLearnSlice(set, get),
     ...createTodaySlice(set, get),
+    ...createSubjectsSlice(set, get, services.subjectId),
     // Without `createSlice` the empty `SubjectState` base is all there is, so `{}` is a real `SubjectState`; TS cannot see that
     // across the optional call.
     ...(pack.createSlice ? pack.createSlice(set, get) : ({} as SubjectState)),

@@ -3,7 +3,6 @@ import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react';
 import type { MiniGame } from '@learn/subject-chess';
 import type { BestMoveDef, MateInNDef, SelectSquaresDef } from '@learn/subject-chess';
 import { parseDiagram } from '@learn/subject-chess';
-import { chessWeb } from '@learn/subject-chess/web/chess-pack.ts';
 import '../../app-i18n.ts';
 import { fixtureContentSource, fixtureLesson } from '@learn/subject-chess/web/testing/fixtures.ts';
 import type { FakeNarrator } from '@learn/platform-web/testing/fake-narrator.ts';
@@ -61,7 +60,6 @@ describe('SeriesBossStep (via BossStep dispatching on mode)', () => {
     const { store } = await renderWithStore(
       <BossStep lesson={lesson} game={boss} nextStepIndex={5} />,
       services,
-      chessWeb,
     );
 
     expect(screen.getByText('Round 1 of 2')).toBeTruthy();
@@ -97,7 +95,6 @@ describe('SeriesBossStep (via BossStep dispatching on mode)', () => {
     const { store } = await renderWithStore(
       <BossStep lesson={lesson} game={boss} nextStepIndex={5} />,
       services,
-      chessWeb,
     );
 
     // Round 1: solve cleanly (0 mistakes so far).
@@ -171,11 +168,7 @@ describe('SeriesBossStep (via BossStep dispatching on mode)', () => {
       };
       const lesson = fixtureLesson({ boss: boss.id });
       const services = createTestServices(fixtureContentSource(lesson, [boss]));
-      await renderWithStore(
-        <BossStep lesson={lesson} game={boss} nextStepIndex={5} />,
-        services,
-        chessWeb,
-      );
+      await renderWithStore(<BossStep lesson={lesson} game={boss} nextStepIndex={5} />, services);
 
       fireEvent.click(screen.getByRole('button', { name: /^c6,/ }));
       fireEvent.click(screen.getByRole('button', { name: /^e7,/ })); // Ne7+, the scripted move
@@ -262,16 +255,11 @@ describe('SeriesBossStep (via BossStep dispatching on mode)', () => {
         await renderWithStore(
           <ExerciseStep lesson={lesson} exercise={def} guided={false} nextStepIndex={3} />,
           services,
-          chessWeb,
         );
         const lessonName = screen.getByRole('button', { name: ring }).getAttribute('aria-label');
         cleanup();
 
-        await renderWithStore(
-          <BossStep lesson={lesson} game={boss} nextStepIndex={5} />,
-          services,
-          chessWeb,
-        );
+        await renderWithStore(<BossStep lesson={lesson} game={boss} nextStepIndex={5} />, services);
         expect(screen.getByRole('button', { name: ring }).getAttribute('aria-label')).toBe(
           lessonName,
         );

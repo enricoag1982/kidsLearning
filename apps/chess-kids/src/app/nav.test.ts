@@ -10,7 +10,6 @@ import {
 } from '@learn/subject-chess/web/testing/fixtures.ts';
 import { seedReturningProfile } from '@learn/subject-chess/web/testing/app-test-helpers.ts';
 import { createTestServices } from '@learn/subject-chess/web/testing/test-services.ts';
-import { chessWeb } from '@learn/subject-chess/web/chess-pack.ts';
 import type { Services } from '@learn/platform-web/app/services.ts';
 import { createAppStore } from '@learn/platform-web/app/store.ts';
 import type { AppStore } from '@learn/platform-web/app/store.ts';
@@ -47,7 +46,7 @@ async function storeAtHome(
   services: Services,
 ): Promise<{ readonly store: AppStore; readonly profileId: string }> {
   const profile = await seedReturningProfile(services, 'Mia');
-  const store = createAppStore(services, chessWeb);
+  const store = createAppStore(services);
   await store.getState().selectProfileAndHome(profile.id);
   return { store, profileId: profile.id };
 }
@@ -55,7 +54,7 @@ async function storeAtHome(
 describe('Start', () => {
   it('no parent lock yet: resets to first-run', async () => {
     const services = createTestServices(fixtureContentSource(fixtureLesson()));
-    const store = createAppStore(services, chessWeb);
+    const store = createAppStore(services);
     await store.getState().init();
     expect(names(store)).toEqual(['first-run']);
   });
@@ -63,7 +62,7 @@ describe('Start', () => {
   it('a returning device (parent lock set): resets to the picker', async () => {
     const services = createTestServices(fixtureContentSource(fixtureLesson()));
     await seedReturningProfile(services, 'Mia');
-    const store = createAppStore(services, chessWeb);
+    const store = createAppStore(services);
     await store.getState().init();
     expect(names(store)).toEqual(['picker']);
   });
@@ -72,7 +71,7 @@ describe('Start', () => {
 describe('First run done', () => {
   it('no profiles yet: pushes new-player on top of first-run', async () => {
     const services = createTestServices(fixtureContentSource(fixtureLesson()));
-    const store = createAppStore(services, chessWeb);
+    const store = createAppStore(services);
     setRoute(store, { name: 'first-run' });
     await store.getState().finishFirstRun();
     expect(names(store)).toEqual(['first-run', 'new-player']);
@@ -81,7 +80,7 @@ describe('First run done', () => {
   it('exactly one existing profile (M1-upgrade path): resets straight to Home', async () => {
     const services = createTestServices(fixtureContentSource(fixtureLesson()));
     await seedReturningProfile(services, 'Mia');
-    const store = createAppStore(services, chessWeb);
+    const store = createAppStore(services);
     setRoute(store, { name: 'first-run' });
     await store.getState().finishFirstRun();
     expect(names(store)).toEqual(['home']);
@@ -91,7 +90,7 @@ describe('First run done', () => {
     const services = createTestServices(fixtureContentSource(fixtureLesson()));
     await seedReturningProfile(services, 'Mia');
     await createProfile(services.deps, 'Zoe', 'cat');
-    const store = createAppStore(services, chessWeb);
+    const store = createAppStore(services);
     setRoute(store, { name: 'first-run' });
     await store.getState().finishFirstRun();
     expect(names(store)).toEqual(['picker']);
@@ -102,7 +101,7 @@ describe('New player from picker', () => {
   it('pushes new-player on the picker; finishing resets to home + placement-offer', async () => {
     const services = createTestServices(fixtureContentSource(fixtureLesson()));
     await seedReturningProfile(services, 'Mia');
-    const store = createAppStore(services, chessWeb);
+    const store = createAppStore(services);
     await store.getState().goToPicker();
     store.getState().startNewPlayer();
     expect(names(store)).toEqual(['picker', 'new-player']);
@@ -115,7 +114,7 @@ describe('Add child (parent area)', () => {
   it('pushes new-player on the parent area; finishing pops back to it and refreshes profiles', async () => {
     const services = createTestServices(fixtureContentSource(fixtureLesson()));
     await seedReturningProfile(services, 'Mia');
-    const store = createAppStore(services, chessWeb);
+    const store = createAppStore(services);
     setRoute(store, { name: 'parent' });
     store.getState().startNewPlayer();
     expect(names(store)).toEqual(['parent', 'new-player']);
@@ -175,7 +174,7 @@ describe('Pick profile', () => {
   it('selecting a profile from the picker resets straight to Home', async () => {
     const services = createTestServices(fixtureContentSource(fixtureLesson()));
     const profile = await seedReturningProfile(services, 'Mia');
-    const store = createAppStore(services, chessWeb);
+    const store = createAppStore(services);
     await store.getState().goToPicker();
     expect(names(store)).toEqual(['picker']);
     await store.getState().selectProfileAndHome(profile.id);
@@ -187,7 +186,7 @@ describe('Grown-ups', () => {
   it('picker -> password(parent-area) -> parent on success; Done resets to the picker', async () => {
     const services = createTestServices(fixtureContentSource(fixtureLesson()));
     await seedReturningProfile(services, 'Mia');
-    const store = createAppStore(services, chessWeb);
+    const store = createAppStore(services);
     await store.getState().goToPicker();
 
     store.getState().goToPasswordScreen();

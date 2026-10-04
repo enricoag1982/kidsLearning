@@ -28,7 +28,7 @@ function StepPreview({
   readonly lesson: Lesson;
   readonly view: View;
 }): JSX.Element {
-  const [store] = useState(() => createAppStore(createTestServices(content), chessWeb));
+  const [store] = useState(() => createAppStore(createTestServices(content)));
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
