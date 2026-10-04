@@ -15,7 +15,8 @@ import { TapButton } from '../ui/ds/primitives.tsx';
 import { GridBoard } from '../ui/grid/GridBoard.tsx';
 import type { GridCellContent, GridHighlight } from '../ui/grid/GridBoard.tsx';
 
-/** Dev-only playground of `GridBoard` (`/#grid`): a robot map, a sudoku-like board, a tap-to-select board. */
+/** Dev-only playground of `GridBoard` (`/#grid`): a robot map, a sudoku-like board, a tap-to-select board, number puzzles
+ * (4 × 4 and 6 × 6 sudoku with box borders, given / entered digits, pencil marks) and a picture cross with clue lanes. */
 
 function Card({
   title,
@@ -25,7 +26,7 @@ function Card({
   readonly children: ReactNode;
 }): JSX.Element {
   return (
-    <section className="rounded-2xl border-2 border-line bg-card p-4">
+    <section className="rounded-2xl border-2 border-line bg-card p-3 sm:p-4">
       <h2 className="mb-3 font-display text-xl text-ink">{title}</h2>
       {children}
     </section>
@@ -280,6 +281,140 @@ function SudokuDemo(): JSX.Element {
   );
 }
 
+/** A puzzle as rows of digits, `.` = empty. */
+function digitCells(
+  givens: readonly string[],
+  entries: Readonly<Record<string, string>>,
+  marks: Readonly<Record<string, readonly string[]>>,
+): Record<string, GridCellContent> {
+  const cells: Record<string, GridCellContent> = {};
+  givens.forEach((row, y) => {
+    Array.from(row).forEach((char, x) => {
+      if (char !== '.') {
+        cells[cellKey({ x, y })] = { item: { text: char, label: char, style: 'given' } };
+      }
+    });
+  });
+  for (const [key, digit] of Object.entries(entries)) {
+    cells[key] = { item: { text: digit, label: digit, style: 'entry' } };
+  }
+  for (const [key, list] of Object.entries(marks)) cells[key] = { ...cells[key], marks: list };
+  return cells;
+}
+
+const NUMBER_BOX = 'mx-auto aspect-square w-full max-w-[420px]';
+
+const SUDOKU4_GIVEN = ['1..4', '.41.', '2..3', '.32.'] as const;
+const SUDOKU4_CELLS = digitCells(
+  SUDOKU4_GIVEN,
+  { '1,0': '2', '2,0': '3' },
+  {
+    '0,1': ['2', '3'],
+    '3,1': ['2', '3'],
+    '1,2': ['1', '4'],
+    '2,2': ['1', '4'],
+    '0,3': ['1', '4'],
+    '3,3': ['1', '4'],
+  },
+);
+
+function Sudoku4Demo(): JSX.Element {
+  return (
+    <Card title="Number puzzle 4 × 4 (boxes 2 × 2, given bold, entries blue, pencil marks)">
+      <div className={NUMBER_BOX} data-testid="dev-grid-sudoku4">
+        <GridBoard
+          size={{ cols: 4, rows: 4 }}
+          boxes={{ cols: 2, rows: 2 }}
+          cells={SUDOKU4_CELLS}
+          label="Number puzzle, 4 by 4"
+        />
+      </div>
+      <p className="mt-2 text-sm text-muted">Bold = given, blue = entered, small = notes.</p>
+    </Card>
+  );
+}
+
+const SUDOKU6_GIVEN = ['1...5.', '.561..', '2..5.4', '.6.3..', '3.2..5', '..53.2'] as const;
+const SUDOKU6_CELLS = digitCells(
+  SUDOKU6_GIVEN,
+  { '1,0': '2', '3,0': '4' },
+  {
+    '2,0': ['3'],
+    '0,1': ['3', '4'],
+    '4,1': ['2', '4'],
+    '1,2': ['1', '3'],
+    '4,2': ['1', '6'],
+    '0,3': ['1', '4', '5'],
+    '2,3': ['1', '2', '3', '4', '6'],
+  },
+);
+
+function Sudoku6Demo(): JSX.Element {
+  return (
+    <Card title="Number puzzle 6 × 6 (boxes 3 × 2, notes up to 3 × 3; not checked for one solution)">
+      <div className={NUMBER_BOX} data-testid="dev-grid-sudoku6">
+        <GridBoard
+          size={{ cols: 6, rows: 6 }}
+          boxes={{ cols: 3, rows: 2 }}
+          cells={SUDOKU6_CELLS}
+          label="Number puzzle, 6 by 6"
+        />
+      </div>
+    </Card>
+  );
+}
+
+// Picture cross: X shape; every clue is the run lengths of its line.
+const CROSS_SIZE = { cols: 5, rows: 5 } as const;
+const CROSS_LABELS = {
+  top: ['1 1', '1 1', '1', '1 1', '1 1'],
+  left: ['1 1', '1 1', '1', '1 1', '1 1'],
+} as const;
+const CROSS_TONES: readonly NonNullable<GridCellContent['tone']>[] = [
+  'neutral',
+  'filled',
+  'crossed',
+];
+
+function PictureCrossDemo(): JSX.Element {
+  const [tones, setTones] = useState<
+    Readonly<Record<string, NonNullable<GridCellContent['tone']>>>
+  >({
+    '0,0': 'filled',
+    '4,0': 'filled',
+    '2,2': 'filled',
+    '1,0': 'crossed',
+    '2,0': 'crossed',
+    '3,0': 'crossed',
+    '0,1': 'crossed',
+  });
+
+  function cycle(cell: Cell): void {
+    const key = cellKey(cell);
+    const current = tones[key] ?? 'neutral';
+    const next = CROSS_TONES[(CROSS_TONES.indexOf(current) + 1) % CROSS_TONES.length] ?? 'neutral';
+    setTones({ ...tones, [key]: next });
+  }
+
+  const cells: Record<string, GridCellContent> = {};
+  for (const [key, tone] of Object.entries(tones)) cells[key] = { tone };
+
+  return (
+    <Card title="Picture cross 5 × 5 (clue lanes, filled / crossed tones, tap to cycle)">
+      <div className={NUMBER_BOX} data-testid="dev-grid-cross">
+        <GridBoard
+          size={CROSS_SIZE}
+          edgeLabels={CROSS_LABELS}
+          cells={cells}
+          onCellTap={cycle}
+          label="Picture cross, 5 by 5"
+        />
+      </div>
+      <p className="mt-2 text-sm text-muted">Tap a cell: empty, filled, crossed out.</p>
+    </Card>
+  );
+}
+
 const SELECT_SIZE = { cols: 6, rows: 3 } as const;
 
 function SelectDemo(): JSX.Element {
@@ -358,12 +493,15 @@ function SelectDemo(): JSX.Element {
 
 export function GridPlayground(): JSX.Element {
   return (
-    <main className="min-h-dvh bg-cream p-6">
+    <main className="min-h-dvh bg-cream p-3 sm:p-6">
       <h1 className="mb-4 font-display text-3xl text-ink">Grid playground (dev only)</h1>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <RobotDemo />
         <SudokuDemo />
         <SelectDemo />
+        <Sudoku4Demo />
+        <Sudoku6Demo />
+        <PictureCrossDemo />
       </div>
     </main>
   );

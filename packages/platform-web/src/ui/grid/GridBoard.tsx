@@ -3,7 +3,16 @@ import type { CSSProperties, JSX, KeyboardEvent } from 'react';
 import { cellKey, cellPosition, inGrid, step } from '@learn/platform-core';
 import type { Cell, GridSize, Heading } from '@learn/platform-core';
 import { useMediaQuery } from '../useMediaQuery.ts';
-import { GRID_FRAME_PX, useGridFit } from './fit.ts';
+import {
+  GRID_FRAME_PX,
+  LANE_FONT_PX,
+  LANE_LINE_PX,
+  LANE_PAD_PX,
+  LANE_WORD_GAP_PX,
+  clueLines,
+  laneSizes,
+  useGridFit,
+} from './fit.ts';
 import {
   ArrowUpIcon,
   CheckMark,
@@ -28,9 +37,13 @@ export interface GridCellContent {
     readonly image?: string;
     readonly text?: string;
     readonly label: string;
+    /** Number puzzles: `given` = bold ink, `entry` = the player's own, info colour (never colour alone: "given" joins the name). */
+    readonly style?: 'given' | 'entry';
   };
   /** Logic puzzles: `filled` = solid cell, `crossed` = ✕ mark. */
   readonly tone?: 'neutral' | 'filled' | 'crossed';
+  /** Pencil marks (small digits in a 2 × 2 / 3 × 3 mini grid, up to 9), never scored. Hidden when the cell is under 40 px. */
+  readonly marks?: readonly string[];
 }
 
 export type GridHighlight = 'target' | 'good' | 'bad' | 'hint' | 'selected';
@@ -59,8 +72,15 @@ export interface GridBoardProps {
   readonly highlights?: Readonly<Record<string, GridHighlight>>;
   /** When set, every cell is a button (tap targets ≥ 48 px on a 1024 × 768 tablet for a 6 × 6 grid); otherwise cells are not focusable. */
   readonly onCellTap?: (cell: Cell) => void;
-  /** Accessible name per cell; default "row R, column C" + its content labels (rock, star, flag, item label, actor label). */
+  /** Accessible name per cell (replaces the default, so also its given / notes / clue parts); default "row R, column C" + its
+   * content labels (rock, star, flag, item label, actor label, filled, crossed out, highlight), then "given", "notes 1 and 4",
+   * "column clue …" and "row clue …". */
   readonly cellLabel?: (cell: Cell) => string;
+  /** Box size for thick borders between boxes (sudoku 4 × 4 → `{ cols: 2, rows: 2 }`; 6 × 6 → `{ cols: 3, rows: 2 }`). */
+  readonly boxes?: { readonly cols: number; readonly rows: number };
+  /** Clue lanes: one label per column above the board, one per row left of it (picture cross: "1 1", "3"). A top label's
+   * words stand one under the other. Each label joins the accessible names of the cells in its column / row. */
+  readonly edgeLabels?: { readonly top?: readonly string[]; readonly left?: readonly string[] };
   /** Accessible name of the whole board, e.g. "Meadow, 5 by 5". */
   readonly label: string;
   /** On the area the board is fitted into (margins, flex hints); the board never sizes itself from it. */
@@ -76,11 +96,31 @@ const HIGHLIGHT_NAME: Readonly<Record<GridHighlight, string>> = {
   selected: 'selected',
 };
 
+/** Pencil marks drawn at most (a 3 × 3 mini grid). */
+const MAX_MARKS = 9;
+/** Below this cell side the marks are too small to read: not drawn, not in the name. */
+const MARKS_MIN_CELL_PX = 40;
+
+/** "notes 1", "notes 1 and 4", "notes 1, 2 and 4"; `''` without marks. */
+function notesLabel(marks: readonly string[]): string {
+  const last = marks[marks.length - 1];
+  if (last === undefined) return '';
+  if (marks.length === 1) return `notes ${last}`;
+  return `notes ${marks.slice(0, -1).join(', ')} and ${last}`;
+}
+
+function visibleMarks(content: GridCellContent | undefined, showMarks: boolean): readonly string[] {
+  if (!showMarks) return [];
+  return (content?.marks ?? []).filter((mark) => mark !== '').slice(0, MAX_MARKS);
+}
+
 function defaultCellLabel(
   cell: Cell,
   content: GridCellContent | undefined,
   actor: GridActor | undefined,
   highlight: GridHighlight | undefined,
+  marks: readonly string[],
+  clues: readonly string[],
 ): string {
   const { row, column } = cellPosition(cell);
   const parts = [`row ${String(row)}`, `column ${String(column)}`];
@@ -92,7 +132,44 @@ function defaultCellLabel(
   if (content?.tone === 'filled') parts.push('filled');
   if (content?.tone === 'crossed') parts.push('crossed out');
   if (highlight) parts.push(HIGHLIGHT_NAME[highlight]);
+  if (content?.item?.style === 'given') parts.push('given');
+  if (marks.length > 0) parts.push(notesLabel(marks));
+  parts.push(...clues);
   return parts.join(', ');
+}
+
+type BoxEdge = 'top' | 'right' | 'bottom' | 'left';
+
+/** The sides of `cell` that border another box (the outer frame is never one), in CSS order. */
+function boxEdges(size: GridSize, boxes: GridBoardProps['boxes'], cell: Cell): readonly BoxEdge[] {
+  if (boxes === undefined || !(boxes.cols >= 1) || !(boxes.rows >= 1)) return [];
+  const edges: BoxEdge[] = [];
+  if (cell.y > 0 && cell.y % boxes.rows === 0) edges.push('top');
+  if (cell.x < size.cols - 1 && (cell.x + 1) % boxes.cols === 0) edges.push('right');
+  if (cell.y < size.rows - 1 && (cell.y + 1) % boxes.rows === 0) edges.push('bottom');
+  if (cell.x > 0 && cell.x % boxes.cols === 0) edges.push('left');
+  return edges;
+}
+
+const BOX_LINE_PX = 3;
+const THIN = 'var(--color-grid-line)';
+const THICK = 'var(--color-ink)';
+
+/** The cell's inset lines: 1 px everywhere, except a box edge is a 3 px dark line. Both cells on a box edge know it
+ * (`data-box-edges`), the line itself is drawn once, by the cell right of / below it, so the cells never move. */
+function boxShadow(edges: readonly BoxEdge[]): string {
+  const has = (edge: BoxEdge): boolean => edges.includes(edge);
+  const thick = [
+    has('left') ? `inset ${String(BOX_LINE_PX)}px 0 0 0 ${THICK}` : '',
+    has('top') ? `inset 0 ${String(BOX_LINE_PX)}px 0 0 ${THICK}` : '',
+  ];
+  const thin = [
+    has('left') ? '' : `inset 1px 0 0 0 ${THIN}`,
+    has('right') ? '' : `inset -1px 0 0 0 ${THIN}`,
+    has('top') ? '' : `inset 0 1px 0 0 ${THIN}`,
+    has('bottom') ? '' : `inset 0 -1px 0 0 ${THIN}`,
+  ];
+  return [...thick, ...thin].filter((part) => part !== '').join(', ');
 }
 
 const RING: Readonly<Record<GridHighlight, string>> = {
@@ -130,6 +207,12 @@ function Fill({
   );
 }
 
+const TEXT_LOOK: Readonly<Record<'given' | 'entry' | 'plain', string>> = {
+  given: 'font-bold text-ink',
+  entry: 'font-normal text-info',
+  plain: 'font-semibold text-ink',
+};
+
 function CellItem({
   item,
   filled,
@@ -140,6 +223,7 @@ function CellItem({
   return (
     <span
       aria-hidden="true"
+      data-style={item.style}
       className="pointer-events-none absolute inset-0 flex items-center justify-center"
     >
       {item.image !== undefined ? (
@@ -150,7 +234,9 @@ function CellItem({
         </span>
       ) : (
         <span
-          className={`font-display font-semibold leading-none ${filled ? 'text-white' : 'text-ink'}`}
+          className={`font-display leading-none ${
+            filled ? 'font-semibold text-white' : TEXT_LOOK[item.style ?? 'plain']
+          }`}
           style={{ fontSize: ITEM_FONT_TEXT }}
         >
           {item.text}
@@ -160,8 +246,91 @@ function CellItem({
   );
 }
 
-/** A generic grid of square cells (robot maps, mazes, sudoku, arrays) that takes the largest cell size fitting its parent (the
- * parent must give it a width and a height). View mode: every cell is a labelled `role="img"`; tap mode (`onCellTap`): a
+function ClueLane({
+  edge,
+  labels,
+  count,
+}: {
+  readonly edge: 'top' | 'left';
+  readonly labels: readonly string[] | undefined;
+  readonly count: number;
+}): JSX.Element {
+  const top = edge === 'top';
+  const gap = LANE_PAD_PX / 2;
+  const template = `repeat(${String(count)}, minmax(0, 1fr))`;
+  return (
+    <div
+      aria-hidden="true"
+      data-testid={`grid-lane-${edge}`}
+      className="relative"
+      style={top ? { gridColumn: 2, gridRow: 1 } : { gridColumn: 1, gridRow: 2 }}
+    >
+      <div
+        className={`absolute grid rounded-lg bg-grid-cell-alt font-display font-bold text-ink ${
+          top ? 'inset-x-0 top-0' : 'inset-y-0 left-0'
+        }`}
+        style={{
+          ...(top ? { bottom: gap } : { right: gap }),
+          ...(top ? { gridTemplateColumns: template } : { gridTemplateRows: template }),
+          fontSize: LANE_FONT_PX,
+          lineHeight: `${String(LANE_LINE_PX)}px`,
+        }}
+      >
+        {Array.from({ length: count }, (_, index) => {
+          const words = clueLines(labels?.[index] ?? '');
+          return (
+            <div
+              key={index}
+              data-testid={`grid-clue-${edge}-${String(index)}`}
+              className={`flex shadow-[inset_0_0_0_1px_var(--color-grid-line)] ${
+                top ? 'flex-col items-center justify-end pb-0.5' : 'items-center justify-end pr-2'
+              }`}
+              style={top ? undefined : { columnGap: LANE_WORD_GAP_PX }}
+            >
+              {words.map((word, at) => (
+                <span key={at}>{word}</span>
+              ))}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+const MARK_FONT = 'calc(var(--grid-cell, 3rem) * 0.25)';
+
+function CellMarks({
+  marks,
+  testId,
+}: {
+  readonly marks: readonly string[];
+  readonly testId: string;
+}): JSX.Element {
+  // Up to 4 marks fill a 2 × 2 mini grid, more a 3 × 3 one; in the order given, row by row.
+  const side = marks.length <= 4 ? 2 : 3;
+  return (
+    <span
+      aria-hidden="true"
+      data-testid={testId}
+      className="pointer-events-none absolute inset-[6%] grid place-items-center"
+      style={{
+        gridTemplateColumns: `repeat(${String(side)}, minmax(0, 1fr))`,
+        gridTemplateRows: `repeat(${String(side)}, minmax(0, 1fr))`,
+        fontSize: MARK_FONT,
+      }}
+    >
+      {marks.map((mark, index) => (
+        <span key={index} className="font-display font-semibold leading-none text-muted">
+          {mark}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+/** A generic grid of square cells (robot maps, mazes, sudoku, arrays, picture-cross clues) that takes the largest cell size fitting
+ * its parent, clue lanes included (the parent must give it a width and a height). View mode: every cell is a labelled `role="img"`; tap mode (`onCellTap`): a
  * labelled button, arrow keys move between cells. The actor slides between cells; nothing here knows any rule. */
 export function GridBoard({
   size,
@@ -171,12 +340,17 @@ export function GridBoard({
   highlights,
   onCellTap,
   cellLabel,
+  boxes,
+  edgeLabels,
   label,
   className,
 }: GridBoardProps): JSX.Element {
   const { cols, rows } = size;
   const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
-  const { areaRef, cell: cellPx } = useGridFit(size);
+  const lanes = laneSizes(edgeLabels);
+  const hasLanes = lanes.top > 0 || lanes.left > 0;
+  const { areaRef, cell: cellPx } = useGridFit(size, lanes);
+  const showMarks = cellPx === null || cellPx >= MARKS_MIN_CELL_PX;
   const tapMode = onCellTap !== undefined;
 
   const [focusedCell, setFocusedCell] = useState<Cell>({ x: 0, y: 0 });
@@ -205,8 +379,8 @@ export function GridBoard({
       ? { padding: GRID_FRAME_PX, aspectRatio: `${String(cols)} / ${String(rows)}` }
       : ({
           padding: GRID_FRAME_PX,
-          width: cellPx * cols + 2 * GRID_FRAME_PX,
-          height: cellPx * rows + 2 * GRID_FRAME_PX,
+          width: cellPx * cols + 2 * GRID_FRAME_PX + lanes.left,
+          height: cellPx * rows + 2 * GRID_FRAME_PX + lanes.top,
           '--grid-cell': `${String(cellPx)}px`,
         } as CSSProperties);
   const template: CSSProperties = {
@@ -222,7 +396,17 @@ export function GridBoard({
       const key = cellKey(cell);
       const content = cells?.[key];
       const highlight = highlights?.[key];
-      const name = cellLabel ? cellLabel(cell) : defaultCellLabel(cell, content, actor, highlight);
+      const marks = visibleMarks(content, showMarks);
+      const columnClue = clueLines(edgeLabels?.top?.[x] ?? '').join(' ');
+      const rowClue = clueLines(edgeLabels?.left?.[y] ?? '').join(' ');
+      const clues = [
+        ...(columnClue === '' ? [] : [`column clue ${columnClue}`]),
+        ...(rowClue === '' ? [] : [`row clue ${rowClue}`]),
+      ];
+      const name = cellLabel
+        ? cellLabel(cell)
+        : defaultCellLabel(cell, content, actor, highlight, marks, clues);
+      const edges = boxEdges(size, boxes, cell);
       const filled = content?.tone === 'filled';
       const background = filled
         ? 'bg-grid-filled'
@@ -263,6 +447,9 @@ export function GridBoard({
             </Fill>
           )}
           {content?.item && <CellItem item={content.item} filled={filled} />}
+          {marks.length > 0 && (
+            <CellMarks marks={marks} testId={`grid-marks-${String(x)}-${String(y)}`} />
+          )}
         </>
       );
 
@@ -270,6 +457,8 @@ export function GridBoard({
         'aria-label': name,
         'data-testid': `grid-cell-${String(x)}-${String(y)}`,
         'data-highlight': highlight,
+        'data-box-edges': edges.length > 0 ? edges.join(' ') : undefined,
+        style: edges.length > 0 ? { boxShadow: boxShadow(edges) } : undefined,
       };
       const look = `relative block ${background} shadow-[inset_0_0_0_1px_var(--color-grid-line)]`;
       cellElements.push(
@@ -333,6 +522,67 @@ export function GridBoard({
     }
   }
 
+  const cellsArea = (
+    <div
+      className="relative h-full w-full overflow-hidden rounded-lg"
+      style={hasLanes ? { gridColumn: 2, gridRow: 2 } : undefined}
+    >
+      <div className="grid h-full w-full" style={template}>
+        {cellElements}
+      </div>
+      {actorCell !== undefined && actor !== undefined && (
+        <div
+          aria-hidden="true"
+          data-testid="grid-actor"
+          data-cell={cellKey(actorCell)}
+          data-heading={actor.heading}
+          className={`grid-actor ${reducedMotion ? '' : 'grid-actor-move'}`.trim()}
+          style={{
+            width: `${String(100 / cols)}%`,
+            height: `${String(100 / rows)}%`,
+            transform: `translate(${String(actorCell.x * 100)}%, ${String(actorCell.y * 100)}%)`,
+          }}
+        >
+          <div
+            className={`relative h-full w-full ${
+              actor.bumped === true && !reducedMotion ? 'grid-actor-bump' : ''
+            }`.trim()}
+          >
+            <img
+              src={actor.image}
+              alt=""
+              draggable={false}
+              className="absolute left-[16%] top-[16%] h-[68%] w-[68%] object-contain drop-shadow-md"
+            />
+            {actor.heading !== undefined && (
+              <span
+                data-testid="grid-actor-heading"
+                data-heading={actor.heading}
+                className={`absolute h-[28%] w-[28%] rounded-full border-2 border-edge-info bg-card p-[2%] ${CHIP_EDGE[actor.heading]}`}
+              >
+                <span
+                  className="block h-full w-full"
+                  style={{ transform: `rotate(${String(CHIP_ROTATION[actor.heading])}deg)` }}
+                >
+                  <ArrowUpIcon />
+                </span>
+              </span>
+            )}
+          </div>
+        </div>
+      )}
+      {highlightElements.length > 0 && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 grid"
+          style={template}
+        >
+          {highlightElements}
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <div
       ref={areaRef}
@@ -347,61 +597,21 @@ export function GridBoard({
         className={`rounded-2xl bg-grid-frame ${cellPx === null ? 'max-h-full w-full' : ''}`.trim()}
         style={boardStyle}
       >
-        <div className="relative h-full w-full overflow-hidden rounded-lg">
-          <div className="grid h-full w-full" style={template}>
-            {cellElements}
+        {hasLanes ? (
+          <div
+            className="grid h-full w-full"
+            style={{
+              gridTemplateColumns: `${String(lanes.left)}px minmax(0, 1fr)`,
+              gridTemplateRows: `${String(lanes.top)}px minmax(0, 1fr)`,
+            }}
+          >
+            {lanes.top > 0 && <ClueLane edge="top" labels={edgeLabels?.top} count={cols} />}
+            {lanes.left > 0 && <ClueLane edge="left" labels={edgeLabels?.left} count={rows} />}
+            {cellsArea}
           </div>
-          {actorCell !== undefined && actor !== undefined && (
-            <div
-              aria-hidden="true"
-              data-testid="grid-actor"
-              data-cell={cellKey(actorCell)}
-              data-heading={actor.heading}
-              className={`grid-actor ${reducedMotion ? '' : 'grid-actor-move'}`.trim()}
-              style={{
-                width: `${String(100 / cols)}%`,
-                height: `${String(100 / rows)}%`,
-                transform: `translate(${String(actorCell.x * 100)}%, ${String(actorCell.y * 100)}%)`,
-              }}
-            >
-              <div
-                className={`relative h-full w-full ${
-                  actor.bumped === true && !reducedMotion ? 'grid-actor-bump' : ''
-                }`.trim()}
-              >
-                <img
-                  src={actor.image}
-                  alt=""
-                  draggable={false}
-                  className="absolute left-[16%] top-[16%] h-[68%] w-[68%] object-contain drop-shadow-md"
-                />
-                {actor.heading !== undefined && (
-                  <span
-                    data-testid="grid-actor-heading"
-                    data-heading={actor.heading}
-                    className={`absolute h-[28%] w-[28%] rounded-full border-2 border-edge-info bg-card p-[2%] ${CHIP_EDGE[actor.heading]}`}
-                  >
-                    <span
-                      className="block h-full w-full"
-                      style={{ transform: `rotate(${String(CHIP_ROTATION[actor.heading])}deg)` }}
-                    >
-                      <ArrowUpIcon />
-                    </span>
-                  </span>
-                )}
-              </div>
-            </div>
-          )}
-          {highlightElements.length > 0 && (
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 grid"
-              style={template}
-            >
-              {highlightElements}
-            </div>
-          )}
-        </div>
+        ) : (
+          cellsArea
+        )}
       </div>
     </div>
   );
