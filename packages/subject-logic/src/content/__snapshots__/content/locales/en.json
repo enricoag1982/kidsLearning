@@ -203,6 +203,13 @@
    "guest": "Guest"
   },
   "grid": {
+   "board": {
+    "cross": "Picture cross, {{size}} by {{size}}",
+    "sudoku": "Sudoku, {{size}} by {{size}}"
+   },
+   "cross": "Cross",
+   "digits": "Numbers",
+   "fill": "Fill",
    "hint": {
     "combine": "Use the fills and crosses from the other lines.",
     "cross-out": "This line has all its filled cells. Cross out the rest.",
@@ -223,6 +230,12 @@
     "cross": "Fill the cells to match the clues. Find the picture!",
     "sudoku": "Fill the grid: each row, column and box has every number once."
    },
+   "note": "Note {{digit}}",
+   "notes": "Notes",
+   "pick-cell": "Tap a cell first.",
+   "put": "Put {{digit}}",
+   "reveal": "Picture revealed",
+   "tool": "Tool",
    "wrong": {
     "box": "That number is already in this box.",
     "column": "That number is already in this column.",

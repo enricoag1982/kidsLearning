@@ -100,7 +100,7 @@ const sudokuRules: GridRules<SudokuPuzzle> = {
 };
 
 /** The cells of a picture line, row-major indices. */
-function lineCells(size: number, line: CrossLine): readonly number[] {
+export function lineCells(size: number, line: CrossLine): readonly number[] {
   return Array.from({ length: size }, (_, k) =>
     line.kind === 'row' ? line.index * size + k : k * size + line.index,
   );

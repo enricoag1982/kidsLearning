@@ -83,9 +83,9 @@ function gridFillsOf(all: CompiledContent): readonly GridFillDef[] {
   ].filter(isGridFill);
 }
 
-/** For content with a `grid-fill` exercise: the two instructions, every rejected-entry note (plain, and joined with the easier offer as
- * the fixed string the lesson screen can always reach), every hint by level and the 1-3 star praise. Plugs into
- * `SubjectContent.voiceTemplates`; the inventory dedupes the texts. */
+/** For content with a `grid-fill` exercise: the two instructions, the "tap a cell first" note, every rejected-entry note (plain, and
+ * joined with the easier offer as the fixed string the lesson screen can always reach), every hint by level and the 1-3 star praise.
+ * Plugs into `SubjectContent.voiceTemplates`; the inventory dedupes the texts. */
 export function gridFillVoiceTemplates(
   notes: NotesRegistry,
 ): (add: (text: string, source: string) => void, r: Resolve, all: CompiledContent) => void {
@@ -102,6 +102,8 @@ export function gridFillVoiceTemplates(
 
     add(r('grid.instruction.sudoku'), 'exercise-instruction');
     add(r('grid.instruction.cross'), 'exercise-instruction');
+    // A number pressed with no cell selected: not an error note, so no easier-offer string.
+    speak({ kind: 'tap-first' });
     for (const feedback of WRONG) {
       speak(feedback);
       speak(feedback, 3, true);

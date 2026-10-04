@@ -582,6 +582,7 @@ describe('grid-fill voice templates', () => {
       'Use the fills and crosses from the other lines.',
       'Watch: here it goes.',
       'Look closely.',
+      'Tap a cell first.',
     ]) {
       expect(texts, text).toContain(text);
     }
@@ -595,8 +596,8 @@ describe('grid-fill voice templates', () => {
     expect(joined.map((entry) => entry.text)).toContain(
       `Not this one. Check the clues again. ${offer}`,
     );
-    // 2 instructions, 7 + 7 wrong, 6 where to look + 7 techniques + watch + look closely, 3 praise.
-    expect(out).toHaveLength(2 + 14 + 15 + 3);
+    // 2 instructions, tap a cell first, 7 + 7 wrong, 6 where to look + 7 techniques + watch + look closely, 3 praise.
+    expect(out).toHaveLength(2 + 1 + 14 + 15 + 3);
     expect(out.map((entry) => entry.source)).toEqual(
       expect.arrayContaining(['exercise-instruction', 'exercise-note']),
     );
