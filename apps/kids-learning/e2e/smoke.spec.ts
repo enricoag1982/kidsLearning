@@ -29,7 +29,7 @@ test('loads the app shell with a valid manifest and no console errors', async ({
   const manifestResponse = await page.request.get(manifestUrl);
   expect(manifestResponse.ok()).toBe(true);
   const manifest = (await manifestResponse.json()) as Manifest;
-  expect(manifest.name).toBe('Chess for Kids');
+  expect(manifest.name).toBe('Kids Learning');
   expect(manifest.icons).toHaveLength(3);
 
   expect(consoleErrors).toEqual([]);

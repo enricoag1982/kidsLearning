@@ -35,11 +35,14 @@ test.describe('Parent area: overview, report, backup (M5.1)', () => {
     await page.reload();
     await openParentArea(page);
     await page.getByText('Leo', { exact: true }).waitFor();
-    const miaCard = page.getByRole('button', { name: /^Mia/ });
+    // The overview card has one line per subject (Chess, Math); the seeded progress is chess's.
+    const miaButton = page.getByRole('button', { name: /^Mia/ });
+    const miaCard = miaButton.getByTestId('overview-subject-chess');
     await expect(miaCard.getByText(/^[1-9]\d* stars$/)).toBeVisible();
+    await expect(miaButton.getByTestId('overview-subject-math').getByText('0 stars')).toBeVisible();
 
     // Tapping it opens her report with the same seeded game showing, by name.
-    await miaCard.click();
+    await miaButton.click();
     await page.getByRole('button', { name: 'Settings' }).waitFor();
     await expect(page.getByText('Mouse')).toBeVisible(); // the seeded game's own row, by name
 
@@ -49,7 +52,9 @@ test.describe('Parent area: overview, report, backup (M5.1)', () => {
       page.waitForEvent('download'),
       page.getByRole('button', { name: "Export this child's data" }).click(),
     ]);
-    expect(download.suggestedFilename()).toMatch(/^chess-kids-backup-mia-\d{4}-\d{2}-\d{2}\.json$/);
+    expect(download.suggestedFilename()).toMatch(
+      /^kids-learning-backup-mia-\d{4}-\d{2}-\d{2}\.json$/,
+    );
     const exportedPath = await download.path();
     if (!exportedPath) throw new Error('download had no local path');
 
@@ -95,7 +100,7 @@ test.describe('Parent area: privacy (M5.5)', () => {
     await page.getByRole('button', { name: 'Privacy' }).click();
     await page.getByRole('heading', { name: 'Privacy' }).waitFor();
     await expect(
-      page.getByText('Chess for Kids keeps everything on this device.', { exact: false }),
+      page.getByText('Kids Learning keeps everything on this device.', { exact: false }),
     ).toBeVisible();
 
     await page.getByRole('button', { name: 'Back' }).click();

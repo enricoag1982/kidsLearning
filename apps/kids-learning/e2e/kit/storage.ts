@@ -1,8 +1,8 @@
 import type { Page } from '@playwright/test';
 import type { AppSettings, ProfileSettings, TracksCatalog } from '@learn/platform-core';
 import type { Lesson } from '@learn/subject-chess';
-import { localDayString } from '@learn/platform-core';
-import { CHESS_APP_CONFIG, DEFAULT_PROFILE_SETTINGS } from '@learn/subject-chess';
+import { localDayString, subjectStoragePrefix } from '@learn/platform-core';
+import { DEFAULT_PROFILE_SETTINGS } from '@learn/subject-chess';
 import { LocalStorageGameRecordRepository } from '@learn/platform-web/adapters/storage/local-game-record-repository.ts';
 import { LocalStorageProfileRepository } from '@learn/platform-web/adapters/storage/local-profile-repository.ts';
 import { LocalStorageProgressRepository } from '@learn/platform-web/adapters/storage/local-progress-repository.ts';
@@ -14,6 +14,10 @@ import {
 } from '@learn/platform-web/adapters/storage/local-store.ts';
 import { MIGRATIONS } from '@learn/platform-web/adapters/storage/migrations.ts';
 import { createMemoryStorage } from '@learn/platform-web/testing/memory-storage.ts';
+import { KIDS_APP_CONFIG } from '../../src/app-config.ts';
+
+/** The chess subject's own store prefix (`kids-chess:`); profiles, settings, streaks and session logs are in the shared `kids:`. */
+export const CHESS_STORE_PREFIX = subjectStoragePrefix(KIDS_APP_CONFIG, 'chess');
 
 /** The real repositories a spec can drive directly, over the page's own storage (`withAppStorage`). */
 export interface AppStorageRepos {
@@ -24,7 +28,7 @@ export interface AppStorageRepos {
   readonly settings: LocalStorageSettingsRepository;
 }
 
-/** Every `chess-kids:*` key `page`'s `localStorage` currently holds. */
+/** Every key `page`'s `localStorage` currently holds (the shared `kids:` store and each subject's `kids-<id>:`). */
 async function dumpStorage(page: Page): Promise<Readonly<Record<string, string>>> {
   return page.evaluate(() => {
     const out: Record<string, string> = {};
@@ -47,9 +51,11 @@ async function loadStorage(page: Page, entries: Readonly<Record<string, string>>
 /**
  * Runs `fn` against the page's own storage through the real repository classes (same ones the app
  * itself uses), instead of the app's own webpage/React tree: reads `page`'s `localStorage` into a
- * fresh in-memory `Storage`, opens it the same way `createServices` does (`openLocalStore` +
- * `MIGRATIONS`), lets `fn` read/write through `AppStorageRepos`, then writes the result back to
- * `page`. Every seed/read helper below is one call to this.
+ * fresh in-memory `Storage`, opens the shared store (`kids:`) and the chess subject's own
+ * (`kids-chess:`) the same way `createAppServices` does (`openLocalStore` + `MIGRATIONS`), lets `fn`
+ * read/write through `AppStorageRepos` (profiles and settings shared, progress / game records /
+ * badges chess's), then writes the result back to `page`. Every seed/read helper below is one call
+ * to this.
  */
 export async function withAppStorage<T>(
   page: Page,
@@ -59,17 +65,22 @@ export async function withAppStorage<T>(
   const storage = createMemoryStorage();
   for (const [key, value] of Object.entries(before)) storage.setItem(key, value);
 
-  const store = openLocalStore(storage, {
+  const sharedStore = openLocalStore(storage, {
     version: SCHEMA_VERSION,
     migrations: MIGRATIONS,
-    keyPrefix: CHESS_APP_CONFIG.storagePrefix,
+    keyPrefix: KIDS_APP_CONFIG.storagePrefix,
+  });
+  const chessStore = openLocalStore(storage, {
+    version: SCHEMA_VERSION,
+    migrations: MIGRATIONS,
+    keyPrefix: CHESS_STORE_PREFIX,
   });
   const repos: AppStorageRepos = {
-    profiles: new LocalStorageProfileRepository(store),
-    progress: new LocalStorageProgressRepository(store),
-    gameRecords: new LocalStorageGameRecordRepository(store),
-    rewards: new LocalStorageRewardsRepository(store),
-    settings: new LocalStorageSettingsRepository(store),
+    profiles: new LocalStorageProfileRepository(sharedStore),
+    progress: new LocalStorageProgressRepository(chessStore),
+    gameRecords: new LocalStorageGameRecordRepository(chessStore),
+    rewards: new LocalStorageRewardsRepository(chessStore, sharedStore),
+    settings: new LocalStorageSettingsRepository(sharedStore),
   };
   const result = await fn(repos);
 

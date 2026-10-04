@@ -126,7 +126,7 @@ test.describe('Play -> vs Computer: Fox unlocked (M4.2, seeded smoke test)', () 
     await expect(page.getByRole('heading', { name: 'Play' })).toBeVisible();
 
     const records = await page.evaluate(() => {
-      const raw = localStorage.getItem('chess-kids:game-records');
+      const raw = localStorage.getItem('kids-chess:game-records');
       return raw ? (JSON.parse(raw) as { game: string; opponent: string; result: string }[]) : [];
     });
     const record = records.find(

@@ -5,6 +5,11 @@ One folder per released tag: `local-storage.json` (every `chess-kids:*` key, raw
 device"). `storage-compat.test.ts`/`.spec.ts` load these against `master`; a fixture that fails to
 load cleanly there is a real compat bug, not a fixture problem.
 
+**Since m11.6** the app reads no `chess-kids:` localStorage (`docs/multi-subject.md` D3): the
+`local-storage.json` dumps and their `loaded.snap.json` outputs stay as records, unused. The tests
+replay the backup files (`backup-all.json`, `share-mia.json`): they import as the chess subject
+(`AppConfig.legacyBackupApps`) into the current layout; `merged-into-*.snap.json` hold that result.
+
 **Add one for a new release**: worktree the tag, `pnpm install --frozen-lockfile && pnpm build`;
 copy `generate-fixture.spec.ts` into its e2e folder (`apps/web/e2e/` up to `v2.0.0`, `apps/kids-learning/e2e/` from v4), set `TAG`, adapt to that release's own
 labels/features (never its app code); run it (`PW_CHROMIUM_PATH=... PW_PORT=<free>

@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 import type { E2ETexts } from './i18n.ts';
 
 export interface PageFlows {
@@ -6,21 +6,53 @@ export interface PageFlows {
   completeFirstRun: (page: Page, nickname?: string) => Promise<void>;
   dismissCelebrationIfShown: (page: Page) => Promise<void>;
   pickProfileFromPicker: (page: Page, nickname: string) => Promise<void>;
+  /** Opens `subjectId` from the subjects hub or, from anywhere else, through Home's "Subjects" button; a placement offer on
+   * a fresh subject is declined. Waits for that subject's Home (`homeTitle`, default the bound subject's `appTitle`). */
+  openSubject: (page: Page, subjectId: string, homeTitle?: string) => Promise<void>;
   startLessonToFirstGuided: (page: Page) => Promise<void>;
   openParentArea: (page: Page) => Promise<void>;
 }
 
 export interface PageFlowOptions {
-  /** The app's Home heading, awaited after first run and after picking a profile. */
+  /** The subject's Home heading (`app.title`: "Chess", "Math"), awaited after first run and after picking a profile. */
   readonly appTitle: string;
   readonly texts: Pick<E2ETexts, 'contentText'>;
+  /** The app hosts several subjects: first run and the profile picker lead to the subjects hub, and the flows go on through
+   * this subject's tile (`subject-tile-<subjectId>`) to its Home. Absent: no hub (a single-subject app). */
+  readonly subjectId?: string;
 }
 
-/** The subject-neutral page flows (first run, picker, celebration, parent area), bound to one app. */
-export function createPages({ appTitle, texts }: PageFlowOptions): PageFlows {
+/** The subject-neutral page flows (first run, picker, celebration, parent area), bound to one app and, in a multi-subject app,
+ * to one of its subjects. */
+export function createPages({ appTitle, texts, subjectId }: PageFlowOptions): PageFlows {
   const { contentText } = texts;
-  const waitForHome = (page: Page): Promise<void> =>
-    page.getByRole('heading', { level: 1, name: appTitle }).waitFor();
+  const homeHeading = (page: Page, title: string): Locator =>
+    page.getByRole('heading', { level: 1, name: title, exact: true });
+  const waitForHome = (page: Page): Promise<void> => homeHeading(page, appTitle).waitFor();
+  const subjectTile = (page: Page, id: string): Locator => page.getByTestId(`subject-tile-${id}`);
+  const declineOfferButton = (page: Page): Locator =>
+    page.getByRole('button', { name: contentText('placement.offer-no') });
+
+  // A tile tap lands on the subject's Home, or on the placement offer first when the subject is fresh for this profile
+  // (once per app session): that offer is declined.
+  async function settleOnHome(page: Page, homeTitle: string): Promise<void> {
+    const home = homeHeading(page, homeTitle);
+    const decline = declineOfferButton(page);
+    await home.or(decline).first().waitFor();
+    if (await decline.isVisible()) {
+      await decline.click();
+      await home.waitFor();
+    }
+  }
+
+  async function openSubject(page: Page, id: string, homeTitle = appTitle): Promise<void> {
+    const tile = subjectTile(page, id);
+    if (!(await tile.isVisible())) {
+      await page.getByRole('button', { name: 'Subjects', exact: true }).click();
+    }
+    await tile.click();
+    await settleOnHome(page, homeTitle);
+  }
 
   // Stops at the placement offer, so specs that exercise placement can continue from there.
   async function completeFirstRunToPlacementOffer(page: Page, nickname = 'Kid'): Promise<void> {
@@ -35,6 +67,7 @@ export function createPages({ appTitle, texts }: PageFlowOptions): PageFlows {
     await page.getByPlaceholder('Your name').fill(nickname);
     await page.getByRole('button', { name: 'Next' }).click(); // nickname -> avatar
     await page.getByRole('button', { name: "Let's play!" }).click();
+    if (subjectId !== undefined) await subjectTile(page, subjectId).click(); // hub -> the subject
 
     await page.getByText(contentText('placement.offer-question')).waitFor();
   }
@@ -42,7 +75,7 @@ export function createPages({ appTitle, texts }: PageFlowOptions): PageFlows {
   // Fresh install to Home, declining placement: the landing every spec that needs a profile relies on.
   async function completeFirstRun(page: Page, nickname = 'Kid'): Promise<void> {
     await completeFirstRunToPlacementOffer(page, nickname);
-    await page.getByRole('button', { name: contentText('placement.offer-no') }).click();
+    await declineOfferButton(page).click();
     await waitForHome(page);
   }
 
@@ -58,7 +91,13 @@ export function createPages({ appTitle, texts }: PageFlowOptions): PageFlows {
   // Every reload shows the picker again, so specs that reload call this to get back to Home.
   async function pickProfileFromPicker(page: Page, nickname: string): Promise<void> {
     await page.getByRole('button', { name: new RegExp(nickname) }).click();
-    await waitForHome(page);
+    if (subjectId === undefined) {
+      await waitForHome(page);
+      return;
+    }
+    // Picker -> hub -> the subject's tile -> Home (a subject without progress offers placement first).
+    await subjectTile(page, subjectId).click();
+    await settleOnHome(page, appTitle);
   }
 
   // From a fresh install: today's lesson, Story -> Demo -> first guided try.
@@ -82,6 +121,7 @@ export function createPages({ appTitle, texts }: PageFlowOptions): PageFlows {
     completeFirstRun,
     dismissCelebrationIfShown,
     pickProfileFromPicker,
+    openSubject,
     startLessonToFirstGuided,
     openParentArea,
   };

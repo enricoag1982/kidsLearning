@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { pickProfileFromPicker } from './helpers.ts';
 
 test.describe('Profiles, first run and parent area', () => {
   test('fresh install → first run → Home; reload → picker → Home; lockout → parent area → add child', async ({
@@ -19,11 +20,11 @@ test.describe('Profiles, first run and parent area', () => {
       page.waitForEvent('download'),
       page.getByRole('button', { name: 'Save parent code' }).click(),
     ]);
-    expect(download.suggestedFilename()).toBe('chess-for-kids-parent-code.txt');
+    expect(download.suggestedFilename()).toBe('kids-learning-parent-code.txt');
 
     // First run: Saved.
     await expect(page.getByText('Parent code saved!')).toBeVisible();
-    await expect(page.getByText('chess-for-kids-parent-code.txt')).toBeVisible();
+    await expect(page.getByText('kids-learning-parent-code.txt')).toBeVisible();
     await page.getByRole('button', { name: 'Next' }).click();
 
     // New player: nickname, then avatar.
@@ -33,7 +34,15 @@ test.describe('Profiles, first run and parent area', () => {
     await page.getByRole('button', { name: 'Fox' }).click();
     await page.getByRole('button', { name: "Let's play!" }).click();
 
-    // Offered once, right after creating a new player; declines it here (Home shows Mia).
+    // The subjects hub (two subjects): Chess.
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'What shall we learn?' }),
+    ).toBeVisible();
+    await expect(page.getByTestId('subject-tile-chess')).toBeVisible();
+    await expect(page.getByTestId('subject-tile-math')).toBeVisible();
+    await page.getByTestId('subject-tile-chess').click();
+
+    // Offered on the first entry into a fresh subject; declines it here (Home shows Mia).
     await expect(
       page.getByText("Already know some chess? Let's find out where to start you!"),
     ).toBeVisible();
@@ -43,10 +52,10 @@ test.describe('Profiles, first run and parent area', () => {
     await expect(page.getByRole('heading', { level: 1, name: 'Chess' })).toBeVisible();
     await expect(page.getByText('Mia')).toBeVisible();
 
-    // Reload → picker (app start always shows it once a parent lock exists) → Mia → Home.
+    // Reload → picker (app start always shows it once a parent lock exists) → Mia → hub → Chess → Home.
     await page.reload();
     await expect(page.getByRole('heading', { name: "Who's playing today?" })).toBeVisible();
-    await page.getByRole('button', { name: /Mia/ }).click();
+    await pickProfileFromPicker(page, 'Mia');
     await expect(page.getByRole('heading', { level: 1, name: 'Chess' })).toBeVisible();
 
     // Grown-ups: 5 wrong attempts locks the gate with a countdown.

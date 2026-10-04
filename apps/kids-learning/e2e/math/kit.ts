@@ -1,5 +1,6 @@
-// The math e2e kit: the platform's page flows bound to the math locale, plus a driver that plays any
-// exercise from its kind's `solution()` through the kind's own e2e driver (one path for every kind).
+// The math e2e kit: the platform's page flows bound to the math subject of the Kids Learning app (through the subjects
+// hub) and its locale, plus a driver that plays any exercise from its kind's `solution()` through the kind's own e2e
+// driver (one path for every kind).
 import { expect } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import { createE2ETexts } from '@learn/platform-web/e2e/i18n.ts';
@@ -23,14 +24,15 @@ import en from '@learn/subject-math/dist/locales/en.json' with { type: 'json' };
 /** The math locale's texts, resolved as the app renders them (`lessons:add-within-5.title`, `math.erase`). */
 export const { contentText, interpolate } = createE2ETexts({ en });
 
-/** The shared page flows bound to the math app's title and locale. */
+/** The shared page flows bound to the math subject's Home title and locale. */
 export const {
   completeFirstRun,
   dismissCelebrationIfShown,
   pickProfileFromPicker,
+  openSubject,
   startLessonToFirstGuided,
   openParentArea,
-} = createPages({ appTitle: contentText('app.title'), texts: { contentText } });
+} = createPages({ appTitle: contentText('app.title'), texts: { contentText }, subjectId: 'math' });
 
 // The content build validates this shape (invalid content fails `pnpm build`), so this is a type
 // conversion, not a runtime check.

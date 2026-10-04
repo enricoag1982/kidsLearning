@@ -1,6 +1,6 @@
 {
  "backup": {
-  "app": "chess-kids",
+  "app": "kids-learning",
   "schemaVersion": 6,
   "exportedAt": "<masked>",
   "profiles": [
@@ -783,6 +783,16 @@
       ],
       "assessmentResults": [],
       "unlocks": []
+     },
+     "math": {
+      "lessonProgress": [],
+      "attempts": [],
+      "miniGameProgress": [],
+      "conceptStats": [],
+      "gameRecords": [],
+      "earnedBadges": [],
+      "assessmentResults": [],
+      "unlocks": []
      }
     }
    },
@@ -821,6 +831,16 @@
         "at": "2026-09-26T21:45:12.607Z"
        }
       ],
+      "unlocks": []
+     },
+     "math": {
+      "lessonProgress": [],
+      "attempts": [],
+      "miniGameProgress": [],
+      "conceptStats": [],
+      "gameRecords": [],
+      "earnedBadges": [],
+      "assessmentResults": [],
       "unlocks": []
      }
     }

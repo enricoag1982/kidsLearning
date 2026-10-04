@@ -1,7 +1,7 @@
 /**
  * `pnpm voice:check` (`docs/voice.md`): rebuilds the voice inventory in memory — same content, same
  * `buildVoiceInventory` as `scripts/voice-texts.ts`, without writing `dist/voice-texts.json` — and
- * compares its keys against `apps/chess-kids/public/audio/en/manifest.json`'s own `entries`. CI's own guard
+ * compares its keys against `apps/kids-learning/public/audio/en/manifest.json`'s own `entries`. CI's own guard
  * against a content/UI change that added narrated text but forgot to regenerate its audio.
  *
  * Fails (exit 1) on any inventory key with no manifest entry: exactly the case
@@ -17,7 +17,7 @@ import { chessContent } from '../src/content/chess-content.ts';
 
 const packageDir = dirname(dirname(fileURLToPath(import.meta.url)));
 const repoRoot = join(packageDir, '..', '..');
-const manifestPath = join(repoRoot, 'apps', 'chess-kids', 'public', 'audio', 'en', 'manifest.json');
+const manifestPath = join(repoRoot, 'apps', 'kids-learning', 'public', 'audio', 'en', 'manifest.json');
 
 let compiled: ReturnType<typeof compileAll>;
 try {

@@ -140,10 +140,11 @@ test.describe('5-minute warning (M7.1)', () => {
     await seedDailyLimit(page, profileId, 15);
     await seedMinutesToday(page, profileId, 12); // remaining = 15 - 12 = 3 min
 
-    // A screen change is what (re-)evaluates the notice (`AppNotice.tsx`) — reload + re-enter Home,
-    // same as the "a parent-set limit shows its line" spec above.
+    // A screen change is what (re-)evaluates the notice (`AppNotice.tsx`) — reload and pick the child.
+    // The subjects hub is a calm screen, and the first one after the picker: the warning (once per
+    // child per day) shows there.
     await page.reload();
-    await pickProfileFromPicker(page, 'Kid');
+    await page.getByRole('button', { name: /Kid/ }).click();
 
     await page.getByText('5 minutes left — pick something short!').waitFor();
   });

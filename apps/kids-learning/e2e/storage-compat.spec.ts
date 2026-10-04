@@ -1,45 +1,50 @@
 // Snapshot rule (docs/refactor-v4.md R0 "storage-compat fixtures"): this spec's own expectations
-// change ONLY when the storage/backup format or these screens' contracts change on purpose — a v4
-// refactor PR must leave it green, unmodified, against every fixture tag.
-import { readFileSync } from 'node:fs';
+// change ONLY when the storage/backup format or these screens' contracts change on purpose.
+//
+// Since m11.6 (docs/multi-subject.md D3) the app reads no `chess-kids:` localStorage, so the recorded
+// `local-storage.json` dumps are not replayed any more: what a returning chess user does is import the
+// backup file of the old app, which lands in the chess subject (`AppConfig.legacyBackupApps`).
 import { join } from 'node:path';
 import { expect, test } from '@playwright/test';
-import { findLesson, journeyNodeName } from './helpers.ts';
+import {
+  completeFirstRun,
+  findLesson,
+  journeyNodeName,
+  openParentArea,
+  pickProfileFromPicker,
+} from './helpers.ts';
 
 const FIXTURES_DIR = join(import.meta.dirname, '..', 'test-fixtures', 'storage');
 const TAGS = ['v1.0.0', 'v1.1.0', 'v2.0.0'] as const;
-/** Every fixture's own parent code (`test-fixtures/storage/README.md`), test data only. */
-const PARENT_CODE = '1234';
 
 for (const tag of TAGS) {
-  test(`storage compat smoke: ${tag} fixture loads on the current app`, async ({ page }) => {
-    test.setTimeout(20_000);
+  test(`storage compat smoke: ${tag} backup file imports into the chess subject`, async ({
+    page,
+  }) => {
+    test.setTimeout(30_000);
 
-    const dump = JSON.parse(
-      readFileSync(join(FIXTURES_DIR, tag, 'local-storage.json'), 'utf8'),
-    ) as Record<string, string>;
-    // The dump already carries `chess-kids:schema-version` (every fixture's own key list,
-    // `local-store.ts`'s reserved-prefix guard) — filled before the very first `goto`, same as the
-    // app's own storage would already hold it on a returning device.
-    expect(Object.keys(dump)).toContain('chess-kids:schema-version');
+    // A fresh device with its own child; the old app's file brings Mia and Leo.
+    await completeFirstRun(page, 'Kid');
+    await page.getByRole('button', { name: 'Switch player' }).click();
+    await openParentArea(page);
+    await page.getByRole('button', { name: 'Backup' }).click();
+    await page.getByLabel('Choose file').setInputFiles(join(FIXTURES_DIR, tag, 'backup-all.json'));
 
-    await page.addInitScript((entries: readonly (readonly [string, string])[]) => {
-      for (const [key, value] of entries) {
-        window.localStorage.setItem(key, value);
-      }
-    }, Object.entries(dump));
+    // The file's own app id (`chess-kids`) is accepted: a plan with both fixture children, no error.
+    await expect(page.getByText(/^2 children$/)).toBeVisible();
+    await page.getByRole('button', { name: 'Merge' }).click();
+    await page.getByText('Import complete.').waitFor();
+    await page.getByRole('button', { name: 'Back' }).click(); // backup -> overview
+    await expect(page.getByRole('button', { name: /^Mia/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: /^Leo/ })).toBeVisible();
+    await page.getByRole('button', { name: 'Done' }).click();
 
-    await page.goto('/');
-
-    // Picker shows both fixture children — no error screen (a `StorageError` would show one
-    // instead of the picker).
-    await expect(page.getByRole('heading', { name: "Who's playing today?" })).toBeVisible();
+    // Picker shows both fixture children. Pick Mia -> hub -> Chess -> Home shows her Continue (she has
+    // one lesson left mid-way, `resumeStep > 0`) and her stars pill above zero (3 lessons mastered for
+    // real, per the fixture).
     await expect(page.getByRole('button', { name: /Mia/ })).toBeVisible();
     await expect(page.getByRole('button', { name: /Leo/ })).toBeVisible();
-
-    // Pick Mia -> Home shows her Continue (she has one lesson left mid-way, `resumeStep > 0`) and
-    // her stars pill above zero (3 lessons mastered for real, per the fixture).
-    await page.getByRole('button', { name: /Mia/ }).click();
+    await pickProfileFromPicker(page, 'Mia');
     await expect(page.getByRole('heading', { level: 1, name: 'Chess' })).toBeVisible();
     await expect(page.getByRole('button', { name: /Continue/ })).toBeVisible();
     const starsPill = page.locator('[aria-label$=" stars"]');
@@ -52,13 +57,5 @@ for (const tag of TAGS) {
     await expect(
       page.getByRole('button', { name: journeyNodeName(rook, 'current') }),
     ).toBeVisible();
-
-    // Parent area opens with the fixture's own parent code.
-    await page.getByRole('button', { name: 'Back to Home' }).click();
-    await page.getByRole('button', { name: 'Switch player' }).click();
-    await page.getByRole('button', { name: /Grown-ups/ }).click();
-    await page.getByLabel('Parent code', { exact: true }).fill(PARENT_CODE);
-    await page.getByRole('button', { name: 'Open' }).click();
-    await expect(page.getByRole('heading', { name: 'Parent area' })).toBeVisible();
   });
 }

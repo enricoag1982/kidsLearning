@@ -51,7 +51,7 @@ const catalog = rawTracks as unknown as TracksCatalog;
  */
 async function clearConceptStats(page: Page): Promise<void> {
   await page.evaluate(() => {
-    localStorage.removeItem('chess-kids:concept-stats');
+    localStorage.removeItem('kids-chess:concept-stats');
   });
 }
 
@@ -272,6 +272,14 @@ test('onboarding and profile screens have no serious/critical violations and cor
   await expectNoSeriousViolations(page, 'New player: avatar');
   await page.getByRole('button', { name: "Let's play!" }).click();
 
+  // 5.4. Subjects hub (kid style): one big tile per subject; Chess goes on.
+  await page.getByRole('heading', { level: 1, name: 'What shall we learn?' }).waitFor();
+  await expectKidTouchTarget(page, 'Chess');
+  await expectKidTouchTarget(page, 'Math');
+  await expectKidTouchTarget(page, 'Switch player');
+  await expectNoSeriousViolations(page, 'Subjects hub');
+  await page.getByTestId('subject-tile-chess').click();
+
   // 5.5. Placement offer (kid style): declined here (a full placement run is scanned in its
   // own dedicated test below, alongside the test-out sheet/runner/results).
   await page.getByText(contentText('placement.offer-question')).waitFor();
@@ -468,7 +476,7 @@ test('lesson flow has no serious/critical accessibility violations and kid-sized
   // Shortens the bot's "thinking" pause for every versus boss reached below (Pawn Wars Jr. and,
   // to deep-scan `choice`/`best-move`, Pawn Wars too) — set now, well before either is reached.
   // The voice-report flag (above) is set here too, not via `addInitScript` before the first
-  // `page.goto`: every `chess-kids:*` key is reserved for the app's own versioned storage
+  // `page.goto`: every `kids:*` / `kids-<subject>:*` key is reserved for the app's own versioned storage
   // (`local-store.ts`), which throws "Unversioned data found under …" if one is
   // already present before the app's own startup writes its version key. Setting it only once the
   // app is already up (same as `test-seed` already did) still covers the whole curriculum walk
@@ -477,7 +485,7 @@ test('lesson flow has no serious/critical accessibility violations and kid-sized
   await page.evaluate(
     ({ checkVoiceMisses: check }: { checkVoiceMisses: boolean }) => {
       localStorage.setItem('chess-kids:test-seed', '1');
-      if (check) localStorage.setItem('chess-kids:voice-report', '1');
+      if (check) localStorage.setItem('kids:voice-report', '1');
     },
     { checkVoiceMisses },
   );
@@ -542,11 +550,11 @@ test('lesson flow has no serious/critical accessibility violations and kid-sized
       );
       await page.evaluate(
         ({ lessonIds }: { lessonIds: readonly string[] }) => {
-          const raw = localStorage.getItem('chess-kids:profiles');
+          const raw = localStorage.getItem('kids:profiles');
           const profiles = raw ? (JSON.parse(raw) as Record<string, { id: string }>) : {};
           const [profile] = Object.values(profiles);
           if (!profile) return;
-          const key = 'chess-kids:lesson-progress';
+          const key = 'kids-chess:lesson-progress';
           const allRaw = localStorage.getItem(key);
           const all = allRaw ? (JSON.parse(allRaw) as Record<string, { bossStars?: number }>) : {};
           for (const lessonId of lessonIds) {

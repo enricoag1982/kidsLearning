@@ -151,10 +151,10 @@ test.describe('Device sharing (M7.2): export merges into another device', () => 
       pageA.waitForEvent('download'),
       pageA.getByRole('button', { name: 'Send to other device' }).click(),
     ]);
-    expect(downloadA.suggestedFilename()).toMatch(/^chess-for-kids-all-\d{4}-\d{2}-\d{2}\.json$/);
+    expect(downloadA.suggestedFilename()).toMatch(/^kids-learning-all-\d{4}-\d{2}-\d{2}\.json$/);
     // Saved to a stable path before closing device A's context: a context's own downloads are
     // cleaned up with it, and this file must still exist once device B (a separate context) reads it.
-    const exportedPath = join(mkdtempSync(join(tmpdir(), 'chess-kids-share-')), 'share.json');
+    const exportedPath = join(mkdtempSync(join(tmpdir(), 'kids-learning-share-')), 'share.json');
     await downloadA.saveAs(exportedPath);
     await contextA.close();
 
@@ -168,7 +168,10 @@ test.describe('Device sharing (M7.2): export merges into another device', () => 
     await pageB.reload();
 
     await openParentArea(pageB);
-    const miaCard = pageB.getByRole('button', { name: /^Mia/ });
+    // The overview card has one line per subject; the lessons here are chess's.
+    const miaCard = pageB
+      .getByRole('button', { name: /^Mia/ })
+      .getByTestId('overview-subject-chess');
     await expect(miaCard.getByText(/^[1-9]\d* stars$/)).toBeVisible();
     const starsBeforeImport = await miaCard.getByText(/ stars$/).textContent();
 

@@ -34,13 +34,19 @@ test.describe('Parent area', () => {
     ).toHaveAttribute('aria-pressed', 'true');
   });
 
-  test('every localStorage key belongs to the math app', async ({ page }) => {
+  test('every localStorage key belongs to the app; Math writes only its own store', async ({
+    page,
+  }) => {
     await completeFirstRun(page, 'Mia');
     await page.getByRole('button', { name: /Start/ }).click(); // opening a lesson writes progress too
     await page.getByRole('button', { name: /Let me try/ }).waitFor();
 
     const keys = await page.evaluate(() => Object.keys(localStorage));
-    expect(keys.length).toBeGreaterThan(0);
-    expect(keys.filter((key) => !key.startsWith('math-demo:'))).toEqual([]);
+    expect(keys.filter((key) => !/^kids(-chess|-math)?:/.test(key))).toEqual([]);
+    expect(keys).toContain('kids:profiles');
+    // Chess was never opened: its store holds nothing but its version.
+    expect(
+      keys.filter((key) => key.startsWith('kids-chess:') && !key.endsWith(':schema-version')),
+    ).toEqual([]);
   });
 });
