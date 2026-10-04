@@ -5,11 +5,14 @@ import { newProfile } from '../domain/profile.ts';
 import type { Profile } from '../domain/profile.ts';
 import { newLessonProgress, recordExerciseStars } from '../domain/progress.ts';
 import type { LessonProgress } from '../domain/progress.ts';
+import { emptySubjectProfileData } from '../domain/merge.ts';
+import type { SubjectProfileData } from '../domain/merge.ts';
 import { newEarnedBadge } from '../domain/badges.ts';
 import type { EarnedBadge } from '../domain/badges.ts';
 import type { BackupFile } from './backup.ts';
 import type { BackupImporter } from './ports.ts';
 import {
+  makeGameRecordRepo,
   makeProfileRepo,
   makeProgressRepo as buildProgressRepo,
   makeRewardsRepo as buildRewardsRepo,
@@ -56,7 +59,7 @@ function makeDeps(overrides: Partial<AppDeps> = {}): AppDeps {
     clock: { now: () => NOW },
     content: makeContent(),
     backupImporter: makeBackupImporter(),
-    storageSchemaVersion: 5,
+    storageSchemaVersion: 6,
     ...overrides,
   });
 }
@@ -64,29 +67,25 @@ function makeDeps(overrides: Partial<AppDeps> = {}): AppDeps {
 const DEFAULT_PROFILE_SETTINGS = composeDefaultSettings(buildDeps({}).subject.settings);
 
 /** A minimal, valid `BackupFile` for one child, built straight from literal data (not via
- * `buildBackupFile`, so these tests do not depend on a *second* `AppDeps`'s own repositories). */
+ * `buildBackupFile`, so these tests do not depend on a *second* `AppDeps`'s own repositories). `overrides` fill subject
+ * `main` (the single-subject deps' subject id); `subjects` replaces the whole per-subject map. */
 function incomingFileFor(
   profile: Profile,
-  overrides: Partial<BackupFile['data'][string]> = {},
+  overrides: Partial<SubjectProfileData> = {},
+  subjects: Readonly<Record<string, SubjectProfileData>> = {
+    main: { ...emptySubjectProfileData(), ...overrides },
+  },
 ): BackupFile {
   return {
     app: 'chess-kids',
-    schemaVersion: 5,
+    schemaVersion: 6,
     exportedAt: NOW.toISOString(),
     profiles: [profile],
     data: {
       [profile.id]: {
         settings: DEFAULT_PROFILE_SETTINGS,
-        lessonProgress: [],
-        attempts: [],
-        miniGameProgress: [],
-        conceptStats: [],
-        gameRecords: [],
-        earnedBadges: [],
         sessionLogs: [],
-        assessmentResults: [],
-        unlocks: [],
-        ...overrides,
+        subjects,
       },
     },
   };
@@ -206,7 +205,10 @@ describe('importMerged', () => {
 
     const importer = deps.backupImporter as BackupImporter & { calls: BackupFile[] };
     const written = importer.calls[0];
-    expect(written?.data.p1?.lessonProgress[0]?.bestStars).toEqual({ 'l1-01': 3, 'l1-02': 2 });
+    expect(written?.data.p1?.subjects.main?.lessonProgress[0]?.bestStars).toEqual({
+      'l1-01': 3,
+      'l1-02': 2,
+    });
   });
 
   it('"add as new child": creates a new local profile with the incoming child’s own id and data', async () => {
@@ -226,7 +228,9 @@ describe('importMerged', () => {
     const importer = deps.backupImporter as BackupImporter & { calls: BackupFile[] };
     const written = importer.calls[0];
     expect(written?.profiles.map((p) => p.id).sort()).toEqual(['other-1', 'p1']);
-    expect(written?.data['other-1']?.lessonProgress[0]?.bestStars).toEqual({ 'l1-01': 2 });
+    expect(written?.data['other-1']?.subjects.main?.lessonProgress[0]?.bestStars).toEqual({
+      'l1-01': 2,
+    });
   });
 
   it('"merge into a different local child": re-keys every incoming record to the chosen local id', async () => {
@@ -246,7 +250,7 @@ describe('importMerged', () => {
     const written = importer.calls[0];
     // Only the local profile row exists; nothing was kept under the incoming device's own id.
     expect(written?.profiles.map((p) => p.id)).toEqual(['local-1']);
-    expect(written?.data['local-1']?.lessonProgress[0]?.profileId).toBe('local-1');
+    expect(written?.data['local-1']?.subjects.main?.lessonProgress[0]?.profileId).toBe('local-1');
     // Local's own nickname/avatar are kept (decision table "Profile matching").
     expect(written?.profiles[0]?.nickname).toBe('Mia');
     expect(written?.profiles[0]?.avatar).toBe('fox');
@@ -265,8 +269,153 @@ describe('importMerged', () => {
     expect(second.totalStars).toBe(first.totalStars);
     const importer = deps.backupImporter as BackupImporter & { calls: BackupFile[] };
     expect(importer.calls).toHaveLength(2); // called each time, but the written content is stable
-    expect(importer.calls[1]?.data.p1?.lessonProgress).toEqual(
-      importer.calls[0]?.data.p1?.lessonProgress,
+    expect(importer.calls[1]?.data.p1?.subjects.main?.lessonProgress).toEqual(
+      importer.calls[0]?.data.p1?.subjects.main?.lessonProgress,
     );
+  });
+});
+
+/** Local deps hosting subjects `a` and `b`, each with its own lesson progress (same lesson id `l1` in both). */
+function twoSubjectDeps(
+  localA: readonly LessonProgress[] = [],
+  localB: readonly LessonProgress[] = [],
+  profiles: readonly Profile[] = [newProfile('p1', 'Mia', 'fox', NOW)],
+): AppDeps {
+  const repos = (lessons: readonly LessonProgress[]) => ({
+    progress: makeProgressRepo(lessons),
+    gameRecords: makeGameRecordRepo(),
+    badges: buildRewardsRepo(),
+  });
+  return makeDeps({
+    profiles: makeProfileRepo(profiles),
+    subjectData: { a: repos(localA), b: repos(localB) },
+  });
+}
+
+function starsOnL1(id: string, profileId: string, exerciseId: string, stars: 1 | 2 | 3) {
+  return recordExerciseStars(
+    newLessonProgress(id, profileId, 'l1', NOW),
+    exerciseId,
+    stars,
+    L1,
+    NOW,
+  );
+}
+
+describe('per-subject sections', () => {
+  it('previewChildChange "add-new" sums stars and badges over every subject', async () => {
+    const deps = twoSubjectDeps();
+    const leo = newProfile('incoming-1', 'Leo', 'panda', NOW);
+    const incoming = incomingFileFor(
+      leo,
+      {},
+      {
+        a: {
+          ...emptySubjectProfileData(),
+          lessonProgress: [starsOnL1('lp-a', 'incoming-1', 'l1-01', 3)],
+          earnedBadges: [newEarnedBadge('b1', 'incoming-1', 'first-win', undefined, NOW)],
+        },
+        b: {
+          ...emptySubjectProfileData(),
+          lessonProgress: [starsOnL1('lp-b', 'incoming-1', 'l1-01', 2)],
+          earnedBadges: [
+            newEarnedBadge('b2', 'incoming-1', 'streak-3', undefined, NOW),
+            newEarnedBadge('b3', 'incoming-1', 'streak-7', undefined, NOW),
+          ],
+        },
+      },
+    );
+
+    const summary = await previewChildChange(deps, incoming, {
+      incomingProfileId: 'incoming-1',
+      kind: 'add-new',
+    });
+
+    expect(summary).toEqual({ starsDelta: 5, badgesDelta: 3, minutesThisWeekDelta: 0 });
+  });
+
+  it('importMerged keeps the same lesson id in two subjects separate, per-subject best-of', async () => {
+    const mia = newProfile('p1', 'Mia', 'fox', NOW);
+    const deps = twoSubjectDeps(
+      [starsOnL1('lp-a', 'p1', 'l1-01', 1)],
+      [starsOnL1('lp-b', 'p1', 'l1-01', 3)],
+    );
+    const incoming = incomingFileFor(
+      mia,
+      {},
+      {
+        a: {
+          ...emptySubjectProfileData(),
+          lessonProgress: [starsOnL1('lp-a-in', 'p1', 'l1-01', 3)],
+        },
+        b: {
+          ...emptySubjectProfileData(),
+          lessonProgress: [starsOnL1('lp-b-in', 'p1', 'l1-01', 1)],
+        },
+      },
+    );
+
+    const result = await importMerged(deps, incoming, []);
+
+    const importer = deps.backupImporter as BackupImporter & { calls: BackupFile[] };
+    const written = importer.calls[0]?.data.p1?.subjects;
+    expect(written?.a?.lessonProgress).toHaveLength(1);
+    expect(written?.a?.lessonProgress[0]?.bestStars).toEqual({ 'l1-01': 3 });
+    expect(written?.b?.lessonProgress).toHaveLength(1);
+    expect(written?.b?.lessonProgress[0]?.bestStars).toEqual({ 'l1-01': 3 });
+    expect(result.totalStars).toBe(6);
+  });
+
+  it('"merge into a different local child" re-keys the rows of every subject', async () => {
+    const deps = twoSubjectDeps([], [], [newProfile('local-1', 'Mia', 'fox', NOW)]);
+    const otherMia = newProfile('other-1', 'Mia', 'panda', NOW);
+    const incoming = incomingFileFor(
+      otherMia,
+      {},
+      {
+        a: {
+          ...emptySubjectProfileData(),
+          lessonProgress: [starsOnL1('lp-a', 'other-1', 'l1-01', 2)],
+        },
+        b: {
+          ...emptySubjectProfileData(),
+          earnedBadges: [newEarnedBadge('b1', 'other-1', 'first-win', undefined, NOW)],
+        },
+      },
+    );
+
+    await importMerged(deps, incoming, [
+      { incomingProfileId: 'other-1', kind: 'merge', localProfileId: 'local-1' },
+    ]);
+
+    const importer = deps.backupImporter as BackupImporter & { calls: BackupFile[] };
+    const written = importer.calls[0]?.data['local-1']?.subjects;
+    expect(written?.a?.lessonProgress[0]?.profileId).toBe('local-1');
+    expect(written?.b?.earnedBadges[0]?.profileId).toBe('local-1');
+  });
+
+  it('a subject hosted locally but absent from the incoming file is kept as is', async () => {
+    const mia = newProfile('p1', 'Mia', 'fox', NOW);
+    const deps = twoSubjectDeps(
+      [starsOnL1('lp-a', 'p1', 'l1-01', 2)],
+      [starsOnL1('lp-b', 'p1', 'l1-02', 3)],
+    );
+    const incoming = incomingFileFor(
+      mia,
+      {},
+      {
+        a: {
+          ...emptySubjectProfileData(),
+          lessonProgress: [starsOnL1('lp-a-in', 'p1', 'l1-02', 1)],
+        },
+      },
+    );
+
+    await importMerged(deps, incoming, []);
+
+    const importer = deps.backupImporter as BackupImporter & { calls: BackupFile[] };
+    const written = importer.calls[0]?.data.p1?.subjects;
+    expect(written?.a?.lessonProgress[0]?.bestStars).toEqual({ 'l1-01': 2, 'l1-02': 1 });
+    expect(written?.b?.lessonProgress[0]?.bestStars).toEqual({ 'l1-02': 3 });
   });
 });

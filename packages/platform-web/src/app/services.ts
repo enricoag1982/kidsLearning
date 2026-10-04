@@ -44,12 +44,15 @@ function createLazyBackupFileWriter(): BackupFileWriter {
   };
 }
 
-function createLazyBackupImporter(store: LocalStore): BackupImporter {
+function createLazyBackupImporter(
+  sharedStore: LocalStore,
+  subjectStores: Readonly<Record<string, LocalStore>>,
+): BackupImporter {
   return {
     async writeMerged(file, options) {
       const { LocalStorageBackupImporter } =
         await import('../adapters/storage/local-backup-importer.ts');
-      return new LocalStorageBackupImporter(store).writeMerged(file, options);
+      return new LocalStorageBackupImporter(sharedStore, subjectStores).writeMerged(file, options);
     },
   };
 }
@@ -129,6 +132,9 @@ export function createServices(
     keyPrefix: appConfig.storagePrefix,
   });
 
+  // Filled in the subject loop below; the lazy importer reads it only at write time, after every subject has registered.
+  const subjectStores: Record<string, LocalStore> = {};
+
   const shared = {
     profiles: new LocalStorageProfileRepository(sharedStore),
     clock: createSystemClock(),
@@ -138,8 +144,7 @@ export function createServices(
     settings: new LocalStorageSettingsRepository(sharedStore),
     random: createMathRandom(),
     backupFileWriter: createLazyBackupFileWriter(),
-    // Still over the shared store: m11.3 makes import subject-aware.
-    backupImporter: createLazyBackupImporter(sharedStore),
+    backupImporter: createLazyBackupImporter(sharedStore, subjectStores),
     storageSchemaVersion: SCHEMA_VERSION,
     app: { ...appConfig, version: __APP_VERSION__ },
   };
@@ -157,6 +162,7 @@ export function createServices(
       prefix === appConfig.storagePrefix
         ? sharedStore
         : openLocalStore(storage, { migrations: MIGRATIONS, keyPrefix: prefix });
+    subjectStores[id] = subjectStore;
     const { content, subject } = pack.createServices();
     const progress = new LocalStorageProgressRepository(subjectStore);
     const gameRecords = new LocalStorageGameRecordRepository(subjectStore);
@@ -173,6 +179,7 @@ export function createServices(
       content,
       subject: createSubjectRuntime(pack.core, settingsSlot),
       subjectData,
+      subjectId: id,
     };
   }
 

@@ -2,7 +2,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { createProfile, updateProfileSettings } from '@learn/platform-core';
 import type { BackupFile } from '@learn/platform-core';
-import { DEFAULT_PROFILE_SETTINGS } from '@learn/subject-chess';
+import { chessCore, DEFAULT_PROFILE_SETTINGS } from '@learn/subject-chess';
+import { SCHEMA_VERSION } from '@learn/platform-web/adapters/storage/local-store.ts';
 import type { AppUpdate } from '@learn/platform-web/adapters/app-update.ts';
 import { createBundledContentSource } from '@learn/subject-chess/web/adapters/content/bundled-content-source.ts';
 import type { FakeBackupFileWriter } from '@learn/platform-web/testing/fake-backup-file-writer.ts';
@@ -25,10 +26,12 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-/** A minimal, valid incoming `BackupFile` for one child (device sharing tests). */
+type SubjectSection = BackupFile['data'][string]['subjects'][string];
+
+/** A minimal, valid incoming `BackupFile` for one child (device sharing tests); `dataOverrides` fill the chess section. */
 function incomingFileFor(
   profileOverrides: { readonly id: string; readonly nickname: string; readonly avatar?: string },
-  dataOverrides: Partial<BackupFile['data'][string]> = {},
+  dataOverrides: Partial<SubjectSection> = {},
 ): BackupFile {
   const now = new Date().toISOString();
   const profile = {
@@ -42,22 +45,26 @@ function incomingFileFor(
   };
   return {
     app: 'chess-kids',
-    schemaVersion: 1,
+    schemaVersion: SCHEMA_VERSION,
     exportedAt: now,
     profiles: [profile],
     data: {
       [profile.id]: {
         settings: DEFAULT_PROFILE_SETTINGS,
-        lessonProgress: [],
-        attempts: [],
-        miniGameProgress: [],
-        conceptStats: [],
-        gameRecords: [],
-        earnedBadges: [],
         sessionLogs: [],
-        assessmentResults: [],
-        unlocks: [],
-        ...dataOverrides,
+        subjects: {
+          [chessCore.id]: {
+            lessonProgress: [],
+            attempts: [],
+            miniGameProgress: [],
+            conceptStats: [],
+            gameRecords: [],
+            earnedBadges: [],
+            assessmentResults: [],
+            unlocks: [],
+            ...dataOverrides,
+          },
+        },
       },
     },
   };

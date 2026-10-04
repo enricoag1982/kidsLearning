@@ -56,10 +56,11 @@ export function createTestServices(
     // Deterministic (warm-up/practice task picking): RTL tests can assert exact tasks shown.
     random: bot.seededRandom(1),
     backupFileWriter: createFakeBackupFileWriter(),
-    backupImporter: new LocalStorageBackupImporter(store),
+    backupImporter: new LocalStorageBackupImporter(store, { [chessCore.id]: store }),
     storageSchemaVersion: SCHEMA_VERSION,
     subject: createSubjectRuntime(chessCore),
     app: { ...CHESS_APP_CONFIG, version: __APP_VERSION__ },
+    subjectId: chessCore.id,
   };
 
   const narrator = createFakeNarrator();

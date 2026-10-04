@@ -27,4 +27,10 @@ export const MIGRATIONS: readonly Migration[] = [
       // No-op: nothing to transform.
     },
   },
+  {
+    to: 6,
+    migrate: () => {
+      // 6: backup format v6 (per-subject sections, m11.3); storage layout unchanged.
+    },
+  },
 ];

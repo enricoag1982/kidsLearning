@@ -115,7 +115,7 @@ export type {
 export type { Random } from './domain/random.ts';
 
 export type { AppDeps } from './app/use-cases.ts';
-export { allSubjectData } from './app/subject-data.ts';
+export { allSubjectData, DEFAULT_SUBJECT_ID, subjectDataById } from './app/subject-data.ts';
 export {
   loadProgress,
   loadGameRecords,

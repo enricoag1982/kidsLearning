@@ -2,12 +2,13 @@ import type { MergeableProfileData } from '../domain/merge.ts';
 import {
   emptyProfileData,
   mergeProfileData,
+  profileBadgeCount,
+  profileStarsTotal,
   rekeyProfileData,
   totalMinutesOverDays,
 } from '../domain/merge.ts';
 import { composeDefaultSettings } from '../domain/profile-settings.ts';
 import type { Profile } from '../domain/profile.ts';
-import { totalStars } from '../domain/progress.ts';
 import type { BackupFile, ProfileBackupData } from './backup.ts';
 import { buildBackupFile, requireBackupImporter } from './backup.ts';
 import { getOrCreateDeviceId } from './device.ts';
@@ -103,8 +104,8 @@ export async function previewChildChange(
 
   if (choice.kind === 'add-new') {
     return {
-      starsDelta: totalStars(incomingData.lessonProgress),
-      badgesDelta: incomingData.earnedBadges.length,
+      starsDelta: profileStarsTotal(incomingData),
+      badgesDelta: profileBadgeCount(incomingData),
       minutesThisWeekDelta: totalMinutesOverDays(incomingData, now, PREVIEW_MINUTES_DAYS),
     };
   }
@@ -121,8 +122,8 @@ export async function previewChildChange(
   const merged = mergeProfileData(localData, rekeyed, now);
 
   return {
-    starsDelta: totalStars(merged.lessonProgress) - totalStars(localData.lessonProgress),
-    badgesDelta: merged.earnedBadges.length - localData.earnedBadges.length,
+    starsDelta: profileStarsTotal(merged) - profileStarsTotal(localData),
+    badgesDelta: profileBadgeCount(merged) - profileBadgeCount(localData),
     minutesThisWeekDelta:
       totalMinutesOverDays(merged, now, PREVIEW_MINUTES_DAYS) -
       totalMinutesOverDays(localData, now, PREVIEW_MINUTES_DAYS),
@@ -209,9 +210,9 @@ export async function importMerged(
 
   await importer.writeMerged(mergedFile, { localDeviceId, deviceSettings });
 
-  const totalStarsAll = profiles.reduce(
-    (sum, profile) => sum + totalStars(data[profile.id]?.lessonProgress ?? []),
-    0,
-  );
+  const totalStarsAll = profiles.reduce((sum, profile) => {
+    const profileData = data[profile.id];
+    return sum + (profileData === undefined ? 0 : profileStarsTotal(profileData));
+  }, 0);
   return { profileCount: profiles.length, totalStars: totalStarsAll };
 }

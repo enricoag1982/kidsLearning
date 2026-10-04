@@ -2,23 +2,60 @@ import type { AssessmentResult, Unlock } from './assessment.ts';
 import type { EarnedBadge } from './badges.ts';
 import type { ProfileSettings } from './profile-settings.ts';
 import type { Attempt, GameRecord, LessonProgress, MiniGameProgress, Stars } from './progress.ts';
+import { totalStars } from './progress.ts';
 import type { ConceptStats } from './review.ts';
 import type { SessionLog } from './session-log.ts';
 import { lastNDays, totalMinutesForDate } from './session-log.ts';
 import type { Streak } from './streak.ts';
 
-export interface MergeableProfileData {
-  readonly settings: ProfileSettings;
+/** One subject's records for one profile (that subject's own store). */
+export interface SubjectProfileData {
   readonly lessonProgress: readonly LessonProgress[];
   readonly attempts: readonly Attempt[];
   readonly miniGameProgress: readonly MiniGameProgress[];
   readonly conceptStats: readonly ConceptStats[];
   readonly gameRecords: readonly GameRecord[];
   readonly earnedBadges: readonly EarnedBadge[];
-  readonly streak?: Streak;
-  readonly sessionLogs: readonly SessionLog[];
   readonly assessmentResults: readonly AssessmentResult[];
   readonly unlocks: readonly Unlock[];
+}
+
+export interface MergeableProfileData {
+  readonly settings: ProfileSettings;
+  readonly streak?: Streak;
+  readonly sessionLogs: readonly SessionLog[];
+  /** By subject id; a subject without records may be absent. */
+  readonly subjects: Readonly<Record<string, SubjectProfileData>>;
+}
+
+/** A subject with no records yet. */
+export function emptySubjectProfileData(): SubjectProfileData {
+  return {
+    lessonProgress: [],
+    attempts: [],
+    miniGameProgress: [],
+    conceptStats: [],
+    gameRecords: [],
+    earnedBadges: [],
+    assessmentResults: [],
+    unlocks: [],
+  };
+}
+
+/** Stars over every subject's lesson progress. */
+export function profileStarsTotal(data: MergeableProfileData): number {
+  return Object.values(data.subjects).reduce(
+    (sum, subject) => sum + totalStars(subject.lessonProgress),
+    0,
+  );
+}
+
+/** Earned badges over every subject. */
+export function profileBadgeCount(data: MergeableProfileData): number {
+  return Object.values(data.subjects).reduce(
+    (sum, subject) => sum + subject.earnedBadges.length,
+    0,
+  );
 }
 
 // Mirrors the web storage layer's own caps; duplicated here so `platform-core` never imports a web
@@ -342,23 +379,19 @@ export function mergeUnlocks(local: readonly Unlock[], incoming: readonly Unlock
   return [...byKey.values()];
 }
 
-/** Merges one profile's backed-up data; `local`/`incoming` must share the target profile id (`app/merge.ts`
- * re-keys a child first). Idempotent. */
-export function mergeProfileData(
-  local: MergeableProfileData,
-  incoming: MergeableProfileData,
+/** One subject's records: every per-record rule above, caps applied to this subject alone. */
+function mergeSubjectProfileData(
+  local: SubjectProfileData,
+  incoming: SubjectProfileData,
   now: Date,
-): MergeableProfileData {
-  const merged: MergeableProfileData = {
-    settings: mergeProfileSettings(local.settings, incoming.settings),
+): SubjectProfileData {
+  return {
     lessonProgress: mergeLessonProgress(local.lessonProgress, incoming.lessonProgress, now),
     attempts: unionById(local.attempts, incoming.attempts, MAX_ATTEMPTS),
     miniGameProgress: mergeMiniGameProgress(local.miniGameProgress, incoming.miniGameProgress, now),
     conceptStats: mergeConceptStats(local.conceptStats, incoming.conceptStats),
     gameRecords: unionById(local.gameRecords, incoming.gameRecords, MAX_GAME_RECORDS),
     earnedBadges: mergeEarnedBadges(local.earnedBadges, incoming.earnedBadges),
-    streak: mergeStreak(local.streak, incoming.streak),
-    sessionLogs: mergeSessionLogs(local.sessionLogs, incoming.sessionLogs, now),
     assessmentResults: unionById(
       local.assessmentResults,
       incoming.assessmentResults,
@@ -366,7 +399,30 @@ export function mergeProfileData(
     ),
     unlocks: mergeUnlocks(local.unlocks, incoming.unlocks),
   };
-  return merged;
+}
+
+/** Merges one profile's backed-up data; `local`/`incoming` must share the target profile id (`app/merge.ts`
+ * re-keys a child first). Subjects merge by id (a side without one counts as empty), never across ids. Idempotent. */
+export function mergeProfileData(
+  local: MergeableProfileData,
+  incoming: MergeableProfileData,
+  now: Date,
+): MergeableProfileData {
+  const subjectIds = new Set([...Object.keys(local.subjects), ...Object.keys(incoming.subjects)]);
+  const subjects: Record<string, SubjectProfileData> = {};
+  for (const id of subjectIds) {
+    subjects[id] = mergeSubjectProfileData(
+      local.subjects[id] ?? emptySubjectProfileData(),
+      incoming.subjects[id] ?? emptySubjectProfileData(),
+      now,
+    );
+  }
+  return {
+    settings: mergeProfileSettings(local.settings, incoming.settings),
+    streak: mergeStreak(local.streak, incoming.streak),
+    sessionLogs: mergeSessionLogs(local.sessionLogs, incoming.sessionLogs, now),
+    subjects,
+  };
 }
 
 /** Minutes over the last `days` local calendar days ending today, across all device rows. */
@@ -377,23 +433,31 @@ export function totalMinutesOverDays(data: MergeableProfileData, now: Date, days
   );
 }
 
-/** Brand-new local profile data: `settings` (the caller's default), all lists empty; a safe fallback only. */
+/** Brand-new local profile data: `settings` (the caller's default), no records; a safe fallback only. */
 export function emptyProfileData(settings: ProfileSettings): MergeableProfileData {
+  return { settings, sessionLogs: [], subjects: {} };
+}
+
+function rekeySubjectProfileData(
+  data: SubjectProfileData,
+  targetProfileId: string,
+): SubjectProfileData {
   return {
-    settings,
-    lessonProgress: [],
-    attempts: [],
-    miniGameProgress: [],
-    conceptStats: [],
-    gameRecords: [],
-    earnedBadges: [],
-    sessionLogs: [],
-    assessmentResults: [],
-    unlocks: [],
+    lessonProgress: data.lessonProgress.map((row) => ({ ...row, profileId: targetProfileId })),
+    attempts: data.attempts.map((row) => ({ ...row, profileId: targetProfileId })),
+    miniGameProgress: data.miniGameProgress.map((row) => ({ ...row, profileId: targetProfileId })),
+    conceptStats: data.conceptStats.map((row) => ({ ...row, profileId: targetProfileId })),
+    gameRecords: data.gameRecords.map((row) => ({ ...row, profileId: targetProfileId })),
+    earnedBadges: data.earnedBadges.map((row) => ({ ...row, profileId: targetProfileId })),
+    assessmentResults: data.assessmentResults.map((row) => ({
+      ...row,
+      profileId: targetProfileId,
+    })),
+    unlocks: data.unlocks.map((row) => ({ ...row, profileId: targetProfileId })),
   };
 }
 
-/** Re-keys every record in `data` to `targetProfileId`, when the chosen local profile's id differs
+/** Re-keys every record in `data` (every subject's too) to `targetProfileId`, when the chosen local profile's id differs
  * from the incoming child's own. Record ids are left untouched: independently random, never collide. */
 export function rekeyProfileData(
   data: MergeableProfileData,
@@ -401,20 +465,15 @@ export function rekeyProfileData(
 ): MergeableProfileData {
   return {
     ...data,
-    lessonProgress: data.lessonProgress.map((row) => ({ ...row, profileId: targetProfileId })),
-    attempts: data.attempts.map((row) => ({ ...row, profileId: targetProfileId })),
-    miniGameProgress: data.miniGameProgress.map((row) => ({ ...row, profileId: targetProfileId })),
-    conceptStats: data.conceptStats.map((row) => ({ ...row, profileId: targetProfileId })),
-    gameRecords: data.gameRecords.map((row) => ({ ...row, profileId: targetProfileId })),
-    earnedBadges: data.earnedBadges.map((row) => ({ ...row, profileId: targetProfileId })),
     ...(data.streak === undefined
       ? {}
       : { streak: { ...data.streak, profileId: targetProfileId } }),
     sessionLogs: data.sessionLogs.map((row) => ({ ...row, profileId: targetProfileId })),
-    assessmentResults: data.assessmentResults.map((row) => ({
-      ...row,
-      profileId: targetProfileId,
-    })),
-    unlocks: data.unlocks.map((row) => ({ ...row, profileId: targetProfileId })),
+    subjects: Object.fromEntries(
+      Object.entries(data.subjects).map(([id, subject]) => [
+        id,
+        rekeySubjectProfileData(subject, targetProfileId),
+      ]),
+    ),
   };
 }

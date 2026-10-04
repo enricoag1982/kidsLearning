@@ -4,6 +4,7 @@ import type { AssessmentResult, Unlock } from './assessment.ts';
 import type { EarnedBadge } from './badges.ts';
 import {
   emptyProfileData,
+  emptySubjectProfileData,
   mergeConceptStats,
   mergeEarnedBadges,
   mergeLessonProgress,
@@ -13,10 +14,12 @@ import {
   mergeSessionLogs,
   mergeStreak,
   mergeUnlocks,
+  profileBadgeCount,
+  profileStarsTotal,
   rekeyProfileData,
   totalMinutesOverDays,
 } from './merge.ts';
-import type { MergeableProfileData } from './merge.ts';
+import type { MergeableProfileData, SubjectProfileData } from './merge.ts';
 import { composeDefaultSettings } from './profile-settings.ts';
 import type { ProfileSettings } from './profile-settings.ts';
 
@@ -382,20 +385,25 @@ describe('mergeUnlocks', () => {
   });
 });
 
-function fullProfileData(overrides: Partial<MergeableProfileData> = {}): MergeableProfileData {
+/** One-subject profile data (subject `main`) from flat overrides: the per-subject lists go into `subjects.main`. */
+function fullProfileData(
+  overrides: Partial<SubjectProfileData> &
+    Partial<Pick<MergeableProfileData, 'settings' | 'streak' | 'sessionLogs'>> = {},
+): MergeableProfileData {
+  const { settings, streak, sessionLogs, ...records } = overrides;
   return {
-    settings: DEFAULT_PROFILE_SETTINGS,
-    lessonProgress: [],
-    attempts: [],
-    miniGameProgress: [],
-    conceptStats: [],
-    gameRecords: [],
-    earnedBadges: [],
-    sessionLogs: [],
-    assessmentResults: [],
-    unlocks: [],
-    ...overrides,
+    settings: settings ?? DEFAULT_PROFILE_SETTINGS,
+    ...(streak === undefined ? {} : { streak }),
+    sessionLogs: sessionLogs ?? [],
+    subjects: { main: { ...emptySubjectProfileData(), ...records } },
   };
+}
+
+/** `data.subjects[id]`, or throws (lint-friendly stand-in for a non-null assertion). */
+function subjectOf(data: MergeableProfileData, id = 'main'): SubjectProfileData {
+  const subject = data.subjects[id];
+  if (subject === undefined) throw new Error(`no subject "${id}" in merged data`);
+  return subject;
 }
 
 function attempt(overrides: Partial<Attempt> = {}): Attempt {
@@ -462,9 +470,10 @@ describe('mergeProfileData', () => {
       assessmentResults: [assessmentResult({ id: 'ar2' })],
     });
     const merged = mergeProfileData(local, incoming, NOW);
-    expect(merged.attempts.map((a) => a.id).sort()).toEqual(['a1', 'a2']);
-    expect(merged.gameRecords.map((g) => g.id).sort()).toEqual(['g1', 'g2']);
-    expect(merged.assessmentResults.map((a) => a.id).sort()).toEqual(['ar1', 'ar2']);
+    const main = subjectOf(merged);
+    expect(main.attempts.map((a) => a.id).sort()).toEqual(['a1', 'a2']);
+    expect(main.gameRecords.map((g) => g.id).sort()).toEqual(['g1', 'g2']);
+    expect(main.assessmentResults.map((a) => a.id).sort()).toEqual(['ar1', 'ar2']);
   });
 
   it('nothing either device did is lost, in both directions', () => {
@@ -497,20 +506,23 @@ describe('mergeProfileData', () => {
       ],
     });
     const forward = mergeProfileData(local, incoming, NOW);
-    expect(forward.lessonProgress.map((p) => p.lessonId).sort()).toEqual([
-      'from-incoming',
-      'from-local',
-    ]);
-    expect(forward.earnedBadges.map((b) => b.badgeId).sort()).toEqual([
-      'incoming-badge',
-      'local-badge',
-    ]);
+    expect(
+      subjectOf(forward)
+        .lessonProgress.map((p) => p.lessonId)
+        .sort(),
+    ).toEqual(['from-incoming', 'from-local']);
+    expect(
+      subjectOf(forward)
+        .earnedBadges.map((b) => b.badgeId)
+        .sort(),
+    ).toEqual(['incoming-badge', 'local-badge']);
 
     const backward = mergeProfileData(incoming, local, NOW);
-    expect(backward.lessonProgress.map((p) => p.lessonId).sort()).toEqual([
-      'from-incoming',
-      'from-local',
-    ]);
+    expect(
+      subjectOf(backward)
+        .lessonProgress.map((p) => p.lessonId)
+        .sort(),
+    ).toEqual(['from-incoming', 'from-local']);
   });
 
   it('is idempotent: merging the same incoming file twice equals merging it once', () => {
@@ -573,6 +585,150 @@ describe('mergeProfileData', () => {
   });
 });
 
+/** Two-subject profile data (`a`, `b`) from per-subject overrides. */
+function twoSubjectData(
+  a: Partial<SubjectProfileData> = {},
+  b: Partial<SubjectProfileData> = {},
+): MergeableProfileData {
+  return {
+    settings: DEFAULT_PROFILE_SETTINGS,
+    sessionLogs: [],
+    subjects: {
+      a: { ...emptySubjectProfileData(), ...a },
+      b: { ...emptySubjectProfileData(), ...b },
+    },
+  };
+}
+
+function earnedBadge(overrides: Partial<EarnedBadge> = {}): EarnedBadge {
+  return {
+    id: 'b1',
+    profileId: 'p1',
+    badgeId: 'first-win',
+    at: EARLIER.toISOString(),
+    seen: false,
+    createdAt: EARLIER.toISOString(),
+    updatedAt: EARLIER.toISOString(),
+    ...overrides,
+  };
+}
+
+describe('mergeProfileData: per-subject sections', () => {
+  it('the same lesson id in two subjects stays separate (never merged across subjects)', () => {
+    const local = twoSubjectData({
+      lessonProgress: [lessonProgress({ lessonId: 'intro', bestStars: { e1: 1 } })],
+    });
+    const incoming = twoSubjectData(
+      {},
+      { lessonProgress: [lessonProgress({ id: 'lp-b', lessonId: 'intro', bestStars: { e1: 3 } })] },
+    );
+    const merged = mergeProfileData(local, incoming, NOW);
+    expect(subjectOf(merged, 'a').lessonProgress).toEqual(local.subjects.a?.lessonProgress);
+    expect(subjectOf(merged, 'a').lessonProgress[0]?.bestStars).toEqual({ e1: 1 });
+    expect(subjectOf(merged, 'b').lessonProgress[0]?.bestStars).toEqual({ e1: 3 });
+  });
+
+  it('is the union of both sides’ subject ids; a side without one counts as empty', () => {
+    const local: MergeableProfileData = {
+      ...fullProfileData(),
+      subjects: { a: { ...emptySubjectProfileData(), attempts: [attempt({ id: 'a-local' })] } },
+    };
+    const incoming: MergeableProfileData = {
+      ...fullProfileData(),
+      subjects: { b: { ...emptySubjectProfileData(), attempts: [attempt({ id: 'a-incoming' })] } },
+    };
+    const merged = mergeProfileData(local, incoming, NOW);
+    expect(Object.keys(merged.subjects).sort()).toEqual(['a', 'b']);
+    expect(subjectOf(merged, 'a').attempts.map((row) => row.id)).toEqual(['a-local']);
+    expect(subjectOf(merged, 'b').attempts.map((row) => row.id)).toEqual(['a-incoming']);
+  });
+
+  it('caps (attempts 2000, game records 500, assessment results 500) apply per subject', () => {
+    const at = (index: number): string => new Date(Date.UTC(2026, 0, 1, 0, 0, index)).toISOString();
+    const attemptsFor = (prefix: string, count: number): Attempt[] =>
+      Array.from({ length: count }, (_, index) =>
+        attempt({ id: `${prefix}-${String(index)}`, createdAt: at(index), updatedAt: at(index) }),
+      );
+    const recordsFor = (prefix: string, count: number): GameRecord[] =>
+      Array.from({ length: count }, (_, index) =>
+        gameRecord({
+          id: `${prefix}-${String(index)}`,
+          createdAt: at(index),
+          updatedAt: at(index),
+        }),
+      );
+    const resultsFor = (prefix: string, count: number): AssessmentResult[] =>
+      Array.from({ length: count }, (_, index) =>
+        assessmentResult({
+          id: `${prefix}-${String(index)}`,
+          createdAt: at(index),
+          updatedAt: at(index),
+        }),
+      );
+    const local = twoSubjectData({
+      attempts: attemptsFor('a', 1500),
+      gameRecords: recordsFor('ga', 400),
+      assessmentResults: resultsFor('ra', 400),
+    });
+    const incoming = twoSubjectData(
+      {
+        attempts: attemptsFor('a2', 1000).map((row) => ({ ...row, id: `x-${row.id}` })),
+        gameRecords: recordsFor('ga2', 300),
+        assessmentResults: resultsFor('ra2', 300),
+      },
+      { attempts: attemptsFor('b', 1800), gameRecords: recordsFor('gb', 450) },
+    );
+
+    const merged = mergeProfileData(local, incoming, NOW);
+
+    expect(subjectOf(merged, 'a').attempts).toHaveLength(2000);
+    expect(subjectOf(merged, 'a').gameRecords).toHaveLength(500);
+    expect(subjectOf(merged, 'a').assessmentResults).toHaveLength(500);
+    // b is under every cap by itself: untouched by a's overflow, though both subjects together exceed 2000.
+    expect(subjectOf(merged, 'b').attempts).toHaveLength(1800);
+    expect(subjectOf(merged, 'b').gameRecords).toHaveLength(450);
+    expect(
+      subjectOf(merged, 'a').attempts.length + subjectOf(merged, 'b').attempts.length,
+    ).toBeGreaterThan(2000);
+  });
+
+  it('is idempotent across subjects', () => {
+    const local = twoSubjectData({ lessonProgress: [lessonProgress({ bestStars: { e1: 1 } })] });
+    const incoming = twoSubjectData(
+      { lessonProgress: [lessonProgress({ id: 'lp-i', bestStars: { e1: 2 } })] },
+      { earnedBadges: [earnedBadge({ id: 'b-in', badgeId: 'b-only' })] },
+    );
+    const once = mergeProfileData(local, incoming, NOW);
+    expect(mergeProfileData(once, incoming, NOW)).toEqual(once);
+  });
+});
+
+describe('profileStarsTotal / profileBadgeCount', () => {
+  it('sum over every subject', () => {
+    const data = twoSubjectData(
+      {
+        lessonProgress: [lessonProgress({ bestStars: { e1: 3, e2: 2 }, bossStars: 1 })],
+        earnedBadges: [earnedBadge({ id: 'b1' })],
+      },
+      {
+        lessonProgress: [lessonProgress({ id: 'lp-b', lessonId: 'other', bestStars: { e1: 1 } })],
+        earnedBadges: [
+          earnedBadge({ id: 'b2', badgeId: 'x' }),
+          earnedBadge({ id: 'b3', badgeId: 'y' }),
+        ],
+      },
+    );
+    expect(profileStarsTotal(data)).toBe(3 + 2 + 1 + 1);
+    expect(profileBadgeCount(data)).toBe(3);
+  });
+
+  it('are 0 with no subject sections', () => {
+    const data = emptyProfileData(DEFAULT_PROFILE_SETTINGS);
+    expect(profileStarsTotal(data)).toBe(0);
+    expect(profileBadgeCount(data)).toBe(0);
+  });
+});
+
 describe('rekeyProfileData', () => {
   it('re-keys every record’s profileId to the target, keeping record ids untouched', () => {
     const data = fullProfileData({
@@ -589,10 +745,46 @@ describe('rekeyProfileData', () => {
       },
     });
     const rekeyed = rekeyProfileData(data, 'local-id');
-    expect(rekeyed.lessonProgress[0]?.profileId).toBe('local-id');
-    expect(rekeyed.lessonProgress[0]?.id).toBe('lp1');
-    expect(rekeyed.attempts[0]?.profileId).toBe('local-id');
+    expect(subjectOf(rekeyed).lessonProgress[0]?.profileId).toBe('local-id');
+    expect(subjectOf(rekeyed).lessonProgress[0]?.id).toBe('lp1');
+    expect(subjectOf(rekeyed).attempts[0]?.profileId).toBe('local-id');
     expect(rekeyed.streak?.profileId).toBe('local-id');
+  });
+});
+
+describe('rekeyProfileData: per-subject sections', () => {
+  it('rewrites profileId inside every subject, shared logs and the streak too', () => {
+    const data: MergeableProfileData = {
+      ...twoSubjectData(
+        {
+          lessonProgress: [lessonProgress({ id: 'lp-a', profileId: 'incoming-id' })],
+          unlocks: [
+            {
+              id: 'u1',
+              profileId: 'incoming-id',
+              targetType: 'lesson',
+              targetId: 'l1',
+              via: 'parent',
+              createdAt: EARLIER.toISOString(),
+              updatedAt: EARLIER.toISOString(),
+            },
+          ],
+        },
+        {
+          earnedBadges: [earnedBadge({ id: 'b-b', profileId: 'incoming-id' })],
+          gameRecords: [gameRecord({ id: 'g-b', profileId: 'incoming-id' })],
+        },
+      ),
+      sessionLogs: [sessionLog({ profileId: 'incoming-id' })],
+    };
+    const rekeyed = rekeyProfileData(data, 'local-id');
+    expect(subjectOf(rekeyed, 'a').lessonProgress[0]?.profileId).toBe('local-id');
+    expect(subjectOf(rekeyed, 'a').unlocks[0]?.profileId).toBe('local-id');
+    expect(subjectOf(rekeyed, 'b').earnedBadges[0]?.profileId).toBe('local-id');
+    expect(subjectOf(rekeyed, 'b').gameRecords[0]?.profileId).toBe('local-id');
+    expect(rekeyed.sessionLogs[0]?.profileId).toBe('local-id');
+    // Record ids stay.
+    expect(subjectOf(rekeyed, 'b').earnedBadges[0]?.id).toBe('b-b');
   });
 });
 
@@ -610,10 +802,26 @@ describe('totalMinutesOverDays', () => {
 });
 
 describe('emptyProfileData', () => {
-  it('has DEFAULT_PROFILE_SETTINGS and every list empty', () => {
+  it('has DEFAULT_PROFILE_SETTINGS, no session logs and no subject sections', () => {
     const data = emptyProfileData(DEFAULT_PROFILE_SETTINGS);
     expect(data.settings).toEqual(DEFAULT_PROFILE_SETTINGS);
-    expect(data.lessonProgress).toEqual([]);
+    expect(data.sessionLogs).toEqual([]);
+    expect(data.subjects).toEqual({});
     expect(data.streak).toBeUndefined();
+  });
+});
+
+describe('emptySubjectProfileData', () => {
+  it('has every list empty', () => {
+    expect(emptySubjectProfileData()).toEqual({
+      lessonProgress: [],
+      attempts: [],
+      miniGameProgress: [],
+      conceptStats: [],
+      gameRecords: [],
+      earnedBadges: [],
+      assessmentResults: [],
+      unlocks: [],
+    });
   });
 });

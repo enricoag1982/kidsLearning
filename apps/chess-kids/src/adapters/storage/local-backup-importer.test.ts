@@ -58,10 +58,11 @@ function makeDeps(): AppDeps {
     passwordFile: makePasswordFileWriter(),
     settings: new LocalStorageSettingsRepository(store),
     random: { next: () => 0.5 },
-    backupImporter: new LocalStorageBackupImporter(store),
+    backupImporter: new LocalStorageBackupImporter(store, { [chessCore.id]: store }),
     storageSchemaVersion: SCHEMA_VERSION,
     subject: createSubjectRuntime(chessCore),
     app: { ...CHESS_APP_CONFIG, version: '0.0.0-test' },
+    subjectId: chessCore.id,
   };
 }
 
