@@ -14,6 +14,10 @@ import { digitsOf, numeral, parseNumeral } from './numeral.ts';
 /** The longest `append` number a card shows: the 5-digit pad / numeral width (curriculum §1 "Numbers"). */
 const MAX_APPEND_DIGITS = 5;
 
+/** The lowest digit of the sentences "{{h}} hundreds, {{t}} tens and {{o}} ones" (`pv-read`, `pv-which`): a place word is plural, and
+ * the text resolver pluralises one `count` var only, so no place may say "1 hundreds". 0 stays ("0 tens" is right). */
+const SPOKEN_LOWEST_DIGIT = 2;
+
 /** The place codes of a 3- and a 4-digit number, high to low: "2H 0T 5O", "1Th 2H 0T 5O". */
 const CODES: Readonly<Record<3 | 4, readonly string[]>> = {
   3: ['H', 'T', 'O'],
@@ -64,6 +68,11 @@ function appendText(text: string): string | null {
 function zeroRule(text: string, zeroIn: ZeroIn): boolean {
   const zeroAt = zeroIn === 'tens' ? text.length - 2 : zeroIn === 'ones' ? text.length - 1 : -1;
   return text.split('').every((digit, index) => (digit === '0') === (index === zeroAt));
+}
+
+/** A spoken place count is 0 or 2-9: a 1 would read "1 hundreds" (see {@link SPOKEN_LOWEST_DIGIT}). */
+function spokenRule(text: string): boolean {
+  return !text.includes('1');
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
@@ -179,7 +188,7 @@ function readReasons(digits: readonly number[], maxDigits: number): readonly Val
 export const pvRead: ExerciseTemplate<PvReadParams, NumberEntryItem> = {
   params: pvReadParams,
   generate({ digits, zeroIn }, ctx) {
-    const places = drawDigits(ctx.random, digits, zeroIn);
+    const places = drawDigits(ctx.random, digits, zeroIn, SPOKEN_LOWEST_DIGIT);
     const maxDigits = digits + 1;
     const reasons = readReasons(places, maxDigits);
     return {
@@ -207,6 +216,12 @@ export const pvRead: ExerciseTemplate<PvReadParams, NumberEntryItem> = {
       fail(
         at,
         `"${item.prompt.big}" is not a ${String(params.digits)}-digit number with zeros ${params.zeroIn}`,
+      );
+    }
+    if (!spokenRule(text)) {
+      fail(
+        at,
+        `"${item.prompt.big}" has a 1: its sentence would read "1 hundreds" / "1 tens" / "1 ones"`,
       );
     }
     if (Number(text) !== item.answer) {
@@ -272,7 +287,7 @@ export const pvWhich: ExerciseTemplate<PvWhichParams, ChoiceItem> = {
   params: pvWhichParams,
   generate({ digits, zeroIn }, ctx) {
     for (let attempt = 0; attempt < 100; attempt += 1) {
-      const places = drawDigits(ctx.random, digits, zeroIn);
+      const places = drawDigits(ctx.random, digits, zeroIn, SPOKEN_LOWEST_DIGIT);
       const wrong = whichDistractors(places);
       if (wrong === null) continue;
       const entries = shuffle(
@@ -314,6 +329,12 @@ export const pvWhich: ExerciseTemplate<PvWhichParams, ChoiceItem> = {
       fail(
         at,
         `"${item.prompt?.big ?? ''}" is not a ${String(params.digits)}-digit number with zeros ${params.zeroIn}`,
+      );
+    }
+    if (!spokenRule(text)) {
+      fail(
+        at,
+        `"${item.prompt?.big ?? ''}" has a 1: its sentence would read "1 hundreds" / "1 tens" / "1 ones"`,
       );
     }
     const values = item.options.map((option) => parseNumeral(option.big));
