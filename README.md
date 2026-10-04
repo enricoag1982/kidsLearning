@@ -8,7 +8,7 @@ small idea at a time through animal-themed lessons, mini-games and spoken instru
 | Subject | Status |
 |---|---|
 | Chess | Basics (5 worlds, 23 lessons), computer opponent (5 levels), play vs a friend; 3 paths planned |
-| Math | Demo (1 world, 3 lessons); full course planned (v1.2) |
+| Math | W1–W3 (16 lessons): place value, mental math, times tables; number line, base-ten blocks, dot arrays; 3 world bosses (Number Train, Market Orders, Race to 20 vs a bot) |
 | Coding | W1–W3 (13 lessons): arrow steps, repeat loops, turns and jumps; 3 world bosses (Bug Squash, Fence Builder, Left-Right Rescue) |
 | Logic | Planned (v1.3) — [`docs/new-subjects.md`](docs/new-subjects.md) |
 
@@ -65,6 +65,10 @@ After the Basics, three paths are planned: **Openings**, **Tactics**, and **Chec
 | Parent area | Coding |
 |---|---|
 | ![Parent area: one line per subject](docs/images/parent-area.png) | ![Coding: a repeat loop running](docs/images/coding.png) |
+
+| Math | Race to 20 |
+|---|---|
+| ![Math: building a number with blocks](docs/images/math.png) | ![Race to 20 against the Hedgehog](docs/images/race.png) |
 
 ## Run it yourself
 
