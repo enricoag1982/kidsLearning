@@ -14,6 +14,9 @@ export default defineConfig({
           environment: 'node',
           include: ['src/**/*.test.ts'],
           exclude: ['**/node_modules/**', 'src/**/*.slow.test.ts', 'src/web/**'],
+          // Content solvers (boss par = optimal solve) are CPU-bound; `pnpm -r test` runs every package at once, so on a CI
+          // runner a 1–2 s check can pass 5 s (hungry-queen, 2026-10-04). The timeout only guards a hang.
+          testTimeout: 20_000,
         },
       },
       {
