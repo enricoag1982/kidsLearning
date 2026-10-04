@@ -7,7 +7,9 @@ export interface IconProps {
   readonly className?: string;
 }
 
-/** Shared stroke-icon base (viewBox 24, round caps/joins, `aria-hidden`); `fill` / `stroke` default to the two-tone look, some icons override one. */
+/** Shared stroke-icon base (viewBox 24, round caps/joins, `aria-hidden`); `fill` / `stroke` default to the two-tone look, some icons override one.
+ * Always `shrink-0` (merged with `className`), like every standalone icon below that sits in a button or pill: an icon is a flex child,
+ * and a squeezed row must wrap or clip its label, never collapse the icon to a dot. */
 export function Svg({
   size = 24,
   strokeWidth = 2,
@@ -31,7 +33,7 @@ export function Svg({
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden="true"
-      className={className}
+      className={`shrink-0 ${className ?? ''}`.trim()}
     >
       {children}
     </svg>
@@ -62,7 +64,7 @@ function strokeIcon(look: StrokeLook, shapes: ReactNode): (props?: IconProps) =>
 export const BackIcon = strokeIcon({ size: 30, strokeWidth: 2.4 }, <path d="M15 18l-6-6 6-6" />);
 
 export const ChevronRightIcon = strokeIcon(
-  { size: 20, strokeWidth: 2.5, className: 'flex-shrink-0 text-muted' },
+  { size: 20, strokeWidth: 2.5, className: 'text-muted' },
   <path d="m9 6 6 6-6 6" />,
 );
 
@@ -192,7 +194,7 @@ export function FlameIcon({
   className = 'h-6 w-6',
 }: Pick<IconProps, 'className'> = {}): JSX.Element {
   return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
+    <svg viewBox="0 0 24 24" className={`shrink-0 ${className}`} aria-hidden="true">
       <path
         d="M12 2c1 3-3 4-3 7.5A3.5 3.5 0 0 0 12 13a2 2 0 0 0 2-2c1.5 1.5 2.5 3 2.5 5a4.5 4.5 0 0 1-9 0C7.5 12 9 9 9 7c1.5 1 1.5-1 3-5z"
         fill="#B8561A"
@@ -204,7 +206,7 @@ export function FlameIcon({
 /** World-boss flag (Journey): two-tone pole + pennant, no stroke/fill uniform to share the base. */
 export function FlagIcon({ size = 18 }: Pick<IconProps, 'size'> = {}): JSX.Element {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" className="shrink-0">
       <path d="M6 3v18" stroke="#6E4A07" strokeWidth={2} strokeLinecap="round" />
       <path d="M6 4h13l-4 4 4 4H6z" fill="#E9A92B" />
     </svg>
@@ -214,7 +216,7 @@ export function FlagIcon({ size = 18 }: Pick<IconProps, 'size'> = {}): JSX.Eleme
 /** Home's big central "Start" play triangle: solid fill, no stroke. */
 export function PlayIcon({ size = 32 }: Pick<IconProps, 'size'> = {}): JSX.Element {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" className="shrink-0">
       <path d="M7 4l13 8-13 8z" fill="currentColor" />
     </svg>
   );

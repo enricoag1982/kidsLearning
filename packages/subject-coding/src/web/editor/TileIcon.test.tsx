@@ -38,6 +38,11 @@ describe('TileIcon', () => {
     expect(right?.getAttribute('transform')).toBeNull();
   });
 
+  it.each(KINDS)('never shrinks inside a flex row: %s carries flex-none', (kind) => {
+    const { container } = render(<TileIcon kind={kind} />);
+    expect(container.querySelector('svg')?.classList.contains('flex-none')).toBe(true);
+  });
+
   it('takes a size', () => {
     const { container } = render(<TileIcon kind="up" size={24} />);
     expect(container.querySelector('svg')?.getAttribute('width')).toBe('24');
