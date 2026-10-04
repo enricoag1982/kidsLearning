@@ -49,13 +49,13 @@ Totals: 5 lessons, 10 guided, 30 scored, 5 variants, 5 boss rounds = 50 exercise
 
 ### W3 Grid Puzzles (sudoku, picture cross) — plan, `m14.11`
 
-| Lesson | Title | Technique (max) | Guided (1 target cell) | Scored (4) | Easier variant |
+| Lesson | Title | Techniques allowed (plan L9) | Guided (1 target cell) | Scored (4) | Easier variant |
 |---|---|---|---|---|---|
-| `grd-last` | Last empty cell | last-cell | 2 `sdk-last` (row; box) | 4 `sdk-last` (empty 4, 5, 6, 6) | `sdk-last` empty 3 |
-| `grd-only-place` | Only place | hidden-single | 2 `sdk-place` ("Where can the 3 go in this box?") | 4 `sdk-place` (empty 6, 7, 8, 8) | `sdk-place` empty 5 |
-| `grd-only-number` | Only number | naked-single | 2 `sdk-number` ("Which number fits here?") | 4 `sdk-number` (empty 8, 9, 10, 10) | `sdk-number` empty 7 |
-| `grd-six` | Six by six | naked-single, 6 × 6 (boxes 2 rows × 3 columns) | 2 `sdk-six` (empty 6; 8) | 4 `sdk-six` (empty 10, 12, 14, 16) | `sdk-six` empty 8 |
-| `grd-pixels` | Picture cross | combine | 2 library pictures (full lines only; overlap) | 4 library pictures (cross-out; combine) | library picture, full lines + overlap |
+| `grd-last` | Last empty cell | last cell | 2 `sdk-last` (row; box) | 4 `sdk-last` (empty 4, 5, 6, 6) | `sdk-last` empty 3 |
+| `grd-only-place` | Only place | last cell + only place | 2 `sdk-place` ("Where can the 3 go in this box?") | 4 `sdk-place` (empty 6, 7, 8, 8) | `sdk-place` empty 5 |
+| `grd-only-number` | Only number | last cell + only number | 2 `sdk-number` ("Which number fits here?") | 4 `sdk-number` (empty 8, 9, 10, 10) | `sdk-number` empty 7 |
+| `grd-six` | Six by six | last cell + only number, 6 × 6 (boxes 2 rows × 3 columns) | 2 `sdk-six` (empty 6; 8) | 4 `sdk-six` (empty 10, 12, 14, 16) | `sdk-six` empty 8 |
+| `grd-pixels` | Picture cross | line techniques up to combine | 2 library pictures (full lines only; overlap) | 4 library pictures (cross-out; combine) | library picture, full lines + overlap |
 
 Sudoku Sprint (`sudoku-sprint`, `series`, `errors3: 1`, `errors2: 3`, concept `grd-six`, `unlockAfter: grd-pixels`, goal "Fill the grids, step by step!"): 5 rounds, `sdk-last` → `sdk-place` → `sdk-number` → `sdk-six` empty 8 → `sdk-six` empty 10. One error allowed for 3 stars: ≈ 40 cells in a row; recalibrate after playtests.
 
@@ -81,8 +81,8 @@ Code: `packages/subject-logic/src/content/templates/` (`LOGIC_TEMPLATES`); texts
 | `carroll` | group `carroll` (2 × 2) | `axes` two attributes, `items` 4–8 | zone per item | every zone ≥ 1 item; each item fits exactly one zone | m14.10 |
 | `venn` | group `venn` | `axes` two shape-fact rules or two animal facts, `items` 4–8, `outside` yes / no | zone per item | as `carroll`; outside may be empty (`allow-empty`) | m14.10 |
 | `line-up` | order (3–5 shape items, smallest first) | `by` size / count, `items` 3–5, same kind and colour | order | strict order, no ties | m14.10 |
-| `sdk-last` / `sdk-place` / `sdk-number` | grid-fill sudoku 4 × 4 | `empty`, `targets` 1 (guided) | the solution | kind `verify`: one solution, the human solver finishes with techniques ≤ the lesson's, the lesson's technique occurs, targets deducible; template: no 4 × 4 grid repeats across lessons (cross-lesson guard) | m14.11 |
-| `sdk-six` | grid-fill sudoku 6 × 6 | `empty` | the solution | as above; build ≤ 40 ms per item | m14.11 |
+| `sdk-last` / `sdk-place` / `sdk-number` | grid-fill sudoku 4 × 4 | `empty`, `targets` 1 (guided) | the solution | kind `verify`: one solution, the human solver finishes with the lesson's allowed set (plan L9), the lesson's technique occurs, targets deducible; template: no 4 × 4 grid repeats across lessons (cross-lesson guard) | m14.11 |
+| `sdk-six` | grid-fill sudoku 6 × 6 | `empty` (from 7, or more tries at 6: 99.5 % within 200) | the solution | as above; build ≤ 40 ms per item (measured ≤ 2.1 ms mean) | m14.11 |
 
 Animal facts (W2 `venn`, authored table in the template, emoji + tags): 16 animals × `flies`, `swims`, `four-legs`, `farm`; every pair of tags splits them into four non-empty zones.
 
