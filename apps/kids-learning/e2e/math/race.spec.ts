@@ -1,6 +1,7 @@
-// Race to 20 in the deployed math app: the duel mini-game the Today session offers once Rounding (pv-round, World 1's last lesson) is done
-// (it becomes the W3 world boss in m13.14), played through the real UI with the platform duel driver (a best move every kid turn). The
-// bot is the Hedgehog, the character of pv-round. Chromium only, like the other math specs.
+// Race to 20 in the deployed math app: the world boss of World 3, Times-Table Forest. With every earlier world (lessons and bosses, as
+// the content has them) and the six times-table lessons mastered, its Journey node opens the duel, played through the real UI with the
+// platform duel driver (a best move every kid turn). The bot is the Hedgehog, the character of mt-7-mixed. Chromium only, like the
+// other math specs.
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import { race } from '@learn/subject-math';
@@ -8,52 +9,35 @@ import type { RaceState } from '@learn/subject-math';
 import {
   completeFirstRun,
   contentText,
-  dismissCelebrationIfShown,
   findDuel,
-  findLesson,
-  findMiniGame,
   playDuel,
-  playLesson,
-  playSeries,
-  playWarmUp,
   readMiniGameProgress,
   seedMasteredAndReopen,
+  openJourneyWorld,
+  worldBossNodeName,
+  worldLessons,
+  worldsBefore,
 } from './kit.ts';
 
 const NICKNAME = 'Kid';
+const FOREST = 'times-forest';
 const duel = findDuel('race-to-20');
-const rounding = findLesson('pv-round');
 
 /**
- * Fresh install, then the way the app reaches the game today: the first four lessons seeded as mastered, Rounding played through
- * "Start today" (that session was planned before Rounding was done, so it holds the lesson only), and the next "Start today" plans
- * a warm-up, the world boss (Number Train) and then Race to 20 as the session's mini-game. The Number Train is played through, so
- * the session lands on the duel.
+ * Fresh install, then the way the app reaches the game: the lessons and world bosses of every earlier world and the six lessons of the
+ * forest seeded as mastered, the Journey opened on the forest, and the world boss node (Race to 20) tapped.
  */
-async function openRaceFromToday(page: Page): Promise<void> {
+async function openRaceFromJourney(page: Page): Promise<void> {
   await completeFirstRun(page, NICKNAME);
+  const before = worldsBefore(FOREST);
   await seedMasteredAndReopen(
     page,
     NICKNAME,
-    ['pv-hto', 'pv-compare', 'pv-line', 'pv-thousands'].map(findLesson),
-    [],
+    [...before.lessons, ...worldLessons(FOREST)],
+    before.bosses,
   );
-
-  await page.getByRole('button', { name: /Start/ }).click();
-  await page.getByRole('button', { name: /Let me try/ }).click(); // Story -> Demo
-  await page.getByRole('button', { name: /^Next/ }).click(); // Demo -> first guided try
-  await playLesson(page, rounding);
-  await expect(page.getByRole('heading', { name: 'Lesson complete!' })).toBeVisible();
-  await dismissCelebrationIfShown(page);
-  await page.getByRole('button', { name: /Continue/ }).click();
-  await page.getByRole('button', { name: 'Done' }).click();
-
-  await page.getByRole('button', { name: /Start/ }).click();
-  // Rounding's concept is due at once: the session opens with one warm-up task from it.
-  await playWarmUp(page, rounding.exercises, /^Round 1 of/);
-  await playSeries(page, findMiniGame('number-train'));
-  await page.getByRole('button', { name: /Continue/ }).click();
-  await dismissCelebrationIfShown(page);
+  await page.getByRole('button', { name: /Journey/ }).click();
+  await page.getByRole('button', { name: worldBossNodeName(duel, 'available') }).click();
   await expect(
     page.getByRole('heading', { name: contentText(duel.titleKey), level: 2 }),
   ).toBeVisible();
@@ -65,10 +49,10 @@ function earnedStars(page: Page) {
 }
 
 test.describe('Race to 20', () => {
-  test('the session offers it after Rounding and the Number Train: Hedgie opens, the kid lands on 4, 8, 12, 16 and wins with 3 stars', async ({
+  test('the world boss of Times-Table Forest: Hedgie opens, the kid lands on 4, 8, 12, 16 and wins with 3 stars; the node is won', async ({
     page,
   }) => {
-    await openRaceFromToday(page);
+    await openRaceFromJourney(page);
 
     // The bot moves first, from 0 (where the mover loses); the kid's step buttons open on its turn.
     await expect(page.getByTestId('duel-turn')).toHaveText("Hedgie's turn");
@@ -85,9 +69,10 @@ test.describe('Race to 20', () => {
     await expect(page.locator('[data-token="true"]')).toHaveAttribute('data-stone', '20');
     await expect(earnedStars(page)).toHaveCount(3);
 
-    // Saved with the result panel's Continue (the session's next step), not before.
-    await page.getByRole('button', { name: /Continue/ }).click();
-    await expect(page.getByText('Great session!')).toBeVisible();
+    // Saved with the result panel's button, not before; the Journey (open on the first world, all being done) shows the boss as won.
+    await page.getByRole('button', { name: contentText('play.back-to-journey') }).click();
+    await openJourneyWorld(page, 3, FOREST);
+    await expect(page.getByRole('button', { name: worldBossNodeName(duel, 'won') })).toBeVisible();
     expect(await readMiniGameProgress(page, 'race-to-20')).toEqual({
       bestStars: 3,
       plays: 1,
@@ -96,7 +81,7 @@ test.describe('Race to 20', () => {
   });
 
   test('a Hint makes the best step glow and costs a star: 2 stars', async ({ page }) => {
-    await openRaceFromToday(page);
+    await openRaceFromJourney(page);
     await page.locator('[data-duel-turn="kid"]').waitFor();
 
     await page.getByRole('button', { name: 'Hint' }).click();
@@ -112,7 +97,7 @@ test.describe('Race to 20', () => {
 
     await expect(page.locator('[data-duel-status="won"]')).toBeVisible();
     await expect(earnedStars(page)).toHaveCount(2);
-    await page.getByRole('button', { name: /Continue/ }).click();
+    await page.getByRole('button', { name: contentText('play.back-to-journey') }).click();
     expect(await readMiniGameProgress(page, 'race-to-20')).toMatchObject({
       bestStars: 2,
       wins: 1,
