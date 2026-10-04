@@ -79,6 +79,12 @@ Rules: `docs/retrospective.md` §9 (≤ 3–4 commits per agent run, lead decide
 | F5 | Card-kit Hint button | 56 px like the shared controls; every other card target ≥ 64 px |
 | F6 | Crowded control rows | `compact` buttons are `flex-1` with `min-w-14`, so 4 buttons squeeze (coding guided try at 1024 × 768: Reset label touches its padding) instead of wrapping; try `min-width: auto` (content) and check chess / math rows |
 | F7 | Bug Squash / boss badges | No generic "mini-game won" badge condition: Bug Squasher counts clean `seq-debug` hunts instead (`docs/subjects/coding/curriculum.md`) |
+| F8 | Phone Home header (390 × 844) | Header buttons wrap onto 2 rows; the last Home tile sits at the fold (scrolls) — shared shell |
+| F9 | Phone Journey header | World title truncated ("World 1 · Number Mead…"), the 2nd world tab clipped at the right edge — shared shell |
+| F10 | Card choice on phones | 3 short items (e.g. `<` `=` `>`) wrap 2 + 1 |
+| F11 | Race to 20 polish | Title shown twice (top bar + heading); stones ≈ 28 × 40 px at 1024 × 768 |
+| F12 | Number-line card size | At 1024 × 768 the line card (≈ 150 px) is small beside the prompt card (≈ 450 px) |
+| F13 | Math pictures in cards | `round-ten` / `bridge-add` have no line picture (card prompts have no picture slot); `groups` shows "3 groups of 4" + one emoji (emoji limit 8) |
 
 ## 5. After v1.0
 
@@ -105,3 +111,4 @@ Rules: `docs/retrospective.md` §9 (≤ 3–4 commits per agent run, lead decide
 | Ruleset `master-quality` (required check `quality`, squash only) | Settings → Rules (`CONTRIBUTING.md`) |
 | v1.0.0 tag after release checks | Actions → Tag (`docs/release.md` §2) |
 | v1.1.0 tag after release checks (Coding) | Actions → Tag, `ref` = the `m12.7` merge commit |
+| v1.2.0 tag after release checks (Math) | Actions → Tag, `ref` = the `m13.15` merge commit |

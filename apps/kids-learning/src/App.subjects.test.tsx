@@ -1,6 +1,6 @@
 // The whole deployed app over the real chess and math packs: the hub, the subject switch and the storage layout.
 import { describe, expect, it } from 'vitest';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { configure, fireEvent, render, screen } from '@testing-library/react';
 import type { InitOptions } from 'i18next';
 import { createProfile, selectProfile, setupParentPassword } from '@learn/platform-core';
 import App from '@learn/platform-web/App.tsx';
@@ -12,6 +12,10 @@ import { createMemoryStorage } from '@learn/platform-web/testing/memory-storage.
 import { chessEntry } from '@learn/subject-chess/entry';
 import { mathEntry } from '@learn/subject-math/entry';
 import { KIDS_APP_CONFIG } from './app-config.ts';
+
+// The whole app with two real subject packs renders per step; under CPU load (every package's tests at once) a step can take
+// longer than the 1 s default, so the lookups wait up to 5 s (a timing guard only).
+configure({ asyncUtilTimeout: 5_000 });
 
 function storageKeys(storage: Storage): readonly string[] {
   return Array.from({ length: storage.length }, (_, index) => storage.key(index) ?? '');
