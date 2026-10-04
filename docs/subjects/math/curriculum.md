@@ -1,6 +1,6 @@
-# Math — curriculum (v1.2: W1 shipped in `m13.10`, W2 in `m13.11`; W3 in `m13.14`)
+# Math — curriculum (v1.2: W1 shipped in `m13.10`, W2 in `m13.11`, W3 in `m13.14`)
 
-Lesson / exercise design for W1–W3 of [plan.md](plan.md) §2. A world's rows are its plan until its iteration lands, then what shipped (like `docs/subjects/coding/curriculum.md`), plus the content review log (§6). W1 Number Meadow (`m13.10`) and W2 Mental Math Mountain (`m13.11`) are shipped; W3 is still the plan.
+Lesson / exercise design for W1–W3 of [plan.md](plan.md) §2. A world's rows are its plan until its iteration lands, then what shipped (like `docs/subjects/coding/curriculum.md`), plus the content review log (§6). W1 Number Meadow (`m13.10`), W2 Mental Math Mountain (`m13.11`) and W3 Times-Table Forest (`m13.14`) are shipped.
 
 ## 1. Shape
 
@@ -10,7 +10,7 @@ Lesson / exercise design for W1–W3 of [plan.md](plan.md) §2. A world's rows a
 | Characters | Owl narrates; the Hedgehog teaches (every lesson; the math demo's character and the hub icon) |
 | Ranks | `counter` (start) → `builder` (W1) → `climber` (W2) → `multiplier` (W3) |
 | Lesson | story 2–3 sentences (Owl + Hedgehog, the rule), demo = full worked example (fading: guided 1 leaves the last step, guided 2 two steps), 2 guided, 6 scored, ≥ 1 easier variant for the hardest scored item, concept = lesson id |
-| CPA | guided and the first 4 scored may show pictures (blocks, line, groups, array); the last 2 scored are symbols only (W1: all lessons but `pv-line`, whose table has one symbol item, `nl-half`, last; W2 has no pictures: bonds, sums and stories are symbols or text, §2 W2) |
+| CPA | guided and the first 4 scored may show pictures (blocks, line, groups, array); the last 2 scored are symbols only (W1: all lessons but `pv-line`, whose table has one symbol item, `nl-half`, last; W2 has no pictures: bonds, sums and stories are symbols or text, §2 W2; W3: all lessons) |
 | Generated | every guided / scored / variant / boss round comes from a template (§3) with a stored seed; stories, demos, word-problem frames and reasons are authored |
 | Reasons | a wrong answer matching a known bug speaks its reason (§3 "Bugs"); any other wrong answer gets the kind's default note |
 | Stars | card kit: 3 = no error, no hint; 2 = 1 error or hint 1; 1 = otherwise. Mastery = mean ≥ 2.4 |
@@ -34,9 +34,9 @@ Lesson / exercise design for W1–W3 of [plan.md](plan.md) §2. A world's rows a
 
 Totals: 5 lessons, 10 guided, 30 scored, 5 easier variants, 5 boss rounds = 50 exercises (every one generated). Scored order puts the pictured items (blocks, line) first and the symbols last (CPA, §1); `pv-line` has the table's five line pictures and one symbol item.
 
-Number Train (`number-train`, `series`, `errors3: 0`, `errors2: 2`, concept `pv-line`, `unlockAfter: pv-round`, title "Number Train", goal "Put every carriage number where it belongs on the line!"): 5 rounds, the carriage number goes where it belongs: `nl-place` step 100 → 50 → 10 (only the ends numbered), then 2 `nl-estimate` (0–1000, numbers at 0, 500, 1000). It is the world boss on the Journey once the five lessons are done, and the Today session's mini-game before Race to 20.
+Number Train (`number-train`, `series`, `errors3: 0`, `errors2: 2`, concept `pv-line`, `unlockAfter: pv-round`, title "Number Train", goal "Put every carriage number where it belongs on the line!"): 5 rounds, the carriage number goes where it belongs: `nl-place` step 100 → 50 → 10 (only the ends numbered), then 2 `nl-estimate` (0–1000, numbers at 0, 500, 1000). It is the world boss on the Journey once the five lessons are done, and the Today session's mini-game after Rounding.
 
-Ranks `counter` (start) → `builder` (after `world:number-meadow`). Badges: `number-builder` ("Number Builder": `mastered` `world:number-meadow`, "Master Number Meadow and beat Number Train"), `star-counter` (`stars-total` 10 / 30, generic). Race to 20 (below) is re-pointed to `pv-round` (concept and `unlockAfter`) until `m13.14`.
+Ranks `counter` (start) → `builder` (after `world:number-meadow`). Badges: `number-builder` ("Number Builder": `mastered` `world:number-meadow`, "Master Number Meadow and beat Number Train"), `star-counter` (`stars-total` 10 / 30, generic).
 
 Retired in `m13.10`: the demo world `adding` (lessons `add-within-5`, `add-within-10`, `take-away`, boss `number-parade`, rank `adder`, badge `first-sums`, their texts). Stored progress for them is tolerated (G8, `m13.4`): the backup / merge keep it, total stars count it ("nothing is lost"), no Journey node, warm-up and Practice ignore its concepts (`apps/kids-learning/src/retired-content.test.tsx`, e2e `math/backup.spec.ts`).
 
@@ -58,27 +58,33 @@ Market Orders (`market-orders`, `series`, `errors3: 0`, `errors2: 2`, concept `m
 
 Ranks `counter` (start) → `builder` (after `world:number-meadow`) → `climber` (after `world:mental-mountain`). Badges: `number-builder`, `mountain-climber` ("Mountain Climber": `mastered` `world:mental-mountain`, "Master Mental Math Mountain and beat Market Orders"), `star-counter` (generic).
 
-### W3 Times-Table Forest — boss Race to 20
+### W3 Times-Table Forest (times tables) — shipped in `m13.14`
 
-| Lesson | Title | Guided | Scored (6) | Variant |
-|---|---|---|---|---|
-| `mt-groups` | Equal groups | `groups`, `groups-choice` | 3 `groups` · 2 `groups-choice` · 1 `fact` (×2) | `groups` ≤ 3 × 3 |
-| `mt-arrays` | Arrays | 2 `array-build` | 3 `array-build` · 2 `array-commute` · 1 `fact` | `array-build` ≤ 3 × 4 |
-| `mt-2-5-10` | Twos, fives, tens | `fact` ×2, `fact` ×10 | 4 `fact` · 1 `fact-missing` · 1 `fact-tf` | `fact` ×10 |
-| `mt-4-8` | Fours and eights | 2 `fact` ×4 (double double) | 4 `fact` · 1 `fact-missing` · 1 `fact-choice` | `fact` ×4 ≤ 5 |
-| `mt-3-6-9` | Threes, sixes, nines | `fact` ×3, `fact` ×9 | 4 `fact` · 1 `fact-missing` · 1 `fact-tf` | `fact` ×3 ≤ 5 |
-| `mt-7-mixed` | Sevens and mixed | `fact` ×7, `fact` ×0 / ×1 | 4 `fact` (mixed tables) · 1 `fact-missing` · 1 `fact-choice` | `fact` ×7 ≤ 5 |
+`packages/subject-math/content/`: `lessons/times-forest/<lesson>.yaml`, `minigames/race-to-20.yaml` (the world boss), `tracks.yaml`, `badges.yaml`, texts in `locales/en/`. Track `numbers`, world `times-forest` ("Times-Table Forest", habitat `forest`, **order 3**, after World 2 Mental Math Mountain), boss `race-to-20` (`tracks.yaml` `boss`). Every lesson is taught by the Hedgehog (Hedgie); the Owl narrates ("Owl says: …"). Concept id = lesson id; every guided / scored / variant exercise is a `generate:` entry (§3) with a stored seed (§5). Spoken texts never contain "×": instructions, stories, demos and reasons say "times" ("Make an array for 3 times 4."); only the cards show `3 × 4`.
 
-Race to 20 (`duel`) — **built in `m13.13`** (`minigames/race-to-20.yaml`; game `race`, params `{ target: 20, maxStep: 3 }`): add 1, 2 or 3 to the total; who says 20 wins. The bot moves first from 0 (a kid moving first from 0 loses to perfect play); bot level 1 (40 % mistakes); win once.
+| Lesson | Title | Concept | Kinds (guided / scored) | Guided | Scored (6) | Easier variant (for the hardest scored item) |
+|---|---|---|---|---|---|---|
+| `mt-groups` | Equal groups | `mt-groups` | number-entry, choice / number-entry, choice | `groups` · `groups-choice` | 3 `groups` (the pictured ones) · 2 `groups-choice` · 1 `fact` (×2) | `groups` 2 groups of 2 (≤ 3 × 3; for `gr-big-1`, 4 groups of 5) |
+| `mt-arrays` | Arrays | `mt-arrays` | array / array, true-false, number-entry | 2 `array-build` (3 rows of 2; 2 rows of 3) | 3 `array-build` (one with the rows free) · 2 `array-commute` · 1 `fact` | `array-build` 3 rows of 4 (≤ 3 × 4; for `ar-big-1`, 5 rows of 6) |
+| `mt-2-5-10` | Twos, fives, tens | `mt-2-5-10` | number-entry / number-entry, true-false | `fact` ×2, `fact` ×10 | 3 `fact` (one of each table) · 1 `fact` ×5 (big b) · 1 `fact-missing` · 1 `fact-tf` | `fact` ×10 (for `t2-five-1`, 5 × 8) |
+| `mt-4-8` | Fours and eights | `mt-4-8` | number-entry / number-entry, choice | 2 `fact` ×4 (double, double again) | 3 `fact` (×4 and ×8) · 1 `fact` ×8 (big b) · 1 `fact-missing` · 1 `fact-choice` | `fact` ×4 ≤ 5 (for `t4-hard-1`, 8 × 8) |
+| `mt-3-6-9` | Threes, sixes, nines | `mt-3-6-9` | number-entry / number-entry, true-false | `fact` ×3, `fact` ×9 | 3 `fact` (one of each table) · 1 `fact` ×6 / ×9 (big b) · 1 `fact-missing` · 1 `fact-tf` | `fact` ×3 ≤ 5 (for `t3-hard-1`, 9 × 9) |
+| `mt-7-mixed` | Sevens and mixed | `mt-7-mixed` | number-entry / number-entry, choice | `fact` ×7, `fact` ×0 | `fact` ×7 · `fact` ×1 · `fact` mixed 2–10 · `fact` ×6 / ×7 / ×9 (big b) · 1 `fact-missing` · 1 `fact-choice` (both mixed 2–10) | `fact` ×7 ≤ 5 (for `t7-hard-1`, 7 × 9) |
 
-| Plan | As built (`m13.13`) |
+Totals: 6 lessons, 12 guided, 36 scored, 6 easier variants = 54 exercises (every one generated). Race to 20 is the world boss, opened by `mt-7-mixed`. Tables drilled (the `a` of every card): ×2 / ×5 / ×10, ×4 / ×8, ×3 / ×6 / ×9, ×7 with the ×0 and ×1 tricks, then 2–10 mixed in the last lesson's missing-number and choice items (and one mixed fact); `b` runs 2–10 (guided 3–9 or 2–6; easier variants up to 5, the ×10 one up to 9). The last two scored items of every lesson are symbols only (CPA, §1): `groups-choice` and `fact` in `mt-groups`, `array-commute` and `fact` in `mt-arrays`, all fact cards elsewhere.
+
+Ranks `counter` (start) → `builder` (W1) → `climber` (W2) → `multiplier` (after `world:times-forest`). Badges: `times-ranger` ("Times Ranger": `mastered` `world:times-forest`, "Master Times-Table Forest and beat Race to 20").
+
+Race to 20 (`duel`) — built in `m13.13` (`minigames/race-to-20.yaml`; game `race`, params `{ target: 20, maxStep: 3 }`), **the W3 world boss since `m13.14`**: add 1, 2 or 3 to the total; who says 20 wins. The bot moves first from 0 (a kid moving first from 0 loses to perfect play); bot level 1 (40 % mistakes); win once.
+
+| Plan | As built |
 |---|---|
-| World boss of W3 | Not yet: W3 does not exist. `unlockAfter: pv-round`, concept `pv-round` (`m13.10`; `m13.13` had `take-away`; temporary: W3 concepts come in `m13.14`); reached as the Today session's mini-game after Rounding and the Number Train (`pickSessionMiniGame`; card-kit subjects have no Play screen). `m13.14` makes it the W3 world boss (id `race-to-20` kept) |
+| World boss of W3 | Yes (`m13.14`): `tracks.yaml` `boss: race-to-20`, `concept` and `unlockAfter` `mt-7-mixed` (the world's last lesson; `m13.13` had `take-away`, `m13.10` `pv-round`). It opens from its Journey node once the six lessons are mastered; the Today session no longer offers it after Rounding. Id `race-to-20` kept. e2e: `math/race.spec.ts` (Journey → world boss node → win, node won; Hint → 2 stars) |
 | Hint "Leave a number in the 4 times table" | "Try to land on 4, 8, 12 or 16." (the best step button also glows) |
-| Bot | the unlock lesson's character: Owl up to `m13.13` (`take-away`); since `m13.10` the Hedgehog (`pv-round`), "Hedgie". Board lines are spoken after each move: "Hedgie adds 2. Now it's 7." / "You add 1. Now it's 4." (every step and total below 20: 54 + 54 clips) and "Your turn!" |
+| Bot | the unlock lesson's character: the Hedgehog (`mt-7-mixed`), "Hedgie". Board lines are spoken after each move: "Hedgie adds 2. Now it's 7." / "You add 1. Now it's 4." (every step and total below 20) and "Your turn!"; unchanged by the move to W3 (the bot was already Hedgie since `m13.10`: no clip added or removed) |
 | Board | number track 0–20 (two rows of 10 on a phone, one row on a tablet), token on the total, last move's stones green (kid) / blue with a paw (bot), +1 +2 +3 buttons (80 px) |
 
-Totals (plan): 16 lessons, 32 guided, 96 scored, ≥ 16 variants, 10 series rounds + 1 duel. Shipped so far: W1 and W2 (10 lessons, 10 rounds) + the duel.
+Totals: 16 lessons, 32 guided, 96 scored, 16 easier variants, 10 series rounds + 1 duel, all shipped: W1 (5 lessons, Number Train), W2 (5 lessons, Market Orders), W3 (6 lessons, Race to 20).
 
 ## 3. Templates
 
@@ -110,16 +116,18 @@ Kinds: card kit `choice` / `true-false` / `number-entry` / `order`; math `number
 | `compensate` | number-entry | `near` 9 / 99, `op` + / −; "46 + 99" | n ± near | `forgot-adjust` | built (m13.11) |
 | `equals-balance` | number-entry | `max` 10–20; "7 + 5 = 6 + ?" | a + b − c | `answer-next` | built (m13.11) |
 | `story` | number-entry (text only) | `frame` part-whole / change-add / change-take / compare, `max` 20–100; 4 authored sentences per frame (`stories.*`) | a ± b | `wrong-op` | built (m13.11) |
-| `groups` | number-entry + emoji groups | k ≤ 5 groups of n ≤ 5 | k × n | `add-factors` | planned (m13.14) |
-| `groups-choice` | choice | "3 groups of 4" → 4 + 4 + 4 / 3 + 4 / 3 + 3 + 3 + 3 | 4 + 4 + 4 | `add-factors` | planned (m13.14) |
-| `array-build` | array | rows × cols ≤ 6 × 6 (rows fixed by the text) | rows, cols | — | planned (m13.14) |
-| `array-commute` | true-false | "3 × 4 = 4 × 3" / "3 × 4 = 3 + 4" | bool | `add-factors` | planned (m13.14) |
-| `fact` / `fact-missing` | number-entry | table ∈ set, b 1–10; weighted to the lesson's tables | a × b / b | `neighbour`, `add-factors`, `digit-swap` | planned (m13.14) |
-| `fact-choice` / `fact-tf` | choice / true-false | same | — | same | planned (m13.14) |
+| `groups` | number-entry; card "3 groups of 4" + one emoji | `maxGroups` 3–5, `maxSize` 3–5 (2 up to each) | k × n | `add-factors` | built (m13.14) |
+| `groups-choice` | choice (3 sums); card "3 groups of 4" | `maxGroups` 3–4, `maxSize` 3–4: "3 groups of 4" → 4 + 4 + 4 / 3 + 4 / 3 + 3 + 3 + 3 | 4 + 4 + 4 | `add-factors`, `neighbour` | built (m13.14) |
+| `array-build` | array; card "3 × 4" | `maxRows` 3–6, `maxCols` 3–6 (2 up to each), `fixedRows` (rows fixed by the text, default) | rows, cols | `neighbour` | built (m13.14) |
+| `array-commute` | true-false | `max` 3–10: "3 × 4 = 4 × 3" / "3 × 4 = 3 + 4" | bool | `add-factors` | built (m13.14) |
+| `fact` | number-entry; card "7 × 6" | `tables` (0–10), `b` [lowest, highest] (default 1–10) | a × b | `add-factors`, `neighbour`, `digit-swap` | built (m13.14) |
+| `fact-missing` | number-entry; card "6 × ? = 42" | `tables` (1–10), `b` | b | `neighbour` | built (m13.14) |
+| `fact-choice` | choice (3 numerals); card "8 × 7" | `tables` (1–10), `b` | a × b | `neighbour`, `add-factors` | built (m13.14) |
+| `fact-tf` | true-false; card "4 × 8 = 32" | `tables` (1–10), `b` | bool | `neighbour` | built (m13.14) |
 
 Bugs (one authored reason sentence each, spoken when the wrong answer matches):
 
-| Bug | Wrong answer | Reason (W1 and W2 bugs: the text shipped in `lessons.yaml` `bugs:` by m13.9 / m13.11; the W3 ones are drafts) |
+| Bug | Wrong answer | Reason (shipped in `lessons.yaml` `bugs:` by m13.9 (W1), m13.11 (W2) and m13.14 (W3)) |
 |---|---|---|
 | `append` | 2005 for 2 H 0 T 5 O | "Each place holds one digit: 2 hundreds is 200, not 2000." |
 | `swap` | 250 for 205 | "Look at the order: hundreds, then tens, then ones." |
@@ -137,7 +145,7 @@ Bugs (one authored reason sentence each, spoken when the wrong answer matches):
 | `answer-next` | 7 + 5 = 12 | "The equals sign means both sides are the same." |
 | `wrong-op` | added instead of subtracted (or back) | "Read it again: does the number get bigger or smaller?" |
 | `add-factors` | 3 + 4 for 3 × 4 | "Times means groups: 3 groups of 4." |
-| `neighbour` | a × (b ± 1) | "That's the next fact. Count one group less." |
+| `neighbour` | the fact one step along the table (a × (b − 1), else a × (b + 1)); an array one dot more or fewer in a row; a sum with one term more or fewer; the missing number ± 1 | "So close, just one off! Count again." |
 | `digit-swap` | 42 for 24 | "Check the digits' order." |
 
 ### W1 templates as built (`m13.9`)
@@ -182,6 +190,24 @@ Code: `packages/subject-math/src/content/templates/` (`arithmetic`, `bonds`, `do
 | Pad | `maxDigits` is widened only when a reason is longer than the answer (a take-away or comparison story: the sum, 3 digits) | a typed wrong number must fit |
 | Test kit | `overSeeds` / `wordingProblems` take a word limit (stories 20, other cards 14) | story sentences have two sentences and a question |
 
+### W3 templates as built (`m13.14`)
+
+Code: `packages/subject-math/src/content/templates/` (`groups`, `array`, `fact`, the bug models in `bugs`, `index`); texts: `lessons.yaml` `templates.<id>` (`array-build-free` for the rows-free wording) and `bugs.<id>`; array notes and hints: `content/array-voice.ts`. Tests run every parameter set of §2 over 1 000 seeds with an independent `check` and break every `check` by hand (`templates/groups|array|fact.test.ts`); `templates/w3-lesson.test.ts` builds a fixture lesson with all 8.
+
+| Item | As built | Why |
+|---|---|---|
+| `neighbour` reason text | "So close, just one off! Count again." (the draft said "That's the next fact. Count one group less.") | the neighbour is the fact under the answer (a × (b − 1)) or, at b = 1 or when that is the added factors, the one over: "one group less" is wrong for one of them; the same sentence also serves the array, sum and missing-number cases |
+| `neighbour` fact | a × (b − 1), else a × (b + 1); never the answer or the added factors; none for table 0 and for 1 × 1 | one neighbour per item, the one under the answer first |
+| `fact` reasons | `add-factors` (a + b), `neighbour`, `digit-swap` (only a 2-digit answer not ending in 0: 42 → 24; 40 → 04 is no answer a child gives); a value that is the answer or an earlier wrong value is left out (priority add-factors, neighbour, digit-swap) | reasons are distinct values; 2 × 2 has no `add-factors` (2 + 2 is the answer) |
+| `fact` tables | 0–10 (the lesson `mt-7-mixed` drills ×0 / ×1); `fact-missing`, `fact-choice`, `fact-tf` take 1–10 | 0 × ? = 0 has every number as an answer; a table 0 has no neighbour fact |
+| Drawn facts | uniform over the tables × b range; `fact-choice` skips facts without 3 distinct answers (1 × 1, 2 × 2), `fact-tf` facts without a neighbour; params that leave no fact are refused | an item always has its answer and reasons |
+| `fact-missing` | "6 × ? = 42", the missing number b; the reason `neighbour` is b − 1 (b + 1 at b = 1) | one wrong value the child types |
+| `groups` card | "3 groups of 4" with one emoji of the thing, the same for the same numbers; k and n from 2 | the card's `emoji` holds 16 UTF-16 units (8 emoji): the groups cannot be drawn; the fixed picture lets the expander tell a repeat |
+| `groups-choice` | `maxGroups` / `maxSize` 3–4; card "3 groups of 4" too; 2 groups of 2 is never drawn; options: the sum of k n's, the added factors `k + n`, and the other way round (4 groups of 3: no reason, the wrong-answer note) or, for k = n, the same number one term more (one fewer when that is 5 terms) with `neighbour` | a card holds 16 characters: 5 terms are 17; "2 + 2" would be the answer and the added factors; the card lets the `check` read k and n |
+| `array-build` | card "3 × 4" (as the array samples); `fixed-rows` written only when `false` ("Make an array for 3 times 4."); reasons: both (r, c − 1) and (r, c + 1) on the grid, each `neighbour`; the turned array has the kind's own "same number" note | the `check` reads the shape from the card; "×" is not spoken |
+| `array-commute` | two different factors from 2 to `max` (3–10), true half the time; "3 × 4 = 3 + 4" speaks `add-factors` | 3 × 3 = 3 × 3 says nothing |
+| Array voice | the kind's notes and hints join the voice inventory when the content has an array exercise: wrong note (plain, and with the easier offer), hints 1–3 (hint 2 per distinct `cols`), the turned-round note where it can happen, each reason (plain, and with the offer where the exercise has an easier variant), praise | `pnpm voice:check` covers exactly what can be spoken |
+
 ## 4. Rules for the build
 
 | Rule | Where |
@@ -192,13 +218,15 @@ Code: `packages/subject-math/src/content/templates/` (`arithmetic`, `bonds`, `do
 | Place-value targets ≤ 9 999; blocks ≤ 9 per column | `place-value` verify |
 | Arrays ≤ 6 × 6 on the grid board | `array` verify |
 | Instructions ≤ 14 words; text names what to do ("Build 305 with blocks.") | content tests |
+| Spoken texts (instructions, stories, demos, reasons) never contain "×": say "times"; cards (`prompt.big`) keep "3 × 4" | `times-forest.test.ts` over the voice inventory |
+| A fact appears once per lesson (7 × 8 and 8 × 7 count as one) | `times-forest.test.ts` |
 | Content review rule (CLAUDE.md): every choice / true-false text has exactly one reading that leads to the answer | review log in this file |
 
 ## 5. Exercises as shipped
 
 ### W1 (`m13.10`)
 
-Columns: generated id (`<stem>-<n>`, from the entry's `id`); template and stored seed (params in the YAML; **never change a seed or a count of a released lesson**: stored stars sit on the ids, tests pin them: `src/content/number-meadow.test.ts`); the card as drawn; the answer (the right option in bold); what it practises. Texts: [lessons.yaml](../../../packages/subject-math/content/locales/en/lessons.yaml) (`templates.*`, `bugs.*`, the lessons' story / demo).
+Columns: generated id (`<stem>-<n>`, from the entry's `id`); template and stored seed (params in the YAML; **never change a seed or a count of a released lesson**: stored stars sit on the ids, tests pin them: `src/content/number-meadow.test.ts`); the card as drawn; the answer (the right option in bold); what it practises. Texts: [lessons.yaml](../../../packages/subject-math/content/locales/en/lessons.yaml) (`templates.*`, `bugs.*`, the lessons' story / demo). The W1 seeds are pinned in `src/content/number-meadow.test.ts`, the W3 seeds in `src/content/times-forest.test.ts`.
 
 #### `pv-hto`
 
@@ -368,9 +396,101 @@ Same columns; seeds and counts are frozen by `src/content/mental-mountain.test.t
 
 Demos (a worked example with its card): `64 + 36 = 100`, `35 + 36`, `38 + 7`, `46 + 99`, `12 + 5`; the stories ("Owl says: …", Hedgie, 2–3 sentences) are authored per lesson.
 
+### W3 (`m13.14`)
+
+Reasons per card (not in the tables): every `fact` speaks `add-factors` (a + b), `neighbour` (the fact one step along) and `digit-swap` (a 2-digit answer, digits swapped) where they exist (§3); the missing number speaks `neighbour` (± 1); a `fact-choice` marks its `neighbour` and `add-factors` options; a false `fact-tf` / `array-commute` claim speaks `neighbour` / `add-factors`; an array speaks `neighbour` for one dot more or fewer in a row. The card's emoji is the thing counted (one per `groups` item).
+
+#### `mt-groups`
+
+| id | template, seed | card | answer / options | practises |
+|---|---|---|---|---|
+| `gr-g-1` (guided) | `groups` @1 | ⭐ 3 groups of 2 | 6 | a first picture of groups: 3 groups of 2, added up (3 + 2 = 5 speaks `add-factors`) |
+| `gr-gc-1` (guided) | `groups-choice` @7 | 2 groups of 3 | 2 + 2 + 2 2 + 3 **3 + 3** | which sum shows 2 groups of 3 (guided): 3 + 3; 2 + 2 + 2 (the other way round) and 2 + 3 (`add-factors`) are the wrong ones |
+| `gr-total-1` | `groups` @32 | 🐟 3 groups of 4 | 12 | groups of 4, how many in all |
+| `gr-total-2` | `groups` @32 | 🐞 2 groups of 4 | 8 | 2 groups of 4 |
+| `gr-big-1` | `groups` @5 | 🍪 4 groups of 5 | 20 | the biggest groups (4 groups of 5; easier: `gr-easy-1`) |
+| `gr-sum-1` | `groups-choice` @1 | 4 groups of 2 | 4 + 4 4 + 2 **2 + 2 + 2 + 2** | which sum shows 4 groups of 2: 2 + 2 + 2 + 2; 4 + 4 (the other way round) and 4 + 2 (`add-factors`) are wrong |
+| `gr-sum-2` | `groups-choice` @1 | 4 groups of 4 | 4 + 4 **4 + 4 + 4 + 4** 4 + 4 + 4 | k = n: 4 groups of 4 is four 4s; the 3-term sum speaks `neighbour`, 4 + 4 the `add-factors` |
+| `gr-times-1` | `fact` @6 | 2 × 7 | 14 | the first fact as a symbol (symbols only) |
+| `gr-easy-1` (easier) | `groups` @7 | 🍎 2 groups of 2 | 4 | 2 groups of 2, the smallest picture |
+
+#### `mt-arrays`
+
+| id | template, seed | card | answer / options | practises |
+|---|---|---|---|---|
+| `ar-g-1` (guided) | `array-build` @2 | 3 × 2 | 3 rows of 2 | 3 rows of 2: tap the bottom-right dot; one dot more or fewer in a row speaks `neighbour` |
+| `ar-g-2` (guided) | `array-build` @2 | 2 × 3 | 2 rows of 3 | 2 rows of 3, the same 6 dots turned round (the turned array speaks the "same number" note) |
+| `ar-build-1` | `array-build` @5 | 4 × 5 | 4 rows of 5 | 4 rows of 5 |
+| `ar-free-1` | `array-build` @2 | 4 × 3 | 4 rows of 3 (rows free) | the rows free ("an array for 4 times 3"): 4 rows of 3 or 3 rows of 4 both count |
+| `ar-big-1` | `array-build` @31 | 5 × 6 | 5 rows of 6 | 5 rows of 6, the biggest array (easier: `ar-easy-1`) |
+| `ar-commute-1` | `array-commute` @1 | 5 × 2 = 5 + 2 | false | false: 5 × 2 is not 5 + 2 (`add-factors`) |
+| `ar-commute-2` | `array-commute` @1 | 6 × 5 = 5 × 6 | true | true: 6 × 5 = 5 × 6 (symbols only) |
+| `ar-fact-1` | `fact` @4 | 4 × 6 | 24 | 4 × 6, the array as a fact (symbols only) |
+| `ar-easy-1` (easier) | `array-build` @5 | 3 × 4 | 3 rows of 4 | 3 rows of 4 |
+
+#### `mt-2-5-10`
+
+| id | template, seed | card | answer / options | practises |
+|---|---|---|---|---|
+| `t2-g2-1` (guided) | `fact` @6 | 2 × 6 | 12 | skip count by 2 |
+| `t2-g10-1` (guided) | `fact` @1 | 10 × 7 | 70 | times 10: add a zero |
+| `t2-fact-1` | `fact` @3 | 10 × 3 | 30 | ×10 fact |
+| `t2-fact-2` | `fact` @3 | 2 × 3 | 6 | ×2 fact |
+| `t2-fact-3` | `fact` @3 | 5 × 5 | 25 | ×5 fact (a 2-digit answer with digits to swap) |
+| `t2-five-1` | `fact` @1 | 5 × 8 | 40 | ×5 with a big b (easier: `t2-easy-1`) |
+| `t2-missing-1` | `fact-missing` @1 | 5 × ? = 45 | 9 | 5 × ? = 45, the missing number |
+| `t2-true-1` | `fact-tf` @5 | 10 × 4 = 30 | false | false: 10 × 4 is 40, not 30 (the fact under it speaks `neighbour`) |
+| `t2-easy-1` (easier) | `fact` @4 | 10 × 9 | 90 | ×10 up to 9 (add a zero) |
+
+#### `mt-4-8`
+
+| id | template, seed | card | answer / options | practises |
+|---|---|---|---|---|
+| `t4-g-1` (guided) | `fact` @1 | 4 × 5 | 20 | ×4 as double, double again |
+| `t4-g-2` (guided) | `fact` @1 | 4 × 2 | 8 | 4 × 2: double 2, double 4 |
+| `t4-fact-1` | `fact` @2 | 8 × 6 | 48 | ×8 fact |
+| `t4-fact-2` | `fact` @2 | 4 × 7 | 28 | ×4 fact |
+| `t4-fact-3` | `fact` @2 | 8 × 2 | 16 | ×8 with a small b |
+| `t4-hard-1` | `fact` @1 | 8 × 8 | 64 | 8 × 8 (easier: `t4-easy-1`) |
+| `t4-missing-1` | `fact-missing` @1 | 8 × ? = 32 | 4 | 8 × ? = 32 |
+| `t4-choice-1` | `fact-choice` @3 | 8 × 5 | 13 32 **40** | pick 8 × 5 among 13 (`add-factors`), 32 (`neighbour`) and 40 |
+| `t4-easy-1` (easier) | `fact` @1 | 4 × 4 | 16 | ×4 up to 5 |
+
+#### `mt-3-6-9`
+
+| id | template, seed | card | answer / options | practises |
+|---|---|---|---|---|
+| `t3-g3-1` (guided) | `fact` @1 | 3 × 7 | 21 | ×3 by skip counting |
+| `t3-g9-1` (guided) | `fact` @1 | 9 × 7 | 63 | ×9: 10 less one group |
+| `t3-fact-1` | `fact` @3 | 9 × 3 | 27 | ×9 fact |
+| `t3-fact-2` | `fact` @3 | 3 × 3 | 9 | ×3 fact |
+| `t3-fact-3` | `fact` @3 | 6 × 5 | 30 | ×6 fact |
+| `t3-hard-1` | `fact` @4 | 9 × 9 | 81 | 9 × 9 (easier: `t3-easy-1`) |
+| `t3-missing-1` | `fact-missing` @1 | 6 × ? = 54 | 9 | 6 × ? = 54 |
+| `t3-true-1` | `fact-tf` @4 | 9 × 8 = 72 | true | true: 9 × 8 is 72 |
+| `t3-easy-1` (easier) | `fact` @1 | 3 × 4 | 12 | ×3 up to 5 |
+
+#### `mt-7-mixed`
+
+| id | template, seed | card | answer / options | practises |
+|---|---|---|---|---|
+| `t7-g7-1` (guided) | `fact` @1 | 7 × 7 | 49 | ×7 first fact |
+| `t7-g01-1` (guided) | `fact` @7 | 0 × 3 | 0 | ×0: anything times 0 is 0 |
+| `t7-seven-1` | `fact` @2 | 7 × 8 | 56 | ×7 fact |
+| `t7-zero-1` | `fact` @2 | 1 × 3 | 3 | ×1: anything times 1 stays the same |
+| `t7-mixed-1` | `fact` @3 | 8 × 6 | 48 | mixed tables (8 × 6) |
+| `t7-hard-1` | `fact` @1 | 7 × 9 | 63 | 7 × 9 (easier: `t7-easy-1`) |
+| `t7-missing-1` | `fact-missing` @8 | 3 × ? = 15 | 5 | 3 × ? = 15, mixed tables (symbols only) |
+| `t7-choice-1` | `fact-choice` @6 | 6 × 9 | 48 15 **54** | pick 6 × 9 among 48 (`neighbour`), 15 (`add-factors`) and 54 (symbols only) |
+| `t7-easy-1` (easier) | `fact` @1 | 7 × 4 | 28 | ×7 up to 5 |
+
+Race to 20 (world boss): not generated (the game's params are `{ target: 20, maxStep: 3 }`).
+
+Stories ("Owl says: …", Hedgie, 2–3 sentences) and demos are authored per lesson; the demo cards are `3 groups of 4` (with 🍓), `3 × 4`, `5 × 6`, `4 × 3`, `9 × 4`, `7 × 6`: each worked in the demo text with "times" and "plus" ("4 plus 4 plus 4 makes 12. So 3 times 4 is 12!").
+
 ## 6. Content review log
 
-CLAUDE.md rule: every choice / true-false / setup text is checked against its card so exactly one reading leads to the accepted answer; no distractor items. The checks are run on the shipped cards by `src/content/number-meadow.test.ts` (W1, checks 1–20) and `src/content/mental-mountain.test.ts` (W2, checks 21–32) (re-derived from the compiled defs and the English sentences, not through the templates' own `check`) and over 1 000 seeds per template combination.
+CLAUDE.md rule: every choice / true-false / setup text is checked against its card so exactly one reading leads to the accepted answer; no distractor items. The checks are run on the shipped cards by `src/content/number-meadow.test.ts` (W1), `src/content/mental-mountain.test.ts` (W2) and `src/content/times-forest.test.ts` (W3), re-derived from the compiled defs, not through the templates' own `check`, and over 1 000 seeds per template combination.
 
 | Check | What was checked | Result |
 |---|---|---|
@@ -409,5 +529,17 @@ CLAUDE.md rule: every choice / true-false / setup text is checked against its ca
 | 33 | Voice: every story, demo, instruction, reason and the Market Orders goal are in the inventory with generated audio (`pnpm voice:check`); the Journey / reward texts of W2 are new texts of the same kind | ok |
 | 34 | Placement, test-out of a lesson and of the world, and the parent unlock run on both worlds (`src/content/placement.test.ts`): 4 of 4 passes World 2 via placement, the boss stays to play, Mountain Climber fires once Market Orders is won | ok |
 | 35 | Reworded bug sentences fit every item that can speak them: `wrong-place` (+ / −, 10 / 100), `forgot-adjust` (9 / 99, + / −), each at most 14 words | ok |
+| 36 | `groups` "How many in all?" over "3 groups of 4" + one emoji: one picture of the thing, the answer is k × n, the added factors (k + n) speak `add-factors` unless they are the answer (2 groups of 2) | ok |
+| 37 | `groups-choice` "Which sum shows 2 groups of 3?": exactly one of the 3 sums has k terms that are all n and it is the answer (the other way round, 2 + 2 + 2, has the same total but shows 3 groups of 2, and the question says "shows"); the added factors speak `add-factors`; k = n offers the sum with one term more / fewer as `neighbour` | ok |
+| 38 | `array-build` "Make 3 rows of 4 dots." / "Make an array for 4 times 3.": the card says rows × columns, the array is that shape, rows fixed unless the words say "an array for" (one item per lesson); one dot more or fewer in a row speaks `neighbour` | ok |
+| 39 | `array-commute` "Is this true?" (6 × 5 = 5 × 6 true, 5 × 2 = 5 + 2 false): the answer is the truth, worked out by adding up; the false sum speaks `add-factors`; one true and one false in the lesson | ok |
+| 40 | `fact` "What is 7 times 6?" / `fact-missing` "What number is missing?" over "6 × ? = 42" / `fact-choice` "Which is the answer?" over "8 × 7" / `fact-tf` "Is this true?" over "4 × 8 = 32": one answer each, worked out by adding up; the options of a choice are 3 distinct numbers with exactly one right; a false claim is the neighbour fact | ok |
+| 41 | Stories and demos (W3): 2–3 sentences, "Owl says:" and Hedgie in every story, every demo has its card and works one example (`3 groups of 4`, `3 × 4`, `5 × 6`, `4 × 3`, `9 × 4`, `7 × 6`) | ok |
+| 42 | CPA (W3): the pictures (groups, arrays) are among the first 4 scored items; the last 2 scored items of every lesson are symbols only | ok |
+| 43 | Easier variants (W3): one per lesson for the hardest scored item (a smaller groups / array, a times-10 fact, a times-4 / 3 / 7 fact up to 5) | ok |
+| 44 | No two alike items in a lesson, and each fact once per lesson (7 × 8 and 8 × 7 count as one); each fact lesson drills its own tables (×2 ×5 ×10; ×4 ×8; ×3 ×6 ×9; ×7 with ×0 / ×1 and a mixed 2–10 close) | ok |
+| 45 | No spoken text (inventory: stories, demos, instructions, reasons, notes) contains "×": they say "times" | ok |
+| 46 | Voice (W3): every story, demo, instruction, reason and array note is in the inventory with generated audio (`pnpm voice:check`: 75 clips added, none removed) | ok |
+| 47 | Race to 20 is the W3 world boss (opened by `mt-7-mixed`, bot Hedgie); placement, world test-out, the won boss + badge and the parent unlock run over every world of the content (`src/content/placement.test.ts`); e2e `math/forest.spec.ts` (Journey with every earlier world done; Arrays end to end) and `math/race.spec.ts` (boss node → duel → won) seed every earlier world's lessons and bosses as the content has them | ok |
 
-Manual checks still open (owner, `docs/release.md` §1): a child's first run of `pv-hto` (blocks on the iPad / Android tablet), the number line with a finger on a phone, a child's first story problems (are the sentences readable aloud and on screen at 8; is the "how many more" comparison understood).
+Manual checks still open (owner, `docs/release.md` §1): a child's first run of `pv-hto` (blocks on the iPad / Android tablet), the number line with a finger on a phone, a child's first story problems (are the sentences readable aloud and on screen at 8; is the "how many more" comparison understood). Also open for World 3: the dot grid of `mt-arrays` with a finger, and how the voice reads "times" and the sums ("4 plus 4 plus 4").

@@ -519,7 +519,7 @@ describe('the content review of World 3: exactly one reading leads to the answer
   const product = (a: number, b: number): number =>
     Array.from({ length: b }, () => a).reduce((sum, term) => sum + term, 0);
 
-  it('check 21: "How many in all?" over "3 groups of 4": one picture of the thing, the answer is k × n, the added factors speak add-factors', () => {
+  it('check 36: "How many in all?" over "3 groups of 4": one picture of the thing, the answer is k × n, the added factors speak add-factors', () => {
     const picks = all.filter(({ def }) => groupsOf(def) !== null && def.type === 'number-entry');
     // 1 guided + 2 + 1 scored + the easier variant (mt-groups).
     expect(picks).toHaveLength(1 + 2 + 1 + 1);
@@ -539,7 +539,7 @@ describe('the content review of World 3: exactly one reading leads to the answer
     }
   });
 
-  it('check 22: "Which sum shows 2 groups of 3?": exactly one of the 3 sums has k terms that are all n, and it is the answer; the added factors speak add-factors', () => {
+  it('check 37: "Which sum shows 2 groups of 3?": exactly one of the 3 sums has k terms that are all n, and it is the answer; the added factors speak add-factors', () => {
     const picks = all.filter(({ def }) => groupsOf(def) !== null && def.type === 'choice');
     expect(picks).toHaveLength(1 + 2);
     for (const { where, def } of picks) {
@@ -563,7 +563,7 @@ describe('the content review of World 3: exactly one reading leads to the answer
     }
   });
 
-  it('check 23: "Make 3 rows of 4 dots." / "Make an array for 4 times 3.": the card says rows × columns, the array is that shape; rows fixed unless the text says "an array for"', () => {
+  it('check 38: "Make 3 rows of 4 dots." / "Make an array for 4 times 3.": the card says rows × columns, the array is that shape; rows fixed unless the text says "an array for"', () => {
     const arrays = all.filter(({ def }) => def.type === 'array');
     // 2 guided + 3 scored + the easier variant (mt-arrays).
     expect(arrays).toHaveLength(2 + 3 + 1);
@@ -583,7 +583,7 @@ describe('the content review of World 3: exactly one reading leads to the answer
     expect(arrays.filter(({ def }) => def.type === 'array' && !def.fixedRows)).toHaveLength(1);
   });
 
-  it('check 24: "Is this true?" over "6 × 5 = 5 × 6" / "5 × 2 = 5 + 2": the answer is the truth of the statement (worked out by adding up), the false sum speaks add-factors', () => {
+  it('check 39: "Is this true?" over "6 × 5 = 5 × 6" / "5 × 2 = 5 + 2": the answer is the truth of the statement (worked out by adding up), the false sum speaks add-factors', () => {
     const statements = all.filter(
       ({ def }) =>
         def.type === 'true-false' && /^\d+ × \d+ = \d+ [×+] \d+$/.test(def.prompt?.big ?? ''),
@@ -609,7 +609,7 @@ describe('the content review of World 3: exactly one reading leads to the answer
     ).toEqual([false, true]);
   });
 
-  it('check 25: "What is 7 times 6?" over "7 × 6", "What number is missing?" over "6 × ? = 42", "Which is the answer?" over "8 × 7", "Is this true?" over "4 × 8 = 32": one answer each, worked out by adding up', () => {
+  it('check 40: "What is 7 times 6?" over "7 × 6", "What number is missing?" over "6 × ? = 42", "Which is the answer?" over "8 × 7", "Is this true?" over "4 × 8 = 32": one answer each, worked out by adding up', () => {
     let facts = 0;
     let missing = 0;
     let choices = 0;
