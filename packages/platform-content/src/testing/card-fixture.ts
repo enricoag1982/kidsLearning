@@ -1,12 +1,18 @@
 // A tiny subject made only of YAML (`card-subject/`) that uses all four card kinds: what the card kit's own tests and the
 // platform-web App-flow test compile through `createCardContent`. One lesson entry and one series round are generated
-// (`fixture-add`): the build-time expansion's own fixture (`generate/expand.test.ts`).
+// (`fixture-add`): the build-time expansion's own fixture (`generate/expand.test.ts`). One mini-game is a `duel` over the
+// take-away game (`createCardFixtureContent` registers the mode).
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { randomInt } from '@learn/platform-core/domain/random';
+import { takeAwayGame } from '@learn/platform-core/testing';
 import { z } from 'zod';
 import type { AnyExerciseTemplate, ExerciseTemplate } from '../generate/template.ts';
-import type { ExerciseYamlBase } from '../subject.ts';
+import { createCardContent } from '../kinds/cards/content.ts';
+import { createDuelContent } from '../modes/duel.ts';
+import type { DuelGameContent } from '../modes/duel.ts';
+import { duelVoiceTemplates } from '../modes/duel-voice.ts';
+import type { ExerciseYamlBase, SubjectContent } from '../subject.ts';
 
 /** The fixture's content root: `lessons/`, `minigames/`, `locales/`, `tracks.yaml`, `badges.yaml`. */
 export const CARD_FIXTURE_ROOT = join(dirname(fileURLToPath(import.meta.url)), 'card-subject');
@@ -73,3 +79,28 @@ export const fixtureAdd: ExerciseTemplate<FixtureAddParams, FixtureAddItem> = {
 export const CARD_FIXTURE_TEMPLATES: Readonly<Record<string, AnyExerciseTemplate>> = {
   'fixture-add': fixtureAdd,
 };
+
+/** The fixture's duel games (`createDuelContent` / `createDuelMode` over the same ids): the take-away game, a pile of 1-30. */
+export const CARD_FIXTURE_DUEL_GAMES = {
+  'take-away-fixture': {
+    params: z.object({ pile: z.number().int().min(1).max(30) }).strict(),
+    game: takeAwayGame,
+  },
+} as const satisfies Readonly<Record<string, DuelGameContent>>;
+
+/** The card fixture subject's whole content behaviour: the card kit plus the opt-in `duel` mode and its voice lines. */
+export function createCardFixtureContent(): SubjectContent {
+  const cards = createCardContent({
+    characters: CARD_FIXTURE_CHARACTERS,
+    templates: CARD_FIXTURE_TEMPLATES,
+  });
+  const duelVoice = duelVoiceTemplates(CARD_FIXTURE_CHARACTERS);
+  return {
+    ...cards,
+    modes: { ...cards.modes, duel: createDuelContent(CARD_FIXTURE_DUEL_GAMES) },
+    voiceTemplates: (add, r, all) => {
+      cards.voiceTemplates(add, r, all);
+      duelVoice(add, r, all);
+    },
+  };
+}

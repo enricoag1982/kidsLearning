@@ -73,6 +73,7 @@ Layout: `tracks.yaml` (worlds, ranks), `badges.yaml`, `lessons/<world>/<lesson>.
 |---|---|---|
 | Own exercise kind | core kind + `solution` + content kind + UI + e2e driver, registered in the subject's registries; type dispatch only via registries (`dispatchGuard`) | `subject-chess/src/kinds/`, `subject-coding/src/kinds/` |
 | Own mini-game mode | mode def + content + UI | `subject-chess/src/modes/` |
+| Small two-player game against a bot | the platform's opt-in `duel` mode: a `TurnGame` + a board (§7) | `platform-core/src/testing/take-away-game.ts`, card fixture |
 | Routes, home tiles, store slice, parent panels, surfaces, `characterArt` | optional `SubjectWeb` fields | `subject-chess/src/web/chess-pack.ts` |
 | Profile settings | own `SubjectSettingsSlot`; field names unique across subjects | chess `computerLevel` |
 | Mix | `createCardCore({ notes })`, `characterColor`; start from `subject-coding` (card kit + own kinds) for a hand-built pack | `subject-coding/` |
@@ -177,3 +178,33 @@ Any other wrong answer keeps the default note; scoring, errors and hints do not 
 **Voice** (decision G6): `createCardContent` puts the card notes of the kinds the content uses into the voice inventory (`cardVoiceTemplates(notes)`, computed through core's `exerciseNote`): the wrong notes (plain and with the easier offer), every reason, every hint by level, the 1–3 star praise. A subject with its own `voiceTemplates` composes it: `cardVoiceTemplates(core.notes)(add, r, all)` (coding does). Run `pnpm voice:generate` after adding reasons.
 
 Reference: `packages/platform-content/src/testing/card-fixture.ts` (`fixture-add`, used by one lesson entry and one series round of the card fixture), tests `generate/expand.test.ts`.
+
+## 7. Duel mode
+
+Opt-in mini-game `mode: duel`: the child and a bot alternate in a small game (race to 20, nim). The platform owns turns, the bot, the result, stars, the step UI (turn banner, bot pause, Hint, result panel, "Play again") and the e2e driver; the subject owns the rules and the board. `BossStep` looks up platform modes before the pack's: the mode id stays `duel` (chess `versus` is chess-only and unchanged). A subject that does not register it pays nothing (the step is only bundled through `createDuelModeUi`).
+
+| Piece | Where | What |
+|---|---|---|
+| `TurnGame<P, S, M>` | subject core, pure | `start(params, first)`, `toMove`, `moves`, `play` (throws on an illegal move), `result` (`'kid' \| 'bot' \| 'draw'`), `bestMoves` (moves that keep a won position won; `[]` when losing), `sameMove`. State and moves are plain JSON |
+| Core mode | `modes: { duel: createDuelMode({ <game id>: game }) }` | engine: `startDuel`, `kidMove`, `botMove`, `duelHint`, `duelStars` (3 stars; 2 with a hint; 0 lost / drawn) |
+| Content mode | `modes: { duel: createDuelContent({ <game id>: { params: zodSchema, game } }) }`, `voiceTemplates` includes `duelVoiceTemplates(characters)` | schema, compile, verify |
+| Board | `modes: { duel: createDuelModeUi({ <game id>: Board }) }` in `SubjectWeb` | `Board({ state, legalMoves, disabled, hintMoves?, lastMove?, onMove })`; every move button carries `data-move="<JSON of the move>"` |
+| e2e | `createDuelE2E(games).play(page, game, { outcome: 'win' \| 'lose' })` (`platform-web/src/modes/duel/e2e.ts`) | reads `data-duel-state` / `data-duel-turn` / `data-duel-status`, plays `bestMoves[0]` (or a non-best move to lose) |
+
+```yaml
+# minigames/take-away.yaml
+id: take-away
+mode: duel
+concept: counting
+unlockAfter: count-up        # also the bot's character (the lesson's), else Owl
+game: take-away-fixture      # TurnGame id
+params: { pile: 6 }          # the game's own schema
+level: 1                     # bot mistake rate 1 / 2 / 3 = 40 / 20 / 0 % (3 = perfect play)
+first: bot
+hint: take-away-hint         # optional text key; default "Look for a move that leaves me stuck."
+```
+
+- Verify (content build): unknown `game`; `params` outside the game's schema; `level` not 1-3; a start the kid cannot force a win from (moving first: lost position; moving second: a perfect opening of the bot leaves the kid nothing); `hint` key missing.
+- Bot: a best move, unless `services.deps.random` draws under the level's mistake rate (then a random legal move); a random legal move when losing. It answers after 900 ms (150 ms with reduced motion).
+- Voice: bounded set (`duelVoiceTemplates`): `boss.duel.your-turn`, `.bot-turn` (per distinct bot name), `.won`, `.lost`, `.draw`, the hint line (platform or each game's own), plus the goal text; `pnpm voice:generate` picks them up.
+- Reference: `packages/platform-core/src/testing/take-away-game.ts`, `packages/platform-web/src/testing/take-away-board.tsx`, `card-test-entry.tsx`; tests `modes/duel/DuelStep.test.tsx`, `e2e.test.tsx`.

@@ -30,11 +30,13 @@ export function makeMiniGameCompileContext(
   };
 }
 
-/** Helpers for a mode's `verify`, sharing the lesson-level logic: `claimId`, `checkExercise`; `issues` is the shared sink. */
+/** Helpers for a mode's `verify`, sharing the lesson-level logic: `claimId`, `checkExercise`, `checkTextKey` (a full `<namespace>:<path>`
+ * key resolves in the English locale); `issues` is the shared sink. */
 export interface ModeVerifyContext {
   readonly issues: string[];
   claimId(id: string, where: string): void;
   checkExercise(exercise: ExerciseDefBase, where: string): void;
+  checkTextKey(key: string, where: string): void;
 }
 
 /** One mini-game mode's content behaviour. Method syntax: bivariance lets a precise mode widen with no cast. */

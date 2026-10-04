@@ -9,20 +9,13 @@ import { parse, stringify } from 'yaml';
 import { compileAll } from '../../compile-all.ts';
 import { ContentError, hasKeyPath, loadLocales } from '../../load.ts';
 import { PLATFORM_LOCALES_DIR } from '../../paths.ts';
-import {
-  CARD_FIXTURE_CHARACTERS,
-  CARD_FIXTURE_ROOT,
-  CARD_FIXTURE_TEMPLATES,
-} from '../../testing/card-fixture.ts';
+import { CARD_FIXTURE_ROOT, createCardFixtureContent } from '../../testing/card-fixture.ts';
 import type { ExerciseDefBase } from '@learn/platform-core';
 import { makeCompileContext } from '../kind-content.ts';
-import { CARD_KIND_CONTENT, cardExerciseSchema, createCardContent } from './content.ts';
+import { CARD_KIND_CONTENT, cardExerciseSchema } from './content.ts';
 import { cardStimulus } from './stimulus.ts';
 
-const content = createCardContent({
-  characters: CARD_FIXTURE_CHARACTERS,
-  templates: CARD_FIXTURE_TEMPLATES,
-});
+const content = createCardFixtureContent();
 
 /** Every issue one raw exercise yields: schema, then compile, then the kind's verify. */
 function issuesOf(raw: Record<string, unknown>): readonly string[] {
@@ -412,7 +405,7 @@ describe('card demo', () => {
 describe('the card fixture subject', () => {
   const compiled = compileAll(content, CARD_FIXTURE_ROOT);
 
-  it('compiles: one lesson using all four kinds (three more generated), one series boss, tracks, badges', () => {
+  it('compiles: one lesson using all four kinds (three more generated), a series boss and a duel, tracks, badges', () => {
     expect(compiled.content.lessons.map((lesson) => lesson.id)).toEqual(['count-up']);
     const [lesson] = compiled.content.lessons;
     expect(
@@ -431,8 +424,21 @@ describe('the card fixture subject', () => {
       textKey: 'lessons:count-up.demo',
       prompt: { emoji: '🍎🍎🍎', big: '3' },
     });
-    expect(compiled.content.minigames).toHaveLength(1);
-    expect(compiled.content.minigames[0]).toMatchObject({ id: 'parade', mode: 'series' });
+    expect(compiled.content.minigames).toHaveLength(2);
+    expect(compiled.content.minigames.map((game) => [game.id, game.mode])).toEqual([
+      ['parade', 'series'],
+      ['take-away', 'duel'],
+    ]);
+    expect(compiled.content.minigames[1]).toMatchObject({
+      game: 'take-away-fixture',
+      params: { pile: 6 },
+      level: 1,
+      first: 'bot',
+      hintKey: 'lessons:take-away-hint',
+      titleKey: 'lessons:take-away.title',
+      goalKey: 'lessons:take-away.goal',
+      unlockAfter: 'count-up',
+    });
     expect(compiled.tracks.tracks).toHaveLength(1);
     expect(compiled.badges).toHaveLength(1);
   });
@@ -571,6 +577,23 @@ describe('the card fixture subject', () => {
       expect(typeof text, ref).toBe('string');
       expect(spoken.has(text as string), ref).toBe(true);
     }
+  });
+
+  it("voices the duel's lines: turn, result, the game's own hint and the bot's name from the lesson's character", () => {
+    const spoken = new Set(compiled.voiceTexts.entries.map((entry) => entry.text));
+    for (const text of [
+      'Your turn',
+      "Fox's turn",
+      'You won! Great thinking!',
+      'I won this time. Try again!',
+      'A draw! Try again.',
+      'Leave me a pile of 3.',
+      'Take 1 or 2 stones. Whoever takes the last stone wins!',
+    ]) {
+      expect(spoken.has(text), text).toBe(true);
+    }
+    // The fixture's duel has its own hint, so the platform's default line is not inventoried.
+    expect(spoken.has('Look for a move that leaves me stuck.')).toBe(false);
   });
 
   it('every text the kit speaks or shows resolves in the merged English bundle', () => {
@@ -770,7 +793,9 @@ describe('a broken card fixture subject', () => {
       if (error instanceof ContentError) issues = error.issues;
       else throw error;
     }
-    expect(issues).toEqual([
+    // A mini-game file's schema is a union over the subject's modes: with `duel` next to `series`, the issues also list what the
+    // duel branch finds missing, so only the lines about the rounds are compared.
+    expect(issues.filter((issue) => issue.includes(': rounds.'))).toEqual([
       'minigames/parade.yaml: rounds.3.generate.template: unknown template "nope"',
     ]);
   });

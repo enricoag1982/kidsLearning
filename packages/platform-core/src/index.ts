@@ -199,6 +199,25 @@ export {
   seriesStars,
 } from './domain/exercise/modes/series/engine.ts';
 
+// The opt-in turn-based `duel` mini-game mode: a subject supplies a `TurnGame` and registers `createDuelMode` itself.
+export type {
+  DuelGameDef,
+  DuelSide,
+  DuelState,
+  TurnGame,
+} from './domain/exercise/modes/duel/def.ts';
+export { DUEL_MISTAKE_RATE } from './domain/exercise/modes/duel/def.ts';
+export {
+  botMove,
+  duelGameOf,
+  duelHint,
+  duelStars,
+  kidMove,
+  startDuel,
+} from './domain/exercise/modes/duel/engine.ts';
+export type { DuelMode } from './domain/exercise/modes/duel/mode.ts';
+export { createDuelMode, isDuelMode } from './domain/exercise/modes/duel/mode.ts';
+
 // A subject's kind/mode registries and app identifiers, injected via `AppDeps.subject` / `AppDeps.app`.
 export type {
   AnyKind,

@@ -18,6 +18,10 @@ parade:
 parade-r1: What is nine minus four?
 parade-r2: Put the letters in order.
 parade-r3: Is this a fox?
+take-away:
+  title: Take Away
+  goal: Take 1 or 2 stones. Whoever takes the last stone wins!
+take-away-hint: Leave me a pile of 3.
 bugs:
   off-by-one: So close! Count the last jump again.
 templates:
