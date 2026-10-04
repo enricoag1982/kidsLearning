@@ -14,6 +14,21 @@
   --color-board-dark: #c49a6c;
   --color-board-frame: #8a6a48;
 
+  /* Generic grid board (`ui/grid`): soft cream cells in a meadow frame; rock, star, flag, footprints, target ring. */
+  --color-grid-cell: #f6f0d9;
+  --color-grid-cell-alt: #ece9c9;
+  --color-grid-line: #d4cba5;
+  --color-grid-frame: #7ea06a;
+  --color-grid-filled: #3d4f58;
+  --color-grid-rock: #a39a89;
+  --color-grid-rock-edge: #5f584b;
+  --color-grid-star: #e9a92b;
+  --color-grid-star-edge: #8c5e08;
+  --color-grid-goal: #2f6fb0;
+  --color-grid-goal-edge: #1f3f6d;
+  --color-grid-trail: #a99a7a;
+  --color-grid-target: #f4d35e;
+
   /* Raised look: each border is a darker shade of its fill, the ledge darker still, so the edge
      clears WCAG 2.2 SC 1.4.11 (3:1); neutral buttons share one taupe for both. */
   --color-edge-neutral: #8c7b61;
