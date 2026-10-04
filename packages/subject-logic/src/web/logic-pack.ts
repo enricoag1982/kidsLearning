@@ -1,6 +1,7 @@
 // The logic `SubjectWeb` pack: the card kit's web (card prompt, surfaces) over the compiled logic content, with logic's kind UI
-// registry in place of the kit's, so logic's own kinds (`group`, `grid-fill`) join `LOGIC_KIND_UI`. Pip the Panda is the platform's
-// own panda image, so `art` is empty; add images by id (used as `image:` in the YAML) as the lessons need them.
+// registry in place of the kit's, so logic's own kinds (`grid-fill` since m14.8, `group` later) join `LOGIC_KIND_UI`. The dev playground
+// (`/#logic`) shows `grid-fill` on fixture exercises. Pip the Panda is the platform's own panda image, so `art` is empty; add images by
+// id (used as `image:` in the YAML) as the lessons need them.
 import type { BadgeDef, CompiledContent, TracksCatalog } from '@learn/platform-core';
 import { createBundledContentSource } from '@learn/platform-web/adapters/content/bundled-content-source.ts';
 import type { SubjectWeb } from '@learn/platform-web/app/subject.ts';
@@ -25,4 +26,9 @@ export const logicWeb: SubjectWeb = {
     rankGlyphs: { thinker: '1' },
   }),
   kinds: LOGIC_KIND_UI,
+  // Gated on the compile-time DEV flag so Rollup drops the dev-playground subtree: an ungated `dev` field keeps its `import()` as a
+  // live split point.
+  dev: import.meta.env.DEV
+    ? { '#logic': () => import('./dev/LogicPlayground.tsx').then((m) => m.LogicPlayground) }
+    : undefined,
 };
