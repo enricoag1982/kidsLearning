@@ -135,7 +135,9 @@ describe('place-value YAML', () => {
     expect(issuesOf(pv({ colour: 'red' }))).toHaveLength(1);
     expect(issuesOf(pv({ start: 'none' }))).toHaveLength(1);
     expect(issuesOf(pv({ start: [0, 1.5, 0] }))).toHaveLength(1);
-    expect(issuesOf(pv({ prompt: {} }))).toEqual(['prompt needs "emoji", "big" or "image"']);
+    expect(issuesOf(pv({ prompt: {} }))).toEqual([
+      'prompt needs "emoji", "big", "image" or "shapes"',
+    ]);
   });
 
   it('rejects an empty reasons list, a bad text ref, a non-whole value and an unknown reason field', () => {

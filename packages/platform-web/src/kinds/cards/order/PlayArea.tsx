@@ -2,6 +2,7 @@ import type { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { CardItem } from '@learn/platform-core/domain/exercise/kinds/cards/prompt';
 import { tContent } from '../../../content-text.ts';
+import type { ContentText } from '../../../content-text.ts';
 import { tapClass } from '../../../ui/ds/tap.ts';
 import { ExerciseControls } from '../../ExerciseControls.tsx';
 import { ExerciseFrame } from '../../ExercisePlay.tsx';
@@ -25,7 +26,7 @@ function Slots({
   readonly total: number;
 }): JSX.Element {
   const { t } = useTranslation();
-  const text = (key: string): string => tContent(t, key);
+  const text: ContentText = (key, options) => tContent(t, key, options);
   return (
     <ol aria-label={t('cards.order-slots')} className="flex flex-wrap justify-center gap-2">
       {Array.from({ length: total }, (_unused, index) => {
@@ -77,7 +78,7 @@ function Pool({
   readonly onPlace: (itemId: string) => void;
 }): JSX.Element {
   const { t } = useTranslation();
-  const text = (key: string): string => tContent(t, key);
+  const text: ContentText = (key, options) => tContent(t, key, options);
   return (
     <div
       role="group"

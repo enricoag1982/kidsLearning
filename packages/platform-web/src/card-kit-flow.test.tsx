@@ -20,6 +20,7 @@ import { cardSolutionOf } from '@learn/platform-core/domain/exercise/kinds/cards
 import App from './App.tsx';
 import { createAppServices } from './app/services.ts';
 import { tContent } from './content-text.ts';
+import type { ContentText } from './content-text.ts';
 import { initI18n } from './i18n.ts';
 import { cardKindE2EOf } from './kinds/cards/e2e-registry.ts';
 import type { CardKindE2E } from './kinds/cards/e2e-registry.ts';
@@ -57,7 +58,7 @@ beforeAll(() => {
 });
 
 /** A text key as the app resolves it (`lessons:count-01-opt-c`, `cards.true`). */
-const text = (key: string): string => tContent(i18next.t, key);
+const text: ContentText = (key, options) => tContent(i18next.t, key, options);
 const page = jsdomPage() as unknown as Parameters<CardKindE2E['perform']>[0];
 
 /** The one-subject app on a fresh storage with a parent code and the profile `Mia`, her subject data in `app.subjectData`. */
@@ -164,6 +165,42 @@ describe('a card subject end to end', () => {
     expect(progress?.bestStars).toEqual(Object.fromEntries(EXERCISES.map((def) => [def.id, 3])));
     // The subject's data lives in the subject's own store.
     expect(await app.subjectData.cards?.progress.listLessons(profileId)).toHaveLength(1);
+  });
+
+  it('draws shape cards and a prompt row, each named for a screen reader and the e2e driver', async () => {
+    const { services } = await cardApp();
+    render(<App services={services} />);
+    await openLesson();
+    const [first, oddOneOut, pattern] = GUIDED;
+    if (first === undefined || oddOneOut === undefined || pattern === undefined) {
+      throw new Error('the card fixture has fewer than three guided tries');
+    }
+    await solve(first);
+    await next();
+
+    // odd one out: three shape options, no prompt; two share a name.
+    await screen.findByText(instruction(oddOneOut));
+    expect(screen.getAllByRole('button', { name: 'blue circle' })).toHaveLength(2);
+    expect(
+      screen.getByRole('button', { name: 'blue square' }).querySelectorAll('svg'),
+    ).toHaveLength(1);
+    await solve(oddOneOut);
+    await next();
+
+    // pattern: the row is one image with a gap in it; the options show their counts.
+    await screen.findByText(instruction(pattern));
+    const row = screen.getByRole('img', {
+      name: 'Row of shapes: red circle, blue square, red circle, a gap',
+    });
+    expect(row.querySelectorAll('svg')).toHaveLength(3);
+    expect(row.querySelector('[data-gap]')?.textContent).toBe('?');
+    expect(
+      screen.getByRole('button', { name: '3 small yellow triangles' }).querySelectorAll('svg'),
+    ).toHaveLength(3);
+    await play(pattern, [{ type: 'answer-choice', optionId: 'c' }]);
+    await expectNote('Not quite! Try again.');
+    await solve(pattern);
+    await next();
   });
 
   it("a wrong first try speaks the kind's own note and costs a star; the next try still solves", async () => {

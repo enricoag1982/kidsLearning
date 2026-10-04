@@ -9,6 +9,27 @@ guided:
     type: true-false
     prompt: { emoji: 🍎🍎 }
     answer: true
+  # Shape tokens: an odd one out among items, and a pattern row with a gap over shape options.
+  - id: count-g2
+    type: choice
+    options:
+      - { id: a, shape: { kind: circle, colour: blue } }
+      - { id: b, shape: { kind: circle, colour: blue } }
+      - { id: c, shape: { kind: square, colour: blue } }
+    answer: c
+  - id: count-g3
+    type: choice
+    prompt:
+      shapes:
+        - { kind: circle, colour: red }
+        - { kind: square, colour: blue }
+        - { kind: circle, colour: red }
+        - gap
+    options:
+      - { id: a, shape: { kind: square, colour: blue } }
+      - { id: b, shape: { kind: circle, colour: red } }
+      - { id: c, shape: { kind: triangle, colour: yellow, size: small, count: 3 } }
+    answer: a
 exercises:
   - id: count-01
     type: choice

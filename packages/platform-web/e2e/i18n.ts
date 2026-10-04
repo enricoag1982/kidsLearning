@@ -1,9 +1,11 @@
 import i18next, { type ResourceLanguage } from 'i18next';
+import type { ContentText } from '../src/content-text.ts';
 import { i18nOptions } from '../src/i18n-options.ts';
 
 export interface E2ETexts {
-  /** Resolves a text key (`lessons:x.title`, or a namespace-less `common` key) to the compiled English string. */
-  contentText: (key: string) => string;
+  /** Resolves a text key (`lessons:x.title`, or a namespace-less `common` key) to the compiled English string; `options` fills
+   * its `{{vars}}` and picks a plural (`{ count }`) the way the app's `t()` does. */
+  contentText: ContentText;
   /** Fills every `{{key}}` of a compiled template (no plural handling). */
   interpolate: (template: string, vars: Readonly<Record<string, string | number>>) => string;
 }
@@ -16,13 +18,13 @@ export function createE2ETexts(resources: { readonly en: ResourceLanguage }): E2
   const instance = i18next.createInstance();
   void instance.init(i18nOptions(resources));
   return {
-    contentText: (key) => {
+    contentText: (key, options) => {
       // Dynamic keys (read from built content) cannot satisfy the literal key union of `t()`.
       const dynamic = instance.t as unknown as (
         k: string,
         opts?: Readonly<Record<string, unknown>>,
       ) => string;
-      return dynamic(key, { interpolation: { skipOnVariables: true } });
+      return dynamic(key, { ...options, interpolation: { skipOnVariables: true } });
     },
     interpolate: (template, vars) => {
       return instance.services.interpolator.interpolate(template, vars, instance.language, {});
