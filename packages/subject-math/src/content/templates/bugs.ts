@@ -1,6 +1,7 @@
-// The known misconceptions ("bugs") of the W1 and W2 templates (docs/subjects/math/curriculum.md §3 "Bugs"): each bug id is an authoring
-// name and a `lessons:` text `bugs.<id>` (the one sentence spoken when the wrong answer matches), and each has a pure model of the
-// wrong answer it produces, so a template can offer it as a distractor / reason. Numbers are digit lists, high to low (`numeral.ts`).
+// The known misconceptions ("bugs") of the W1, W2 and W3 templates (docs/subjects/math/curriculum.md §3 "Bugs"): each bug id is an
+// authoring name and a `lessons:` text `bugs.<id>` (the one sentence spoken when the wrong answer matches), and each has a pure model
+// of the wrong answer it produces, so a template can offer it as a distractor / reason. Numbers are digit lists, high to low
+// (`numeral.ts`).
 
 export const W1_BUG_IDS = [
   'append',
@@ -24,7 +25,9 @@ export const W2_BUG_IDS = [
   'wrong-op',
 ] as const;
 
-export const BUG_IDS = [...W1_BUG_IDS, ...W2_BUG_IDS] as const;
+export const W3_BUG_IDS = ['add-factors', 'neighbour', 'digit-swap'] as const;
+
+export const BUG_IDS = [...W1_BUG_IDS, ...W2_BUG_IDS, ...W3_BUG_IDS] as const;
 
 export type BugId = (typeof BUG_IDS)[number];
 
@@ -142,4 +145,35 @@ export function forgotAdjust(n: number, near: 9 | 99, op: '+' | '-'): number {
  * smaller), the sum of a subtraction story. */
 export function wrongOperation(a: number, b: number, adds: boolean): number {
   return adds ? Math.abs(a - b) : a + b;
+}
+
+// W3 (m13.14): the times-table bugs. A fact is `a × b` (a the table, b how many of it).
+
+/** `add-factors`: the factors added instead of multiplied (3 × 4 → 7). */
+export function addFactors(a: number, b: number): number {
+  return a + b;
+}
+
+/** `neighbour`: the fact one step along the table, never the right answer or the added factors (those are other wrong answers): the
+ * one under the answer (a × (b − 1)) when there is one, else the one over (a × (b + 1)). `null` when no such fact exists (a = 0, or
+ * 1 × 1: every neighbour is the answer or the sum). */
+export function neighbourFact(a: number, b: number): number | null {
+  for (const steps of [b - 1, b + 1]) {
+    const value = a * steps;
+    if (steps >= 1 && value !== a * b && value !== addFactors(a, b)) return value;
+  }
+  return null;
+}
+
+/** The wrong number a child types for the missing factor of `a × ? = a × b`: one step under (b − 1), or over at b = 1. */
+export function neighbourFactor(b: number): number {
+  return b >= 2 ? b - 1 : b + 1;
+}
+
+/** `digit-swap`: the digits of a 2-digit answer the wrong way round (42 → 24). `null` for any other number, one that ends in 0 (its swap
+ * is no 2-digit number: 40 → 04) and one whose digits are alike (33). */
+export function swapDigits(n: number): number | null {
+  if (!Number.isInteger(n) || n < 10 || n > 99 || n % 10 === 0) return null;
+  const swapped = (n % 10) * 10 + Math.floor(n / 10);
+  return swapped === n ? null : swapped;
 }

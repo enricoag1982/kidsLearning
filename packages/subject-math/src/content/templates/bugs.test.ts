@@ -1,6 +1,7 @@
 // The bug models: each wrong answer of the curriculum's §3 table, pinned by hand-worked examples.
 import { describe, expect, it } from 'vitest';
 import {
+  addFactors,
   appendPlaces,
   BUG_IDS,
   bugRef,
@@ -11,13 +12,17 @@ import {
   forgotAdjust,
   halveTensOnly,
   nearestTo,
+  neighbourFact,
+  neighbourFactor,
   onesFirstSign,
   roundDownBug,
+  swapDigits,
   swapHundredsTens,
   swapTensOnes,
   valueOf,
   W1_BUG_IDS,
   W2_BUG_IDS,
+  W3_BUG_IDS,
   wrongOperation,
   wrongPlace,
 } from './bugs.ts';
@@ -37,11 +42,12 @@ describe('bug texts', () => {
     }
   });
 
-  it('lists the W1 and the W2 bugs once each', () => {
+  it('lists the W1, the W2 and the W3 bugs once each', () => {
     expect(W1_BUG_IDS).toHaveLength(7);
     expect(W2_BUG_IDS).toHaveLength(9);
+    expect(W3_BUG_IDS).toHaveLength(3);
     expect(new Set(BUG_IDS).size).toBe(BUG_IDS.length);
-    expect(BUG_IDS).toHaveLength(W1_BUG_IDS.length + W2_BUG_IDS.length);
+    expect(BUG_IDS).toHaveLength(W1_BUG_IDS.length + W2_BUG_IDS.length + W3_BUG_IDS.length);
   });
 
   it('refs are bugs.<id>', () => {
@@ -93,6 +99,45 @@ describe('bug models', () => {
     expect(roundDownBug(45, 10)).toBe('five-down');
     expect(roundDownBug(350, 100)).toBe('five-down');
     expect(roundDownBug(367, 100)).toBe('truncate');
+  });
+
+  it('add-factors adds the factors (3 × 4 → 7)', () => {
+    expect(addFactors(3, 4)).toBe(7);
+    expect(addFactors(0, 9)).toBe(9);
+  });
+
+  it('neighbour is the fact one step under (7 × 6 → 7 × 5), over at b = 1, over when the one under is the added factors, never the answer', () => {
+    expect(neighbourFact(7, 6)).toBe(35);
+    expect(neighbourFact(4, 1)).toBe(8);
+    // 3 × 3: the one under (6) is 3 + 3, so 3 × 4; 2 × 4: 6 is 2 + 4, so 2 × 5.
+    expect(neighbourFact(3, 3)).toBe(12);
+    expect(neighbourFact(2, 4)).toBe(10);
+    // 2 × 2 is also 2 + 2: the neighbour is still 2 × 1.
+    expect(neighbourFact(2, 2)).toBe(2);
+    // No neighbour: 0 × n (every fact is 0), 1 × 1 (the one over, 2, is 1 + 1).
+    expect(neighbourFact(0, 5)).toBeNull();
+    expect(neighbourFact(1, 1)).toBeNull();
+    for (let a = 0; a <= 10; a += 1) {
+      for (let b = 1; b <= 10; b += 1) {
+        expect(neighbourFact(a, b), `${String(a)} × ${String(b)}`).not.toBe(a * b);
+      }
+    }
+  });
+
+  it('neighbourFactor is the missing number one under, or one over at 1', () => {
+    expect(neighbourFactor(7)).toBe(6);
+    expect(neighbourFactor(2)).toBe(1);
+    expect(neighbourFactor(1)).toBe(2);
+  });
+
+  it('digit-swap exchanges the digits of a 2-digit number (42 → 24), and nothing else', () => {
+    expect(swapDigits(42)).toBe(24);
+    expect(swapDigits(81)).toBe(18);
+    expect(swapDigits(10)).toBeNull();
+    expect(swapDigits(40)).toBeNull();
+    expect(swapDigits(33)).toBeNull();
+    expect(swapDigits(7)).toBeNull();
+    expect(swapDigits(100)).toBeNull();
   });
 });
 

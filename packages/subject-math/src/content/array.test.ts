@@ -350,6 +350,54 @@ variants:
     }
   });
 
+  it('voices every note an array exercise can speak: the wrong note, the hints, the turned-round note where it can happen, the reasons', () => {
+    const compiled = compileAll<MathContent>(mathContent, rootWith(LESSON, TEXTS));
+    const spoken = (source: string): string[] =>
+      compiled.voiceTexts.entries
+        .filter((entry) => entry.source === source)
+        .map((entry) => entry.text);
+    const plain = spoken('exercise-note');
+    for (const text of [
+      'Count the rows and the dots in each row.',
+      // ar-g1 / ar-01 / ar-easy: the rows are fixed and the array is not square.
+      'Same number, but count the rows again.',
+      'Rows go across, like lines in a book.',
+      // One per `cols` of the lesson (3 and 4); the answer for hint 3.
+      'Each row has 3.',
+      'Each row has 4.',
+      'Here is the answer.',
+      'Each row needs 4 dots. Count along one row.',
+      'Amazing!',
+      'Well done!',
+      'Good try!',
+    ]) {
+      expect(plain, text).toContain(text);
+    }
+    expect(plain).not.toContain('Each row has 5.');
+    // The easier offer joins the default wrong note, and the notes of the exercise that has an easier variant (ar-01: its reason and
+    // its turned-round array).
+    expect(spoken('exercise-note-easier-offer')).toEqual(
+      expect.arrayContaining([
+        'Count the rows and the dots in each row. This one is tricky. Want an easier one?',
+        'Each row needs 4 dots. Count along one row. This one is tricky. Want an easier one?',
+        'Same number, but count the rows again. This one is tricky. Want an easier one?',
+      ]),
+    );
+  });
+
+  it('voices no turned-round note when no exercise can produce it (rows free, or a square array)', () => {
+    const free = LESSON.replace('rows: 2\n    cols: 3', 'rows: 3\n    cols: 3')
+      .replace(
+        'rows: 3\n    cols: 4\n    prompt: { big: 3 × 4 }\n    reasons: [{ rows: 3, cols: 3,',
+        'rows: 3\n    cols: 4\n    fixed-rows: false\n    prompt: { big: 3 × 4 }\n    reasons: [{ rows: 3, cols: 5,',
+      )
+      .replace('rows: 1\n    cols: 4', 'rows: 2\n    cols: 2');
+    const compiled = compileAll<MathContent>(mathContent, rootWith(free, TEXTS));
+    const plain = compiled.voiceTexts.entries.map((entry) => entry.text);
+    expect(plain).toContain('Count the rows and the dots in each row.');
+    expect(plain).not.toContain('Same number, but count the rows again.');
+  });
+
   it('fails the build on a verify issue, on a reason text that does not exist and on a bad shape', () => {
     const expectIssue = (lesson: string, texts: string, message: RegExp): void => {
       expect(() => compileAll<MathContent>(mathContent, rootWith(lesson, texts))).toThrow(message);

@@ -15,7 +15,7 @@ import { resolveText } from '@learn/platform-content/text-resolve';
 import type { MathContent, MathExerciseDef } from '../../core/types.ts';
 import { playSolution, playWrongThenSolve, starsFor } from '../../testing/play.ts';
 import { mathContent, MATH_TEMPLATES } from '../math-content.ts';
-import { BUG_IDS, W1_BUG_IDS } from './bugs.ts';
+import { BUG_IDS, W1_BUG_IDS, W3_BUG_IDS } from './bugs.ts';
 import {
   W1_FIXTURE_LESSON,
   W1_FIXTURE_LESSON_ID,
@@ -222,7 +222,11 @@ describe('the shipped W1 content, built from these templates (m13.10)', () => {
         ? Object.values(bugs).filter((text) => typeof text === 'string')
         : [];
     expect(bugTexts).toHaveLength(BUG_IDS.length);
-    for (const text of bugTexts) expect(listed).toContain(text);
+    // The W3 bugs are spoken once W3 ships (`m13.14` c2).
+    const w3Texts = W3_BUG_IDS.map((id) => (typeof bugs === 'object' ? bugs[id] : undefined));
+    for (const text of bugTexts.filter((candidate) => !w3Texts.includes(candidate))) {
+      expect(listed).toContain(text);
+    }
     for (const text of ['Build 243 with blocks.', 'Build 305 with blocks.', 'Is this true?']) {
       expect(listed, text).toContain(text);
     }
