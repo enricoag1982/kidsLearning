@@ -5,8 +5,8 @@ import { textRefSchema } from '../../schema.ts';
 import type { ExerciseKindContent } from '../kind-content.ts';
 import { cardExerciseFields } from './prompt.ts';
 
-/** The pad's most digits, and so the largest answer (9999). */
-const MAX_PAD_DIGITS = 4;
+/** The pad's most digits, and so the largest answer (99 999). */
+const MAX_PAD_DIGITS = 5;
 
 /** A wrong value and the text ref of the reason spoken when it is typed (a known misconception). */
 const reasonSchema = z

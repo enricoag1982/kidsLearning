@@ -54,6 +54,15 @@ describe('number-entry digit rules', () => {
     expect(run([enter(7), enter(1)], kind.init(single)).state.entry).toBe('7');
   });
 
+  it('takes five digits for an answer up to 99 999 and solves 10 000', () => {
+    const five: NumberEntryDef = { ...def, answer: 10000, maxDigits: 5 };
+    const typed = [enter(1), enter(0), enter(0), enter(0), enter(0), enter(7)];
+    const { state, outcomes } = run(typed, kind.init(five));
+    expect(state.entry).toBe('10000');
+    expect(outcomes).toEqual(['typed', 'typed', 'typed', 'typed', 'typed', 'ignored']);
+    expect(run([...typed, submit], kind.init(five)).state.solved).toBe(true);
+  });
+
   it('replaces a lone 0 instead of appending to it', () => {
     expect(run([enter(0), enter(7)]).state.entry).toBe('7');
     expect(run([enter(0), enter(0)]).state.entry).toBe('0');
@@ -149,6 +158,7 @@ describe('number-entry solution', () => {
       [99, 2],
       [9, 1],
       [9999, 4],
+      [99999, 5],
       [0, 2],
     ] as const) {
       const edge: NumberEntryDef = { ...def, answer, maxDigits };
