@@ -171,6 +171,8 @@ export default defineConfig([
       // The duel mode's driver (it types Playwright's `Page`) and the unit test that runs it: reachable otherwise only from
       // Playwright specs through a subject's e2e registry.
       'packages/platform-web/src/modes/duel/e2e.{ts,test.tsx}',
+      // The opt-in `group` kind's driver and its unit test, reachable the same way.
+      'packages/platform-web/src/kinds/group/e2e.{ts,test.tsx}',
     ],
     rules: {
       'no-restricted-imports': [

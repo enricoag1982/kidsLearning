@@ -243,6 +243,222 @@
      ]
     }
    ]
+  },
+  {
+   "id": "sort-up",
+   "world": "sorting",
+   "order": 1,
+   "concept": "sorting",
+   "character": "fox",
+   "titleKey": "lessons:sort-up.title",
+   "storyKey": "lessons:sort-up.story",
+   "demo": {
+    "textKey": "lessons:sort-up.demo",
+    "prompt": {
+     "shapes": [
+      {
+       "kind": "circle",
+       "colour": "red"
+      },
+      {
+       "kind": "square",
+       "colour": "blue"
+      }
+     ]
+    }
+   },
+   "guided": [],
+   "exercises": [
+    {
+     "id": "sort-01",
+     "concept": "sorting",
+     "textKey": "lessons:sort-01",
+     "type": "group",
+     "layout": "row",
+     "boxes": [
+      {
+       "id": "red",
+       "textKey": "lessons:sort-red",
+       "rule": {
+        "all": [
+         "colour:red"
+        ]
+       }
+      },
+      {
+       "id": "blue",
+       "textKey": "lessons:sort-blue",
+       "rule": {
+        "all": [
+         "colour:blue"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "r-circle",
+       "shape": {
+        "kind": "circle",
+        "colour": "red"
+       }
+      },
+      {
+       "id": "b-square",
+       "shape": {
+        "kind": "square",
+        "colour": "blue"
+       }
+      },
+      {
+       "id": "r-triangle",
+       "shape": {
+        "kind": "triangle",
+        "colour": "red"
+       }
+      },
+      {
+       "id": "b-star",
+       "shape": {
+        "kind": "star",
+        "colour": "blue"
+       }
+      }
+     ],
+     "answer": {
+      "r-circle": "red",
+      "b-square": "blue",
+      "r-triangle": "red",
+      "b-star": "blue"
+     }
+    },
+    {
+     "id": "sort-02",
+     "concept": "sorting",
+     "textKey": "lessons:sort-02",
+     "type": "group",
+     "layout": "carroll",
+     "axes": [
+      {
+       "textKey": "lessons:sort-red",
+       "notTextKey": "lessons:sort-not-red",
+       "rule": {
+        "all": [
+         "colour:red"
+        ]
+       }
+      },
+      {
+       "textKey": "lessons:sort-circle",
+       "notTextKey": "lessons:sort-not-circle",
+       "rule": {
+        "all": [
+         "kind:circle"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "r-circle",
+       "shape": {
+        "kind": "circle",
+        "colour": "red"
+       }
+      },
+      {
+       "id": "r-square",
+       "shape": {
+        "kind": "square",
+        "colour": "red"
+       }
+      },
+      {
+       "id": "b-circle",
+       "shape": {
+        "kind": "circle",
+        "colour": "blue"
+       }
+      },
+      {
+       "id": "y-triangle",
+       "shape": {
+        "kind": "triangle",
+        "colour": "yellow"
+       }
+      }
+     ],
+     "answer": {
+      "r-circle": "a-b",
+      "r-square": "a-not-b",
+      "b-circle": "not-a-b",
+      "y-triangle": "not-a-not-b"
+     }
+    },
+    {
+     "id": "sort-03",
+     "concept": "sorting",
+     "textKey": "lessons:sort-03",
+     "type": "group",
+     "layout": "venn",
+     "axes": [
+      {
+       "textKey": "lessons:sort-square",
+       "notTextKey": "lessons:sort-not-square",
+       "rule": {
+        "all": [
+         "kind:square"
+        ]
+       }
+      },
+      {
+       "textKey": "lessons:sort-blue",
+       "notTextKey": "lessons:sort-not-blue",
+       "rule": {
+        "all": [
+         "colour:blue"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "b-square",
+       "shape": {
+        "kind": "square",
+        "colour": "blue"
+       }
+      },
+      {
+       "id": "r-square",
+       "shape": {
+        "kind": "square",
+        "colour": "red"
+       }
+      },
+      {
+       "id": "b-triangle",
+       "shape": {
+        "kind": "triangle",
+        "colour": "blue"
+       }
+      },
+      {
+       "id": "y-circle",
+       "shape": {
+        "kind": "circle",
+        "colour": "yellow"
+       }
+      }
+     ],
+     "answer": {
+      "b-square": "both",
+      "r-square": "only-a",
+      "b-triangle": "only-b",
+      "y-circle": "neither"
+     }
+    }
+   ]
   }
  ],
  "minigames": [

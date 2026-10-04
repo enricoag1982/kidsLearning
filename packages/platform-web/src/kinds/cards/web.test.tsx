@@ -1,12 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { screen } from '@testing-library/react';
-import { cardLesson, cardCore, renderCardUi } from '../../testing/card-test-entry.tsx';
+import { cardLesson, renderCardUi } from '../../testing/card-test-entry.tsx';
 import { createCardWeb } from './web.ts';
 import { SurfaceDemo, SurfaceStory, SurfaceView } from './surface.tsx';
+import { createCardCore } from '@learn/platform-core/domain/exercise/kinds/cards/core';
 import { initCardState } from '@learn/platform-core/domain/exercise/kinds/cards/def';
+import { CARD_FIXTURE_CHARACTERS } from '@learn/platform-content/testing/card-fixture';
 import { CARD_SAMPLES, makeContentSource } from '@learn/platform-core/testing';
 
 const content = makeContentSource({ lessons: [cardLesson] });
+/** The bare kit's core (the test entry's `cardCore` also carries the opt-in `group` kind, which `createCardWeb` does not draw). */
+const cardCore = createCardCore({ id: 'cards', characters: CARD_FIXTURE_CHARACTERS });
 const web = createCardWeb({
   core: cardCore,
   content,

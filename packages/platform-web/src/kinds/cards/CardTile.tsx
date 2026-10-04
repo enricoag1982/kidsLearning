@@ -8,35 +8,49 @@ export interface CardTileProps {
   readonly item: CardItem;
   /** The item's text, resolved by the caller; a tile whose host draws the text itself (choice options) passes none. */
   readonly text?: string;
+  /** A small face (a card placed in a box): smaller picture, emoji, big text, shape and text. */
+  readonly compact?: boolean;
 }
 
 /** One card's face: its emoji, big text, image and shape over its text. The drawn parts are `aria-hidden`: the host names the tile
  * (`cardItemLabel`). */
-export function CardTile({ item, text }: CardTileProps): JSX.Element {
+export function CardTile({ item, text, compact = false }: CardTileProps): JSX.Element {
   const pack = usePack();
   return (
-    <span className="flex flex-col items-center justify-center gap-1">
+    <span
+      className="flex flex-col items-center justify-center gap-1"
+      data-compact={compact || undefined}
+    >
       {item.image !== undefined && (
         <img
           src={animalImage(item.image, pack.art)}
           alt=""
           aria-hidden="true"
           draggable={false}
-          className="h-12 w-12 object-contain"
+          className={compact ? 'h-8 w-8 object-contain' : 'h-12 w-12 object-contain'}
         />
       )}
       {item.emoji !== undefined && (
-        <span aria-hidden="true" className="text-5xl leading-none">
+        <span aria-hidden="true" className={`leading-none ${compact ? 'text-3xl' : 'text-5xl'}`}>
           {item.emoji}
         </span>
       )}
       {item.big !== undefined && (
-        <span aria-hidden="true" className="font-display text-4xl font-bold">
+        <span
+          aria-hidden="true"
+          className={`font-display font-bold ${compact ? 'text-2xl' : 'text-4xl'}`}
+        >
           {item.big}
         </span>
       )}
-      {item.shape !== undefined && <ShapeCluster shape={item.shape} />}
-      {text !== undefined && <span className="text-center text-sm font-semibold">{text}</span>}
+      {item.shape !== undefined && (
+        <ShapeCluster shape={item.shape} className={compact ? 'h-8 w-8' : undefined} />
+      )}
+      {text !== undefined && (
+        <span className={`text-center font-semibold ${compact ? 'text-xs' : 'text-sm'}`}>
+          {text}
+        </span>
+      )}
     </span>
   );
 }
