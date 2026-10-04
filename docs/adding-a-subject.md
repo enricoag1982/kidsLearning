@@ -51,7 +51,7 @@ Layout: `tracks.yaml` (worlds, ranks), `badges.yaml`, `lessons/<world>/<lesson>.
 |---|---|---|
 | `choice` | `options` (≥ 2 items), `answer` (option id) | option ids unique; `answer` is an option |
 | `true-false` | `answer: true \| false`; the statement = text + prompt | none |
-| `number-entry` | `answer` 0–9999, `maxDigits` 1–4 (default `max(2, digits of answer)`) | answer fits `maxDigits` |
+| `number-entry` | `answer` 0–99999, `maxDigits` 1–5 (default `max(2, digits of answer)`) | answer fits `maxDigits` |
 | `order` | `items` (≥ 2, display order), `answer` (every item id, right order) | ids unique; `answer` is a permutation; differs from display order |
 
 ```yaml
