@@ -53,7 +53,7 @@ describe.each(allExercises())('$where ($exercise.type)', ({ exercise }) => {
 });
 
 describe('the fixture world', () => {
-  it('has the one lesson: 2 guided tries and 5 scored exercises, taught by the Owl', () => {
+  it('has the one lesson: 2 guided tries and 5 scored exercises, taught by the Fox', () => {
     expect(
       content.lessons.map((lesson) => [
         lesson.id,
@@ -69,7 +69,7 @@ describe('the fixture world', () => {
         'seq-arrows',
         'meadow-steps',
         1,
-        'owl',
+        'fox',
         ['program', 'predict'],
         ['program', 'program', 'program', 'predict', 'find-bug'],
         undefined,
@@ -137,6 +137,7 @@ describe('texts and the core', () => {
     }
     const topics = en?.common?.topic as Record<string, string> | undefined;
     expect(topics?.owl).toBe('Owl');
+    expect(topics?.fox).toBe('Fox');
   });
 
   it('is a core under the subject id, with the same characters as the content and a kind for every exercise', () => {

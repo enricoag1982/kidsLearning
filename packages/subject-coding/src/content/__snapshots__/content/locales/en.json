@@ -1,5 +1,8 @@
 {
  "characters": {
+  "fox": {
+   "name": "Fox"
+  },
   "owl": {
    "name": "Owl"
   }
@@ -72,6 +75,80 @@
    "continue": "Continue",
    "heading": "New badge!",
    "owl-line": "You earned the {{name}} badge!"
+  },
+  "coding": {
+   "board": {
+    "actor": "Fox",
+    "actor-facing": "Fox, facing {{heading}}",
+    "bad": "not right",
+    "cell": "Row {{row}}, column {{column}}",
+    "flag": "flag",
+    "good": "correct",
+    "heading": {
+     "down": "down",
+     "left": "left",
+     "right": "right",
+     "up": "up"
+    },
+    "hint": "look here",
+    "label": "Map, {{cols}} by {{rows}}",
+    "rock": "rock",
+    "star": "star",
+    "target": "the answer"
+   },
+   "buttons": {
+    "reset": "Reset",
+    "run": "Run",
+    "watch": "Watch"
+   },
+   "hint": {
+    "bug-candidates": "The bug is one of the bright steps.",
+    "bug-flash": "The flashing step is the bug.",
+    "bug-replay": "Watch Fox. Where does it go wrong?",
+    "fill": "Here are all the steps. Tap Run!",
+    "first": "Look at the glowing square. Fox goes there first.",
+    "ghost": "The faded tiles show the first steps.",
+    "predict-answer": "Fox stops on the glowing square.",
+    "replay": "Watch the first steps again."
+   },
+   "notes": {
+    "bug-wrong": "That step is fine. Look again!",
+    "bumped": "Oops, bumped into a rock at step {{step}}!",
+    "bumped-edge": "Oops, Fox hit the edge at step {{step}}!",
+    "incomplete": "Fill the empty steps first",
+    "not-in-tray": "Use the tiles in the box",
+    "predict-wrong": "Not that square. Follow the arrows again!",
+    "too-many": "Too many tiles",
+    "unfinished": "Not there yet — try again!"
+   },
+   "strip": {
+    "fill": "Put tiles inside slot {{n}}",
+    "inside": "Slot {{n}}, inside the repeat: {{tile}}",
+    "inside-empty": "Slot {{n}}, inside the repeat, empty",
+    "label": "Your program",
+    "loop": "{{iteration}} of {{times}}",
+    "slot-empty": "Slot {{n}}, empty",
+    "slot-filled": "Slot {{n}}: {{tile}}",
+    "slot-locked": "Slot {{n}}: {{tile}}, locked",
+    "tile": "Tile {{n}}: {{tile}}",
+    "tile-bug": "Tile {{n}}: {{tile}}, the bug",
+    "times": "Slot {{n}}: Repeat {{times}} times, tap to change"
+   },
+   "tiles": {
+    "down": "Step down",
+    "forward": "Step forward",
+    "jump": "Jump",
+    "left": "Step left",
+    "repeat": "Repeat {{times}} times",
+    "repeat-new": "Repeat",
+    "right": "Step right",
+    "turn-left": "Turn left",
+    "turn-right": "Turn right",
+    "up": "Step up"
+   },
+   "tray": {
+    "label": "Tiles"
+   }
   },
   "complete": {
    "new-in-play": "New in Play",
@@ -455,6 +532,7 @@
    "title": "See you tomorrow!"
   },
   "topic": {
+   "fox": "Fox",
    "owl": "Owl"
   },
   "voice-check": {

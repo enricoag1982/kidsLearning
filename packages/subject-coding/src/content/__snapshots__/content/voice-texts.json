@@ -15,11 +15,6 @@
   "source": "badge-earned"
  },
  {
-  "key": "1a3a236a0e50c1c9",
-  "text": "Today you meet Owl!",
-  "source": "home"
- },
- {
   "key": "1ca0f8469d85aaa7",
   "text": "Star Collector. Earn 30 stars",
   "source": "badge-locked"
@@ -65,11 +60,6 @@
   "source": "owl-line"
  },
  {
-  "key": "454f5ac9d54b1b17",
-  "text": "Want to show me you already know Owl?",
-  "source": "journey"
- },
- {
   "key": "4805eee9fb3cd71d",
   "text": "Look at all your friends!",
   "source": "owl-line"
@@ -110,9 +100,14 @@
   "source": "journey"
  },
  {
-  "key": "68b4994e3b8aac6f",
-  "text": "Finish Owl first!",
-  "source": "journey"
+  "key": "6ddfd7aa9f2d693f",
+  "text": "You already know Fox!",
+  "source": "assessment"
+ },
+ {
+  "key": "704fdbfbeeed08c4",
+  "text": "Today you meet Fox!",
+  "source": "home"
  },
  {
   "key": "77ae1eddf4305d9a",
@@ -123,11 +118,6 @@
   "key": "7a0c19dd64d28c8e",
   "text": "Help Fox reach the flag. Pick up the star on the way!",
   "source": "lesson-exercise"
- },
- {
-  "key": "7c645983e7de82a2",
-  "text": "You already know Owl!",
-  "source": "assessment"
  },
  {
   "key": "82dccc099d5a210e",
@@ -198,6 +188,16 @@
   "key": "c3a5fe94f9fd2264",
   "text": "It's getting late. See you tomorrow!",
   "source": "owl-line"
+ },
+ {
+  "key": "c6c2a8120cf638ee",
+  "text": "Want to show me you already know Fox?",
+  "source": "journey"
+ },
+ {
+  "key": "d9cc87ccf3ef3b00",
+  "text": "Finish Fox first!",
+  "source": "journey"
  },
  {
   "key": "e6dd3db7d2a21a07",
