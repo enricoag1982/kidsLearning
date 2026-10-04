@@ -40,7 +40,7 @@ export const ARRAY_CATALOG: TracksCatalog = {
   ],
   ranks: [
     { id: 'counter', after: 'start' },
-    { id: 'adder', after: 'world:arrays' },
+    { id: 'builder', after: 'world:arrays' },
   ],
 };
 

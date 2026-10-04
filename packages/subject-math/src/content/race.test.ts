@@ -39,11 +39,11 @@ const duel = shipped.content.minigames.find(
 );
 
 describe('race-to-20.yaml', () => {
-  it('compiles to a bot-first level-1 duel of the race game, unlocked after take-away, on the demo world’s concept', () => {
+  it('compiles to a bot-first level-1 duel of the race game, unlocked after pv-round (World 1’s last lesson), on its concept', () => {
     expect(duel).toEqual({
       mode: 'duel',
       id: 'race-to-20',
-      concept: 'take-away',
+      concept: 'pv-round',
       game: 'race',
       params: { target: 20, maxStep: 3 },
       level: 1,
@@ -51,7 +51,7 @@ describe('race-to-20.yaml', () => {
       hintKey: 'lessons:race.hint',
       titleKey: 'lessons:race-to-20.title',
       goalKey: 'lessons:race-to-20.goal',
-      unlockAfter: 'take-away',
+      unlockAfter: 'pv-round',
     });
   });
 
@@ -65,11 +65,17 @@ describe('race-to-20.yaml', () => {
     }
   });
 
-  it('is the unlock of the demo world’s last lesson, not a world boss (the track still ends with Number Parade)', () => {
-    expect(shipped.tracks.tracks[0]?.worlds.map((world) => world.boss)).toEqual(['number-parade']);
+  it('is an unlock of World 1’s last lesson, not a world boss (the track ends with Number Train; m13.14 makes Race to 20 the World 3 boss)', () => {
+    expect(shipped.tracks.tracks[0]?.worlds.map((world) => world.boss)).toEqual(['number-train']);
     expect(
-      shipped.content.lessons.find((lesson) => lesson.id === 'take-away')?.boss,
+      shipped.content.lessons.find((lesson) => lesson.id === 'pv-round')?.boss,
     ).toBeUndefined();
+  });
+
+  it('has the Hedgehog (the character of pv-round) as its bot', () => {
+    const lesson = shipped.content.lessons.find((entry) => entry.id === duel?.unlockAfter);
+    expect(lesson?.character).toBe('hedgehog');
+    expect(shipped.locales.en?.characters).toMatchObject({ hedgehog: { name: 'Hedgie' } });
   });
 });
 
@@ -147,30 +153,30 @@ describe('the texts and the voice inventory', () => {
     );
   });
 
-  it('lists the bot’s and the kid’s line for every (step, total) a move can end on before 20: 54 each, Owl as the bot', () => {
+  it('lists the bot’s and the kid’s line for every (step, total) a move can end on before 20: 54 each, Hedgie as the bot', () => {
     const bot = bySource('race-bot-adds');
     const kid = bySource('race-you-add');
     expect(bot).toHaveLength(54);
     expect(kid).toHaveLength(54);
     expect(new Set(bot).size).toBe(54);
-    expect(bot).toContain("Owl adds 1. Now it's 1.");
-    expect(bot).toContain("Owl adds 3. Now it's 19.");
-    expect(bot).not.toContain("Owl adds 3. Now it's 2.");
-    expect(bot).not.toContain("Owl adds 1. Now it's 20.");
-    expect(bot).not.toContain("Owl adds 2. Now it's 0.");
+    expect(bot).toContain("Hedgie adds 1. Now it's 1.");
+    expect(bot).toContain("Hedgie adds 3. Now it's 19.");
+    expect(bot).not.toContain("Hedgie adds 3. Now it's 2.");
+    expect(bot).not.toContain("Hedgie adds 1. Now it's 20.");
+    expect(bot).not.toContain("Hedgie adds 2. Now it's 0.");
     expect(kid).toContain("You add 2. Now it's 7.");
     expect(kid).not.toContain("You add 1. Now it's 20.");
     expect(bySource('race-your-turn')).toEqual(['Your turn!']);
   });
 
-  it('keeps the platform duel lines (turn, result, hint, "Owl’s turn") in the same inventory', () => {
+  it('keeps the platform duel lines (turn, result, hint, "Hedgie’s turn") in the same inventory', () => {
     const duelLines = bySource('duel');
     for (const line of [
       'Your turn',
       'You won! Great thinking!',
       'I won this time. Try again!',
       'A draw! Try again.',
-      "Owl's turn",
+      "Hedgie's turn",
     ]) {
       expect(duelLines, line).toContain(line);
     }

@@ -1,0 +1,29 @@
+# W1 lesson 1: a number is hundreds, tens and ones; an empty place keeps a zero (205, not 2005). Every exercise is generated from a
+# template (`src/content/templates/`) with a stored seed; never change a seed or a count once released (`docs/adding-a-subject.md` §6).
+# Scored order (CPA): blocks first, then the symbols only (the last two: pick the numeral).
+id: pv-hto
+order: 1
+concept: pv-hto
+character: hedgehog
+demo:
+  prompt: { big: 205 }
+guided:
+  - id: hto-g
+    generate: { template: pv-build, count: 2, seed: 101, params: { digits: 3, values: [243, 305] } }
+exercises:
+  - id: hto-build
+    generate: { template: pv-build, count: 1, seed: 4, params: { digits: 3, zeroIn: none } }
+  - id: hto-zero
+    easier: hto-easy-1
+    generate: { template: pv-build, count: 1, seed: 26, params: { digits: 3, zeroIn: tens } }
+  - id: hto-read
+    generate: { template: pv-read, count: 1, seed: 16, params: { digits: 3, zeroIn: none } }
+  - id: hto-read-zero
+    generate: { template: pv-read, count: 1, seed: 20, params: { digits: 3, zeroIn: tens } }
+  - id: hto-which
+    generate: { template: pv-which, count: 1, seed: 8, params: { digits: 3, zeroIn: none } }
+  - id: hto-which-zero
+    generate: { template: pv-which, count: 1, seed: 13, params: { digits: 3, zeroIn: tens } }
+variants:
+  - id: hto-easy
+    generate: { template: pv-build, count: 1, seed: 18, params: { digits: 3, zeroIn: none } }

@@ -40,7 +40,7 @@ export const LINE_CATALOG: TracksCatalog = {
   ],
   ranks: [
     { id: 'counter', after: 'start' },
-    { id: 'adder', after: 'world:lines' },
+    { id: 'builder', after: 'world:lines' },
   ],
 };
 

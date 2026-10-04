@@ -25,7 +25,7 @@ export const mathWeb: SubjectWeb = {
     core: mathCore,
     content: createBundledContentSource({ content, tracks, badges }),
     art: { hedgehog },
-    rankGlyphs: { counter: '1', adder: '+' },
+    rankGlyphs: { counter: '1', builder: '2' },
   }),
   kinds: MATH_KIND_UI,
   // The opt-in `duel` mini-game mode: Race to 20 on its number track (m13.13).

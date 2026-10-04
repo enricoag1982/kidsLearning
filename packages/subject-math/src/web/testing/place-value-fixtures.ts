@@ -30,7 +30,7 @@ export const PLACE_VALUE_TEXTS = {
 /** Guided: no zero. Scored: a zero and its reason, 4 columns, a start to take blocks away from, a 9. */
 export const fixtureLesson: MathLesson = {
   id: 'pv-fx',
-  world: 'adding',
+  world: 'number-meadow',
   order: 1,
   concept: 'pv-fx',
   character: 'hedgehog',
@@ -51,18 +51,18 @@ const tracks: TracksCatalog = {
       titleKey: 'journey:tracks.numbers',
       worlds: [
         {
-          id: 'adding',
+          id: 'number-meadow',
           track: 'numbers',
           order: 1,
           habitat: 'meadow',
-          titleKey: 'journey:worlds.adding',
+          titleKey: 'journey:worlds.number-meadow',
         },
       ],
     },
   ],
   ranks: [
     { id: 'counter', after: 'start' },
-    { id: 'adder', after: 'world:adding' },
+    { id: 'builder', after: 'world:number-meadow' },
   ],
 };
 

@@ -1,4 +1,4 @@
-// A test-only lesson that uses every W1 template once through a `generate:` entry (the shipped W1 lessons come in m13.10): the YAML of
+// A test-only lesson that uses every W1 template once through a `generate:` entry (the shipped W1 lessons, since m13.10, use them too): the YAML of
 // the lesson and the texts it needs in `lessons.yaml`. Never imported by shipped code, and not part of `content/`.
 
 /** The template ids the lesson uses, in the order of its entries. */

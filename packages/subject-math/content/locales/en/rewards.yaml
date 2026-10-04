@@ -1,7 +1,7 @@
 badges:
-  first-sums:
-    name: First Sums
-    condition: 'Master World 1: Adding'
+  number-builder:
+    name: Number Builder
+    condition: Master Number Meadow and beat Number Train
   star-counter:
     name: Star Counter
     condition_one: 'Earn {{count}} star'

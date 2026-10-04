@@ -1,8 +1,13 @@
 [
  {
-  "key": "00be6249143675a1",
-  "text": "What is 4 plus 3?",
-  "source": "lesson-guided"
+  "key": "0040f50b3371db58",
+  "text": "Owl says: rounding finds the nearest ten or hundred. Hedgie checks the next digit: 5 or more goes up, less than 5 stays down.",
+  "source": "lesson-story"
+ },
+ {
+  "key": "00566cd46adcb795",
+  "text": "Hundreds, tens and ones: count each column.",
+  "source": "exercise-note"
  },
  {
   "key": "035fab1c1f095fe6",
@@ -10,9 +15,9 @@
   "source": "race-you-add"
  },
  {
-  "key": "039df935ac031c53",
-  "text": "Owl adds 3. Now it's 9.",
-  "source": "race-bot-adds"
+  "key": "043090b61e127a8d",
+  "text": "Count the jumps between the marks, not the marks.",
+  "source": "exercise-note"
  },
  {
   "key": "04a83fcf89fa37d0",
@@ -20,24 +25,14 @@
   "source": "owl-line"
  },
  {
-  "key": "04e78db62374eddc",
-  "text": "First Sums. Master World 1: Adding",
-  "source": "badge-locked"
- },
- {
-  "key": "07ae375f957172a8",
-  "text": "Owl adds 2. Now it's 14.",
-  "source": "race-bot-adds"
- },
- {
-  "key": "085525cbe75aa54e",
-  "text": "Owl adds 1. Now it's 10.",
-  "source": "race-bot-adds"
- },
- {
   "key": "09d0d86ca82c29e8",
   "text": "It starts with 7.",
   "source": "exercise-note"
+ },
+ {
+  "key": "0a2ba2d1bd8cb77c",
+  "text": "Not that one. Try another! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "0adfa5ef877f3ded",
@@ -50,14 +45,14 @@
   "source": "race-you-add"
  },
  {
-  "key": "0c68b04a6ede726c",
-  "text": "Owl adds 1. Now it's 8.",
-  "source": "race-bot-adds"
+  "key": "0c3936af810cceb7",
+  "text": "About where is 625? Put it on the line.",
+  "source": "lesson-exercise"
  },
  {
-  "key": "0f5e967b7bc3cb26",
-  "text": "What is 5 plus 5?",
-  "source": "minigame-round"
+  "key": "0d9116a7e93d40cc",
+  "text": "Which one comes next?",
+  "source": "exercise-note"
  },
  {
   "key": "10f7da5df39c54d0",
@@ -70,6 +65,16 @@
   "source": "race-you-add"
  },
  {
+  "key": "13ea94f885e4a7a1",
+  "text": "Hedgie adds 2. Now it's 8.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "13f0641124636809",
+  "text": "Hedgie adds 1. Now it's 14.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "159b3dec13ee4d7b",
   "text": "You add 1. Now it's 18.",
   "source": "race-you-add"
@@ -80,24 +85,54 @@
   "source": "exercise-note"
  },
  {
+  "key": "165e28ae2db18a84",
+  "text": "Round 47 to the nearest ten. The ones digit is 7, so go up. 47 is closer to 50 than to 40!",
+  "source": "lesson-demo"
+ },
+ {
   "key": "198d22a4fd3d9094",
   "text": "You add 3. Now it's 13.",
   "source": "race-you-add"
  },
  {
-  "key": "19b85125fba56f53",
-  "text": "Owl adds 3. Now it's 17.",
+  "key": "1999ccd69364e1f5",
+  "text": "An empty place still needs a zero to hold its spot.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "1a3815a5556c46cd",
+  "text": "Hedgie adds 2. Now it's 3.",
   "source": "race-bot-adds"
  },
  {
-  "key": "1b96d247671c85ff",
-  "text": "What is 3 plus 1?",
+  "key": "1c34d091721707b7",
+  "text": "Hedgie adds 2. Now it's 6.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "1dd0842b73d9826e",
+  "text": "Round 354 to the nearest hundred.",
   "source": "lesson-exercise"
  },
  {
-  "key": "1ec4b2139e011da8",
-  "text": "Owl adds 3. Now it's 14.",
-  "source": "race-bot-adds"
+  "key": "1ecd5512c0d691cb",
+  "text": "Not there yet. Look at the numbers on the line.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "1f326b672a783891",
+  "text": "Put every carriage number where it belongs on the line!",
+  "source": "minigame-goal"
+ },
+ {
+  "key": "206d5b6e69f73a74",
+  "text": "Round 28 to the nearest ten.",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "2157a2f9de5a8a1f",
+  "text": "Put 400 on the number line.",
+  "source": "lesson-exercise"
  },
  {
   "key": "220b955b268d8b6a",
@@ -105,9 +140,9 @@
   "source": "exercise-note"
  },
  {
-  "key": "238c6caa997d35fa",
-  "text": "You earned the First Sums badge!",
-  "source": "celebration"
+  "key": "24697ff09138b3ea",
+  "text": "Round 45 to the nearest ten.",
+  "source": "lesson-exercise"
  },
  {
   "key": "247f6795ec932652",
@@ -120,9 +155,14 @@
   "source": "race-you-add"
  },
  {
-  "key": "25aca7d5b3f708b3",
-  "text": "Finish Taking away first!",
-  "source": "journey"
+  "key": "25b0eb3909085aed",
+  "text": "Build 2802 with blocks.",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "26b85e2e79dd5a03",
+  "text": "Right in the middle? It goes up to the bigger number. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "27dfb80057b25845",
@@ -130,18 +170,8 @@
   "source": "exercise-note"
  },
  {
-  "key": "280c2d37ebfe4677",
-  "text": "Owl adds 1. Now it's 16.",
-  "source": "race-bot-adds"
- },
- {
-  "key": "288f59e63e21f805",
-  "text": "Owl adds 3. Now it's 4.",
-  "source": "race-bot-adds"
- },
- {
-  "key": "28f3b8cef6394a7c",
-  "text": "Owl adds 2. Now it's 11.",
+  "key": "289dc8b48e417118",
+  "text": "Hedgie adds 1. Now it's 8.",
   "source": "race-bot-adds"
  },
  {
@@ -150,19 +180,24 @@
   "source": "race-you-add"
  },
  {
-  "key": "29d005805e5ecbca",
-  "text": "Owl adds 2. Now it's 3.",
+  "key": "2a3e32b0ee2e7038",
+  "text": "Hedgie adds 3. Now it's 17.",
   "source": "race-bot-adds"
  },
  {
-  "key": "2a5c3beb2d8a6b2b",
-  "text": "Hedgie loves collecting berries! When she finds some more, she counts them all together. Adding means putting groups together to see how many there are.",
-  "source": "lesson-story"
+  "key": "2a4006274f5195ba",
+  "text": "Here are the hundreds. Now finish!",
+  "source": "exercise-note"
  },
  {
   "key": "2a9f634563e775ce",
   "text": "You add 2. Now it's 5.",
   "source": "race-you-add"
+ },
+ {
+  "key": "2aaf110414bebf84",
+  "text": "Hedgie adds 3. Now it's 4.",
+  "source": "race-bot-adds"
  },
  {
   "key": "2bc8ac486893a8fb",
@@ -175,24 +210,24 @@
   "source": "duel"
  },
  {
+  "key": "2d4aab44789a3586",
+  "text": "Hedgie adds 2. Now it's 9.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "2dabedd1bc55ef5c",
   "text": "You add 1. Now it's 14.",
   "source": "race-you-add"
  },
  {
-  "key": "2ed0900af2b3d778",
-  "text": "Owl adds 1. Now it's 15.",
+  "key": "311d471061f2e9b7",
+  "text": "Hedgie adds 1. Now it's 17.",
   "source": "race-bot-adds"
  },
  {
   "key": "323fde12bb24ff58",
   "text": "It starts with 0.",
   "source": "exercise-note"
- },
- {
-  "key": "327d6304af983436",
-  "text": "World boss time: Number Parade!",
-  "source": "home"
  },
  {
   "key": "32813fb993cc7953",
@@ -205,9 +240,29 @@
   "source": "owl-line"
  },
  {
-  "key": "37e6374c3f11e5f8",
-  "text": "Owl has 5 apples and eats 2. Cross out 2 dots, and 3 are left. 5 minus 2 makes 3!",
-  "source": "lesson-demo"
+  "key": "342f4548d30b58b4",
+  "text": "Find the middle: 500.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "34ca72ef1afcb95b",
+  "text": "Hedgie adds 2. Now it's 5.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "39845df5f7eacbe1",
+  "text": "Number Builder",
+  "source": "badge-earned"
+ },
+ {
+  "key": "3987935cbc0d1250",
+  "text": "Owl says: every digit has a place. Hedgie counts the hundreds, then the tens, then the ones. An empty place still needs a zero!",
+  "source": "lesson-story"
+ },
+ {
+  "key": "3a0d9cd3776374e4",
+  "text": "Build 1357 with blocks.",
+  "source": "lesson-variant"
  },
  {
   "key": "3b199d66b044403d",
@@ -215,19 +270,19 @@
   "source": "race-you-add"
  },
  {
-  "key": "4129d23b91085b79",
-  "text": "What is 6 minus 4?",
+  "key": "3d5f11edd51339bf",
+  "text": "Build 507 with blocks.",
   "source": "lesson-exercise"
  },
  {
-  "key": "419fd80e4bd45b9b",
-  "text": "Owl adds 1. Now it's 5.",
-  "source": "race-bot-adds"
+  "key": "3f40b73ab1bf8627",
+  "text": "Build 9321 with blocks.",
+  "source": "lesson-exercise"
  },
  {
-  "key": "420ff7d75ff86884",
-  "text": "Owl adds 2. Now it's 2.",
-  "source": "race-bot-adds"
+  "key": "41470e8abcd0f273",
+  "text": "Build 4278 with blocks.",
+  "source": "lesson-guided"
  },
  {
   "key": "42395b2cf6a958b5",
@@ -240,19 +295,14 @@
   "source": "race-you-add"
  },
  {
-  "key": "440d9ca4a28987df",
-  "text": "What is 4 plus 5?",
-  "source": "lesson-exercise"
+  "key": "43ea50bd5c3f3cd9",
+  "text": "Owl says: ten hundreds make one thousand. The thousands get a place on the left. Hedgie reads thousands, hundreds, tens, then ones!",
+  "source": "lesson-story"
  },
  {
   "key": "44ee1e157e7f833d",
   "text": "What would you like to learn today?",
   "source": "owl-line"
- },
- {
-  "key": "450843738cdc505c",
-  "text": "You already know Taking away!",
-  "source": "assessment"
  },
  {
   "key": "45fb0b129686c1bd",
@@ -270,34 +320,29 @@
   "source": "owl-line"
  },
  {
-  "key": "4849d9000b1189d6",
-  "text": "What is 1 plus 4?",
-  "source": "lesson-exercise"
- },
- {
-  "key": "48a379853b5c40ab",
-  "text": "Owl adds 2. Now it's 7.",
-  "source": "race-bot-adds"
- },
- {
   "key": "4986e2154c9333d3",
   "text": "You add 3. Now it's 19.",
   "source": "race-you-add"
  },
  {
-  "key": "49d56d80cb7af153",
-  "text": "Hedgie has 2 berries and finds 1 more. Count all the dots. 2 plus 1 makes 3!",
-  "source": "lesson-demo"
- },
- {
-  "key": "4a4f8a1a3a9463d4",
-  "text": "Owl adds 2. Now it's 8.",
-  "source": "race-bot-adds"
- },
- {
   "key": "4a61f482035c8a48",
   "text": "It starts with 4.",
   "source": "exercise-note"
+ },
+ {
+  "key": "4ab4f4a9237a15e2",
+  "text": "Hedgie adds 1. Now it's 9.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "4b8f57473d4f9733",
+  "text": "Build 243 with blocks.",
+  "source": "lesson-guided"
+ },
+ {
+  "key": "4e5bfdc212d2776b",
+  "text": "Count the jumps between the marks, not the marks. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "505c71eccfcc70b2",
@@ -310,14 +355,24 @@
   "source": "race-you-add"
  },
  {
-  "key": "50f350cf6b05ea56",
-  "text": "Owl adds 1. Now it's 14.",
+  "key": "5197ec2f064d8dbc",
+  "text": "Put 600 on the number line.",
+  "source": "minigame-round"
+ },
+ {
+  "key": "51f8c579c4b17ce4",
+  "text": "Hedgie adds 1. Now it's 16.",
   "source": "race-bot-adds"
  },
  {
-  "key": "51b7170470966958",
-  "text": "Owl adds 1. Now it's 1.",
-  "source": "race-bot-adds"
+  "key": "5212ee09ee683c9d",
+  "text": "Put 500 on the number line.",
+  "source": "lesson-variant"
+ },
+ {
+  "key": "52503b25436f925e",
+  "text": "Hedgie's turn",
+  "source": "duel"
  },
  {
   "key": "530abb19f63d5293",
@@ -325,44 +380,14 @@
   "source": "exercise-note"
  },
  {
-  "key": "5343b5e521734e5c",
-  "text": "Owl adds 1. Now it's 9.",
-  "source": "race-bot-adds"
- },
- {
-  "key": "53451240d554b2dc",
-  "text": "Owl adds 3. Now it's 19.",
-  "source": "race-bot-adds"
- },
- {
   "key": "535a165cf2cfaa5f",
   "text": "Your turn!",
   "source": "race-your-turn"
  },
  {
-  "key": "54ad63532c04fbb2",
-  "text": "Owl adds 1. Now it's 19.",
-  "source": "race-bot-adds"
- },
- {
-  "key": "560280972f061d0e",
-  "text": "Solve every sum in the parade. How few mistakes can you make?",
-  "source": "minigame-goal"
- },
- {
-  "key": "565e1fc8376bb2d1",
-  "text": "Owl adds 1. Now it's 4.",
-  "source": "race-bot-adds"
- },
- {
-  "key": "56e85cf96ff301dc",
-  "text": "Owl adds 3. Now it's 8.",
-  "source": "race-bot-adds"
- },
- {
-  "key": "59422f49670509e9",
-  "text": "Owl adds 1. Now it's 11.",
-  "source": "race-bot-adds"
+  "key": "53b53605e2329c62",
+  "text": "Round 698 to the nearest ten.",
+  "source": "lesson-exercise"
  },
  {
   "key": "5975daf7cd7cef89",
@@ -378,6 +403,16 @@
   "key": "59e1802c5217a382",
   "text": "Math opens at 09:00. See you soon!",
   "source": "owl-line"
+ },
+ {
+  "key": "5a3404d16008058d",
+  "text": "Is this true?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "5a8ba77ddeb31b1c",
+  "text": "Put 700 on the number line.",
+  "source": "lesson-guided"
  },
  {
   "key": "5b1f538e8108589f",
@@ -400,8 +435,8 @@
   "source": "journey"
  },
  {
-  "key": "5f4b81c58fef0037",
-  "text": "Owl adds 2. Now it's 18.",
+  "key": "5eeb75a57ea8ca64",
+  "text": "Hedgie adds 1. Now it's 6.",
   "source": "race-bot-adds"
  },
  {
@@ -420,9 +455,14 @@
   "source": "exercise-note"
  },
  {
-  "key": "649a35c92457f8f1",
-  "text": "What is 7 minus 4?",
-  "source": "minigame-round"
+  "key": "65cdac8efa024066",
+  "text": "Hedgie adds 2. Now it's 17.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "671bd59b87923163",
+  "text": "7 hundreds, 3 tens and 8 ones. What number is it?",
+  "source": "lesson-exercise"
  },
  {
   "key": "6842a59d60e89216",
@@ -430,9 +470,19 @@
   "source": "race-you-add"
  },
  {
+  "key": "68724bd6b9fbaabb",
+  "text": "Hedgie adds 2. Now it's 10.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "6b2352d3fb67886a",
   "text": "You add 3. Now it's 15.",
   "source": "race-you-add"
+ },
+ {
+  "key": "6b2bfbf16b376f42",
+  "text": "Rounding down every time? Check which number is nearer.",
+  "source": "exercise-note"
  },
  {
   "key": "6bd3c9207e1d6e62",
@@ -440,14 +490,19 @@
   "source": "duel"
  },
  {
-  "key": "6cb1704089a27819",
-  "text": "Owl adds 3. Now it's 12.",
+  "key": "6c4f0bd80504b24e",
+  "text": "Hedgie adds 3. Now it's 18.",
   "source": "race-bot-adds"
  },
  {
-  "key": "6df9f9603133084d",
-  "text": "What is 2 plus 2?",
-  "source": "lesson-exercise"
+  "key": "6cc021c39ca21743",
+  "text": "This line goes from 0 to 1000, with a mark every 100. To find 300, Hedgie counts three jumps from 0!",
+  "source": "lesson-demo"
+ },
+ {
+  "key": "6f752ca2de41d910",
+  "text": "Hedgie adds 2. Now it's 7.",
+  "source": "race-bot-adds"
  },
  {
   "key": "73467fceb66c0ef0",
@@ -455,29 +510,24 @@
   "source": "race-you-add"
  },
  {
-  "key": "74c0ecdcac0218fd",
-  "text": "Owl adds 1. Now it's 3.",
+  "key": "745b6eb38edff8a6",
+  "text": "Hedgie adds 1. Now it's 11.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "75136f0e09d71546",
+  "text": "Here are the thousands. Now finish!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "7538f98a243cbc59",
+  "text": "Hedgie adds 3. Now it's 12.",
   "source": "race-bot-adds"
  },
  {
   "key": "765fdaa8564df64e",
   "text": "You add 2. Now it's 9.",
   "source": "race-you-add"
- },
- {
-  "key": "76702295a72ac1c7",
-  "text": "What is 8 minus 3?",
-  "source": "lesson-exercise"
- },
- {
-  "key": "76c55bb04e490cf5",
-  "text": "Taking away means some go away, and we count what is left. If Owl has 5 apples and eats 2, there are 3 left.",
-  "source": "lesson-story"
- },
- {
-  "key": "7750dc0897128743",
-  "text": "What is 7 plus 3?",
-  "source": "lesson-exercise"
  },
  {
   "key": "77ae1eddf4305d9a",
@@ -490,29 +540,9 @@
   "source": "assessment"
  },
  {
-  "key": "78d320fa74a0c749",
-  "text": "Want to show me you already know Adding up to 10?",
-  "source": "journey"
- },
- {
-  "key": "79857121b6ff2bff",
-  "text": "Owl adds 1. Now it's 6.",
-  "source": "race-bot-adds"
- },
- {
   "key": "79f5f2bc342b2dfa",
   "text": "Math opens at 08:00. See you soon!",
   "source": "owl-line"
- },
- {
-  "key": "7aa92a690438bbee",
-  "text": "Owl adds 2. Now it's 9.",
-  "source": "race-bot-adds"
- },
- {
-  "key": "7acec55bbfc58d8d",
-  "text": "You already know Adding up to 10!",
-  "source": "assessment"
  },
  {
   "key": "7cb30e40b3c960e6",
@@ -520,19 +550,29 @@
   "source": "journey"
  },
  {
-  "key": "7eaaadbd0f723b04",
-  "text": "What is 8 minus 2?",
-  "source": "minigame-round"
- },
- {
-  "key": "7eb640bf08bd4c4f",
-  "text": "Owl adds 2. Now it's 6.",
-  "source": "race-bot-adds"
- },
- {
   "key": "8146b5611a937245",
   "text": "You add 1. Now it's 12.",
   "source": "race-you-add"
+ },
+ {
+  "key": "829f3c22c5904107",
+  "text": "Hedgie adds 1. Now it's 2.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "82e86bc08dcb7c1c",
+  "text": "The number beside the blocks shows what you built.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "83b90568d75b2e82",
+  "text": "Which number has 6 hundreds, 0 tens and 4 ones?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "848775eb81255f4a",
+  "text": "Which sign goes in the gap? The open side faces the bigger number.",
+  "source": "lesson-exercise"
  },
  {
   "key": "87f01985eb893207",
@@ -540,9 +580,9 @@
   "source": "badge-locked"
  },
  {
-  "key": "8917d97813333957",
-  "text": "Finish Adding up to 10 first!",
-  "source": "journey"
+  "key": "88b64cd3844fed50",
+  "text": "Look at the order: hundreds, then tens, then ones. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "896e35f21442804c",
@@ -550,14 +590,24 @@
   "source": "race-you-add"
  },
  {
-  "key": "8a58d909942c0b34",
-  "text": "First Sums",
-  "source": "badge-earned"
+  "key": "89a93a72a6d07fcc",
+  "text": "Hedgie adds 3. Now it's 16.",
+  "source": "race-bot-adds"
  },
  {
-  "key": "8b1855c296a9476b",
-  "text": "Owl adds 3. Now it's 10.",
-  "source": "race-bot-adds"
+  "key": "89e281cb61e277a2",
+  "text": "About where is 428? Put it on the line.",
+  "source": "minigame-round"
+ },
+ {
+  "key": "8ac504fbd6caf0a2",
+  "text": "Put 350 on the number line.",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "8b5a84637a990ce4",
+  "text": "Count the blocks in each column again. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "8b89769909ec6247",
@@ -570,34 +620,54 @@
   "source": "exercise-note"
  },
  {
-  "key": "8d71ba6b435f59c1",
-  "text": "Owl adds 1. Now it's 12.",
-  "source": "race-bot-adds"
- },
- {
-  "key": "8ddc97f1e2d90aec",
-  "text": "Owl adds 2. Now it's 10.",
-  "source": "race-bot-adds"
- },
- {
-  "key": "8ec9fa4151757d65",
-  "text": "Owl adds 1. Now it's 2.",
-  "source": "race-bot-adds"
- },
- {
-  "key": "8f81bb9992b8ae08",
-  "text": "What is 9 minus 5?",
-  "source": "lesson-exercise"
- },
- {
-  "key": "910c2ea026165cb2",
-  "text": "What is 1 plus 1?",
+  "key": "8c5ad44c27c2b9d3",
+  "text": "Put 60 on the number line.",
   "source": "lesson-guided"
  },
  {
-  "key": "914cc3119aa15571",
-  "text": "Owl adds 3. Now it's 6.",
+  "key": "8e009314f3aa18ec",
+  "text": "Owl says: look at the biggest place first. Hedgie checks the hundreds, then the tens. The open side of the sign faces the bigger number!",
+  "source": "lesson-story"
+ },
+ {
+  "key": "8ec9bb9dbca5cef2",
+  "text": "Hedgie adds 1. Now it's 3.",
   "source": "race-bot-adds"
+ },
+ {
+  "key": "8f586746b7f20481",
+  "text": "Round 31 to the nearest ten.",
+  "source": "lesson-variant"
+ },
+ {
+  "key": "8fe226e634c46cb4",
+  "text": "What number is halfway between 800 and 900?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "90415c95a9f1dd53",
+  "text": "Build 7463 with blocks.",
+  "source": "lesson-guided"
+ },
+ {
+  "key": "904d69605c486d88",
+  "text": "Want to show me you already know World 1 · Number Meadow?",
+  "source": "journey"
+ },
+ {
+  "key": "9082bf7edcff0bd2",
+  "text": "Put 70 on the number line.",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "9396b12b12df91f1",
+  "text": "Hedgie adds 1. Now it's 13.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "945fd7f3aef1665b",
+  "text": "Build 305 with blocks.",
+  "source": "lesson-guided"
  },
  {
   "key": "94f516a7b14c3876",
@@ -610,13 +680,28 @@
   "source": "assessment"
  },
  {
-  "key": "970392cdc8ef3d9e",
-  "text": "Want to show me you already know World 1 · Adding?",
-  "source": "journey"
+  "key": "95a759caa64da279",
+  "text": "Hedgie adds 1. Now it's 15.",
+  "source": "race-bot-adds"
  },
  {
-  "key": "990078a832412bba",
-  "text": "Owl adds 3. Now it's 3.",
+  "key": "95f1e9cae4ed38a0",
+  "text": "Compare 406 and 460. The hundreds are the same, so look at the tens. 0 tens is less than 6 tens, so 406 is smaller!",
+  "source": "lesson-demo"
+ },
+ {
+  "key": "96812a855d0850fe",
+  "text": "Find the middle: 50.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "98925a40f39e713e",
+  "text": "Hedgie adds 1. Now it's 12.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "99f417eab914233c",
+  "text": "Hedgie adds 2. Now it's 16.",
   "source": "race-bot-adds"
  },
  {
@@ -625,8 +710,8 @@
   "source": "badge-locked"
  },
  {
-  "key": "9f2580d4c5676db4",
-  "text": "Owl adds 2. Now it's 17.",
+  "key": "9dfc287093ef3e1a",
+  "text": "Hedgie adds 3. Now it's 5.",
   "source": "race-bot-adds"
  },
  {
@@ -635,9 +720,14 @@
   "source": "home"
  },
  {
-  "key": "a11c312630eead4b",
-  "text": "Owl adds 2. Now it's 19.",
+  "key": "a1b5484c6340d3d5",
+  "text": "Hedgie adds 3. Now it's 14.",
   "source": "race-bot-adds"
+ },
+ {
+  "key": "a201f1510142a0b1",
+  "text": "Look at the order: hundreds, then tens, then ones.",
+  "source": "exercise-note"
  },
  {
   "key": "a234472404a252d1",
@@ -650,8 +740,23 @@
   "source": "race-you-add"
  },
  {
+  "key": "a28a29f0620519d1",
+  "text": "Hedgie adds 3. Now it's 8.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "a39e61565a7b1cce",
+  "text": "Put the parts together. What number is it?",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "a4a00559aa6ccb7c",
   "text": "It starts with 8.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "a6b6a5b8e605822b",
+  "text": "Count the blocks in each column again.",
   "source": "exercise-note"
  },
  {
@@ -660,19 +765,34 @@
   "source": "duel"
  },
  {
-  "key": "a79b66c213d04a3a",
-  "text": "Owl adds 2. Now it's 12.",
-  "source": "race-bot-adds"
- },
- {
-  "key": "a7f8fb6b3947dc00",
-  "text": "Owl adds 3. Now it's 18.",
-  "source": "race-bot-adds"
+  "key": "a7e432a24b9dd8a0",
+  "text": "Put 250 on the number line.",
+  "source": "minigame-round"
  },
  {
   "key": "a84b5a79bcc60791",
   "text": "Let's do some math together!",
   "source": "voice-check"
+ },
+ {
+  "key": "a85b21b4c6d1a040",
+  "text": "Hedgie adds 2. Now it's 15.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "a96caea44a81e8e8",
+  "text": "Put the numbers in order, smallest first.",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "aa40a3a2b1b8e508",
+  "text": "Hedgie adds 3. Now it's 13.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "aaf8b8bedf36610a",
+  "text": "Hedgie adds 3. Now it's 7.",
+  "source": "race-bot-adds"
  },
  {
   "key": "ac2efcff7ac79249",
@@ -685,19 +805,24 @@
   "source": "race-you-add"
  },
  {
+  "key": "ad390087d676ef5b",
+  "text": "Hedgie adds 1. Now it's 7.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "ad493f8f47bf2624",
+  "text": "Hedgie adds 3. Now it's 6.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "ad999c537fd1becc",
   "text": "You add 1. Now it's 2.",
   "source": "race-you-add"
  },
  {
-  "key": "af2c175085a0231c",
-  "text": "Owl's turn",
-  "source": "duel"
- },
- {
-  "key": "af8c99d5f9bbdbbf",
-  "text": "Owl adds 1. Now it's 17.",
-  "source": "race-bot-adds"
+  "key": "adb17446139f4b57",
+  "text": "Round 732 to the nearest hundred.",
+  "source": "lesson-exercise"
  },
  {
   "key": "afedea340ddd7bd6",
@@ -710,28 +835,28 @@
   "source": "race-you-add"
  },
  {
-  "key": "b178f77da63da475",
-  "text": "Owl adds 1. Now it's 18.",
-  "source": "race-bot-adds"
- },
- {
   "key": "b238d122e83fb3d7",
   "text": "You add 1. Now it's 10.",
   "source": "race-you-add"
  },
  {
-  "key": "b2b378a89ea654b0",
-  "text": "What is 2 plus 3?",
-  "source": "lesson-exercise"
- },
- {
-  "key": "b54ad250b0af2db8",
-  "text": "Owl adds 3. Now it's 11.",
+  "key": "b2c58bc85217ec78",
+  "text": "Hedgie adds 1. Now it's 19.",
   "source": "race-bot-adds"
  },
  {
-  "key": "b8c2a640d8b216af",
-  "text": "Owl adds 3. Now it's 16.",
+  "key": "b6170b945d9402ef",
+  "text": "8 hundreds, 0 tens and 5 ones. What number is it?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "b78551cb4e0c22f2",
+  "text": "You earned the Number Builder badge!",
+  "source": "celebration"
+ },
+ {
+  "key": "b82c95fedfc96450",
+  "text": "Hedgie adds 2. Now it's 18.",
   "source": "race-bot-adds"
  },
  {
@@ -740,9 +865,14 @@
   "source": "exercise-note-easier-offer"
  },
  {
-  "key": "bb46f7ec1e8bf998",
-  "text": "What is 3 minus 1?",
-  "source": "lesson-guided"
+  "key": "b9f1fca3ea240722",
+  "text": "Build 932 with blocks.",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "ba0b581753667f90",
+  "text": "Hedgie adds 2. Now it's 14.",
+  "source": "race-bot-adds"
  },
  {
   "key": "bbcd9411182b5a21",
@@ -750,19 +880,14 @@
   "source": "race-you-add"
  },
  {
-  "key": "bbf1c8ba7d0c49ac",
-  "text": "Owl has bigger numbers to add today. Start at the bigger number and count on. It is quicker than counting everything again!",
-  "source": "lesson-story"
- },
- {
-  "key": "bc5fa5e5c7bd474b",
-  "text": "Owl adds 3. Now it's 13.",
-  "source": "race-bot-adds"
- },
- {
   "key": "bd4393ba39bfaa77",
   "text": "Try to land on 4, 8, 12 or 16.",
   "source": "duel-hint"
+ },
+ {
+  "key": "be3f2288a9204073",
+  "text": "Hedgie adds 2. Now it's 4.",
+  "source": "race-bot-adds"
  },
  {
   "key": "be96f81d5e60d899",
@@ -770,19 +895,19 @@
   "source": "exercise-note"
  },
  {
-  "key": "c09b7476aa931db7",
-  "text": "What is 6 plus 2?",
-  "source": "minigame-round"
- },
- {
   "key": "c0b2306945840f24",
   "text": "Math opens at 07:00. See you soon!",
   "source": "owl-line"
  },
  {
-  "key": "c347df37e384e6c0",
-  "text": "What is 9 minus 3?",
-  "source": "minigame-round"
+  "key": "c15de960f3fa7fbe",
+  "text": "Hedgie adds 3. Now it's 9.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "c233a223a913bea3",
+  "text": "Hedgie adds 2. Now it's 11.",
+  "source": "race-bot-adds"
  },
  {
   "key": "c3a5fe94f9fd2264",
@@ -790,14 +915,29 @@
   "source": "owl-line"
  },
  {
-  "key": "c48102f5eb16f6aa",
-  "text": "Owl adds 3. Now it's 15.",
+  "key": "c3ead4d41b65ce98",
+  "text": "Hedgie adds 1. Now it's 4.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "c4a675341447f9fa",
+  "text": "Which number has 3 hundreds, 7 tens and 4 ones?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "c59d7bf15dd97102",
+  "text": "Hedgie adds 2. Now it's 13.",
   "source": "race-bot-adds"
  },
  {
   "key": "c63f6dc6adabc830",
   "text": "You add 3. Now it's 5.",
   "source": "race-you-add"
+ },
+ {
+  "key": "c6eada1aee95a131",
+  "text": "Hedgie adds 3. Now it's 10.",
+  "source": "race-bot-adds"
  },
  {
   "key": "c916003b70ea4f4b",
@@ -810,9 +950,14 @@
   "source": "home"
  },
  {
-  "key": "ca7061649407c284",
-  "text": "Hi! I'm Owl. Today: Taking away!",
-  "source": "home"
+  "key": "ca4d21d94d8481a1",
+  "text": "Hedgie adds 3. Now it's 11.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "cb29077c74b6295c",
+  "text": "Round 36 to the nearest ten.",
+  "source": "lesson-guided"
  },
  {
   "key": "cb70b23f2da8b321",
@@ -820,19 +965,34 @@
   "source": "race-you-add"
  },
  {
-  "key": "cd853c712fa53163",
-  "text": "Owl adds 2. Now it's 16.",
+  "key": "cbf8e94487696c76",
+  "text": "Build 465 with blocks.",
+  "source": "lesson-variant"
+ },
+ {
+  "key": "cc709ec683c1c3d2",
+  "text": "You already know Number Meadow — 5 lessons are yours!",
+  "source": "assessment"
+ },
+ {
+  "key": "ccf6fedb3c929223",
+  "text": "Owl says: a number line is a path of numbers. Every jump is the same size. Hedgie counts the jumps, not the marks!",
+  "source": "lesson-story"
+ },
+ {
+  "key": "ce2d8a3230330bf8",
+  "text": "Hedgie adds 1. Now it's 18.",
   "source": "race-bot-adds"
  },
  {
-  "key": "cf6c812a5c934ed7",
-  "text": "Owl adds 1. Now it's 7.",
-  "source": "race-bot-adds"
+  "key": "cf1f3ea87282ebbb",
+  "text": "Look: 3 thousands, 4 hundreds, 0 tens and 5 ones. The zero keeps the tens place, so the number is 3405!",
+  "source": "lesson-demo"
  },
  {
-  "key": "d1ae996f53a64249",
-  "text": "Hi! I'm Owl. Today: Adding up to 10!",
-  "source": "home"
+  "key": "d0b83b75666ac812",
+  "text": "About where is 36? Put it on the line.",
+  "source": "lesson-exercise"
  },
  {
   "key": "d31d36fd7746c990",
@@ -840,24 +1000,24 @@
   "source": "race-you-add"
  },
  {
-  "key": "d37e4ebeb11a9603",
-  "text": "Owl has 6 acorns and finds 3 more. Start at 6 and count on 3. 6 plus 3 makes 9!",
-  "source": "lesson-demo"
- },
- {
-  "key": "d43d57955e0cf5b3",
-  "text": "What is 5 plus 3?",
-  "source": "lesson-exercise"
- },
- {
-  "key": "d48d4d8696007a73",
-  "text": "Owl adds 2. Now it's 4.",
-  "source": "race-bot-adds"
- },
- {
   "key": "d566676799134a64",
   "text": "Take turns adding 1, 2 or 3. Whoever says 20 wins!",
   "source": "minigame-goal"
+ },
+ {
+  "key": "d5ceec6d7afc7712",
+  "text": "Not there yet. Look at the numbers on the line. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "d613e260099c3187",
+  "text": "Round 73 to the nearest ten.",
+  "source": "lesson-guided"
+ },
+ {
+  "key": "d65b52496f284b7e",
+  "text": "About where is 726? Put it on the line.",
+  "source": "minigame-round"
  },
  {
   "key": "d75754ab245a594d",
@@ -865,8 +1025,18 @@
   "source": "race-you-add"
  },
  {
-  "key": "d9b56b8f7a7f5646",
-  "text": "Owl adds 2. Now it's 5.",
+  "key": "d7c88efc4ca7fb18",
+  "text": "Number Builder. Master Number Meadow and beat Number Train",
+  "source": "badge-locked"
+ },
+ {
+  "key": "d96b4cd87383bac7",
+  "text": "Hedgie adds 3. Now it's 3.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "d99d6ff37723fc4e",
+  "text": "Hedgie adds 1. Now it's 10.",
   "source": "race-bot-adds"
  },
  {
@@ -875,8 +1045,8 @@
   "source": "exercise-note"
  },
  {
-  "key": "da5cc8fa6c313e69",
-  "text": "Owl adds 2. Now it's 13.",
+  "key": "da33bd9fbb37459d",
+  "text": "Hedgie adds 2. Now it's 12.",
   "source": "race-bot-adds"
  },
  {
@@ -890,14 +1060,9 @@
   "source": "race-you-add"
  },
  {
-  "key": "df17c06e4d249ee5",
-  "text": "Owl adds 2. Now it's 15.",
-  "source": "race-bot-adds"
- },
- {
-  "key": "df5c251a2ff318c5",
-  "text": "Owl adds 3. Now it's 7.",
-  "source": "race-bot-adds"
+  "key": "df2624415285f288",
+  "text": "Read the numbers on every mark.",
+  "source": "exercise-note"
  },
  {
   "key": "dfe3e013f29e8780",
@@ -905,9 +1070,19 @@
   "source": "badge-earned"
  },
  {
+  "key": "e0a2d2fdbfa32f53",
+  "text": "Hedgie adds 1. Now it's 1.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "e0edbe07995e3f02",
   "text": "You add 1. Now it's 17.",
   "source": "race-you-add"
+ },
+ {
+  "key": "e1589fc0260027c1",
+  "text": "Hedgie adds 2. Now it's 2.",
+  "source": "race-bot-adds"
  },
  {
   "key": "e173ccd43e93cb3d",
@@ -920,9 +1095,24 @@
   "source": "exercise-note-easier-offer"
  },
  {
-  "key": "e4f1be22becc5086",
-  "text": "Want to show me you already know Taking away?",
-  "source": "journey"
+  "key": "e52750feae9515f1",
+  "text": "Hedgie adds 3. Now it's 19.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "e5fb2fa02a3b5b00",
+  "text": "Is this the nearest hundred?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "e6a0f233f311e3d6",
+  "text": "Put 40 on the number line.",
+  "source": "minigame-round"
+ },
+ {
+  "key": "e6b599793b3c2ee7",
+  "text": "Right in the middle? It goes up to the bigger number.",
+  "source": "exercise-note"
  },
  {
   "key": "e6dd3db7d2a21a07",
@@ -930,19 +1120,24 @@
   "source": "home"
  },
  {
-  "key": "e6e6d2796d221031",
-  "text": "What is 5 minus 2?",
-  "source": "lesson-exercise"
- },
- {
   "key": "e7c0878a15db2d00",
   "text": "5 minutes left — pick something short!",
   "source": "owl-line"
  },
  {
+  "key": "e91718e2be6ab8c7",
+  "text": "Hedgie adds 1. Now it's 5.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "e9385dbcd47a07e8",
   "text": "You add 2. Now it's 11.",
   "source": "race-you-add"
+ },
+ {
+  "key": "eb34c8b42b309aa6",
+  "text": "Look: 2 hundreds, 0 tens and 5 ones. The zero holds the tens place, so the number is 205!",
+  "source": "lesson-demo"
  },
  {
   "key": "ecd4fe369e2640df",
@@ -955,24 +1150,14 @@
   "source": "race-you-add"
  },
  {
-  "key": "ee2e5d32fb3f2f0d",
-  "text": "Owl adds 1. Now it's 13.",
-  "source": "race-bot-adds"
- },
- {
-  "key": "eebff3ba0c1422a6",
-  "text": "Owl adds 3. Now it's 5.",
-  "source": "race-bot-adds"
- },
- {
-  "key": "eee0c307c1b06c9a",
-  "text": "You already know Adding — 3 lessons are yours!",
-  "source": "assessment"
- },
- {
   "key": "f00eed6db8aa147e",
   "text": "You add 2. Now it's 10.",
   "source": "race-you-add"
+ },
+ {
+  "key": "f02bd9577fdf2ef6",
+  "text": "Hedgie adds 3. Now it's 15.",
+  "source": "race-bot-adds"
  },
  {
   "key": "f04de88ae98dc1d1",
@@ -980,9 +1165,14 @@
   "source": "exercise-note"
  },
  {
-  "key": "f2c41bd5f237f0eb",
-  "text": "What is 3 plus 4?",
-  "source": "minigame-round"
+  "key": "f2087dd0faf75226",
+  "text": "World boss time: Number Train!",
+  "source": "home"
+ },
+ {
+  "key": "f2321411643ad211",
+  "text": "Hedgie adds 2. Now it's 19.",
+  "source": "race-bot-adds"
  },
  {
   "key": "f2d1457382e5d95b",
@@ -990,9 +1180,24 @@
   "source": "duel"
  },
  {
+  "key": "f4f8438175b5bd11",
+  "text": "Find the middle: 250.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "f609b76c4e0cec84",
+  "text": "Each place holds one digit: 2 hundreds is 200, not 2000.",
+  "source": "exercise-note"
+ },
+ {
   "key": "f808c122a4ca0ec7",
   "text": "You add 1. Now it's 5.",
   "source": "race-you-add"
+ },
+ {
+  "key": "f80c8fc3dcb61f21",
+  "text": "Not that one. Try another!",
+  "source": "exercise-note"
  },
  {
   "key": "f86e11534ab08fc5",
@@ -1013,6 +1218,11 @@
   "key": "fd54e9d950e62f0f",
   "text": "You add 2. Now it's 3.",
   "source": "race-you-add"
+ },
+ {
+  "key": "fd878664d98e2fc0",
+  "text": "Compare the biggest place first.",
+  "source": "exercise-note"
  },
  {
   "key": "ff0ec01eabaf8fd3",

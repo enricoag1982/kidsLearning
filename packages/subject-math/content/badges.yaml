@@ -1,8 +1,8 @@
-# Two badges; name / condition text live in locales/en/rewards.yaml under `badges.<id>.name` / `.condition`.
+# Generic conditions only; name / condition texts live in locales/en/rewards.yaml under `badges.<id>.name` / `.condition`.
 badges:
-  - id: first-sums
+  - id: number-builder
     category: milestone
-    condition: { type: mastered, scope: 'world:adding', thresholds: [1] }
+    condition: { type: mastered, scope: 'world:number-meadow', thresholds: [1] }
   - id: star-counter
     category: skill
     condition: { type: stars-total, thresholds: [10, 30] }

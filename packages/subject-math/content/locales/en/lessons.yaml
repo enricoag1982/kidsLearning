@@ -1,45 +1,47 @@
-add-within-5:
-  title: Adding with Hedgie
+# Lesson and mini-game texts: `<id>.title`, `<id>.story`, `<id>.demo` for a lesson, `<id>.title` / `<id>.goal` for a mini-game. Every
+# exercise sentence is generated from `templates.*` below (`lessons:gen.<id>.text`), and every reason from `bugs.*`; `race.*` are the
+# Race to 20 board lines.
+pv-hto:
+  title: Hundreds, tens, ones
   story: >-
-    Hedgie loves collecting berries! When she finds some more, she counts them all together.
-    Adding means putting groups together to see how many there are.
-  demo: Hedgie has 2 berries and finds 1 more. Count all the dots. 2 plus 1 makes 3!
-add5-g1: What is 1 plus 1?
-add5-01: What is 2 plus 2?
-add5-02: What is 3 plus 1?
-add5-03: What is 2 plus 3?
-add5-04: What is 1 plus 4?
-add-within-10:
-  title: Adding up to 10
+    Owl says: every digit has a place. Hedgie counts the hundreds, then the tens, then the ones.
+    An empty place still needs a zero!
+  demo: 'Look: 2 hundreds, 0 tens and 5 ones. The zero holds the tens place, so the number is 205!'
+pv-compare:
+  title: Bigger or smaller?
   story: >-
-    Owl has bigger numbers to add today. Start at the bigger number and count on. It is quicker
-    than counting everything again!
-  demo: Owl has 6 acorns and finds 3 more. Start at 6 and count on 3. 6 plus 3 makes 9!
-add10-g1: What is 4 plus 3?
-add10-01: What is 5 plus 3?
-add10-02: What is 6 plus 2?
-add10-03: What is 4 plus 5?
-add10-04: What is 7 plus 3?
-take-away:
-  title: Taking away
+    Owl says: look at the biggest place first. Hedgie checks the hundreds, then the tens.
+    The open side of the sign faces the bigger number!
+  demo: >-
+    Compare 406 and 460. The hundreds are the same, so look at the tens.
+    0 tens is less than 6 tens, so 406 is smaller!
+pv-line:
+  title: The number line
   story: >-
-    Taking away means some go away, and we count what is left. If Owl has 5 apples and eats 2,
-    there are 3 left.
-  demo: Owl has 5 apples and eats 2. Cross out 2 dots, and 3 are left. 5 minus 2 makes 3!
-takeaway-g1: What is 3 minus 1?
-takeaway-01: What is 5 minus 2?
-takeaway-02: What is 6 minus 4?
-takeaway-03: What is 9 minus 5?
-takeaway-04: What is 8 minus 3?
-number-parade:
-  title: Number Parade
-  goal: Solve every sum in the parade. How few mistakes can you make?
-number-parade-r1: What is 3 plus 4?
-number-parade-r2: What is 9 minus 3?
-number-parade-r3: What is 5 plus 5?
-number-parade-r4: What is 8 minus 2?
-number-parade-r5: What is 6 plus 2?
-number-parade-r6: What is 7 minus 4?
+    Owl says: a number line is a path of numbers. Every jump is the same size.
+    Hedgie counts the jumps, not the marks!
+  demo: >-
+    This line goes from 0 to 1000, with a mark every 100.
+    To find 300, Hedgie counts three jumps from 0!
+pv-thousands:
+  title: Thousands
+  story: >-
+    Owl says: ten hundreds make one thousand. The thousands get a place on the left.
+    Hedgie reads thousands, hundreds, tens, then ones!
+  demo: >-
+    Look: 3 thousands, 4 hundreds, 0 tens and 5 ones.
+    The zero keeps the tens place, so the number is 3405!
+pv-round:
+  title: Rounding
+  story: >-
+    Owl says: rounding finds the nearest ten or hundred. Hedgie checks the next digit:
+    5 or more goes up, less than 5 stays down.
+  demo: >-
+    Round 47 to the nearest ten. The ones digit is 7, so go up.
+    47 is closer to 50 than to 40!
+number-train:
+  title: Number Train
+  goal: Put every carriage number where it belongs on the line!
 bugs:
   append: 'Each place holds one digit: 2 hundreds is 200, not 2000.'
   swap: 'Look at the order: hundreds, then tens, then ones.'

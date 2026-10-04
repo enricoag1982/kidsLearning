@@ -1,10 +1,12 @@
 // Retired content (docs/subjects/math/plan.md G8): a later version removed content that stored progress still refers to
-// (math's demo world `adding` retires in m13.10). The recorded export of the app at tag `m12.5` holds that world's progress, its
+// (math's demo world `adding` retired in m13.10). The recorded export of the app at tag `m12.5` holds that world's progress, its
 // review stats, its boss win and its badge: loaded against a math catalog that has none of it, nothing breaks or starves, the
 // retired lessons' stars stay in the total ("nothing is lost"), and the other subjects are untouched.
 //
 // The replacement math content is derived from whatever the current math content is (its first lesson renamed into a new world
-// with a new concept), never from `adding` itself, so this test keeps passing unchanged once `adding` is really gone.
+// with a new concept), never from `adding` itself. Since m13.10 the shipped math content really has no `adding`, so it is a
+// retirement on its own; the two sanity tests that need the content the export was recorded with get it from `recordedContent`
+// (the three retired concepts, rebuilt from the current content's first lesson) instead of from the shipped content.
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { render, screen } from '@testing-library/react';
@@ -88,29 +90,69 @@ function replacementContent(base: ContentSource): ContentSource {
   });
 }
 
+/** The retired demo world `adding` as of the recording: three lessons whose concepts the export's review stats name (and a world, the
+ * `adder` rank), each with one exercise (the sanity tests only count what is due). Rebuilt from the current content's first lesson. */
+function recordedContent(base: ContentSource): ContentSource {
+  const catalog = base.catalog?.();
+  const template = base.lessons()[0];
+  const baseTrack = catalog?.tracks[0];
+  const baseWorld = baseTrack?.worlds[0];
+  const startRank = catalog?.ranks[0];
+  const exercise = template?.exercises[0];
+  if (!template || !baseTrack || !baseWorld || !startRank || !exercise) {
+    throw new Error('the math content has no lesson to derive the recorded content from');
+  }
+  const world: World = {
+    id: 'adding',
+    track: baseTrack.id,
+    order: 1,
+    habitat: baseWorld.habitat,
+    titleKey: 'journey:worlds.adding',
+  };
+  const lessons: Lesson[] = ['add-within-5', 'add-within-10', 'take-away'].map((id, index) => ({
+    ...template,
+    id,
+    world: world.id,
+    order: index + 1,
+    concept: id,
+    guided: [],
+    exercises: [{ ...exercise, id: `${id}-01`, concept: id }],
+  }));
+  return makeContentSource({
+    lessons,
+    minigames: [],
+    catalog: {
+      tracks: [{ ...baseTrack, worlds: [world] }],
+      ranks: [startRank, { id: 'adder', after: 'world:adding' }],
+    },
+    badges: base.badges?.() ?? [],
+  });
+}
+
 interface MathApp {
   readonly services: Services;
   readonly profileId: string;
 }
 
 /** The real chess / math / coding entries over fresh storage with the recorded export imported (Mia), math active and the clock
- * at {@link LATER}. `retired`: math serves {@link replacementContent} instead of its own. */
+ * at {@link LATER}. `retired`: math serves {@link replacementContent} (a catalog without what the export refers to); otherwise
+ * {@link recordedContent} (the catalog the export was recorded with). */
 async function mathApp(retired: boolean): Promise<MathApp> {
   const loaded = await mathEntry.load();
   const original = loaded.pack.createServices();
-  const mathWithoutAdding: SubjectEntry = {
+  const mathWithContent = (derive: (base: ContentSource) => ContentSource): SubjectEntry => ({
     ...mathEntry,
     load: () =>
       Promise.resolve({
         ...loaded,
         pack: {
           ...loaded.pack,
-          createServices: () => ({ ...original, content: replacementContent(original.content) }),
+          createServices: () => ({ ...original, content: derive(original.content) }),
         },
       }),
-  };
+  });
   const app = createAppServices(
-    [chessEntry, retired ? mathWithoutAdding : mathEntry, codingEntry],
+    [chessEntry, mathWithContent(retired ? replacementContent : recordedContent), codingEntry],
     KIDS_APP_CONFIG,
     createMemoryStorage(),
   );

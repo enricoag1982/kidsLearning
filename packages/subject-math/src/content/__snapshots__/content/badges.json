@@ -1,15 +1,15 @@
 [
  {
-  "id": "first-sums",
+  "id": "number-builder",
   "category": "milestone",
-  "nameKey": "rewards:badges.first-sums.name",
-  "conditionKey": "rewards:badges.first-sums.condition",
+  "nameKey": "rewards:badges.number-builder.name",
+  "conditionKey": "rewards:badges.number-builder.condition",
   "condition": {
    "type": "mastered",
    "thresholds": [
     1
    ],
-   "scope": "world:adding"
+   "scope": "world:number-meadow"
   }
  },
  {

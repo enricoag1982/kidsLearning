@@ -278,7 +278,7 @@ describe('a lesson with array exercises, through the whole build', () => {
     const root = mkdtempSync(join(tmpdir(), 'math-array-'));
     roots.push(root);
     cpSync(realRoot, root, { recursive: true });
-    writeFileSync(join(root, 'lessons', 'adding', 'array-up.yaml'), lessonYaml);
+    writeFileSync(join(root, 'lessons', 'number-meadow', 'array-up.yaml'), lessonYaml);
     const lessonTexts = join(root, 'locales', 'en', 'lessons.yaml');
     writeFileSync(lessonTexts, `${readFileSync(lessonTexts, 'utf8')}${texts}`);
     return root;
