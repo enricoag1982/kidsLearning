@@ -318,12 +318,28 @@ describe('a lesson with number-line exercises, through the whole build', () => {
     for (const root of roots.splice(0)) rmSync(root, { recursive: true, force: true });
   });
 
-  /** A copy of math's content with one more lesson (`lessonYaml`) and its texts appended to `lessons.yaml`. */
-  function rootWith(lessonYaml: string, texts: string): string {
+  /** A copy of math's content without a number-line exercise: the shipped W1 minus its line lesson, and Number Train (a line series)
+   * rewritten as rounds of rounding choices. */
+  function rootWithoutLines(): string {
     const root = mkdtempSync(join(tmpdir(), 'math-line-'));
     roots.push(root);
     cpSync(realRoot, root, { recursive: true });
-    writeFileSync(join(root, 'lessons', 'adding', 'line-up.yaml'), lessonYaml);
+    rmSync(join(root, 'lessons', 'number-meadow', 'pv-line.yaml'));
+    const train = join(root, 'minigames', 'number-train.yaml');
+    writeFileSync(
+      train,
+      `${readFileSync(train, 'utf8').split('rounds:')[0] ?? ''}rounds:
+  - id: train-round
+    generate: { template: round-ten, count: 5, seed: 1, params: { max: 100, five: false } }
+`,
+    );
+    return root;
+  }
+
+  /** The content without a line exercise, with one more lesson (`lessonYaml`) and its texts appended to `lessons.yaml`. */
+  function rootWith(lessonYaml: string, texts: string): string {
+    const root = rootWithoutLines();
+    writeFileSync(join(root, 'lessons', 'number-meadow', 'line-up.yaml'), lessonYaml);
     const lessonTexts = join(root, 'locales', 'en', 'lessons.yaml');
     writeFileSync(lessonTexts, `${readFileSync(lessonTexts, 'utf8')}${texts}`);
     return root;
@@ -435,16 +451,31 @@ variants:
     ).toHaveLength(2);
   });
 
-  it('adds nothing to the voice inventory of a build without a number-line exercise (the shipped content today)', () => {
-    const shipped = compileAll<MathContent>(mathContent, realRoot);
-    const spoken = shipped.voiceTexts.entries.map((entry) => entry.text);
+  it('adds nothing to the voice inventory of a build without a number-line exercise', () => {
+    const without = compileAll<MathContent>(mathContent, rootWithoutLines());
+    const spoken = without.voiceTexts.entries.map((entry) => entry.text);
     for (const text of [
       'Not there yet. Look at the numbers on the line.',
       'Read the numbers on every mark.',
+      'Count the jumps between the marks, not the marks.',
     ]) {
       expect(spoken, text).not.toContain(text);
     }
     expect(spoken.some((text) => text.startsWith('Find the middle'))).toBe(false);
+  });
+
+  it('the shipped W1 (the line lesson and Number Train) has them: one benchmark middle per line it draws, 500, 50 and 250', () => {
+    const shipped = compileAll<MathContent>(mathContent, realRoot);
+    const plain = shipped.voiceTexts.entries
+      .filter((entry) => entry.source === 'exercise-note')
+      .map((entry) => entry.text);
+    expect(plain).toContain('Not there yet. Look at the numbers on the line.');
+    expect(plain).toContain('Read the numbers on every mark.');
+    expect(plain.filter((text) => text.startsWith('Find the middle')).sort()).toEqual([
+      'Find the middle: 250.',
+      'Find the middle: 50.',
+      'Find the middle: 500.',
+    ]);
   });
 
   it('fails the build on a verify issue, on a reason text that does not exist and on a bad shape', () => {

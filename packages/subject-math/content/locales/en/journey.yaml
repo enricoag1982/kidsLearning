@@ -1,7 +1,7 @@
 tracks:
-  numbers: Numbers
+  numbers: Number Adventures
 worlds:
-  adding: Adding
+  number-meadow: Number Meadow
 ranks:
   counter: Counter
-  adder: Adder
+  builder: Builder

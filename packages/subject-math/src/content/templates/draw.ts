@@ -15,11 +15,17 @@ export type ZeroIn = z.output<typeof zeroInParam>;
 /** Leading digits two compared numbers share before they differ (0 = they differ at once; the curriculum's "different hundreds"). */
 export const sharedParam = z.union([z.literal(0), z.literal(1), z.literal(2)]);
 
-/** The digits of a number of `count` digits: the leading digit 1-9, every other 1-9 too except the zero `zeroIn` asks for. */
-export function drawDigits(random: Random, count: number, zeroIn: ZeroIn): readonly number[] {
+/** The digits of a number of `count` digits: every digit `lowest`-9 (default 1-9) except the zero `zeroIn` asks for. A template whose
+ * sentence says "{{h}} hundreds" draws from 2 so no place reads "1 hundreds" (the text resolver pluralises one `count` var only). */
+export function drawDigits(
+  random: Random,
+  count: number,
+  zeroIn: ZeroIn,
+  lowest = 1,
+): readonly number[] {
   const zeroAt = zeroIn === 'tens' ? count - 2 : zeroIn === 'ones' ? count - 1 : -1;
   return Array.from({ length: count }, (_unused, index) =>
-    index === zeroAt ? 0 : randomInt(random, 1, 9),
+    index === zeroAt ? 0 : randomInt(random, lowest, 9),
   );
 }
 

@@ -50,7 +50,7 @@ const GROUPS: readonly SampleGroup[] = [
 
 const SAMPLES: readonly Sample[] = GROUPS.flatMap((group) => group.samples);
 
-/** The tracks of the fixture worlds (numbers: lines, adding; times: arrays), and the ranks the Home header needs. */
+/** The tracks of the fixture worlds (numbers: lines, number-meadow; times: arrays), and the ranks the Home header needs. */
 const PLAYGROUND_CATALOG: TracksCatalog = {
   tracks: [
     {
@@ -66,11 +66,11 @@ const PLAYGROUND_CATALOG: TracksCatalog = {
           titleKey: 'journey:worlds.lines',
         },
         {
-          id: 'adding',
+          id: 'number-meadow',
           track: 'numbers',
           order: 2,
           habitat: 'meadow',
-          titleKey: 'journey:worlds.adding',
+          titleKey: 'journey:worlds.number-meadow',
         },
       ],
     },
@@ -78,7 +78,7 @@ const PLAYGROUND_CATALOG: TracksCatalog = {
   ],
   ranks: [
     { id: 'counter', after: 'start' },
-    { id: 'adder', after: 'world:adding' },
+    { id: 'builder', after: 'world:number-meadow' },
   ],
 };
 

@@ -1,0 +1,25 @@
+# W1 lesson 4: thousands (4-digit numbers). Generated; seeds are stored, never change them.
+id: pv-thousands
+order: 4
+concept: pv-thousands
+character: hedgehog
+demo:
+  prompt: { big: 3405 }
+guided:
+  - id: th-g
+    generate: { template: pv-build, count: 2, seed: 20, params: { digits: 4, zeroIn: none } }
+exercises:
+  - id: th-build
+    generate: { template: pv-build, count: 1, seed: 4, params: { digits: 4, zeroIn: none } }
+  - id: th-zero
+    easier: th-easy-1
+    generate: { template: pv-build, count: 1, seed: 9, params: { digits: 4, zeroIn: tens } }
+  - id: th-expanded
+    generate: { template: pv-expanded, count: 2, seed: 8, params: { digits: 4 } }
+  - id: th-sign
+    generate: { template: cmp-sign, count: 1, seed: 8, params: { digits: 4, shared: 0 } }
+  - id: th-order
+    generate: { template: cmp-order, count: 1, seed: 2, params: { digits: 4, shared: 1 } }
+variants:
+  - id: th-easy
+    generate: { template: pv-build, count: 1, seed: 19, params: { digits: 4, zeroIn: none } }

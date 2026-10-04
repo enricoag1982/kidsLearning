@@ -1,0 +1,24 @@
+# W1 lesson 2: compare from the biggest place (the first place that differs decides). Generated; seeds are stored, never change them.
+# `shared` = how many leading digits the numbers have in common: 1 = same hundreds, 2 = same hundreds and tens (the hardest).
+id: pv-compare
+order: 2
+concept: pv-compare
+character: hedgehog
+demo:
+  prompt: { big: 406 < 460 }
+guided:
+  - id: cmp-g
+    generate: { template: cmp-sign, count: 2, seed: 9, params: { digits: 3, shared: 1 } }
+exercises:
+  - id: cmp-sign
+    generate: { template: cmp-sign, count: 2, seed: 12, params: { digits: 3, shared: 1 } }
+  - id: cmp-close
+    easier: cmp-easy-1
+    generate: { template: cmp-sign, count: 1, seed: 8, params: { digits: 3, shared: 2 } }
+  - id: cmp-order
+    generate: { template: cmp-order, count: 2, seed: 3, params: { digits: 3, shared: 1 } }
+  - id: cmp-true
+    generate: { template: cmp-tf, count: 1, seed: 8, params: { digits: 3, shared: 1 } }
+variants:
+  - id: cmp-easy
+    generate: { template: cmp-sign, count: 1, seed: 0, params: { digits: 3, shared: 0 } }

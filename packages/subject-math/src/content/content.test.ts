@@ -49,154 +49,61 @@ describe.each(allExercises())('$where ($exercise.type)', ({ exercise }) => {
   });
 });
 
-/** `a + b` / `a - b` as the kid reads it on the card, and its result. */
-function sumOf(big: string | undefined): { readonly text: string; readonly result: number } | null {
-  const match = /^(\d+) ([+-]) (\d+)$/.exec(big ?? '');
-  if (match === null) return null;
-  const a = Number(match[1]);
-  const b = Number(match[3]);
-  return { text: big ?? '', result: match[2] === '+' ? a + b : a - b };
-}
-
 describe('the authored world', () => {
-  it('has 3 lessons of 1 guided and 4 exercises, taught by Hedgie then Owl', () => {
-    const byOrder = [...content.lessons].sort((a, b) => a.order - b.order);
-    expect(
-      byOrder.map((lesson) => [
-        lesson.id,
-        lesson.world,
-        lesson.order,
-        lesson.character,
-        lesson.guided.length,
-        lesson.exercises.length,
-      ]),
-    ).toEqual([
-      ['add-within-5', 'adding', 1, 'hedgehog', 1, 4],
-      ['add-within-10', 'adding', 2, 'owl', 1, 4],
-      ['take-away', 'adding', 3, 'owl', 1, 4],
-    ]);
-  });
-
-  it('keeps every lesson, exercise, round and concept id of the build before the card kit (stored progress keeps matching)', () => {
-    expect(
-      content.lessons.map((lesson) => [
-        lesson.id,
-        lesson.concept,
-        lesson.guided.map((exercise) => exercise.id),
-        lesson.exercises.map((exercise) => exercise.id),
-      ]),
-    ).toEqual([
-      [
-        'add-within-10',
-        'add-within-10',
-        ['add10-g1'],
-        ['add10-01', 'add10-02', 'add10-03', 'add10-04'],
-      ],
-      ['add-within-5', 'add-within-5', ['add5-g1'], ['add5-01', 'add5-02', 'add5-03', 'add5-04']],
-      [
-        'take-away',
-        'take-away',
-        ['takeaway-g1'],
-        ['takeaway-01', 'takeaway-02', 'takeaway-03', 'takeaway-04'],
-      ],
-    ]);
-    expect(
-      content.minigames.map((game) => [
-        game.id,
-        game.concept,
-        game.mode === 'series' ? game.rounds.map((round) => round.id) : game.mode,
-      ]),
-    ).toEqual([
-      [
-        'number-parade',
-        'add-within-10',
-        [
-          'number-parade-r1',
-          'number-parade-r2',
-          'number-parade-r3',
-          'number-parade-r4',
-          'number-parade-r5',
-          'number-parade-r6',
-        ],
-      ],
-      ['race-to-20', 'take-away', 'duel'],
-    ]);
-    for (const { where, exercise } of allExercises()) {
-      expect(exercise.textKey, where).toBe(`lessons:${exercise.id}`);
-    }
-    for (const lesson of content.lessons) {
-      expect(lesson.demo.textKey).toBe(`lessons:${lesson.id}.demo`);
-    }
-  });
-
-  it('uses the card kinds choice and number-entry, and both operators', () => {
-    const exercises = allExercises().map(({ exercise }) => exercise);
-    expect(new Set(exercises.map((exercise) => exercise.type))).toEqual(
-      new Set(['choice', 'number-entry']),
-    );
-    const operators = exercises.map((exercise) => / ([+-]) /.exec(exercise.prompt?.big ?? '')?.[1]);
-    expect(new Set(operators)).toEqual(new Set(['+', '-']));
-  });
-
-  it('every sum on a card, in an exercise or a demo, is right: the answer is its result, never below zero', () => {
-    for (const { where, exercise } of allExercises()) {
-      const sum = sumOf(exercise.prompt?.big);
-      expect(sum, `${where}: a sum or a difference on the card`).not.toBeNull();
-      if (sum === null) continue;
-      expect(sum.result, `${where}: ${sum.text} is not below zero`).toBeGreaterThanOrEqual(0);
-      if (exercise.type === 'number-entry') {
-        expect(exercise.answer, `${where}: ${sum.text}`).toBe(sum.result);
-      } else if (exercise.type === 'choice') {
-        const matching = exercise.options.filter((option) => option.big === String(sum.result));
-        expect(
-          matching.map((option) => option.id),
-          `${where}: exactly one option is ${String(sum.result)}, and it is the answer`,
-        ).toEqual([exercise.answer]);
-        expect(
-          new Set(exercise.options.map((option) => option.big)).size,
-          `${where}: no two options alike`,
-        ).toBe(exercise.options.length);
-      }
-    }
-    for (const lesson of content.lessons) {
-      const sum = sumOf(lesson.demo.prompt?.big);
-      expect(sum, `${lesson.id} demo: a sum or a difference on the card`).not.toBeNull();
-      expect(sum?.result ?? -1, `${lesson.id} demo`).toBeGreaterThanOrEqual(0);
-    }
-  });
-
-  it('ends with the Number Parade world boss: 6 rounds, 3 stars up to 0 mistakes, 2 up to 2', () => {
+  it('is World 1, Number Meadow, in the main track Number Adventures, ending with the Number Train world boss', () => {
     const [main] = tracks.tracks;
+    expect(tracks.tracks).toHaveLength(1);
     expect(main).toMatchObject({ id: 'numbers', kind: 'main' });
     expect(main?.worlds).toEqual([
-      expect.objectContaining({ id: 'adding', habitat: 'meadow', boss: 'number-parade' }),
+      expect.objectContaining({
+        id: 'number-meadow',
+        order: 1,
+        habitat: 'meadow',
+        boss: 'number-train',
+      }),
     ]);
-    const boss = content.minigames.find((game) => game.mode === 'series');
-    expect(boss).toMatchObject({
-      id: 'number-parade',
-      mode: 'series',
-      unlockAfter: 'take-away',
-      errors3: 0,
-      errors2: 2,
-    });
-    const rounds = boss?.mode === 'series' ? boss.rounds : [];
-    expect(rounds).toHaveLength(6);
-    expect(rounds.map((round) => round.type)).toEqual([
-      'number-entry',
-      'choice',
-      'number-entry',
-      'number-entry',
-      'choice',
-      'number-entry',
+    expect(new Set(content.lessons.map((lesson) => lesson.world))).toEqual(
+      new Set(['number-meadow']),
+    );
+  });
+
+  it('has the counter and builder ranks and the Number Builder and Star Counter badges', () => {
+    expect(tracks.ranks).toEqual([
+      { id: 'counter', after: 'start' },
+      { id: 'builder', after: 'world:number-meadow' },
+    ]);
+    expect(badges).toEqual([
+      expect.objectContaining({
+        id: 'number-builder',
+        category: 'milestone',
+        condition: { type: 'mastered', scope: 'world:number-meadow', thresholds: [1] },
+      }),
+      expect.objectContaining({
+        id: 'star-counter',
+        condition: { type: 'stars-total', thresholds: [10, 30] },
+      }),
     ]);
   });
 
-  it('has the counter and adder ranks and 2 badges', () => {
-    expect(tracks.ranks).toEqual([
-      { id: 'counter', after: 'start' },
-      { id: 'adder', after: 'world:adding' },
-    ]);
-    expect(badges.map((badge) => badge.id)).toEqual(['first-sums', 'star-counter']);
+  it('keeps nothing of the retired demo world adding: no lesson, round, rank, badge or text of it (stored progress is tolerated, m13.4)', () => {
+    const retired = ['adding', 'add-within-5', 'add-within-10', 'take-away', 'number-parade'];
+    const ids = [
+      ...content.lessons.map((lesson) => lesson.id),
+      ...content.lessons.map((lesson) => lesson.concept),
+      ...content.minigames.map((game) => game.id),
+      ...content.minigames.map((game) => game.concept),
+      ...content.minigames.map((game) => game.unlockAfter),
+      ...tracks.tracks.flatMap((track) => track.worlds.map((world) => world.id)),
+      ...tracks.ranks.map((rank) => rank.id),
+      ...badges.map((badge) => badge.id),
+    ];
+    for (const id of retired) expect(ids, id).not.toContain(id);
+    expect(ids).not.toContain('adder');
+    expect(ids).not.toContain('first-sums');
+    const texts = JSON.stringify(locales.en);
+    for (const text of ['Adding with Hedgie', 'Number Parade', 'First Sums', 'Adder', 'plus 1']) {
+      expect(texts, text).not.toContain(text);
+    }
   });
 });
 
@@ -353,11 +260,17 @@ describe('the voice inventory covers every note', () => {
     );
   });
 
-  it('has no note of a kind the world does not use (order, place-value)', () => {
-    expect(notes('exercise-note')).not.toContain('Not that one. Try another!');
-    expect(notes('exercise-note')).not.toContain('Count the blocks in each column again.');
-    expect(voice.filter((entry) => /^Here are the \w+\. Now finish!$/.test(entry.text))).toEqual(
-      [],
-    );
+  it('has the notes of the kinds World 1 uses beyond the card pad and cards (order, place-value, number-line) and none of the array kind', () => {
+    const plain = notes('exercise-note');
+    for (const text of [
+      'Not that one. Try another!',
+      'Count the blocks in each column again.',
+      'Not there yet. Look at the numbers on the line.',
+    ]) {
+      expect(plain, text).toContain(text);
+    }
+    expect(plain).not.toContain('Count the rows and the dots in each row.');
+    expect(plain).not.toContain('Same number, but count the rows again.');
+    expect(plain).not.toContain('Rows go across, like lines in a book.');
   });
 });

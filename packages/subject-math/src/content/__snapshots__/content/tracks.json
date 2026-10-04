@@ -6,12 +6,12 @@
    "titleKey": "journey:tracks.numbers",
    "worlds": [
     {
-     "id": "adding",
+     "id": "number-meadow",
      "track": "numbers",
      "order": 1,
      "habitat": "meadow",
-     "titleKey": "journey:worlds.adding",
-     "boss": "number-parade"
+     "titleKey": "journey:worlds.number-meadow",
+     "boss": "number-train"
     }
    ]
   }
@@ -22,8 +22,8 @@
    "after": "start"
   },
   {
-   "id": "adder",
-   "after": "world:adding"
+   "id": "builder",
+   "after": "world:number-meadow"
   }
  ]
 }

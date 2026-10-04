@@ -546,11 +546,11 @@
    "savannah": "Savannah"
   },
   "ranks": {
-   "adder": "Adder",
+   "builder": "Builder",
    "counter": "Counter"
   },
   "tracks": {
-   "numbers": "Numbers"
+   "numbers": "Number Adventures"
   },
   "ui": {
    "back": "Back to Home",
@@ -582,30 +582,10 @@
    "world-stars": "{{earned}} of {{max}} stars"
   },
   "worlds": {
-   "adding": "Adding"
+   "number-meadow": "Number Meadow"
   }
  },
  "lessons": {
-  "add-within-10": {
-   "demo": "Owl has 6 acorns and finds 3 more. Start at 6 and count on 3. 6 plus 3 makes 9!",
-   "story": "Owl has bigger numbers to add today. Start at the bigger number and count on. It is quicker than counting everything again!",
-   "title": "Adding up to 10"
-  },
-  "add-within-5": {
-   "demo": "Hedgie has 2 berries and finds 1 more. Count all the dots. 2 plus 1 makes 3!",
-   "story": "Hedgie loves collecting berries! When she finds some more, she counts them all together. Adding means putting groups together to see how many there are.",
-   "title": "Adding with Hedgie"
-  },
-  "add10-01": "What is 5 plus 3?",
-  "add10-02": "What is 6 plus 2?",
-  "add10-03": "What is 4 plus 5?",
-  "add10-04": "What is 7 plus 3?",
-  "add10-g1": "What is 4 plus 3?",
-  "add5-01": "What is 2 plus 2?",
-  "add5-02": "What is 3 plus 1?",
-  "add5-03": "What is 2 plus 3?",
-  "add5-04": "What is 1 plus 4?",
-  "add5-g1": "What is 1 plus 1?",
   "bugs": {
    "append": "Each place holds one digit: 2 hundreds is 200, not 2000.",
    "drop-zero": "An empty place still needs a zero to hold its spot.",
@@ -615,16 +595,187 @@
    "ticks-not-gaps": "Count the jumps between the marks, not the marks.",
    "truncate": "Rounding down every time? Check which number is nearer."
   },
-  "number-parade": {
-   "goal": "Solve every sum in the parade. How few mistakes can you make?",
-   "title": "Number Parade"
+  "gen": {
+   "cmp-close-1": {
+    "text": "Which sign goes in the gap? The open side faces the bigger number."
+   },
+   "cmp-easy-1": {
+    "text": "Which sign goes in the gap? The open side faces the bigger number."
+   },
+   "cmp-g-1": {
+    "text": "Which sign goes in the gap? The open side faces the bigger number."
+   },
+   "cmp-g-2": {
+    "text": "Which sign goes in the gap? The open side faces the bigger number."
+   },
+   "cmp-order-1": {
+    "text": "Put the numbers in order, smallest first."
+   },
+   "cmp-order-2": {
+    "text": "Put the numbers in order, smallest first."
+   },
+   "cmp-sign-1": {
+    "text": "Which sign goes in the gap? The open side faces the bigger number."
+   },
+   "cmp-sign-2": {
+    "text": "Which sign goes in the gap? The open side faces the bigger number."
+   },
+   "cmp-true-1": {
+    "text": "Is this true?"
+   },
+   "hto-build-1": {
+    "text": "Build 932 with blocks."
+   },
+   "hto-easy-1": {
+    "text": "Build 465 with blocks."
+   },
+   "hto-g-1": {
+    "text": "Build 243 with blocks."
+   },
+   "hto-g-2": {
+    "text": "Build 305 with blocks."
+   },
+   "hto-read-1": {
+    "text": "7 hundreds, 3 tens and 8 ones. What number is it?"
+   },
+   "hto-read-zero-1": {
+    "text": "8 hundreds, 0 tens and 5 ones. What number is it?"
+   },
+   "hto-which-1": {
+    "text": "Which number has 3 hundreds, 7 tens and 4 ones?"
+   },
+   "hto-which-zero-1": {
+    "text": "Which number has 6 hundreds, 0 tens and 4 ones?"
+   },
+   "hto-zero-1": {
+    "text": "Build 507 with blocks."
+   },
+   "line-easy-1": {
+    "text": "Put 500 on the number line."
+   },
+   "line-fifties-1": {
+    "text": "Put 350 on the number line."
+   },
+   "line-g-hundreds-1": {
+    "text": "Put 700 on the number line."
+   },
+   "line-g-tens-1": {
+    "text": "Put 60 on the number line."
+   },
+   "line-guess-big-1": {
+    "text": "About where is 625? Put it on the line."
+   },
+   "line-guess-small-1": {
+    "text": "About where is 36? Put it on the line."
+   },
+   "line-half-1": {
+    "text": "What number is halfway between 800 and 900?"
+   },
+   "line-hundreds-1": {
+    "text": "Put 400 on the number line."
+   },
+   "line-tens-1": {
+    "text": "Put 70 on the number line."
+   },
+   "round-big-1": {
+    "text": "Round 698 to the nearest ten."
+   },
+   "round-easy-1": {
+    "text": "Round 31 to the nearest ten."
+   },
+   "round-g-1": {
+    "text": "Round 73 to the nearest ten."
+   },
+   "round-g-2": {
+    "text": "Round 36 to the nearest ten."
+   },
+   "round-half-1": {
+    "text": "Round 45 to the nearest ten."
+   },
+   "round-hundred-1": {
+    "text": "Round 732 to the nearest hundred."
+   },
+   "round-hundred-2": {
+    "text": "Round 354 to the nearest hundred."
+   },
+   "round-ten-1": {
+    "text": "Round 28 to the nearest ten."
+   },
+   "round-true-1": {
+    "text": "Is this the nearest hundred?"
+   },
+   "th-build-1": {
+    "text": "Build 9321 with blocks."
+   },
+   "th-easy-1": {
+    "text": "Build 1357 with blocks."
+   },
+   "th-expanded-1": {
+    "text": "Put the parts together. What number is it?"
+   },
+   "th-expanded-2": {
+    "text": "Put the parts together. What number is it?"
+   },
+   "th-g-1": {
+    "text": "Build 7463 with blocks."
+   },
+   "th-g-2": {
+    "text": "Build 4278 with blocks."
+   },
+   "th-order-1": {
+    "text": "Put the numbers in order, smallest first."
+   },
+   "th-sign-1": {
+    "text": "Which sign goes in the gap? The open side faces the bigger number."
+   },
+   "th-zero-1": {
+    "text": "Build 2802 with blocks."
+   },
+   "train-fifties-1": {
+    "text": "Put 250 on the number line."
+   },
+   "train-guess-1": {
+    "text": "About where is 726? Put it on the line."
+   },
+   "train-guess-2": {
+    "text": "About where is 428? Put it on the line."
+   },
+   "train-hundreds-1": {
+    "text": "Put 600 on the number line."
+   },
+   "train-tens-1": {
+    "text": "Put 40 on the number line."
+   }
   },
-  "number-parade-r1": "What is 3 plus 4?",
-  "number-parade-r2": "What is 9 minus 3?",
-  "number-parade-r3": "What is 5 plus 5?",
-  "number-parade-r4": "What is 8 minus 2?",
-  "number-parade-r5": "What is 6 plus 2?",
-  "number-parade-r6": "What is 7 minus 4?",
+  "number-train": {
+   "goal": "Put every carriage number where it belongs on the line!",
+   "title": "Number Train"
+  },
+  "pv-compare": {
+   "demo": "Compare 406 and 460. The hundreds are the same, so look at the tens. 0 tens is less than 6 tens, so 406 is smaller!",
+   "story": "Owl says: look at the biggest place first. Hedgie checks the hundreds, then the tens. The open side of the sign faces the bigger number!",
+   "title": "Bigger or smaller?"
+  },
+  "pv-hto": {
+   "demo": "Look: 2 hundreds, 0 tens and 5 ones. The zero holds the tens place, so the number is 205!",
+   "story": "Owl says: every digit has a place. Hedgie counts the hundreds, then the tens, then the ones. An empty place still needs a zero!",
+   "title": "Hundreds, tens, ones"
+  },
+  "pv-line": {
+   "demo": "This line goes from 0 to 1000, with a mark every 100. To find 300, Hedgie counts three jumps from 0!",
+   "story": "Owl says: a number line is a path of numbers. Every jump is the same size. Hedgie counts the jumps, not the marks!",
+   "title": "The number line"
+  },
+  "pv-round": {
+   "demo": "Round 47 to the nearest ten. The ones digit is 7, so go up. 47 is closer to 50 than to 40!",
+   "story": "Owl says: rounding finds the nearest ten or hundred. Hedgie checks the next digit: 5 or more goes up, less than 5 stays down.",
+   "title": "Rounding"
+  },
+  "pv-thousands": {
+   "demo": "Look: 3 thousands, 4 hundreds, 0 tens and 5 ones. The zero keeps the tens place, so the number is 3405!",
+   "story": "Owl says: ten hundreds make one thousand. The thousands get a place on the left. Hedgie reads thousands, hundreds, tens, then ones!",
+   "title": "Thousands"
+  },
   "race": {
    "bot-adds": "{{bot}} adds {{step}}. Now it's {{total}}.",
    "hint": "Try to land on 4, 8, 12 or 16.",
@@ -636,16 +787,6 @@
    "goal": "Take turns adding 1, 2 or 3. Whoever says 20 wins!",
    "title": "Race to 20"
   },
-  "take-away": {
-   "demo": "Owl has 5 apples and eats 2. Cross out 2 dots, and 3 are left. 5 minus 2 makes 3!",
-   "story": "Taking away means some go away, and we count what is left. If Owl has 5 apples and eats 2, there are 3 left.",
-   "title": "Taking away"
-  },
-  "takeaway-01": "What is 5 minus 2?",
-  "takeaway-02": "What is 6 minus 4?",
-  "takeaway-03": "What is 9 minus 5?",
-  "takeaway-04": "What is 8 minus 3?",
-  "takeaway-g1": "What is 3 minus 1?",
   "templates": {
    "cmp-order": "Put the numbers in order, smallest first.",
    "cmp-sign": "Which sign goes in the gap? The open side faces the bigger number.",
@@ -666,9 +807,9 @@
  },
  "rewards": {
   "badges": {
-   "first-sums": {
-    "condition": "Master World 1: Adding",
-    "name": "First Sums"
+   "number-builder": {
+    "condition": "Master Number Meadow and beat Number Train",
+    "name": "Number Builder"
    },
    "star-counter": {
     "condition_one": "Earn {{count}} star",

@@ -284,7 +284,7 @@ pvx-easy: Build 40.
     const dir = mkdtempSync(join(tmpdir(), 'math-pv-'));
     dirs.push(dir);
     cpSync(root, dir, { recursive: true });
-    writeFileSync(join(dir, 'lessons', 'adding', 'pv-fx.yaml'), edit(LESSON));
+    writeFileSync(join(dir, 'lessons', 'number-meadow', 'pv-fx.yaml'), edit(LESSON));
     const lessons = join(dir, 'locales', 'en', 'lessons.yaml');
     writeFileSync(lessons, `${readFileSync(lessons, 'utf8')}${TEXTS}`);
     return compileAll<MathContent>(mathContent, dir);

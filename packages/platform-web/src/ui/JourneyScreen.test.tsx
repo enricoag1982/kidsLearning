@@ -10,6 +10,7 @@ import { initI18n } from '../i18n.ts';
 import { cardLocales, createCardTestEntry } from '../testing/card-test-entry.tsx';
 import { createMemoryStorage } from '../testing/memory-storage.ts';
 import { renderWithStore } from '../testing/render-with-store.tsx';
+import { animalImage } from './art/animal-images.ts';
 import { JourneyScreen } from './JourneyScreen.tsx';
 
 const APP: Omit<AppConfig, 'version'> = {
@@ -36,5 +37,19 @@ describe('JourneyScreen over the card fixture subject', () => {
     await screen.findAllByRole('button');
     expect(screen.queryByText(/Paths after/)).toBeNull();
     expect(screen.queryByText(/Basics/)).toBeNull();
+  });
+
+  it("shows the subject's own lesson character, not the Owl, on a World 1 node (the Owl stays for chess's Owl-taught World 1)", async () => {
+    const app = createAppServices([createCardTestEntry()], APP, createMemoryStorage());
+    const services = await app.activate('cards');
+    const profile = await createProfile(services.deps, 'Mia', 'fox');
+    await selectProfile(services.deps, profile.id);
+
+    await renderWithStore(<JourneyScreen />, services);
+
+    await screen.findAllByRole('button');
+    const sources = [...document.querySelectorAll('img')].map((img) => img.getAttribute('src'));
+    expect(sources).toContain(animalImage('fox'));
+    expect(sources).not.toContain(animalImage('owl'));
   });
 });

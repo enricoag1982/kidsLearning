@@ -1,7 +1,7 @@
 // The 13 W1 templates in one test-only lesson (`w1-fixture.ts`, not part of `content/`): it builds through the platform loader with no
 // issue, every generated sentence resolves and fits a card, every exercise plays through its own kind, every bug of the curriculum can
-// be spoken, and the voice inventory lists exactly what the lesson speaks. The shipped content, which uses no template yet, gains none
-// of it.
+// be spoken, and the voice inventory lists exactly what the lesson speaks. The shipped W1 content (m13.10) is built from the templates and
+// is checked in its own tests.
 import { cpSync, mkdirSync, mkdtempSync, rmSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -96,7 +96,10 @@ function load() {
 function compileWithFixture() {
   const root = scratch();
   cpSync(realRoot, root, { recursive: true });
-  writeFileSync(join(root, 'lessons', 'adding', `${W1_FIXTURE_LESSON_ID}.yaml`), W1_FIXTURE_LESSON);
+  writeFileSync(
+    join(root, 'lessons', 'number-meadow', `${W1_FIXTURE_LESSON_ID}.yaml`),
+    W1_FIXTURE_LESSON,
+  );
   const texts = join(root, 'locales', 'en', 'lessons.yaml');
   writeFileSync(texts, `${readFileSync(texts, 'utf8')}${W1_FIXTURE_TEXTS}`);
   return compileAll<MathContent>(mathContent, root);
@@ -218,8 +221,8 @@ describe('the W1 fixture lesson', () => {
   });
 });
 
-describe('the shipped math content, which uses no template yet', () => {
-  it('lists none of the template or bug texts in its voice inventory (they are only narrated once a lesson uses them)', () => {
+describe('the shipped W1 content, built from these templates (m13.10)', () => {
+  it('speaks every bug of the curriculum through some exercise, lists the generated sentences of its guided tries, and no template text raw', () => {
     const shipped = compileAll<MathContent>(mathContent, realRoot);
     const listed = shipped.voiceTexts.entries.map((entry) => entry.text);
     const bugs = AUTHORED_LOCALES.en?.lessons?.bugs;
@@ -228,12 +231,16 @@ describe('the shipped math content, which uses no template yet', () => {
         ? Object.values(bugs).filter((text) => typeof text === 'string')
         : [];
     expect(bugTexts).toHaveLength(BUG_IDS.length);
-    for (const text of bugTexts) expect(listed).not.toContain(text);
-    expect(listed).not.toContain('Is this true?');
+    for (const text of bugTexts) expect(listed).toContain(text);
+    for (const text of ['Build 243 with blocks.', 'Build 305 with blocks.', 'Is this true?']) {
+      expect(listed, text).toContain(text);
+    }
+    // The authored template sentences themselves have `{{vars}}`: only their filled-in forms are narrated.
+    expect(listed.filter((text) => /\{\{/.test(text))).toEqual([]);
     expect(
       shipped.content.lessons
-        .flatMap((lesson) => lesson.exercises)
-        .some((def) => def.id.startsWith('gen')),
-    ).toBe(false);
+        .flatMap((lesson) => [...lesson.guided, ...lesson.exercises])
+        .every((def) => def.textKey.startsWith('lessons:gen.')),
+    ).toBe(true);
   });
 });

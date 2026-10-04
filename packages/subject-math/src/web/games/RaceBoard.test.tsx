@@ -32,9 +32,9 @@ const content = bundled as unknown as MathContent;
 const found = content.minigames.find((game) => game.id === 'race-to-20');
 if (found?.mode !== 'duel') throw new Error('the math content has no race-to-20 duel');
 const GAME: MathDuelGame = found;
-// The lesson the duel unlocks after (its character is the bot's name: Owl).
+// The lesson the duel unlocks after (its character is the bot's name: Hedgie).
 const unlock = content.lessons.find((entry) => entry.id === GAME.unlockAfter);
-if (unlock === undefined) throw new Error('the math content has no take-away lesson');
+if (unlock === undefined) throw new Error('the math content has no pv-round lesson');
 const LESSON: MathLesson = unlock;
 const INVENTORY = new Set(voiceTexts.map((entry) => entry.text));
 
@@ -252,7 +252,7 @@ describe('the race board alone', () => {
 describe('the duel step with the race board', () => {
   it('opens on the bot’s turn with the track at 0 and every step button disabled, then the bot adds after its pause', async () => {
     await mountStep();
-    expect(banner()).toBe("Owl's turn");
+    expect(banner()).toBe("Hedgie's turn");
     expect(screen.getByRole('heading', { name: 'Race to 20' })).toBeTruthy();
     expect(token()).toBe('0');
     for (const n of [1, 2, 3]) expect(step(n).hasAttribute('disabled')).toBe(true);
@@ -266,7 +266,7 @@ describe('the duel step with the race board', () => {
     expect(banner()).toBe('Your turn');
     expect(stone(1).getAttribute('data-look')).toBe('bot');
     expect(stone(3).getAttribute('data-look')).toBe('bot');
-    expect(screen.getByTestId('race-line').textContent).toBe("Owl adds 3. Now it's 3.");
+    expect(screen.getByTestId('race-line').textContent).toBe("Hedgie adds 3. Now it's 3.");
     for (const n of [1, 2, 3]) expect(step(n).hasAttribute('disabled')).toBe(false);
   });
 
@@ -275,12 +275,12 @@ describe('the duel step with the race board', () => {
     expect(narrator.spoken.at(-1)).toBe('Take turns adding 1, 2 or 3. Whoever says 20 wins!');
 
     await wait(BOT_PAUSE);
-    expect(narrator.spoken.slice(-2)).toEqual(["Owl adds 3. Now it's 3.", 'Your turn!']);
+    expect(narrator.spoken.slice(-2)).toEqual(["Hedgie adds 3. Now it's 3.", 'Your turn!']);
 
     fireEvent.click(step(1));
     await wait(0);
     expect(narrator.spoken.at(-1)).toBe("You add 1. Now it's 4.");
-    expect(narrator.spoken).not.toContain("Owl's turn​");
+    expect(narrator.spoken).not.toContain("Hedgie's turn​");
   });
 
   it('plays the kid move at once: the token moves, the stones turn green, the buttons close, and the bot answers after its pause', async () => {
@@ -292,12 +292,12 @@ describe('the duel step with the race board', () => {
     expect(stone(4).getAttribute('data-look')).toBe('kid');
     expect(stone(3).getAttribute('data-look')).toBe('walked');
     expect(document.querySelectorAll('[data-testid="paw"]')).toHaveLength(0);
-    expect(banner()).toBe("Owl's turn");
+    expect(banner()).toBe("Hedgie's turn");
     for (const n of [1, 2, 3]) expect(step(n).hasAttribute('disabled')).toBe(true);
 
     await wait(BOT_PAUSE);
     expect(token()).toBe('7'); // 4 is lost for the bot: a random step, 3
-    expect(screen.getByTestId('race-line').textContent).toBe("Owl adds 3. Now it's 7.");
+    expect(screen.getByTestId('race-line').textContent).toBe("Hedgie adds 3. Now it's 7.");
   });
 
   it('Hint makes the best step glow, speaks the game’s hint, and the next move clears it', async () => {
@@ -321,7 +321,7 @@ describe('the duel step with the race board', () => {
     const { narrator } = await mountStep(constant(0.99), true);
     await wait(BOT_PAUSE);
     // The bot's line is pending (a manual narrator): the hint cancels it and is spoken instead.
-    expect(narrator.spoken.at(-1)).toBe("Owl adds 3. Now it's 3.");
+    expect(narrator.spoken.at(-1)).toBe("Hedgie adds 3. Now it's 3.");
     fireEvent.click(screen.getByRole('button', { name: 'Hint' }));
     await wait(0);
     expect(narrator.spoken).not.toContain('Your turn!');
@@ -415,7 +415,7 @@ describe('the duel step with the race board', () => {
     const missing = [...spoken].filter((line) => !INVENTORY.has(line));
     expect(missing).toEqual([]);
     // A fair spread of the bounded set was exercised, both voices.
-    expect([...spoken].filter((line) => line.startsWith('Owl adds')).length).toBeGreaterThan(10);
+    expect([...spoken].filter((line) => line.startsWith('Hedgie adds')).length).toBeGreaterThan(10);
     expect([...spoken].filter((line) => line.startsWith('You add')).length).toBeGreaterThan(10);
     expect(spoken.has('Your turn!')).toBe(true);
   });

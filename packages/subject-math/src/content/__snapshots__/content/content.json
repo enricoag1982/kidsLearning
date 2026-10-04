@@ -2,290 +2,1027 @@
  "version": 1,
  "lessons": [
   {
-   "id": "add-within-10",
-   "world": "adding",
+   "id": "pv-compare",
+   "world": "number-meadow",
    "order": 2,
-   "concept": "add-within-10",
-   "character": "owl",
-   "titleKey": "lessons:add-within-10.title",
-   "storyKey": "lessons:add-within-10.story",
-   "demo": {
-    "textKey": "lessons:add-within-10.demo",
-    "prompt": {
-     "big": "6 + 3"
-    }
-   },
-   "guided": [
-    {
-     "id": "add10-g1",
-     "concept": "add-within-10",
-     "textKey": "lessons:add10-g1",
-     "prompt": {
-      "big": "4 + 3"
-     },
-     "type": "number-entry",
-     "answer": 7,
-     "maxDigits": 2
-    }
-   ],
-   "exercises": [
-    {
-     "id": "add10-01",
-     "concept": "add-within-10",
-     "textKey": "lessons:add10-01",
-     "prompt": {
-      "big": "5 + 3"
-     },
-     "type": "choice",
-     "options": [
-      {
-       "id": "a",
-       "big": "7"
-      },
-      {
-       "id": "b",
-       "big": "8"
-      },
-      {
-       "id": "c",
-       "big": "9"
-      }
-     ],
-     "answer": "b"
-    },
-    {
-     "id": "add10-02",
-     "concept": "add-within-10",
-     "textKey": "lessons:add10-02",
-     "prompt": {
-      "big": "6 + 2"
-     },
-     "type": "number-entry",
-     "answer": 8,
-     "maxDigits": 2
-    },
-    {
-     "id": "add10-03",
-     "concept": "add-within-10",
-     "textKey": "lessons:add10-03",
-     "prompt": {
-      "big": "4 + 5"
-     },
-     "type": "number-entry",
-     "answer": 9,
-     "maxDigits": 2
-    },
-    {
-     "id": "add10-04",
-     "concept": "add-within-10",
-     "textKey": "lessons:add10-04",
-     "prompt": {
-      "big": "7 + 3"
-     },
-     "type": "choice",
-     "options": [
-      {
-       "id": "a",
-       "big": "9"
-      },
-      {
-       "id": "b",
-       "big": "10"
-      }
-     ],
-     "answer": "b"
-    }
-   ]
-  },
-  {
-   "id": "add-within-5",
-   "world": "adding",
-   "order": 1,
-   "concept": "add-within-5",
+   "concept": "pv-compare",
    "character": "hedgehog",
-   "titleKey": "lessons:add-within-5.title",
-   "storyKey": "lessons:add-within-5.story",
+   "titleKey": "lessons:pv-compare.title",
+   "storyKey": "lessons:pv-compare.story",
    "demo": {
-    "textKey": "lessons:add-within-5.demo",
+    "textKey": "lessons:pv-compare.demo",
     "prompt": {
-     "big": "2 + 1"
+     "big": "406 < 460"
     }
    },
    "guided": [
     {
-     "id": "add5-g1",
-     "concept": "add-within-5",
-     "textKey": "lessons:add5-g1",
+     "id": "cmp-g-1",
+     "concept": "pv-compare",
+     "textKey": "lessons:gen.cmp-g-1.text",
      "prompt": {
-      "big": "1 + 1"
+      "big": "288 ? 217"
      },
-     "type": "number-entry",
-     "answer": 2,
-     "maxDigits": 2
+     "type": "choice",
+     "options": [
+      {
+       "id": "lt",
+       "big": "<"
+      },
+      {
+       "id": "eq",
+       "big": "="
+      },
+      {
+       "id": "gt",
+       "big": ">"
+      }
+     ],
+     "answer": "gt"
+    },
+    {
+     "id": "cmp-g-2",
+     "concept": "pv-compare",
+     "textKey": "lessons:gen.cmp-g-2.text",
+     "prompt": {
+      "big": "721 ? 796"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "lt",
+       "big": "<"
+      },
+      {
+       "id": "eq",
+       "big": "="
+      },
+      {
+       "id": "gt",
+       "big": ">"
+      }
+     ],
+     "answer": "lt"
     }
    ],
    "exercises": [
     {
-     "id": "add5-01",
-     "concept": "add-within-5",
-     "textKey": "lessons:add5-01",
+     "id": "cmp-sign-1",
+     "concept": "pv-compare",
+     "textKey": "lessons:gen.cmp-sign-1.text",
      "prompt": {
-      "big": "2 + 2"
+      "big": "309 ? 361"
      },
      "type": "choice",
      "options": [
       {
-       "id": "a",
-       "big": "3"
+       "id": "lt",
+       "big": "<"
       },
       {
-       "id": "b",
-       "big": "4"
+       "id": "eq",
+       "big": "="
       },
       {
-       "id": "c",
-       "big": "5"
+       "id": "gt",
+       "reasonKey": "lessons:bugs.ones-first",
+       "big": ">"
       }
      ],
-     "answer": "b"
+     "answer": "lt"
     },
     {
-     "id": "add5-02",
-     "concept": "add-within-5",
-     "textKey": "lessons:add5-02",
+     "id": "cmp-sign-2",
+     "concept": "pv-compare",
+     "textKey": "lessons:gen.cmp-sign-2.text",
      "prompt": {
-      "big": "3 + 1"
-     },
-     "type": "number-entry",
-     "answer": 4,
-     "maxDigits": 2
-    },
-    {
-     "id": "add5-03",
-     "concept": "add-within-5",
-     "textKey": "lessons:add5-03",
-     "prompt": {
-      "big": "2 + 3"
-     },
-     "type": "number-entry",
-     "answer": 5,
-     "maxDigits": 2
-    },
-    {
-     "id": "add5-04",
-     "concept": "add-within-5",
-     "textKey": "lessons:add5-04",
-     "prompt": {
-      "big": "1 + 4"
+      "big": "165 ? 157"
      },
      "type": "choice",
      "options": [
       {
-       "id": "a",
-       "big": "4"
+       "id": "lt",
+       "reasonKey": "lessons:bugs.ones-first",
+       "big": "<"
       },
       {
-       "id": "b",
-       "big": "5"
+       "id": "eq",
+       "big": "="
+      },
+      {
+       "id": "gt",
+       "big": ">"
       }
      ],
-     "answer": "b"
+     "answer": "gt"
+    },
+    {
+     "id": "cmp-close-1",
+     "concept": "pv-compare",
+     "textKey": "lessons:gen.cmp-close-1.text",
+     "prompt": {
+      "big": "263 ? 267"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "lt",
+       "big": "<"
+      },
+      {
+       "id": "eq",
+       "big": "="
+      },
+      {
+       "id": "gt",
+       "big": ">"
+      }
+     ],
+     "answer": "lt",
+     "easier": "cmp-easy-1"
+    },
+    {
+     "id": "cmp-order-1",
+     "concept": "pv-compare",
+     "textKey": "lessons:gen.cmp-order-1.text",
+     "type": "order",
+     "items": [
+      {
+       "id": "n745",
+       "big": "745"
+      },
+      {
+       "id": "n703",
+       "big": "703"
+      },
+      {
+       "id": "n776",
+       "big": "776"
+      },
+      {
+       "id": "n707",
+       "big": "707"
+      }
+     ],
+     "answer": [
+      "n703",
+      "n707",
+      "n745",
+      "n776"
+     ]
+    },
+    {
+     "id": "cmp-order-2",
+     "concept": "pv-compare",
+     "textKey": "lessons:gen.cmp-order-2.text",
+     "type": "order",
+     "items": [
+      {
+       "id": "n308",
+       "big": "308"
+      },
+      {
+       "id": "n371",
+       "big": "371"
+      },
+      {
+       "id": "n355",
+       "big": "355"
+      },
+      {
+       "id": "n319",
+       "big": "319"
+      }
+     ],
+     "answer": [
+      "n308",
+      "n319",
+      "n355",
+      "n371"
+     ]
+    },
+    {
+     "id": "cmp-true-1",
+     "concept": "pv-compare",
+     "textKey": "lessons:gen.cmp-true-1.text",
+     "prompt": {
+      "big": "266 < 225"
+     },
+     "type": "true-false",
+     "answer": false
+    }
+   ],
+   "variants": [
+    {
+     "id": "cmp-easy-1",
+     "concept": "pv-compare",
+     "textKey": "lessons:gen.cmp-easy-1.text",
+     "prompt": {
+      "big": "321 ? 145"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "lt",
+       "reasonKey": "lessons:bugs.ones-first",
+       "big": "<"
+      },
+      {
+       "id": "eq",
+       "big": "="
+      },
+      {
+       "id": "gt",
+       "big": ">"
+      }
+     ],
+     "answer": "gt"
     }
    ]
   },
   {
-   "id": "take-away",
-   "world": "adding",
-   "order": 3,
-   "concept": "take-away",
-   "character": "owl",
-   "titleKey": "lessons:take-away.title",
-   "storyKey": "lessons:take-away.story",
+   "id": "pv-hto",
+   "world": "number-meadow",
+   "order": 1,
+   "concept": "pv-hto",
+   "character": "hedgehog",
+   "titleKey": "lessons:pv-hto.title",
+   "storyKey": "lessons:pv-hto.story",
    "demo": {
-    "textKey": "lessons:take-away.demo",
+    "textKey": "lessons:pv-hto.demo",
     "prompt": {
-     "big": "5 - 2"
+     "big": "205"
     }
    },
    "guided": [
     {
-     "id": "takeaway-g1",
-     "concept": "take-away",
-     "textKey": "lessons:takeaway-g1",
+     "id": "hto-g-1",
+     "concept": "pv-hto",
+     "textKey": "lessons:gen.hto-g-1.text",
      "prompt": {
-      "big": "3 - 1"
+      "big": "243"
      },
-     "type": "number-entry",
-     "answer": 2,
-     "maxDigits": 2
+     "type": "place-value",
+     "target": 243,
+     "columns": 3,
+     "reasons": [
+      {
+       "value": 234,
+       "reasonKey": "lessons:bugs.swap"
+      }
+     ]
+    },
+    {
+     "id": "hto-g-2",
+     "concept": "pv-hto",
+     "textKey": "lessons:gen.hto-g-2.text",
+     "prompt": {
+      "big": "305"
+     },
+     "type": "place-value",
+     "target": 305,
+     "columns": 3,
+     "reasons": [
+      {
+       "value": 350,
+       "reasonKey": "lessons:bugs.swap"
+      }
+     ]
     }
    ],
    "exercises": [
     {
-     "id": "takeaway-01",
-     "concept": "take-away",
-     "textKey": "lessons:takeaway-01",
+     "id": "hto-build-1",
+     "concept": "pv-hto",
+     "textKey": "lessons:gen.hto-build-1.text",
      "prompt": {
-      "big": "5 - 2"
+      "big": "932"
+     },
+     "type": "place-value",
+     "target": 932,
+     "columns": 3,
+     "reasons": [
+      {
+       "value": 923,
+       "reasonKey": "lessons:bugs.swap"
+      }
+     ]
+    },
+    {
+     "id": "hto-zero-1",
+     "concept": "pv-hto",
+     "textKey": "lessons:gen.hto-zero-1.text",
+     "prompt": {
+      "big": "507"
+     },
+     "type": "place-value",
+     "target": 507,
+     "columns": 3,
+     "reasons": [
+      {
+       "value": 570,
+       "reasonKey": "lessons:bugs.swap"
+      }
+     ],
+     "easier": "hto-easy-1"
+    },
+    {
+     "id": "hto-read-1",
+     "concept": "pv-hto",
+     "textKey": "lessons:gen.hto-read-1.text",
+     "prompt": {
+      "big": "7H 3T 8O"
+     },
+     "type": "number-entry",
+     "answer": 738,
+     "maxDigits": 4,
+     "reasons": [
+      {
+       "value": 783,
+       "reasonKey": "lessons:bugs.swap"
+      }
+     ]
+    },
+    {
+     "id": "hto-read-zero-1",
+     "concept": "pv-hto",
+     "textKey": "lessons:gen.hto-read-zero-1.text",
+     "prompt": {
+      "big": "8H 0T 5O"
+     },
+     "type": "number-entry",
+     "answer": 805,
+     "maxDigits": 4,
+     "reasons": [
+      {
+       "value": 850,
+       "reasonKey": "lessons:bugs.swap"
+      },
+      {
+       "value": 8005,
+       "reasonKey": "lessons:bugs.append"
+      }
+     ]
+    },
+    {
+     "id": "hto-which-1",
+     "concept": "pv-hto",
+     "textKey": "lessons:gen.hto-which-1.text",
+     "prompt": {
+      "big": "3H 7T 4O"
      },
      "type": "choice",
      "options": [
       {
        "id": "a",
-       "big": "2"
+       "big": "374"
       },
       {
        "id": "b",
-       "big": "3"
+       "reasonKey": "lessons:bugs.swap",
+       "big": "347"
       },
       {
        "id": "c",
-       "big": "4"
+       "reasonKey": "lessons:bugs.swap",
+       "big": "734"
       }
      ],
-     "answer": "b"
+     "answer": "a"
     },
     {
-     "id": "takeaway-02",
-     "concept": "take-away",
-     "textKey": "lessons:takeaway-02",
+     "id": "hto-which-zero-1",
+     "concept": "pv-hto",
+     "textKey": "lessons:gen.hto-which-zero-1.text",
      "prompt": {
-      "big": "6 - 4"
-     },
-     "type": "number-entry",
-     "answer": 2,
-     "maxDigits": 2
-    },
-    {
-     "id": "takeaway-03",
-     "concept": "take-away",
-     "textKey": "lessons:takeaway-03",
-     "prompt": {
-      "big": "9 - 5"
-     },
-     "type": "number-entry",
-     "answer": 4,
-     "maxDigits": 2
-    },
-    {
-     "id": "takeaway-04",
-     "concept": "take-away",
-     "textKey": "lessons:takeaway-04",
-     "prompt": {
-      "big": "8 - 3"
+      "big": "6H 0T 4O"
      },
      "type": "choice",
      "options": [
       {
        "id": "a",
-       "big": "4"
+       "reasonKey": "lessons:bugs.swap",
+       "big": "640"
       },
       {
        "id": "b",
-       "big": "5"
+       "reasonKey": "lessons:bugs.append",
+       "big": "6004"
+      },
+      {
+       "id": "c",
+       "big": "604"
       }
      ],
-     "answer": "b"
+     "answer": "c"
+    }
+   ],
+   "variants": [
+    {
+     "id": "hto-easy-1",
+     "concept": "pv-hto",
+     "textKey": "lessons:gen.hto-easy-1.text",
+     "prompt": {
+      "big": "465"
+     },
+     "type": "place-value",
+     "target": 465,
+     "columns": 3,
+     "reasons": [
+      {
+       "value": 456,
+       "reasonKey": "lessons:bugs.swap"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pv-line",
+   "world": "number-meadow",
+   "order": 3,
+   "concept": "pv-line",
+   "character": "hedgehog",
+   "titleKey": "lessons:pv-line.title",
+   "storyKey": "lessons:pv-line.story",
+   "demo": {
+    "textKey": "lessons:pv-line.demo",
+    "prompt": {
+     "big": "300"
+    }
+   },
+   "guided": [
+    {
+     "id": "line-g-hundreds-1",
+     "concept": "pv-line",
+     "textKey": "lessons:gen.line-g-hundreds-1.text",
+     "prompt": {
+      "big": "700"
+     },
+     "type": "number-line",
+     "from": 0,
+     "to": 1000,
+     "step": 100,
+     "labels": [
+      0,
+      500,
+      1000
+     ],
+     "target": 700,
+     "tolerance": 0,
+     "reasons": [
+      {
+       "value": 600,
+       "reasonKey": "lessons:bugs.ticks-not-gaps"
+      }
+     ]
+    },
+    {
+     "id": "line-g-tens-1",
+     "concept": "pv-line",
+     "textKey": "lessons:gen.line-g-tens-1.text",
+     "prompt": {
+      "big": "60"
+     },
+     "type": "number-line",
+     "from": 0,
+     "to": 100,
+     "step": 10,
+     "labels": [
+      0,
+      50,
+      100
+     ],
+     "target": 60,
+     "tolerance": 0,
+     "reasons": [
+      {
+       "value": 50,
+       "reasonKey": "lessons:bugs.ticks-not-gaps"
+      }
+     ]
+    }
+   ],
+   "exercises": [
+    {
+     "id": "line-tens-1",
+     "concept": "pv-line",
+     "textKey": "lessons:gen.line-tens-1.text",
+     "prompt": {
+      "big": "70"
+     },
+     "type": "number-line",
+     "from": 0,
+     "to": 100,
+     "step": 10,
+     "labels": "ends",
+     "target": 70,
+     "tolerance": 0,
+     "reasons": [
+      {
+       "value": 60,
+       "reasonKey": "lessons:bugs.ticks-not-gaps"
+      }
+     ]
+    },
+    {
+     "id": "line-hundreds-1",
+     "concept": "pv-line",
+     "textKey": "lessons:gen.line-hundreds-1.text",
+     "prompt": {
+      "big": "400"
+     },
+     "type": "number-line",
+     "from": 0,
+     "to": 1000,
+     "step": 100,
+     "labels": "ends",
+     "target": 400,
+     "tolerance": 0,
+     "reasons": [
+      {
+       "value": 300,
+       "reasonKey": "lessons:bugs.ticks-not-gaps"
+      }
+     ]
+    },
+    {
+     "id": "line-fifties-1",
+     "concept": "pv-line",
+     "textKey": "lessons:gen.line-fifties-1.text",
+     "prompt": {
+      "big": "350"
+     },
+     "type": "number-line",
+     "from": 0,
+     "to": 500,
+     "step": 50,
+     "labels": "ends",
+     "target": 350,
+     "tolerance": 0,
+     "reasons": [
+      {
+       "value": 300,
+       "reasonKey": "lessons:bugs.ticks-not-gaps"
+      }
+     ],
+     "easier": "line-easy-1"
+    },
+    {
+     "id": "line-guess-big-1",
+     "concept": "pv-line",
+     "textKey": "lessons:gen.line-guess-big-1.text",
+     "prompt": {
+      "big": "625"
+     },
+     "type": "number-line",
+     "from": 0,
+     "to": 1000,
+     "step": 100,
+     "labels": [
+      0,
+      500,
+      1000
+     ],
+     "target": 625,
+     "tolerance": 50
+    },
+    {
+     "id": "line-guess-small-1",
+     "concept": "pv-line",
+     "textKey": "lessons:gen.line-guess-small-1.text",
+     "prompt": {
+      "big": "36"
+     },
+     "type": "number-line",
+     "from": 0,
+     "to": 100,
+     "step": 10,
+     "labels": "ends",
+     "target": 36,
+     "tolerance": 5
+    },
+    {
+     "id": "line-half-1",
+     "concept": "pv-line",
+     "textKey": "lessons:gen.line-half-1.text",
+     "prompt": {
+      "big": "800 … 900"
+     },
+     "type": "number-entry",
+     "answer": 850,
+     "maxDigits": 3
+    }
+   ],
+   "variants": [
+    {
+     "id": "line-easy-1",
+     "concept": "pv-line",
+     "textKey": "lessons:gen.line-easy-1.text",
+     "prompt": {
+      "big": "500"
+     },
+     "type": "number-line",
+     "from": 0,
+     "to": 1000,
+     "step": 100,
+     "labels": [
+      0,
+      200,
+      400,
+      600,
+      800,
+      1000
+     ],
+     "target": 500,
+     "tolerance": 0,
+     "reasons": [
+      {
+       "value": 400,
+       "reasonKey": "lessons:bugs.ticks-not-gaps"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pv-round",
+   "world": "number-meadow",
+   "order": 5,
+   "concept": "pv-round",
+   "character": "hedgehog",
+   "titleKey": "lessons:pv-round.title",
+   "storyKey": "lessons:pv-round.story",
+   "demo": {
+    "textKey": "lessons:pv-round.demo",
+    "prompt": {
+     "big": "47 → 50"
+    }
+   },
+   "guided": [
+    {
+     "id": "round-g-1",
+     "concept": "pv-round",
+     "textKey": "lessons:gen.round-g-1.text",
+     "prompt": {
+      "big": "73"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "down",
+       "big": "70"
+      },
+      {
+       "id": "up",
+       "big": "80"
+      }
+     ],
+     "answer": "down"
+    },
+    {
+     "id": "round-g-2",
+     "concept": "pv-round",
+     "textKey": "lessons:gen.round-g-2.text",
+     "prompt": {
+      "big": "36"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "down",
+       "reasonKey": "lessons:bugs.truncate",
+       "big": "30"
+      },
+      {
+       "id": "up",
+       "big": "40"
+      }
+     ],
+     "answer": "up"
+    }
+   ],
+   "exercises": [
+    {
+     "id": "round-ten-1",
+     "concept": "pv-round",
+     "textKey": "lessons:gen.round-ten-1.text",
+     "prompt": {
+      "big": "28"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "down",
+       "reasonKey": "lessons:bugs.truncate",
+       "big": "20"
+      },
+      {
+       "id": "up",
+       "big": "30"
+      }
+     ],
+     "answer": "up"
+    },
+    {
+     "id": "round-half-1",
+     "concept": "pv-round",
+     "textKey": "lessons:gen.round-half-1.text",
+     "prompt": {
+      "big": "45"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "down",
+       "reasonKey": "lessons:bugs.five-down",
+       "big": "40"
+      },
+      {
+       "id": "up",
+       "big": "50"
+      }
+     ],
+     "answer": "up",
+     "easier": "round-easy-1"
+    },
+    {
+     "id": "round-big-1",
+     "concept": "pv-round",
+     "textKey": "lessons:gen.round-big-1.text",
+     "prompt": {
+      "big": "698"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "down",
+       "reasonKey": "lessons:bugs.truncate",
+       "big": "690"
+      },
+      {
+       "id": "up",
+       "big": "700"
+      }
+     ],
+     "answer": "up"
+    },
+    {
+     "id": "round-hundred-1",
+     "concept": "pv-round",
+     "textKey": "lessons:gen.round-hundred-1.text",
+     "prompt": {
+      "big": "732"
+     },
+     "type": "number-entry",
+     "answer": 700,
+     "maxDigits": 3
+    },
+    {
+     "id": "round-hundred-2",
+     "concept": "pv-round",
+     "textKey": "lessons:gen.round-hundred-2.text",
+     "prompt": {
+      "big": "354"
+     },
+     "type": "number-entry",
+     "answer": 400,
+     "maxDigits": 3,
+     "reasons": [
+      {
+       "value": 300,
+       "reasonKey": "lessons:bugs.truncate"
+      }
+     ]
+    },
+    {
+     "id": "round-true-1",
+     "concept": "pv-round",
+     "textKey": "lessons:gen.round-true-1.text",
+     "prompt": {
+      "big": "591 → 500"
+     },
+     "type": "true-false",
+     "answer": false,
+     "reasonKey": "lessons:bugs.truncate"
+    }
+   ],
+   "variants": [
+    {
+     "id": "round-easy-1",
+     "concept": "pv-round",
+     "textKey": "lessons:gen.round-easy-1.text",
+     "prompt": {
+      "big": "31"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "down",
+       "big": "30"
+      },
+      {
+       "id": "up",
+       "big": "40"
+      }
+     ],
+     "answer": "down"
+    }
+   ]
+  },
+  {
+   "id": "pv-thousands",
+   "world": "number-meadow",
+   "order": 4,
+   "concept": "pv-thousands",
+   "character": "hedgehog",
+   "titleKey": "lessons:pv-thousands.title",
+   "storyKey": "lessons:pv-thousands.story",
+   "demo": {
+    "textKey": "lessons:pv-thousands.demo",
+    "prompt": {
+     "big": "3405"
+    }
+   },
+   "guided": [
+    {
+     "id": "th-g-1",
+     "concept": "pv-thousands",
+     "textKey": "lessons:gen.th-g-1.text",
+     "prompt": {
+      "big": "7463"
+     },
+     "type": "place-value",
+     "target": 7463,
+     "columns": 4,
+     "reasons": [
+      {
+       "value": 7436,
+       "reasonKey": "lessons:bugs.swap"
+      }
+     ]
+    },
+    {
+     "id": "th-g-2",
+     "concept": "pv-thousands",
+     "textKey": "lessons:gen.th-g-2.text",
+     "prompt": {
+      "big": "4278"
+     },
+     "type": "place-value",
+     "target": 4278,
+     "columns": 4,
+     "reasons": [
+      {
+       "value": 4287,
+       "reasonKey": "lessons:bugs.swap"
+      }
+     ]
+    }
+   ],
+   "exercises": [
+    {
+     "id": "th-build-1",
+     "concept": "pv-thousands",
+     "textKey": "lessons:gen.th-build-1.text",
+     "prompt": {
+      "big": "9321"
+     },
+     "type": "place-value",
+     "target": 9321,
+     "columns": 4,
+     "reasons": [
+      {
+       "value": 9312,
+       "reasonKey": "lessons:bugs.swap"
+      }
+     ]
+    },
+    {
+     "id": "th-zero-1",
+     "concept": "pv-thousands",
+     "textKey": "lessons:gen.th-zero-1.text",
+     "prompt": {
+      "big": "2802"
+     },
+     "type": "place-value",
+     "target": 2802,
+     "columns": 4,
+     "reasons": [
+      {
+       "value": 2820,
+       "reasonKey": "lessons:bugs.swap"
+      }
+     ],
+     "easier": "th-easy-1"
+    },
+    {
+     "id": "th-expanded-1",
+     "concept": "pv-thousands",
+     "textKey": "lessons:gen.th-expanded-1.text",
+     "prompt": {
+      "big": "6000 + 30 + 7"
+     },
+     "type": "number-entry",
+     "answer": 6037,
+     "maxDigits": 4,
+     "reasons": [
+      {
+       "value": 637,
+       "reasonKey": "lessons:bugs.drop-zero"
+      }
+     ]
+    },
+    {
+     "id": "th-expanded-2",
+     "concept": "pv-thousands",
+     "textKey": "lessons:gen.th-expanded-2.text",
+     "prompt": {
+      "big": "5000 + 800 + 3"
+     },
+     "type": "number-entry",
+     "answer": 5803,
+     "maxDigits": 4,
+     "reasons": [
+      {
+       "value": 583,
+       "reasonKey": "lessons:bugs.drop-zero"
+      }
+     ]
+    },
+    {
+     "id": "th-sign-1",
+     "concept": "pv-thousands",
+     "textKey": "lessons:gen.th-sign-1.text",
+     "prompt": {
+      "big": "2365 ? 7482"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "lt",
+       "big": "<"
+      },
+      {
+       "id": "eq",
+       "big": "="
+      },
+      {
+       "id": "gt",
+       "reasonKey": "lessons:bugs.ones-first",
+       "big": ">"
+      }
+     ],
+     "answer": "lt"
+    },
+    {
+     "id": "th-order-1",
+     "concept": "pv-thousands",
+     "textKey": "lessons:gen.th-order-1.text",
+     "type": "order",
+     "items": [
+      {
+       "id": "n7875",
+       "big": "7875"
+      },
+      {
+       "id": "n7285",
+       "big": "7285"
+      },
+      {
+       "id": "n7324",
+       "big": "7324"
+      },
+      {
+       "id": "n7537",
+       "big": "7537"
+      }
+     ],
+     "answer": [
+      "n7285",
+      "n7324",
+      "n7537",
+      "n7875"
+     ]
+    }
+   ],
+   "variants": [
+    {
+     "id": "th-easy-1",
+     "concept": "pv-thousands",
+     "textKey": "lessons:gen.th-easy-1.text",
+     "prompt": {
+      "big": "1357"
+     },
+     "type": "place-value",
+     "target": 1357,
+     "columns": 4,
+     "reasons": [
+      {
+       "value": 1375,
+       "reasonKey": "lessons:bugs.swap"
+      }
+     ]
     }
    ]
   }
@@ -293,112 +1030,121 @@
  "minigames": [
   {
    "mode": "series",
-   "id": "number-parade",
-   "concept": "add-within-10",
+   "id": "number-train",
+   "concept": "pv-line",
    "rounds": [
     {
-     "id": "number-parade-r1",
-     "concept": "add-within-10",
-     "textKey": "lessons:number-parade-r1",
+     "id": "train-hundreds-1",
+     "concept": "pv-line",
+     "textKey": "lessons:gen.train-hundreds-1.text",
      "prompt": {
-      "big": "3 + 4"
+      "big": "600"
      },
-     "type": "number-entry",
-     "answer": 7,
-     "maxDigits": 2
-    },
-    {
-     "id": "number-parade-r2",
-     "concept": "add-within-10",
-     "textKey": "lessons:number-parade-r2",
-     "prompt": {
-      "big": "9 - 3"
-     },
-     "type": "choice",
-     "options": [
+     "type": "number-line",
+     "from": 0,
+     "to": 1000,
+     "step": 100,
+     "labels": "ends",
+     "target": 600,
+     "tolerance": 0,
+     "reasons": [
       {
-       "id": "a",
-       "big": "5"
-      },
-      {
-       "id": "b",
-       "big": "6"
-      },
-      {
-       "id": "c",
-       "big": "7"
+       "value": 500,
+       "reasonKey": "lessons:bugs.ticks-not-gaps"
       }
-     ],
-     "answer": "b"
+     ]
     },
     {
-     "id": "number-parade-r3",
-     "concept": "add-within-10",
-     "textKey": "lessons:number-parade-r3",
+     "id": "train-fifties-1",
+     "concept": "pv-line",
+     "textKey": "lessons:gen.train-fifties-1.text",
      "prompt": {
-      "big": "5 + 5"
+      "big": "250"
      },
-     "type": "number-entry",
-     "answer": 10,
-     "maxDigits": 2
-    },
-    {
-     "id": "number-parade-r4",
-     "concept": "add-within-10",
-     "textKey": "lessons:number-parade-r4",
-     "prompt": {
-      "big": "8 - 2"
-     },
-     "type": "number-entry",
-     "answer": 6,
-     "maxDigits": 2
-    },
-    {
-     "id": "number-parade-r5",
-     "concept": "add-within-10",
-     "textKey": "lessons:number-parade-r5",
-     "prompt": {
-      "big": "6 + 2"
-     },
-     "type": "choice",
-     "options": [
+     "type": "number-line",
+     "from": 0,
+     "to": 500,
+     "step": 50,
+     "labels": "ends",
+     "target": 250,
+     "tolerance": 0,
+     "reasons": [
       {
-       "id": "a",
-       "big": "7"
-      },
-      {
-       "id": "b",
-       "big": "8"
-      },
-      {
-       "id": "c",
-       "big": "9"
+       "value": 200,
+       "reasonKey": "lessons:bugs.ticks-not-gaps"
       }
-     ],
-     "answer": "b"
+     ]
     },
     {
-     "id": "number-parade-r6",
-     "concept": "add-within-10",
-     "textKey": "lessons:number-parade-r6",
+     "id": "train-tens-1",
+     "concept": "pv-line",
+     "textKey": "lessons:gen.train-tens-1.text",
      "prompt": {
-      "big": "7 - 4"
+      "big": "40"
      },
-     "type": "number-entry",
-     "answer": 3,
-     "maxDigits": 2
+     "type": "number-line",
+     "from": 0,
+     "to": 100,
+     "step": 10,
+     "labels": "ends",
+     "target": 40,
+     "tolerance": 0,
+     "reasons": [
+      {
+       "value": 30,
+       "reasonKey": "lessons:bugs.ticks-not-gaps"
+      }
+     ]
+    },
+    {
+     "id": "train-guess-1",
+     "concept": "pv-line",
+     "textKey": "lessons:gen.train-guess-1.text",
+     "prompt": {
+      "big": "726"
+     },
+     "type": "number-line",
+     "from": 0,
+     "to": 1000,
+     "step": 100,
+     "labels": [
+      0,
+      500,
+      1000
+     ],
+     "target": 726,
+     "tolerance": 50
+    },
+    {
+     "id": "train-guess-2",
+     "concept": "pv-line",
+     "textKey": "lessons:gen.train-guess-2.text",
+     "prompt": {
+      "big": "428"
+     },
+     "type": "number-line",
+     "from": 0,
+     "to": 1000,
+     "step": 100,
+     "labels": [
+      0,
+      500,
+      1000
+     ],
+     "target": 428,
+     "tolerance": 50
     }
    ],
    "errors3": 0,
    "errors2": 2,
-   "titleKey": "lessons:number-parade.title",
-   "goalKey": "lessons:number-parade.goal",
-   "unlockAfter": "take-away"
+   "titleKey": "lessons:number-train.title",
+   "goalKey": "lessons:number-train.goal",
+   "unlockAfter": "pv-round"
   },
   {
    "mode": "duel",
    "id": "race-to-20",
-   "concept": "take-away",
+   "concept": "pv-round",
    "game": "race",
    "params": {
     "target": 20,
@@ -409,7 +1155,7 @@
    "hintKey": "lessons:race.hint",
    "titleKey": "lessons:race-to-20.title",
    "goalKey": "lessons:race-to-20.goal",
-   "unlockAfter": "take-away"
+   "unlockAfter": "pv-round"
   }
  ]
 }

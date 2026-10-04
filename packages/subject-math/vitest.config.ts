@@ -11,6 +11,9 @@ export default defineConfig({
           environment: 'node',
           include: ['src/**/*.test.ts'],
           exclude: ['**/node_modules/**', 'src/web/**'],
+          // Template tests draw 1 000 seeds per param set (under 1 s alone); `pnpm -r test` runs every package at once, so on a
+          // CI runner one passed 5 s (pv-which, 2026-10-04). Same guard as chess's content solvers: the timeout only catches a hang.
+          testTimeout: 20_000,
         },
       },
       {

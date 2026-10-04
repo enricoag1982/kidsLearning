@@ -1,9 +1,19 @@
+# One main track, "Number Adventures": World 1 Number Meadow (place value), ending in the Number Train world boss (`boss`: a mini-game
+# of the world, opened by its last lesson; the world counts as mastered once its lessons are mastered and the boss is won). Worlds 2
+# and 3 join in m13.11 / m13.14. `title` and the world's name are texts in locales/en/journey.yaml.
 tracks:
   - id: numbers
     kind: main
     title: tracks.numbers
     worlds:
-      - { id: adding, order: 1, habitat: meadow, title: worlds.adding, boss: number-parade }
+      - {
+          id: number-meadow,
+          order: 1,
+          habitat: meadow,
+          title: worlds.number-meadow,
+          boss: number-train,
+        }
+# A rank is earned `after` a world (`world:<id>`) or at the `start`; its name is in locales/en/journey.yaml.
 ranks:
   - { id: counter, after: start }
-  - { id: adder, after: world:adding }
+  - { id: builder, after: world:number-meadow }

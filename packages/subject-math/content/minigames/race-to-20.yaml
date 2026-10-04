@@ -1,7 +1,9 @@
+# Race to 20: a duel against the Hedgehog (the unlock lesson's character). Until m13.14 makes it the World 3 boss it is the Today
+# session's mini-game after `pv-round`.
 id: race-to-20
 mode: duel
-concept: take-away
-unlockAfter: take-away
+concept: pv-round
+unlockAfter: pv-round
 game: race
 params: { target: 20, maxStep: 3 }
 level: 1

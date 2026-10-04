@@ -29,6 +29,9 @@ function zeroProblems(n: number, digits: number, zeroIn: string): string[] {
 /** The tens and ones exchanged, by arithmetic. */
 const swapped = (n: number): number => n - (n % 100) + (n % 10) * 10 + (Math.floor(n / 10) % 10);
 
+/** A place word after a 1: the plural a child must never hear ("1 hundreds"; every place word is plural in the sentences). */
+const SINGLE_PLURAL = /\b1 (thousands|hundreds|tens|ones)\b/;
+
 /** `th h t o` read back from "1 thousands, 2 hundreds, 0 tens and 5 ones" (3-digit sentences have no thousands). */
 function readSentence(text: string): readonly number[] | null {
   const [, thousands, hundreds, tens, ones] =
@@ -234,6 +237,27 @@ describe('pv-read', () => {
     });
   });
 
+  it('never says "1 hundreds", "1 tens", "1 ones" or "1 thousands": every place count is 0 or 2-9, 0 tens stays', () => {
+    for (const { digits, zeroIn } of COMBOS) {
+      const { problems, items } = overSeeds<NumberEntryItem>(
+        'pv-read',
+        { digits, zeroIn },
+        ({ item, text }) => [
+          ...(SINGLE_PLURAL.test(text)
+            ? [`${item.id}: "${text}" has a 1 before a place word`]
+            : []),
+          ...(/(^| )1[A-Z]/.test(item.prompt.big)
+            ? [`${item.id}: card ${item.prompt.big} has a 1`]
+            : []),
+        ],
+      );
+      expect(problems, `${String(digits)} ${zeroIn}`).toEqual([]);
+      expect(items).toHaveLength(1000);
+    }
+    const zeroTens = draw<NumberEntryItem>('pv-read', { digits: 3, zeroIn: 'tens' }, 3).drawn;
+    expect(zeroTens[0]?.text).toMatch(/^\d hundreds, 0 tens and \d ones\. What number is it\?$/);
+  });
+
   it('speaks 205 → 2005 (append) and 250 (swap) for a zero in the tens, as the curriculum says', () => {
     const item = sample<NumberEntryItem>(
       'pv-read',
@@ -264,6 +288,18 @@ describe('pv-read', () => {
       expect(checkIssues('pv-read', params, { ...good, maxDigits: 3 }).join()).toMatch(
         /maxDigits 3 should be 4/,
       );
+    });
+
+    it('reports a card with a 1, whose sentence would read "1 hundreds"', () => {
+      const one = { ...good, prompt: { big: '1H 0T 5O' }, answer: 105 };
+      expect(checkIssues('pv-read', params, one).join()).toMatch(/has a 1/);
+      expect(
+        checkIssues(
+          'pv-read',
+          { digits: 3, zeroIn: 'none' },
+          { ...good, prompt: { big: '2H 1T 5O' }, answer: 215 },
+        ).join(),
+      ).toMatch(/has a 1/);
     });
 
     it('reports a card that breaks the zeros / digits params', () => {
@@ -341,6 +377,25 @@ describe('pv-which', () => {
     });
   });
 
+  it('never says "1 hundreds", "1 tens", "1 ones" or "1 thousands" in its sentence or on its card', () => {
+    for (const { digits, zeroIn } of COMBOS) {
+      const { problems, items } = overSeeds<ChoiceItem>(
+        'pv-which',
+        { digits, zeroIn },
+        ({ item, text }) => [
+          ...(SINGLE_PLURAL.test(text)
+            ? [`${item.id}: "${text}" has a 1 before a place word`]
+            : []),
+          ...(/\b1[A-Z]/.test(item.prompt?.big ?? '')
+            ? [`${item.id}: card ${item.prompt?.big ?? ''} has a 1`]
+            : []),
+        ],
+      );
+      expect(problems, `${String(digits)} ${zeroIn}`).toEqual([]);
+      expect(items).toHaveLength(1000);
+    }
+  });
+
   it('shows a hundreds / tens swap in place of append when no place is zero, and in the 4-digit zero cases', () => {
     const none = sample<ChoiceItem>('pv-which', { digits: 3, zeroIn: 'none' });
     expect(
@@ -376,6 +431,11 @@ describe('pv-which', () => {
       expect(
         checkIssues('pv-which', params, { ...good, options: good.options.slice(0, 2) }).join(),
       ).toMatch(/not 3 distinct numerals/);
+    });
+
+    it('reports a card with a 1, whose sentence would read "1 hundreds"', () => {
+      const one = { ...good, prompt: { big: '1H 0T 5O' } };
+      expect(checkIssues('pv-which', params, one).join()).toMatch(/has a 1/);
     });
 
     it('reports a reason on the right option or a distractor without its reason', () => {

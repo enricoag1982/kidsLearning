@@ -1,0 +1,33 @@
+# Number Train: World 1's boss, a `series` of 5 carriage numbers to put on the line, the steps shrinking from 100 to 10, then two
+# estimates between the marks. Generated like a lesson's exercises; seeds are stored, never change them.
+id: number-train
+mode: series
+concept: pv-line
+unlockAfter: pv-round
+errors3: 0
+errors2: 2
+rounds:
+  - id: train-hundreds
+    generate:
+      template: nl-place
+      count: 1
+      seed: 1
+      params: { from: 0, to: 1000, step: 100, labels: ends }
+  - id: train-fifties
+    generate:
+      template: nl-place
+      count: 1
+      seed: 6
+      params: { from: 0, to: 500, step: 50, labels: ends }
+  - id: train-tens
+    generate:
+      template: nl-place
+      count: 1
+      seed: 18
+      params: { from: 0, to: 100, step: 10, labels: ends }
+  - id: train-guess
+    generate:
+      template: nl-estimate
+      count: 2
+      seed: 3
+      params: { from: 0, to: 1000, step: 100, labels: [0, 500, 1000] }

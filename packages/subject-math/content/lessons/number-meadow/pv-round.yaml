@@ -1,0 +1,26 @@
+# W1 lesson 5: rounding to the nearest ten and hundred (exactly half-way goes up). Generated; seeds are stored, never change them.
+# `round-easy` is a number far from the middle (ones 1, 2, 8 or 9): the template has no lever for it, the seed picks it.
+id: pv-round
+order: 5
+concept: pv-round
+character: hedgehog
+demo:
+  prompt: { big: 47 → 50 }
+guided:
+  - id: round-g
+    generate: { template: round-ten, count: 2, seed: 2, params: { max: 100, five: false } }
+exercises:
+  - id: round-ten
+    generate: { template: round-ten, count: 1, seed: 9, params: { max: 100, five: false } }
+  - id: round-half
+    easier: round-easy-1
+    generate: { template: round-ten, count: 1, seed: 18, params: { max: 100, five: true } }
+  - id: round-big
+    generate: { template: round-ten, count: 1, seed: 5, params: { max: 1000, five: false } }
+  - id: round-hundred
+    generate: { template: round-hundred, count: 2, seed: 2, params: { max: 1000, five: false } }
+  - id: round-true
+    generate: { template: round-tf, count: 1, seed: 10, params: { to: 100, max: 1000 } }
+variants:
+  - id: round-easy
+    generate: { template: round-ten, count: 1, seed: 0, params: { max: 100, five: false } }

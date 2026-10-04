@@ -1,0 +1,62 @@
+# W1 lesson 3: the number line (jumps of the same size: count the jumps, not the marks). Generated; seeds are stored, never change them.
+# The table of docs/subjects/math/curriculum.md §2 has 5 line pictures and one symbol-only item (nl-half, last).
+id: pv-line
+order: 3
+concept: pv-line
+character: hedgehog
+demo:
+  prompt: { big: 300 }
+guided:
+  - id: line-g-hundreds
+    generate:
+      template: nl-place
+      count: 1
+      seed: 2
+      params: { from: 0, to: 1000, step: 100, labels: [0, 500, 1000] }
+  - id: line-g-tens
+    generate:
+      template: nl-place
+      count: 1
+      seed: 1
+      params: { from: 0, to: 100, step: 10, labels: [0, 50, 100] }
+exercises:
+  - id: line-tens
+    generate:
+      template: nl-place
+      count: 1
+      seed: 2
+      params: { from: 0, to: 100, step: 10, labels: ends }
+  - id: line-hundreds
+    generate:
+      template: nl-place
+      count: 1
+      seed: 18
+      params: { from: 0, to: 1000, step: 100, labels: ends }
+  - id: line-fifties
+    easier: line-easy-1
+    generate:
+      template: nl-place
+      count: 1
+      seed: 2
+      params: { from: 0, to: 500, step: 50, labels: ends }
+  - id: line-guess-big
+    generate:
+      template: nl-estimate
+      count: 1
+      seed: 1
+      params: { from: 0, to: 1000, step: 100, labels: [0, 500, 1000] }
+  - id: line-guess-small
+    generate:
+      template: nl-estimate
+      count: 1
+      seed: 18
+      params: { from: 0, to: 100, step: 10, labels: ends }
+  - id: line-half
+    generate: { template: nl-half, count: 1, seed: 308, params: { unit: 100 } }
+variants:
+  - id: line-easy
+    generate:
+      template: nl-place
+      count: 1
+      seed: 6
+      params: { from: 0, to: 1000, step: 100, labels: [0, 200, 400, 600, 800, 1000] }
