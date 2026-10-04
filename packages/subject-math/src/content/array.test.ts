@@ -24,7 +24,7 @@ const yaml = (overrides: Record<string, unknown> = {}): Record<string, unknown> 
   cols: 4,
   'fixed-rows': true,
   prompt: { big: '3 × 4' },
-  reasons: [{ rows: 3, cols: 3, text: 'bugs.neighbour' }],
+  reasons: [{ rows: 3, cols: 3, text: 'array-up.neighbour' }],
   ...overrides,
 });
 
@@ -72,7 +72,7 @@ describe('array YAML', () => {
       rows: 3,
       cols: 4,
       fixedRows: true,
-      reasons: [{ rows: 3, cols: 3, reasonKey: 'lessons:bugs.neighbour' }],
+      reasons: [{ rows: 3, cols: 3, reasonKey: 'lessons:array-up.neighbour' }],
     });
     expect(Object.keys(def ?? {})).toEqual([
       'id',
@@ -288,12 +288,11 @@ describe('a lesson with array exercises, through the whole build', () => {
   title: Dot arrays
   story: Rows of dots make an array. Rows go across.
   demo: This array has 3 rows of 4 dots.
+  neighbour: Each row needs 4 dots. Count along one row.
 ar-g1: Make 2 rows of 3 dots. Tap the bottom-right dot.
 ar-01: Make 3 rows of 4 dots. Tap the bottom-right dot.
 ar-02: Make a dot array for 4 × 3. Tap the bottom-right dot.
 ar-easy: Make 1 row of 4 dots. Tap the bottom-right dot.
-bugs:
-  neighbour: Each row needs 4 dots. Count along one row.
 `;
 
   const LESSON = `id: array-up
@@ -314,7 +313,7 @@ exercises:
     rows: 3
     cols: 4
     prompt: { big: 3 × 4 }
-    reasons: [{ rows: 3, cols: 3, text: bugs.neighbour }]
+    reasons: [{ rows: 3, cols: 3, text: array-up.neighbour }]
     easier: ar-easy
   - id: ar-02
     type: array
@@ -359,7 +358,7 @@ variants:
     expectIssue(
       LESSON.replace(
         'fixed-rows: false\n',
-        'fixed-rows: false\n    reasons: [{ rows: 3, cols: 4, text: bugs.neighbour }]\n',
+        'fixed-rows: false\n    reasons: [{ rows: 3, cols: 4, text: array-up.neighbour }]\n',
       ),
       TEXTS,
       /ar-02.*reason for 3 x 4 is an answer Check accepts/s,
@@ -376,7 +375,7 @@ variants:
     );
     expectIssue(
       LESSON,
-      TEXTS.replace(/bugs:\n {2}neighbour: .*\n/, 'bugs:\n  other-reason: Another one.\n'),
+      TEXTS.replace(/ {2}neighbour: .*\n/, '  other-reason: Another one.\n'),
       /reason for 3 x 3/,
     );
     expectIssue(

@@ -121,6 +121,7 @@ function reasonKeys(def: MathExerciseDef): readonly string[] {
     case 'number-entry':
     case 'number-line':
     case 'place-value':
+    case 'array':
       return (def.reasons ?? []).map((reason) => reason.reasonKey);
   }
 }
