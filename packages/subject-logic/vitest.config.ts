@@ -1,6 +1,8 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 
+// `pnpm test` (default `vitest run`): fast tests only. `*.slow.test.ts` (generator runs over 1 000 seeds, timing budgets) is excluded
+// here and run by `pnpm test:slow` (`vitest.slow.config.ts`) instead.
 // Two projects: `node` (core, kinds, content) and `web` (jsdom: `*.test.tsx` and `src/web`).
 export default defineConfig({
   test: {
@@ -10,7 +12,10 @@ export default defineConfig({
           name: 'node',
           environment: 'node',
           include: ['src/**/*.test.ts'],
-          exclude: ['**/node_modules/**', 'src/web/**'],
+          exclude: ['**/node_modules/**', 'src/**/*.slow.test.ts', 'src/web/**'],
+          // Puzzle generators draw 200 seeds per parameter set (under 1 s alone); `pnpm -r test` runs every package at once, so the
+          // timeout only catches a hang (same guard as subject-math's templates).
+          testTimeout: 20_000,
         },
       },
       {
