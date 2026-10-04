@@ -19,8 +19,8 @@
     "test:e2e": "pnpm --filter @learn/kids-learning test:e2e",
     "size": "pnpm --filter @learn/kids-learning size",
     "compat": "pnpm --filter @learn/kids-learning compat",
-    "voice:check": "pnpm --filter @learn/subject-chess voice-check",
-    "voice:generate": "pnpm --filter @learn/subject-chess voice-texts && python3 tools/voice/generate.py"
+    "voice:check": "pnpm --filter @learn/kids-learning voice-check",
+    "voice:generate": "pnpm --filter \"@learn/subject-*\" build && python3 tools/voice/generate.py"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

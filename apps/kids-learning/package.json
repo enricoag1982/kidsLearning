@@ -12,9 +12,11 @@
     "test:e2e": "playwright test",
     "icons": "node scripts/icons.ts",
     "size": "node scripts/check-size.ts",
-    "compat": "node scripts/check-compat.ts"
+    "compat": "node scripts/check-compat.ts",
+    "voice-check": "node scripts/voice-check.ts"
   },
   "dependencies": {
+    "@learn/platform-content": "workspace:*",
     "@learn/platform-core": "workspace:*",
     "@learn/platform-web": "workspace:*",
     "@learn/subject-chess": "workspace:*",

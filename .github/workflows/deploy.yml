@@ -36,7 +36,7 @@ jobs:
 
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: apps/chess-kids/dist
+          path: apps/kids-learning/dist
 
   deploy:
     needs: build

@@ -6,7 +6,9 @@ import { fileURLToPath } from 'node:url';
 /**
  * Offline size budget (non-functional.md §4): *initial* JS ≤ 300 KB gzipped — the app shell before
  * a kid ever opens a lazy-loaded screen (parent area, friend play, placement / test-out —
- * `App.tsx`'s own `React.lazy` calls), not the whole app. `dist/index.html`'s own
+ * `App.tsx`'s own `React.lazy` calls), not the whole app. Inside it (`docs/multi-subject.md` D7, risks):
+ * the entry JS (what `index.html` loads, below) ≤ 135 KB gzipped, and each subject pack — its own lazy
+ * chunk, `<id>-loaded-<hash>.js` — ≤ 70 KB gzipped, so adding a subject never grows the entry. `dist/index.html`'s own
  * `<script type="module">` (the entry chunk) plus every `<link rel="modulepreload">` it lists (the
  * entry's own static, non-lazy dependencies — Vite already resolved exactly the set a first paint
  * needs; a chunk only ever reached through a lazy screen's own dynamic `import()` is never listed
@@ -17,6 +19,10 @@ import { fileURLToPath } from 'node:url';
  * pays no network cost for it regardless of when it is first fetched.
  */
 const BUDGET_BYTES = 300 * 1024;
+const ENTRY_CEILING_KB = 135;
+const PACK_CEILING_KB = 70;
+/** The subjects `src/main.tsx` registers: each one's pack must stay its own chunk, `<id>-loaded-<hash>.js`. */
+const SUBJECT_PACKS = ['chess', 'math'] as const;
 
 const distDir = join(dirname(fileURLToPath(import.meta.url)), '../dist');
 const assetsDir = join(distDir, 'assets');
@@ -73,17 +79,37 @@ if (missing.length > 0) {
 const initialKb = (initialBytes / 1024).toFixed(1);
 const totalKb = (totalBytes / 1024).toFixed(1);
 const budgetKb = (BUDGET_BYTES / 1024).toFixed(0);
-console.log(`Initial JS: ${initialKb} KB gzip (budget ${budgetKb} KB)`);
+console.log(
+  `Entry JS (index.html: script + preloads): ${initialKb} KB gzip (budget ${budgetKb} KB, ceiling ${String(ENTRY_CEILING_KB)} KB)`,
+);
 console.log(`Total JS (incl. lazy chunks + worker): ${totalKb} KB gzip`);
 
 if (initialBytes > BUDGET_BYTES) {
   throw new Error(`initial JS size budget exceeded: ${initialKb} KB > ${budgetKb} KB`);
 }
 
-// v4 ceiling (`docs/refactor-v4.md` §6): `v2.0.0`'s 186.2 KB + 0.3 KB for the owner's m8.34 features; raise it only on purpose.
-const CEILING_KB = 186.5;
-if (initialBytes > Math.round(CEILING_KB * 1024)) {
-  throw new Error(`initial JS above the v4 ceiling: ${initialKb} KB > ${CEILING_KB.toFixed(1)} KB`);
+// Ceiling of the entry (`docs/multi-subject.md` D7): m11.4 measured 128.8 KB with two subjects registered; raise it only on purpose.
+if (initialBytes > ENTRY_CEILING_KB * 1024) {
+  throw new Error(`entry JS above its ceiling: ${initialKb} KB > ${String(ENTRY_CEILING_KB)} KB`);
+}
+
+// One chunk per subject pack (`SubjectEntry.load`'s dynamic import); the list grows with the app's subjects.
+for (const id of SUBJECT_PACKS) {
+  const file = jsFiles.find((name) => new RegExp(`^${id}-loaded-[\\w-]+\\.js$`).test(name));
+  if (file === undefined) {
+    throw new Error(
+      `no ${id}-loaded-*.js chunk in dist/assets: the ${id} pack is not its own lazy chunk`,
+    );
+  }
+  const bytes = gzipSync(readFileSync(join(assetsDir, file))).length;
+  const kb = (bytes / 1024).toFixed(1);
+  console.log(`Subject pack ${id}: ${kb} KB gzip (${file}; ceiling ${String(PACK_CEILING_KB)} KB)`);
+  if (initialNames.has(file)) {
+    throw new Error(`the ${id} pack (${file}) is loaded by index.html, not on demand`);
+  }
+  if (bytes > PACK_CEILING_KB * 1024) {
+    throw new Error(`${id} pack above its ceiling: ${kb} KB > ${String(PACK_CEILING_KB)} KB`);
+  }
 }
 
 /**

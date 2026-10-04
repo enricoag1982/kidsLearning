@@ -1,19 +1,23 @@
 #!/usr/bin/env python3
 """
-Generates pre-recorded Kokoro audio (docs/voice.md) for every text in
-packages/subject-chess/dist/voice-texts.json, writing apps/chess-kids/public/audio/en/<key>.mp3 plus
-apps/chess-kids/public/audio/en/manifest.json (`{ config, entries: { <key>: { text, ms } } }`).
+Generates pre-recorded Kokoro audio (docs/voice.md) for every text of every subject: the union of
+the inventories (`dist/voice-texts.json` of each subject package: packages/subject-chess,
+packages/subject-math), writing apps/kids-learning/public/audio/en/<key>.mp3 plus
+apps/kids-learning/public/audio/en/manifest.json (`{ config, entries: { <key>: { text, ms } } }`).
+One audio folder for the whole app (docs/multi-subject.md D13): a key is the hash of the text, so
+a text two subjects share (the platform's own) is one file.
 
 Incremental: reuses an existing mp3 when its key is already in the manifest, the manifest's
 `config` still matches tools/voice/config.json exactly, and the file exists on disk. A config
 change regenerates every file (one shared config for the whole manifest, not per entry). Removes
-any apps/chess-kids/public/audio/en/*.mp3 whose key is no longer in voice-texts.json, or that was left
-over from a different config.
+any apps/kids-learning/public/audio/en/*.mp3 whose key is in no inventory, or that was left over
+from a different config.
 
 Usage:
-    python3 generate.py                       # generate everything missing
+    python3 generate.py                       # generate everything missing (both subjects)
     python3 generate.py --limit 20             # quick sample (first 20 missing keys)
     python3 generate.py --model-dir /some/dir  # reuse already-downloaded model files
+    python3 generate.py --inventory a.json --inventory b.json   # explicit inventories
 
 Model files (kokoro-v1.0.int8.onnx, voices-v1.0.bin) are read from --model-dir (or the
 $KOKORO_MODEL_DIR env var), default tools/voice/.cache/ (gitignored) — downloaded there
@@ -38,8 +42,12 @@ os.environ.setdefault("OMP_NUM_THREADS", "2")
 TOOLS_DIR = Path(__file__).resolve().parent
 REPO_ROOT = TOOLS_DIR.parent.parent
 DEFAULT_MODEL_DIR = TOOLS_DIR / ".cache"
-DEFAULT_VOICE_TEXTS = REPO_ROOT / "packages" / "subject-chess" / "dist" / "voice-texts.json"
-DEFAULT_OUT_DIR = REPO_ROOT / "apps" / "chess-kids" / "public" / "audio" / "en"
+# One inventory per subject, written by each package's `build` (`pnpm voice:generate` runs it first).
+DEFAULT_INVENTORIES = [
+    REPO_ROOT / "packages" / "subject-chess" / "dist" / "voice-texts.json",
+    REPO_ROOT / "packages" / "subject-math" / "dist" / "voice-texts.json",
+]
+DEFAULT_OUT_DIR = REPO_ROOT / "apps" / "kids-learning" / "public" / "audio" / "en"
 CONFIG_PATH = TOOLS_DIR / "config.json"
 
 MODEL_RELEASE_BASE = "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0"
@@ -108,6 +116,25 @@ def encode_mp3(samples, sample_rate: int, kbps: int, quality: int) -> bytes:
     return encoder.encode(pcm) + encoder.flush()
 
 
+def load_texts_by_key(inventories: list[Path]) -> dict:
+    """The union of the inventories, `{ key: text }`; a key is the hash of its text, so two
+    inventories giving one key two texts is an error (hash clash or a corrupt inventory)."""
+    texts_by_key: dict = {}
+    for path in inventories:
+        if not path.exists():
+            raise SystemExit(
+                f"generate: {path} not found — run `pnpm --filter \"@learn/subject-*\" build` first "
+                "(`pnpm voice:generate` does)."
+            )
+        with open(path, encoding="utf8") as f:
+            inventory = json.load(f)
+        for entry in inventory:
+            key, text = entry["key"], entry["text"]
+            if texts_by_key.setdefault(key, text) != text:
+                raise SystemExit(f"generate: key {key} has two different texts (second one in {path})")
+    return texts_by_key
+
+
 def load_manifest(out_dir: Path) -> dict:
     manifest_path = out_dir / "manifest.json"
     if not manifest_path.exists():
@@ -144,21 +171,20 @@ def main() -> None:
         default=Path(os.environ.get("KOKORO_MODEL_DIR", str(DEFAULT_MODEL_DIR))),
         help="directory holding kokoro-v1.0.int8.onnx / voices-v1.0.bin (downloaded here if missing)",
     )
-    parser.add_argument("--voice-texts", type=Path, default=DEFAULT_VOICE_TEXTS)
+    parser.add_argument(
+        "--inventory",
+        type=Path,
+        action="append",
+        default=None,
+        help="a subject's dist/voice-texts.json; repeat for several (default: every subject's)",
+    )
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     parser.add_argument("--threads", type=int, default=2, help="onnxruntime intra/inter-op thread cap")
     args = parser.parse_args()
 
     config = load_config()
 
-    if not args.voice_texts.exists():
-        raise SystemExit(
-            f"generate: {args.voice_texts} not found — run "
-            "`pnpm --filter @learn/subject-chess voice-texts` first."
-        )
-    with open(args.voice_texts, encoding="utf8") as f:
-        inventory = json.load(f)
-    texts_by_key = {entry["key"]: entry["text"] for entry in inventory}
+    texts_by_key = load_texts_by_key(args.inventory or DEFAULT_INVENTORIES)
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
     manifest = load_manifest(args.out_dir)
@@ -167,7 +193,7 @@ def main() -> None:
         print("generate: config.json changed since the last run — regenerating every file")
     entries: dict = dict(manifest.get("entries", {})) if config_matches else {}
 
-    # Prune: a stale file whose key is no longer inventoried, or left over from a different config.
+    # Prune: a stale file whose key is in no inventory, or left over from a different config.
     for path in sorted(args.out_dir.glob("*.mp3")):
         if path.stem not in texts_by_key or path.stem not in entries:
             path.unlink()
