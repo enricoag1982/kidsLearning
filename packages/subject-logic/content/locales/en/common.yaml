@@ -21,3 +21,32 @@ placement:
 # What a lesson character teaches (`topicKey` in src/core.ts), shown in My Den and on the Journey.
 topic:
   puzzle: Puzzle
+# Grid puzzles (kind `grid-fill`): the instruction under each puzzle and what the Owl says about it. Worded by technique only: no numbers
+# and no coordinates (docs/subjects/logic/plan.md L6).
+grid:
+  instruction:
+    sudoku: 'Fill the grid: each row, column and box has every number once.'
+    cross: Fill the cells to match the clues. Find the picture!
+  wrong:
+    row: That number is already in this row.
+    column: That number is already in this column.
+    box: That number is already in this box.
+    plain: Not yet. Which numbers can still go here?
+    cross-row: That does not match this row's clue.
+    cross-column: That does not match this column's clue.
+    cross-plain: Not this one. Check the clues again.
+  hint:
+    look-row: Look at this row.
+    look-column: Look at this column.
+    look-box: Look at this box.
+    look-cell: Look at this cell and the row, column and box around it.
+    look-line-row: Look at this row and its clue.
+    look-line-column: Look at this column and its clue.
+    last-cell: Only one cell is empty here. Which number is missing?
+    hidden-single: Only one cell here can take the number. Find it!
+    naked-single: This cell has only one number left. Cross out the others.
+    full-line: This clue fills the whole line.
+    overlap: 'The run is long: the middle cells are filled wherever it starts.'
+    cross-out: This line has all its filled cells. Cross out the rest.
+    combine: Use the fills and crosses from the other lines.
+    show: 'Watch: here it goes.'

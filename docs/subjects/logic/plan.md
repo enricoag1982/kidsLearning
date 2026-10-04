@@ -31,7 +31,7 @@ Next versions: Mirror Meadow (spatial), Maze Mountain, Clue Cove (true / false, 
 |---|---|---|---|---|
 | `choice`, `order`, `number-entry`, `true-false` | platform card kit | Cards with drawn shape tokens (kind × colour × size × count) | exact; content checks: every rule that fits the shown terms gives the same answer (pattern ambiguity), one odd item per attribute | card kit |
 | `group` | platform (opt-in, like `duel`) | Tap a card, tap a box (row of 2–4 boxes, Carroll 2 × 2, Venn) | each item fits exactly one zone (rules over shape facts + tags) | box rules / rule out a wrong box / place one |
-| `grid-fill` | logic | Tap a cell, tap a number (sudoku) or fill / cross (picture cross); pencil marks | exactly one solution; a human-style solver finishes with techniques ≤ the lesson's, and the lesson's technique occurs | per step: highlight the unit / name the technique + candidates / fill the cell |
+| `grid-fill` | logic | Tap a cell, tap a number (sudoku) or fill / cross (picture cross); pencil marks | exactly one solution; a human-style solver finishes with the lesson's allowed techniques (L9), and the lesson's technique occurs | per step: highlight the unit(s) / name the technique and point at the cell (no candidates: a naked single's candidate is the answer) / fill the cell |
 
 ## 4. Decisions (lead 2026-10-04, from a code read of the platform after M13)
 

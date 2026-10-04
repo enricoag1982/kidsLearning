@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { parseSudoku } from '../../core/puzzles/sudoku.ts';
-import { countSudokuSolutions } from './sudoku-count.ts';
+import { countSudokuSolutions, findSudokuSolution } from './sudoku-count.ts';
 
 describe('countSudokuSolutions', () => {
   it('the empty 4 × 4 grid has 288 solutions', () => {
@@ -51,5 +51,46 @@ describe('countSudokuSolutions', () => {
 
   it('throws on a grid of the wrong length', () => {
     expect(() => countSudokuSolutions(4, [0, 0, 0])).toThrow(/3 cells/);
+  });
+});
+
+describe('findSudokuSolution', () => {
+  it('returns the solution of a unique puzzle, and leaves the givens alone', () => {
+    const { size, grid } = parseSudoku(['..3.', '..1.', '4123', '3241']);
+    const before = [...grid];
+    const solution = findSudokuSolution(size, grid);
+    expect(solution).toEqual(parseSudoku(['1432', '2314', '4123', '3241']).grid);
+    expect(grid).toEqual(before);
+    const six = parseSudoku(['42....', '..64.2', '634...', '25....', '.63...', '54..13']);
+    const sixSolution = findSudokuSolution(six.size, six.grid);
+    expect(sixSolution).toHaveLength(36);
+    expect(sixSolution).not.toContain(0);
+    expect(countSudokuSolutions(six.size, sixSolution ?? [], Infinity)).toBe(1);
+    six.grid.forEach((value, cell) => {
+      if (value !== 0) expect(sixSolution?.[cell]).toBe(value);
+    });
+  });
+
+  it('returns one of the solutions of an ambiguous puzzle: a full grid that keeps the givens', () => {
+    const { size, grid } = parseSudoku(['.2.4', '.4.2', '2143', '4321']);
+    const solution = findSudokuSolution(size, grid);
+    expect(solution).toBeDefined();
+    expect(countSudokuSolutions(size, solution ?? [], Infinity)).toBe(1);
+    grid.forEach((value, cell) => {
+      if (value !== 0) expect(solution?.[cell]).toBe(value);
+    });
+  });
+
+  it('returns nothing when there is no solution, however it fails', () => {
+    expect(
+      findSudokuSolution(4, parseSudoku(['11..', '....', '....', '....']).grid),
+    ).toBeUndefined();
+    expect(
+      findSudokuSolution(4, parseSudoku(['.12.', '4...', '3...', '....']).grid),
+    ).toBeUndefined();
+  });
+
+  it('throws on a grid of the wrong length', () => {
+    expect(() => findSudokuSolution(4, [0, 0, 0])).toThrow(/3 cells/);
   });
 });

@@ -24,11 +24,14 @@ function peersOf(size: SudokuSize): readonly (readonly number[])[] {
   return peers;
 }
 
-/**
- * The number of solutions of a grid, counted by backtracking on the cell with the fewest candidates; stops once `limit` is reached
- * (so `2` answers "unique?"). Givens that already clash count 0.
- */
-export function countSudokuSolutions(size: SudokuSize, grid: SudokuGrid, limit = 2): number {
+// Backtracking on the cell with the fewest candidates; calls `found` with each solution and stops once `limit` are found. Returns how
+// many it found. Givens that already clash have none.
+function searchSudoku(
+  size: SudokuSize,
+  grid: SudokuGrid,
+  limit: number,
+  found: (solution: SudokuGrid) => void,
+): number {
   if (grid.length !== size * size) {
     throw new Error(`sudoku: ${String(grid.length)} cells (${String(size * size)} expected)`);
   }
@@ -73,6 +76,7 @@ export function countSudokuSolutions(size: SudokuSize, grid: SudokuGrid, limit =
     }
     if (best === -1) {
       count += 1;
+      found(work);
       return;
     }
     for (let digit = 1; digit <= size && count < limit; digit += 1) {
@@ -85,4 +89,21 @@ export function countSudokuSolutions(size: SudokuSize, grid: SudokuGrid, limit =
   };
   search();
   return count;
+}
+
+/**
+ * The number of solutions of a grid, counted by backtracking on the cell with the fewest candidates; stops once `limit` is reached
+ * (so `2` answers "unique?"). Givens that already clash count 0.
+ */
+export function countSudokuSolutions(size: SudokuSize, grid: SudokuGrid, limit = 2): number {
+  return searchSudoku(size, grid, limit, () => undefined);
+}
+
+/** The first solution of a grid the search finds (the only one when the puzzle is unique), or `undefined` when there is none. */
+export function findSudokuSolution(size: SudokuSize, grid: SudokuGrid): SudokuGrid | undefined {
+  let solution: SudokuGrid | undefined;
+  searchSudoku(size, grid, 1, (found) => {
+    solution = [...found];
+  });
+  return solution;
 }

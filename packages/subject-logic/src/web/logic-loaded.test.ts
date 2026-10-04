@@ -39,6 +39,11 @@ describe('logicEntry.load', () => {
       'order',
       'true-false',
     ]);
-    expect(Object.keys(pack.kinds).sort()).toEqual(Object.keys(pack.core.kinds).sort());
+    // One UI per core kind, but `grid-fill`: its UI (and no shipped lesson uses it) comes with m14.8.
+    expect(Object.keys(pack.kinds).sort()).toEqual(
+      Object.keys(pack.core.kinds)
+        .filter((type) => type !== 'grid-fill')
+        .sort(),
+    );
   });
 });
