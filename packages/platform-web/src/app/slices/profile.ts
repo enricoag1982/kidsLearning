@@ -33,9 +33,12 @@ export interface ProfileSlice {
   readonly conceptStats: readonly ConceptStats[];
   readonly journey: Journey | null;
 
-  /** First run: after "Saved", to the new-player wizard, Home (one existing profile) or the picker (more than one). */
+  /** First run: after "Saved", to the new-player wizard, Home (one existing profile; the subjects hub with several subjects) or the picker (more than one). */
   readonly finishFirstRun: () => Promise<void>;
+  /** Creates the profile and selects it: back to the parent area when opened from there, else Home with the placement offer
+   * on top; with several subjects the subjects hub instead (no offer there, multi-subject.md D10). */
   readonly finishNewPlayer: (nickname: string, avatar: string) => Promise<void>;
+  /** Selects the profile and lands on Home, or on the subjects hub with several subjects (the profile's last subject active). */
   readonly selectProfileAndHome: (profileId: string) => Promise<void>;
   readonly refreshProfiles: () => Promise<void>;
   /** Re-reads lesson + mini-game progress and the derived Journey, e.g. after a lesson or mini-game session. */
