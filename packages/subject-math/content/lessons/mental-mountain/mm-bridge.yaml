@@ -1,0 +1,23 @@
+# W2 lesson 3: bridge through ten (make a ten first) and count up across a ten. Generated; seeds are stored, never change them.
+# The plan's line picture for the guided tries is not built (the number-entry card has no picture slot; decided m13.11): the story and
+# demo name the jump to the ten. `bridge-easy` is the ones sum 11-12 for `bridge-hard-1` (ones sum 16-18).
+id: mm-bridge
+order: 3
+concept: mm-bridge
+character: hedgehog
+demo:
+  prompt: { big: 38 + 7 }
+guided:
+  - id: bridge-g
+    generate: { template: bridge-add, count: 2, seed: 1, params: { onesSum: [11, 13], max: 100 } }
+exercises:
+  - id: bridge
+    generate: { template: bridge-add, count: 3, seed: 2, params: { onesSum: [11, 16], max: 100 } }
+  - id: bridge-hard
+    easier: bridge-easy-1
+    generate: { template: bridge-add, count: 1, seed: 5, params: { onesSum: [16, 18], max: 100 } }
+  - id: count
+    generate: { template: count-up, count: 2, seed: 4, params: { maxDiff: 12 } }
+variants:
+  - id: bridge-easy
+    generate: { template: bridge-add, count: 1, seed: 5, params: { onesSum: [11, 12], max: 100 } }

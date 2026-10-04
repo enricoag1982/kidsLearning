@@ -42,6 +42,47 @@ pv-round:
 number-train:
   title: Number Train
   goal: Put every carriage number where it belongs on the line!
+mm-bonds:
+  title: Number bonds
+  story: >-
+    Owl says: number bonds are pairs that make a round number. Hedgie knows 6 and 4 make 10,
+    so 60 and 40 make 100. Find the partner and fill the gap!
+  demo: >-
+    Look: 64 plus what makes 100? The tens: 6 and 3 make 90. The ones: 4 and 6 make 10.
+    So 36 goes in the gap!
+mm-doubles:
+  title: Doubles and halves
+  story: >-
+    Owl says: a double adds a number to itself, and half is one of two equal parts.
+    Hedgie uses doubles to help: 35 plus 36 is double 35 and 1 more.
+    To halve, split the tens and the ones!
+  demo: >-
+    Look: 35 plus 36. Double 35 is 70, and 36 is one more than 35, so the answer is 71!
+mm-bridge:
+  title: Bridge through ten
+  story: >-
+    Owl says: a ten is a bridge. Hedgie makes a ten first, then adds what is left.
+    To count up, jump to the next ten and then on!
+  demo: >-
+    Look: 38 plus 7. Make a ten first: 2 more makes 40. Then 5 are left, so 40 plus 5 is 45!
+mm-tens:
+  title: Tens, hundreds, nearly
+  story: >-
+    Owl says: adding 10 changes only the tens digit, and adding 100 only the hundreds digit.
+    Hedgie uses round numbers for the nearly ones, because 99 is 100 less 1.
+    Add the round number, then fix the 1!
+  demo: >-
+    Look: 46 plus 99. Add 100 to get 146. But 99 is 1 less than 100, so take 1 away: 145!
+mm-problems:
+  title: Story problems
+  story: >-
+    Owl says: read the story, then ask what is happening. Hedgie adds when parts come together
+    and takes away when some go. How many more compares two numbers: take the smaller from the larger!
+  demo: >-
+    Look: Fox has 12 berries and finds 5 more. The berries come together, so add. 12 plus 5 makes 17!
+market-orders:
+  title: Market Orders
+  goal: Help the market animals with their orders!
 bugs:
   append: 'Each place holds one digit: 2 hundreds is 200, not 2000.'
   swap: 'Look at the order: hundreds, then tens, then ones.'

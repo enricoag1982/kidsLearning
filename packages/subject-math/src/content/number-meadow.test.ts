@@ -26,6 +26,9 @@ function english(ref: string): string {
   return text;
 }
 
+/** The five lessons of World 1 (World 2's are in `mental-mountain.test.ts`). */
+const worldOne = content.lessons.filter((lesson) => lesson.world === 'number-meadow');
+
 function lessonOf(id: string): MathLesson {
   const found = content.lessons.find((lesson) => lesson.id === id);
   if (found === undefined) throw new Error(`no lesson ${id}`);
@@ -147,7 +150,7 @@ const idsOf = (defs: readonly MathExerciseDef[] | undefined): readonly string[] 
 
 describe('the 5 lessons of World 1', () => {
   it('are the curriculum’s, in order, all taught by the Hedgehog: 2 guided, 6 scored, 1 easier variant each', () => {
-    const byOrder = [...content.lessons].sort((a, b) => a.order - b.order);
+    const byOrder = [...worldOne].sort((a, b) => a.order - b.order);
     expect(
       byOrder.map((lesson) => [
         lesson.id,
@@ -166,7 +169,7 @@ describe('the 5 lessons of World 1', () => {
       ['pv-thousands', 'pv-thousands', 'number-meadow', 4, 'hedgehog', 2, 6, 1],
       ['pv-round', 'pv-round', 'number-meadow', 5, 'hedgehog', 2, 6, 1],
     ]);
-    expect(content.lessons).toHaveLength(5);
+    expect(worldOne).toHaveLength(5);
     expect(byOrder.map((lesson) => english(lesson.titleKey))).toEqual([
       'Hundreds, tens, ones',
       'Bigger or smaller?',
@@ -640,9 +643,7 @@ describe('the Number Train world boss', () => {
     };
     expect(specOf(raw.rounds)).toEqual(FROZEN_BOSS);
     expect(compiled.tracks.tracks[0]?.worlds[0]?.boss).toBe('number-train');
-    expect(lessonOf('pv-round').order).toBe(
-      Math.max(...content.lessons.map((lesson) => lesson.order)),
-    );
+    expect(lessonOf('pv-round').order).toBe(Math.max(...worldOne.map((lesson) => lesson.order)));
   });
 
   it('plays: every round is solved by its own kind with 3 stars', () => {

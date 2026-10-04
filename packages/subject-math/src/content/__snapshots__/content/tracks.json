@@ -12,6 +12,14 @@
      "habitat": "meadow",
      "titleKey": "journey:worlds.number-meadow",
      "boss": "number-train"
+    },
+    {
+     "id": "mental-mountain",
+     "track": "numbers",
+     "order": 2,
+     "habitat": "mountains",
+     "titleKey": "journey:worlds.mental-mountain",
+     "boss": "market-orders"
     }
    ]
   }
@@ -24,6 +32,10 @@
   {
    "id": "builder",
    "after": "world:number-meadow"
+  },
+  {
+   "id": "climber",
+   "after": "world:mental-mountain"
   }
  ]
 }

@@ -1,0 +1,36 @@
+# W2 lesson 1: number bonds, pairs that make 10, 20 and 100 (64 + 36: the tens make 90, the ones make 10 more). Every exercise is
+# generated from a template (`src/content/templates/`) with a stored seed; never change a seed or a count once released
+# (`docs/adding-a-subject.md` §6). All symbols (a bond has no picture): the first scored items are the easier totals, the last is the
+# equals-sign gap. `bonds-easy` is the bond to 100 in whole tens.
+id: mm-bonds
+order: 1
+concept: mm-bonds
+character: hedgehog
+demo:
+  prompt: { big: 64 + 36 = 100 }
+guided:
+  - id: bonds-g-ten
+    generate: { template: bond-missing, count: 1, seed: 1, params: { total: 10 } }
+  - id: bonds-g-twenty
+    generate: { template: bond-missing, count: 1, seed: 1, params: { total: 20 } }
+exercises:
+  - id: bonds-ten
+    generate: { template: bond-missing, count: 1, seed: 0, params: { total: 10 } }
+  - id: bonds-twenty
+    generate: { template: bond-missing, count: 1, seed: 0, params: { total: 20 } }
+  - id: bonds-hundred
+    easier: bonds-easy-1
+    generate: { template: bond-missing, count: 1, seed: 2, params: { total: 100 } }
+  - id: bonds-rest
+    generate: { template: bond-missing, count: 1, seed: 5, params: { total: 100 } }
+  - id: bonds-pair
+    generate: { template: bond-pairs, count: 1, seed: 9, params: { total: 100 } }
+  - id: bonds-gap
+    generate: { template: equals-balance, count: 1, seed: 11, params: { max: 20 } }
+variants:
+  - id: bonds-easy
+    generate:
+      template: bond-missing
+      count: 1
+      seed: 1
+      params: { total: 100, tensOnly: true }

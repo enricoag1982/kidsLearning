@@ -1,0 +1,31 @@
+# W2 lesson 5: story problems (part-whole, change, comparison). Each story is an authored sentence (`stories.*` in
+# locales/en/lessons.yaml) with two numbers; the template picks the story and the numbers. Text only (no picture), so the CPA rule is
+# met by every item. Generated; seeds are stored, never change them. `story-easy` is a part-whole story up to 20 for `story-part-1`.
+id: mm-problems
+order: 5
+concept: mm-problems
+character: hedgehog
+demo:
+  prompt: { big: 12 + 5 }
+guided:
+  - id: story-g-parts
+    generate: { template: story, count: 1, seed: 8, params: { frame: part-whole, max: 100 } }
+  - id: story-g-change
+    generate: { template: story, count: 1, seed: 15, params: { frame: change-add, max: 100 } }
+exercises:
+  - id: story-part
+    easier: story-easy-1
+    generate: { template: story, count: 1, seed: 5, params: { frame: part-whole, max: 100 } }
+  - id: story-parts
+    generate: { template: story, count: 1, seed: 12, params: { frame: part-whole, max: 100 } }
+  - id: story-gets
+    generate: { template: story, count: 1, seed: 9, params: { frame: change-add, max: 100 } }
+  - id: story-gives
+    generate: { template: story, count: 1, seed: 11, params: { frame: change-take, max: 100 } }
+  - id: story-more
+    generate: { template: story, count: 1, seed: 5, params: { frame: compare, max: 100 } }
+  - id: story-fewer
+    generate: { template: story, count: 1, seed: 15, params: { frame: compare, max: 100 } }
+variants:
+  - id: story-easy
+    generate: { template: story, count: 1, seed: 15, params: { frame: part-whole, max: 20 } }

@@ -13,6 +13,19 @@
   }
  },
  {
+  "id": "mountain-climber",
+  "category": "milestone",
+  "nameKey": "rewards:badges.mountain-climber.name",
+  "conditionKey": "rewards:badges.mountain-climber.condition",
+  "condition": {
+   "type": "mastered",
+   "thresholds": [
+    1
+   ],
+   "scope": "world:mental-mountain"
+  }
+ },
+ {
   "id": "star-counter",
   "category": "skill",
   "nameKey": "rewards:badges.star-counter.name",
