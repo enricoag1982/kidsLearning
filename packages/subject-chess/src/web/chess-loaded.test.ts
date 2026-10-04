@@ -10,6 +10,6 @@ describe('chessEntry.load', () => {
     expect(loaded.pack.core.id).toBe(chessEntry.manifest.id);
     expect(Object.keys(loaded.locales)).toEqual(['en']);
     const common = loaded.locales.en?.common as { app?: { title?: string } } | undefined;
-    expect(common?.app?.title).toBe('Chess for Kids');
+    expect(common?.app?.title).toBe('Chess');
   });
 });

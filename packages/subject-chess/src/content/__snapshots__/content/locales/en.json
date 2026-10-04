@@ -24,7 +24,7 @@
  },
  "common": {
   "app": {
-   "title": "Chess for Kids"
+   "title": "Chess"
   },
   "app-error": {
    "body": "Tap \"Try again\". If this keeps happening, ask a grown-up to send the text below to the app's maker.",

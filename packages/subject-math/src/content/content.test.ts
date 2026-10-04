@@ -129,7 +129,7 @@ const resolve: Resolve = (key, vars = {}) => {
 
 describe('texts', () => {
   it('the app shell texts every subject supplies say "Math"', () => {
-    expect(resolve('app.title')).toBe('Math for Kids');
+    expect(resolve('app.title')).toBe('Math');
     for (const key of [
       'voice-check.sentence',
       'placement.offer-question',

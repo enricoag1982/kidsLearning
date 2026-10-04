@@ -5,6 +5,6 @@ pnpm-lock.yaml
 **/playwright-report
 **/test-results
 **/*.md
-apps/chess-kids/public/audio/**/manifest.json
+apps/kids-learning/public/audio/**/manifest.json
 **/__snapshots__/**
-apps/chess-kids/test-fixtures/storage/**/*.json
+apps/kids-learning/test-fixtures/storage/**/*.json
