@@ -1,6 +1,6 @@
 // The coding e2e kit: the platform's page flows bound to the Coding subject of the Kids Learning app (through the subjects hub) and
 // its locale, plus drivers that play any exercise from its kind's `solution()` through the kind's own e2e driver (one path for every
-// kind), seed lessons as mastered in the coding store, and play a lesson or a series round by round.
+// kind), seed lessons as mastered and bosses as won in the coding store, and play a lesson or a series round by round.
 import type { Page } from '@playwright/test';
 import { createE2ETexts } from '@learn/platform-web/e2e/i18n.ts';
 import { createPages } from '@learn/platform-web/e2e/pages.ts';
@@ -137,13 +137,16 @@ export async function playRounds(page: Page, game: CodingSeries, rounds: number)
 }
 
 /**
- * Seeds `lessons` as mastered in the coding store (every exercise at 3 stars) for the one seeded profile, then reloads and returns to
- * the Coding Home through the picker: what a child who played them in an earlier session would see.
+ * Seeds `lessons` as mastered (every exercise at 3 stars) and `miniGames` as won (a `MiniGameProgress` with `wins: 1`) in the coding
+ * store for the one seeded profile, then reloads and returns to the Coding Home through the picker: what a child who played them in
+ * an earlier session would see. A world unlocks only once the one before it is mastered, its boss included, so a spec that opens a
+ * later world seeds the bosses of the worlds behind the child too.
  */
-export async function seedLessonsMasteredAndReopen(
+export async function seedMiniGamesWonAndReopen(
   page: Page,
   nickname: string,
   lessons: readonly CodingLesson[],
+  miniGames: readonly string[],
 ): Promise<void> {
   const profileId = await getSoleProfileId(page);
   await withAppStorage(
@@ -164,11 +167,46 @@ export async function seedLessonsMasteredAndReopen(
           updatedAt: now,
         });
       }
+      for (const miniGameId of miniGames) {
+        await repos.progress.saveMiniGame({
+          id: `seed-${miniGameId}`,
+          profileId,
+          miniGameId,
+          bestStars: 3,
+          plays: 1,
+          wins: 1,
+          createdAt: now,
+          updatedAt: now,
+        });
+      }
     },
     'coding',
   );
   await page.reload();
   await pickProfileFromPicker(page, nickname);
+}
+
+/** `seedMiniGamesWonAndReopen` with no boss won: the lessons only. */
+export function seedLessonsMasteredAndReopen(
+  page: Page,
+  nickname: string,
+  lessons: readonly CodingLesson[],
+): Promise<void> {
+  return seedMiniGamesWonAndReopen(page, nickname, lessons, []);
+}
+
+/**
+ * The Journey's tab for a world ("2 Looping Hills": its number and title). The Journey opens on the world the child is in; once a world
+ * is finished it moves on to the next one (or, when every world is done, back to the first), so a finished world's boss node is looked
+ * up on its own tab.
+ */
+export async function openJourneyWorld(page: Page, order: number, worldId: string): Promise<void> {
+  await page
+    .getByRole('button', {
+      name: `${String(order)} ${contentText(`journey:worlds.${worldId}`)}`,
+      exact: true,
+    })
+    .click();
 }
 
 /** Home's Start (today's lesson): Story, then Demo, then the first guided try is showing. */
