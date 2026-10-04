@@ -1,5 +1,5 @@
 // The exercise-kind registry: the only place exercise-type dispatch happens. The card kit's four kinds and math's own, one plain
-// object (`number-line` since m13.6; `place-value` and `array` join in m13.7-m13.8).
+// object (`number-line` since m13.6, `place-value` since m13.7; `array` joins in m13.8).
 import type {
   CardAction,
   CardHint,
@@ -16,14 +16,21 @@ import type {
   NumberLineState,
   PlaceAction,
 } from './number-line/def.ts';
+import type {
+  BuildAction,
+  PlaceValueHint,
+  PlaceValueOutcome,
+  PlaceValueState,
+} from './place-value/def.ts';
+import { placeValueKind } from './place-value/kind.ts';
 
 export type ExerciseType = MathExerciseDef['type'];
 export type DefOf<T extends ExerciseType> = Extract<MathExerciseDef, { readonly type: T }>;
 
-export type MathAction = CardAction | PlaceAction;
-export type MathOutcome = CardOutcome | NumberLineOutcome;
-export type MathHint = CardHint | NumberLineHint;
-export type MathState = CardState | NumberLineState;
+export type MathAction = CardAction | PlaceAction | BuildAction;
+export type MathOutcome = CardOutcome | NumberLineOutcome | PlaceValueOutcome;
+export type MathHint = CardHint | NumberLineHint | PlaceValueHint;
+export type MathState = CardState | NumberLineState | PlaceValueState;
 
 export type AnyMathKind = ExerciseKind<
   MathExerciseDef,
@@ -37,6 +44,7 @@ export type AnyMathKind = ExerciseKind<
 export const MATH_KINDS = {
   ...CARD_KINDS,
   'number-line': numberLineKind,
+  'place-value': placeValueKind,
 } as const satisfies { readonly [T in ExerciseType]: AnyMathKind & { readonly type: T } };
 
 export function kindOf(def: { readonly type: ExerciseType }): AnyMathKind {

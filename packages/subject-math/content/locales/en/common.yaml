@@ -21,12 +21,31 @@ topic:
   counter: Counter
 math:
   # The number line kind (src/kinds/number-line): the name a screen reader reads, the notes under the question and the hints.
+  # The place-value kind (src/kinds/place-value): its notes, hints and the names of the blocks' buttons (`pv`); `{{place}}` is one of
+  # the `pv.plural` / `pv.one` texts.
   line:
     label: 'Number line from {{from}} to {{to}}, a mark every {{step}}'
     marker-at: 'Marker at {{value}}'
     no-marker: No marker yet
   notes:
     line-wrong: Not there yet. Look at the numbers on the line.
+    pv-wrong: Count the blocks in each column again.
   hints:
     line-benchmark: 'Find the middle: {{benchmark}}.'
     line-labels: Read the numbers on every mark.
+    pv-columns: 'Hundreds, tens and ones: count each column.'
+    pv-numeral: The number beside the blocks shows what you built.
+    pv-fill: 'Here are the {{place}}. Now finish!'
+  pv:
+    plural:
+      thousands: thousands
+      hundreds: hundreds
+      tens: tens
+      ones: ones
+    one:
+      thousands: thousand
+      hundreds: hundred
+      tens: ten
+      ones: one
+    add: 'Add a {{place}}'
+    remove: 'Take away a {{place}}'

@@ -14,11 +14,14 @@ import { MATH_CHARACTERS, mathCore } from '../core/math-core.ts';
 import type { DefOf, ExerciseType } from '../kinds/index.ts';
 import { numberLine } from './number-line.ts';
 import { numberLineVoiceTemplates } from './number-line-voice.ts';
+import { placeValue } from './place-value.ts';
+import { placeValueVoiceTemplates } from './place-value-voice.ts';
 
 /** The kinds, by `type`: the card kit's four and math's own. */
 export const MATH_KIND_CONTENT = {
   ...CARD_KIND_CONTENT,
   'number-line': numberLine,
+  'place-value': placeValue,
 } as const satisfies {
   readonly [T in ExerciseType]: ExerciseKindContent<DefOf<T>, z.ZodType>;
 };
@@ -33,6 +36,7 @@ export const MATH_TEMPLATES: Readonly<Record<string, AnyExerciseTemplate>> = {};
 const mathVoiceTemplates: SubjectContent['voiceTemplates'] = (add, r, all) => {
   cardVoiceTemplates(mathCore.notes)(add, r, all);
   numberLineVoiceTemplates(mathCore.notes)(add, r, all);
+  placeValueVoiceTemplates(mathCore.notes)(add, r, all);
 };
 
 /** Math's whole `SubjectContent`; `series` is its only mini-game mode, so no mode is a default. */

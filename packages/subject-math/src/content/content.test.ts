@@ -247,7 +247,8 @@ describe('texts', () => {
 
   it('keeps no text of the retired problem card in the English bundle', () => {
     const common = locales.en?.common as Record<string, unknown> | undefined;
-    // `math.notes` / `math.hints` are the number line's (m13.6), not the retired card's.
+    // `math.notes` / `math.hints` / `math.line` / `math.pv` hold the number line's (m13.6) and the place-value kind's (m13.7)
+    // texts, not the retired card's.
     const math = (common?.math ?? {}) as Record<string, unknown>;
     for (const key of [
       'pad-label',
@@ -337,7 +338,11 @@ describe('the voice inventory covers every note', () => {
     );
   });
 
-  it('has no note of a kind the world does not use (order)', () => {
+  it('has no note of a kind the world does not use (order, place-value)', () => {
     expect(notes('exercise-note')).not.toContain('Not that one. Try another!');
+    expect(notes('exercise-note')).not.toContain('Count the blocks in each column again.');
+    expect(voice.filter((entry) => /^Here are the \w+\. Now finish!$/.test(entry.text))).toEqual(
+      [],
+    );
   });
 });

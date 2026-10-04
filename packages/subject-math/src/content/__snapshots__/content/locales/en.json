@@ -190,7 +190,10 @@
   "math": {
    "hints": {
     "line-benchmark": "Find the middle: {{benchmark}}.",
-    "line-labels": "Read the numbers on every mark."
+    "line-labels": "Read the numbers on every mark.",
+    "pv-columns": "Hundreds, tens and ones: count each column.",
+    "pv-fill": "Here are the {{place}}. Now finish!",
+    "pv-numeral": "The number beside the blocks shows what you built."
    },
    "line": {
     "label": "Number line from {{from}} to {{to}}, a mark every {{step}}",
@@ -198,7 +201,24 @@
     "no-marker": "No marker yet"
    },
    "notes": {
-    "line-wrong": "Not there yet. Look at the numbers on the line."
+    "line-wrong": "Not there yet. Look at the numbers on the line.",
+    "pv-wrong": "Count the blocks in each column again."
+   },
+   "pv": {
+    "add": "Add a {{place}}",
+    "one": {
+     "hundreds": "hundred",
+     "ones": "one",
+     "tens": "ten",
+     "thousands": "thousand"
+    },
+    "plural": {
+     "hundreds": "hundreds",
+     "ones": "ones",
+     "tens": "tens",
+     "thousands": "thousands"
+    },
+    "remove": "Take away a {{place}}"
    }
   },
   "new-player": {
