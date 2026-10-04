@@ -479,21 +479,26 @@ function parseLegacyFile(
     throw new BackupValidationError('Not a valid backup file.');
   }
   const { data, ...rest } = result.data;
-  return {
+  const converted: unknown = {
     ...rest,
     app: deps.app.backupAppId,
     schemaVersion: current,
     data: Object.fromEntries(
       Object.entries(data).map(([profileId, profileData]) => {
         const { settings, streak, sessionLogs, ...records } = profileData;
-        const converted = {
-          settings,
-          ...(streak === undefined ? {} : { streak }),
-          sessionLogs,
-          subjects: { [target]: records },
-        };
-        return [profileId, converted];
+        return [
+          profileId,
+          {
+            settings,
+            ...(streak === undefined ? {} : { streak }),
+            sessionLogs,
+            subjects: { [target]: records },
+          },
+        ];
       }),
     ),
   };
+  // As in `parseSubjectsFile`: the zod shape and `BackupFile` differ only in readonly-ness (and in the subject's own settings
+  // fields, which `ProfileSettings` gets by module augmentation).
+  return converted as BackupFile;
 }

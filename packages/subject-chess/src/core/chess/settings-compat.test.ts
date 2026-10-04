@@ -4,7 +4,13 @@ import { describe, expect, it } from 'vitest';
 import { createProfile, getProfileSettings, updateProfileSettings } from '@learn/platform-core';
 import { buildBackupFile, parseBackupFile } from '@learn/platform-core/backup';
 import { makeSettingsRepo } from '@learn/platform-core/testing';
-import { makeDeps } from '../../testing/index.ts';
+import { makeDeps as makeChessDeps } from '../../testing/index.ts';
+import type { AppDeps } from '@learn/platform-core';
+
+/** Backup-wired deps: `buildBackupFile` stamps `storageSchemaVersion`, and a file at or below schema 5 parses as the old flat format. */
+function makeDeps(overrides: Partial<AppDeps> = {}): AppDeps {
+  return makeChessDeps({ storageSchemaVersion: 6, ...overrides });
+}
 
 /** A v2.0.0 profile's stored settings (a variable, not a literal: `pieceStyle` is no longer a `ProfileSettings` field). */
 const V2_SETTINGS = {

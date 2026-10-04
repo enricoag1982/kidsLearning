@@ -1,6 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import type { AppConfig, EarnedBadge, Profile, SessionLog, Streak } from '@learn/platform-core';
+import type {
+  AppConfig,
+  AppDeps,
+  EarnedBadge,
+  Profile,
+  SessionLog,
+  Streak,
+} from '@learn/platform-core';
 import { deleteProfile } from '@learn/platform-core';
+import { buildBackupFile, parseBackupFile } from '@learn/platform-core/backup';
+import { importMerged } from '@learn/platform-core/merge';
 import { makeProgress } from '@learn/platform-core/testing';
 import { createMemoryStorage } from '../testing/memory-storage.ts';
 import { createTestPack } from '../testing/test-pack.ts';
@@ -159,6 +168,139 @@ describe('createServices: several subjects', () => {
     const again = createServices([createTestPack('a'), createTestPack('b')], APP, storage);
     expect(await again.subjectDeps.a?.progress.getLesson('p1', 'rook')).toBeDefined();
     expect(await again.subjectDeps.b?.progress.getLesson('p1', 'rook')).toBeUndefined();
+  });
+});
+
+describe('createServices: backup across subjects', () => {
+  async function seedBoth(a: AppDeps, b: AppDeps): Promise<void> {
+    await a.profiles.save(PROFILE);
+    await a.progress.saveLesson(
+      makeProgress({ id: 'lp-a', profileId: 'p1', lessonId: 'intro', bestStars: { e1: 1 } }),
+    );
+    await b.progress.saveLesson(
+      makeProgress({ id: 'lp-b', profileId: 'p1', lessonId: 'intro', bestStars: { e1: 3 } }),
+    );
+    await a.rewards?.addEarnedBadge(BADGE);
+    await a.rewards?.saveStreak(STREAK);
+    await a.rewards?.saveSessionLog(LOG);
+  }
+
+  it('exports one section per subject, the shared streak and logs once', async () => {
+    const { a, b } = twoSubjects();
+    await seedBoth(a, b);
+
+    const file = await buildBackupFile(a);
+
+    expect(file.schemaVersion).toBe(6);
+    const data = file.data.p1;
+    expect(Object.keys(data?.subjects ?? {})).toEqual(['a', 'b']);
+    expect(data?.subjects.a?.lessonProgress[0]?.bestStars).toEqual({ e1: 1 });
+    expect(data?.subjects.b?.lessonProgress[0]?.bestStars).toEqual({ e1: 3 });
+    expect(data?.subjects.a?.earnedBadges).toEqual([BADGE]);
+    expect(data?.subjects.b?.earnedBadges).toEqual([]);
+    expect(data?.streak).toEqual(STREAK);
+    expect(data?.sessionLogs).toEqual([LOG]);
+  });
+
+  it('an export imported into a fresh two-subject device restores each subject separately', async () => {
+    const source = twoSubjects();
+    await seedBoth(source.a, source.b);
+    const raw = JSON.stringify(await buildBackupFile(source.a));
+
+    const target = twoSubjects();
+    const incoming = await parseBackupFile(target.a, raw);
+    await importMerged(target.a, incoming, []);
+
+    // Fresh services over the same storage: what the next app start reads.
+    const again = createServices([createTestPack('a'), createTestPack('b')], APP, target.storage);
+    const a = again.subjectDeps.a;
+    const b = again.subjectDeps.b;
+    expect((await a?.progress.getLesson('p1', 'intro'))?.bestStars).toEqual({ e1: 1 });
+    expect((await b?.progress.getLesson('p1', 'intro'))?.bestStars).toEqual({ e1: 3 });
+    expect(await a?.rewards?.listEarnedBadges('p1')).toEqual([BADGE]);
+    expect(await b?.rewards?.listEarnedBadges('p1')).toEqual([]);
+    expect(await a?.rewards?.getStreak('p1')).toEqual(STREAK);
+    expect(await b?.rewards?.listSessionLogs('p1')).toEqual([LOG]);
+    expect((await a?.profiles.list())?.map((profile) => profile.id)).toEqual(['p1']);
+    expect(keysOf(target.storage)).toEqual(
+      expect.arrayContaining(['app-a:lesson-progress', 'app-b:lesson-progress', 'app:streaks']),
+    );
+    expect(keysOf(target.storage)).not.toContain('app:lesson-progress');
+  });
+
+  it('merging the same file again changes nothing', async () => {
+    const source = twoSubjects();
+    await seedBoth(source.a, source.b);
+    const raw = JSON.stringify(await buildBackupFile(source.a));
+    const target = twoSubjects();
+    await importMerged(target.a, await parseBackupFile(target.a, raw), []);
+    const once = await buildBackupFile(target.a);
+
+    await importMerged(target.a, await parseBackupFile(target.a, raw), []);
+
+    const twice = await buildBackupFile(target.a);
+    expect(twice).toEqual({ ...once, exportedAt: twice.exportedAt });
+  });
+
+  it('a legacy flat file lands in the subject its app id maps to', async () => {
+    const services = createServices(
+      [createTestPack('a'), createTestPack('b')],
+      { ...APP, legacyBackupApps: { 'old-app': 'b' } },
+      createMemoryStorage(),
+    );
+    const a = services.subjectDeps.a;
+    const b = services.subjectDeps.b;
+    if (a === undefined || b === undefined) throw new Error('subject deps missing');
+    const legacy = {
+      app: 'old-app',
+      schemaVersion: 5,
+      exportedAt: NOW,
+      profiles: [PROFILE],
+      data: {
+        p1: {
+          settings: { dailyLimitMinutes: null, voice: true, sound: true, hints: true },
+          lessonProgress: [
+            makeProgress({ id: 'lp-old', profileId: 'p1', lessonId: 'old', bestStars: { e1: 2 } }),
+          ],
+          attempts: [],
+          miniGameProgress: [],
+          conceptStats: [],
+          gameRecords: [],
+          earnedBadges: [BADGE],
+          streak: STREAK,
+          sessionLogs: [LOG],
+          assessmentResults: [],
+          unlocks: [],
+        },
+      },
+    };
+
+    const incoming = await parseBackupFile(a, JSON.stringify(legacy));
+    await importMerged(a, incoming, []);
+
+    expect((await b.progress.getLesson('p1', 'old'))?.bestStars).toEqual({ e1: 2 });
+    expect(await b.rewards?.listEarnedBadges('p1')).toEqual([BADGE]);
+    expect(await a.progress.listLessons('p1')).toEqual([]);
+    expect(await a.rewards?.listEarnedBadges('p1')).toEqual([]);
+    expect(await a.rewards?.getStreak('p1')).toEqual(STREAK);
+    expect(await a.rewards?.listSessionLogs('p1')).toEqual([LOG]);
+  });
+
+  it('a one-subject app over one store (interim chess / math) exports and imports under its subject id', async () => {
+    const config = { ...APP, subjectStoragePrefix: () => 'app:' };
+    const source = createServices([createTestPack('solo')], config, createMemoryStorage());
+    await source.deps.profiles.save(PROFILE);
+    await source.deps.progress.saveLesson(
+      makeProgress({ id: 'lp', profileId: 'p1', lessonId: 'rook', bestStars: { e1: 3 } }),
+    );
+    const file = await buildBackupFile(source.deps);
+    const raw = JSON.stringify(file);
+
+    const target = createServices([createTestPack('solo')], config, createMemoryStorage());
+    await importMerged(target.deps, await parseBackupFile(target.deps, raw), []);
+
+    expect(Object.keys(file.data.p1?.subjects ?? {})).toEqual(['solo']);
+    expect((await target.deps.progress.getLesson('p1', 'rook'))?.bestStars).toEqual({ e1: 3 });
   });
 });
 

@@ -25,22 +25,11 @@ import { MAX_GAME_RECORDS } from './local-game-record-repository.ts';
 import { MAX_ATTEMPTS } from './local-progress-repository.ts';
 import { STORAGE_KEYS } from './storage-keys.ts';
 
-/** Every record a backup import replaces; deliberately never `parentLock` (a restored backup never
- * touches the parent password). */
-const RECORD_NAMES = [
-  STORAGE_KEYS.profiles,
-  STORAGE_KEYS.settings,
-  STORAGE_KEYS.lessonProgress,
-  STORAGE_KEYS.attempts,
-  STORAGE_KEYS.minigameProgress,
-  STORAGE_KEYS.conceptStats,
-  STORAGE_KEYS.gameRecords,
-  STORAGE_KEYS.earnedBadges,
-  STORAGE_KEYS.streaks,
-  STORAGE_KEYS.sessionLogs,
-  STORAGE_KEYS.assessmentResults,
-  STORAGE_KEYS.unlocks,
-] as const;
+/** Raw value per record name, as the repositories' `readAll` / `writeAll` store it. The shared store's records are `profiles`,
+ * `settings`, `streaks`, `session-logs` (never `parent-lock`: a restored backup never touches the parent password); each
+ * subject store's are `lesson-progress`, `attempts`, `minigame-progress`, `concept-stats`, `game-records`, `earned-badges`,
+ * `assessment-results`, `unlocks`. */
+type RawRecords = Readonly<Record<string, unknown>>;
 
 function byCreatedAtAsc(
   a: { readonly createdAt: string },
@@ -61,23 +50,12 @@ function sessionLogStorageKey(log: SessionLog, localDeviceId: string | undefined
   return isLocal ? `${log.profileId}:${log.date}` : `${log.profileId}:${log.date}:${log.deviceId}`;
 }
 
-/** `file`'s data reshaped into the raw value each `RECORD_NAMES` entry is stored as (as the repositories' `readAll` / `writeAll` do). */
-function toRawRecords(
-  file: BackupFile,
-  options: MergeWriteOptions,
-): Readonly<Record<(typeof RECORD_NAMES)[number], unknown>> {
+/** `file`'s shared part (profiles, settings, streaks, session logs) as raw records. */
+function toSharedRecords(file: BackupFile, options: MergeWriteOptions): RawRecords {
   const profiles: Record<string, Profile> = {};
-  const lessonProgress: Record<string, LessonProgress> = {};
-  const miniGameProgress: Record<string, MiniGameProgress> = {};
-  const conceptStats: Record<string, ConceptStats> = {};
   const streaks: Record<string, Streak> = {};
   const sessionLogs: Record<string, SessionLog> = {};
   const profileSettings: Record<string, ProfileSettings> = {};
-  let attempts: Attempt[] = [];
-  let gameRecords: GameRecord[] = [];
-  let earnedBadges: EarnedBadge[] = [];
-  let assessmentResults: AssessmentResult[] = [];
-  let unlocks: Unlock[] = [];
 
   for (const profile of file.profiles) {
     profiles[profile.id] = profile;
@@ -85,26 +63,12 @@ function toRawRecords(
     if (data === undefined) continue;
 
     profileSettings[profile.id] = data.settings;
-    for (const progress of data.lessonProgress) {
-      lessonProgress[`${progress.profileId}:${progress.lessonId}`] = progress;
-    }
-    for (const progress of data.miniGameProgress) {
-      miniGameProgress[`${progress.profileId}:${progress.miniGameId}`] = progress;
-    }
-    for (const stats of data.conceptStats) {
-      conceptStats[`${stats.profileId}:${stats.conceptId}`] = stats;
-    }
     for (const log of data.sessionLogs) {
       sessionLogs[sessionLogStorageKey(log, options.localDeviceId)] = log;
     }
     if (data.streak !== undefined) {
       streaks[profile.id] = data.streak;
     }
-    attempts = attempts.concat(data.attempts);
-    gameRecords = gameRecords.concat(data.gameRecords);
-    earnedBadges = earnedBadges.concat(data.earnedBadges);
-    assessmentResults = assessmentResults.concat(data.assessmentResults);
-    unlocks = unlocks.concat(data.unlocks);
   }
 
   const { lastProfileId, suggestedLevels, storagePersisted, deviceId } = options.deviceSettings;
@@ -117,36 +81,91 @@ function toRawRecords(
   };
 
   return {
-    profiles,
-    settings,
-    'lesson-progress': lessonProgress,
-    attempts: capped(attempts, MAX_ATTEMPTS),
-    'minigame-progress': miniGameProgress,
-    'concept-stats': conceptStats,
-    'game-records': capped(gameRecords, MAX_GAME_RECORDS),
-    'earned-badges': earnedBadges,
-    streaks,
-    'session-logs': sessionLogs,
-    'assessment-results': capped(assessmentResults, MAX_ASSESSMENT_RESULTS),
-    unlocks,
+    [STORAGE_KEYS.profiles]: profiles,
+    [STORAGE_KEYS.settings]: settings,
+    [STORAGE_KEYS.streaks]: streaks,
+    [STORAGE_KEYS.sessionLogs]: sessionLogs,
+  };
+}
+
+/** Subject `subjectId`'s records from every profile of `file`, as raw records. A profile without that subject's section
+ * contributes nothing, so a subject absent from the file comes out empty. */
+function toSubjectRecords(file: BackupFile, subjectId: string): RawRecords {
+  const lessonProgress: Record<string, LessonProgress> = {};
+  const miniGameProgress: Record<string, MiniGameProgress> = {};
+  const conceptStats: Record<string, ConceptStats> = {};
+  let attempts: Attempt[] = [];
+  let gameRecords: GameRecord[] = [];
+  let earnedBadges: EarnedBadge[] = [];
+  let assessmentResults: AssessmentResult[] = [];
+  let unlocks: Unlock[] = [];
+
+  for (const profile of file.profiles) {
+    const subject = file.data[profile.id]?.subjects[subjectId];
+    if (subject === undefined) continue;
+
+    for (const progress of subject.lessonProgress) {
+      lessonProgress[`${progress.profileId}:${progress.lessonId}`] = progress;
+    }
+    for (const progress of subject.miniGameProgress) {
+      miniGameProgress[`${progress.profileId}:${progress.miniGameId}`] = progress;
+    }
+    for (const stats of subject.conceptStats) {
+      conceptStats[`${stats.profileId}:${stats.conceptId}`] = stats;
+    }
+    attempts = attempts.concat(subject.attempts);
+    gameRecords = gameRecords.concat(subject.gameRecords);
+    earnedBadges = earnedBadges.concat(subject.earnedBadges);
+    assessmentResults = assessmentResults.concat(subject.assessmentResults);
+    unlocks = unlocks.concat(subject.unlocks);
+  }
+
+  return {
+    [STORAGE_KEYS.lessonProgress]: lessonProgress,
+    [STORAGE_KEYS.attempts]: capped(attempts, MAX_ATTEMPTS),
+    [STORAGE_KEYS.minigameProgress]: miniGameProgress,
+    [STORAGE_KEYS.conceptStats]: conceptStats,
+    [STORAGE_KEYS.gameRecords]: capped(gameRecords, MAX_GAME_RECORDS),
+    [STORAGE_KEYS.earnedBadges]: earnedBadges,
+    [STORAGE_KEYS.assessmentResults]: capped(assessmentResults, MAX_ASSESSMENT_RESULTS),
+    [STORAGE_KEYS.unlocks]: unlocks,
   };
 }
 
 const STAGING_PREFIX = 'backup-staging:';
 
-/** Stages every replaced record under `backup-staging:<name>`, then copies all to the real keys: a quota error partway
- * leaves the real keys untouched (`docs/architecture.md` §11). */
-export class LocalStorageBackupImporter implements BackupImporter {
-  private readonly store: LocalStore;
+interface StagedRecord {
+  readonly store: LocalStore;
+  readonly name: string;
+}
 
-  constructor(store: LocalStore) {
-    this.store = store;
+/** Writes `file` as the device's whole dataset: the shared part over `sharedStore`, each subject's records over its own store
+ * in `subjectStores` (by subject id). A store may be both the shared one and a subject's (single-store apps): it then gets
+ * all twelve records. Every replaced record in every store is staged under `backup-staging:<name>` first, then all are
+ * copied to the real keys: a quota error partway removes everything staged and leaves the real keys untouched
+ * (`docs/architecture.md` §11). A file's subject with no registered store is ignored; a registered subject missing from the
+ * file is written empty. */
+export class LocalStorageBackupImporter implements BackupImporter {
+  private readonly sharedStore: LocalStore;
+  private readonly subjectStores: Readonly<Record<string, LocalStore>>;
+
+  constructor(sharedStore: LocalStore, subjectStores: Readonly<Record<string, LocalStore>>) {
+    const seen = new Map<LocalStore, string>();
+    for (const [id, store] of Object.entries(subjectStores)) {
+      const other = seen.get(store);
+      if (other !== undefined) {
+        throw new Error(`subjects "${other}" and "${id}" share one store`);
+      }
+      seen.set(store, id);
+    }
+    this.sharedStore = sharedStore;
+    this.subjectStores = subjectStores;
   }
 
   writeMerged(file: BackupFile, options: MergeWriteOptions): Promise<void> {
     return toPromise(() => {
       this.checkSchemaVersion(file);
-      this.stageThenSwap(toRawRecords(file, options));
+      this.stageThenSwap(this.recordsByStore(file, options));
     });
   }
 
@@ -158,23 +177,41 @@ export class LocalStorageBackupImporter implements BackupImporter {
     }
   }
 
-  private stageThenSwap(raw: Readonly<Record<(typeof RECORD_NAMES)[number], unknown>>): void {
-    const staged: (typeof RECORD_NAMES)[number][] = [];
+  /** Every record to write, grouped by the store instance that holds it. */
+  private recordsByStore(
+    file: BackupFile,
+    options: MergeWriteOptions,
+  ): ReadonlyMap<LocalStore, RawRecords> {
+    const byStore = new Map<LocalStore, RawRecords>();
+    const add = (store: LocalStore, records: RawRecords): void => {
+      byStore.set(store, { ...byStore.get(store), ...records });
+    };
+    add(this.sharedStore, toSharedRecords(file, options));
+    for (const [subjectId, store] of Object.entries(this.subjectStores)) {
+      add(store, toSubjectRecords(file, subjectId));
+    }
+    return byStore;
+  }
+
+  private stageThenSwap(byStore: ReadonlyMap<LocalStore, RawRecords>): void {
+    const staged: StagedRecord[] = [];
     try {
-      for (const name of RECORD_NAMES) {
-        this.store.write(`${STAGING_PREFIX}${name}`, raw[name]);
-        staged.push(name);
+      for (const [store, records] of byStore) {
+        for (const [name, value] of Object.entries(records)) {
+          store.write(`${STAGING_PREFIX}${name}`, value);
+          staged.push({ store, name });
+        }
       }
     } catch (error: unknown) {
-      for (const name of staged) {
-        this.store.remove(`${STAGING_PREFIX}${name}`);
+      for (const { store, name } of staged) {
+        store.remove(`${STAGING_PREFIX}${name}`);
       }
       throw error instanceof Error ? error : new Error(String(error));
     }
 
-    for (const name of RECORD_NAMES) {
-      this.store.write(name, this.store.read(`${STAGING_PREFIX}${name}`));
-      this.store.remove(`${STAGING_PREFIX}${name}`);
+    for (const { store, name } of staged) {
+      store.write(name, store.read(`${STAGING_PREFIX}${name}`));
+      store.remove(`${STAGING_PREFIX}${name}`);
     }
   }
 }

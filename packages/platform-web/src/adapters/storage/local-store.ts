@@ -26,7 +26,7 @@ export interface OpenLocalStoreOptions {
 }
 
 /** Schema version used when `options.version` is omitted (`migrations.ts`: what each adds). */
-export const SCHEMA_VERSION = 5;
+export const SCHEMA_VERSION = 6;
 
 function namespacedKey(keyPrefix: string, name: string): string {
   return `${keyPrefix}${name}`;
