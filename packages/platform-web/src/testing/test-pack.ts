@@ -4,10 +4,19 @@ import { makeContentSource, makeLesson, testSubject } from '@learn/platform-core
 import type { LoadedSubject, SubjectEntry, SubjectWeb } from '../app/subject.ts';
 
 /** A one-lesson content (`<id>-lesson`, in the only world `<id>-world`) with a catalog, so a Journey loads: two test packs with
- * `createTestContent` differ in what they offer. */
-export function createTestContent(id: string): ContentSource {
+ * `createTestContent` differ in what they offer. `secondLesson` adds `<id>-lesson-2` after it (locked until `<id>-lesson` is complete,
+ * so the parent area has something to unlock). */
+export function createTestContent(
+  id: string,
+  options: { readonly secondLesson?: boolean } = {},
+): ContentSource {
   return makeContentSource({
-    lessons: [makeLesson({ id: `${id}-lesson`, world: `${id}-world` })],
+    lessons: [
+      makeLesson({ id: `${id}-lesson`, world: `${id}-world` }),
+      ...(options.secondLesson === true
+        ? [makeLesson({ id: `${id}-lesson-2`, world: `${id}-world`, order: 2 })]
+        : []),
+    ],
     catalog: {
       tracks: [
         {

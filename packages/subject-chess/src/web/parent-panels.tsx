@@ -7,7 +7,6 @@ import type { GameRecord } from '@learn/platform-core';
 import { loadGameRecords, loadJourney } from '@learn/platform-core';
 import { bot, computerLevelStatus } from '../chess.ts';
 import type { ComputerLevelStatus } from '../chess.ts';
-import { useServices } from '@learn/platform-web/app/store.ts';
 import type { ParentSettingsProps, ReportSectionProps } from '@learn/platform-web/app/subject.ts';
 import {
   PARENT_CHIP,
@@ -15,6 +14,7 @@ import {
   PARENT_CHIP_SELECTED,
 } from '@learn/platform-web/ui/ds/parent-styles-lazy.ts';
 import { PARENT_INFO_PANEL } from '@learn/platform-web/ui/parent/parent-styles.ts';
+import { useSubjectScope } from '@learn/platform-web/ui/parent/subject-scope.tsx';
 import {
   formatDate,
   opponentLabel,
@@ -28,7 +28,8 @@ export function SettingsPanel({
   patchSettings,
 }: ParentSettingsProps): JSX.Element {
   const { t } = useTranslation();
-  const services = useServices();
+  // The subject being edited (parent area chips), not necessarily the app's active one.
+  const services = useSubjectScope();
   const [levelStatuses, setLevelStatuses] = useState<readonly ComputerLevelStatus[]>([]);
 
   useEffect(() => {

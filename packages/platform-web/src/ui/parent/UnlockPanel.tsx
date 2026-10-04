@@ -3,12 +3,12 @@ import type { JSX } from 'react';
 import type { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import type { Lesson, SubjectCore } from '@learn/platform-core';
-import { loadJourney } from '@learn/platform-core';
-import { useAppStore, useServices } from '../../app/store.ts';
+import { loadJourney, parentUnlock } from '@learn/platform-core';
 import { usePack } from '../../app/subject.ts';
 import { characterName, tContent } from '../../content-text.ts';
 import { PARENT_NOTE, PARENT_SECONDARY_BUTTON } from './parent-styles.ts';
 import { useAsync } from '../ds/useAsync.ts';
+import { useSubjectScope } from './subject-scope.tsx';
 
 function lessonName(t: TFunction, characters: SubjectCore['characters'], lesson: Lesson): string {
   return characters[lesson.character] === undefined
@@ -20,12 +20,12 @@ export interface UnlockPanelProps {
   readonly profileId: string;
 }
 
-/** Parent "Unlock lessons & worlds" (domain-model.md §3.2): locked worlds / lessons with an unlock button; loads the profile's own `Journey`, bypassing the store's. */
+/** Parent "Unlock lessons & worlds" (domain-model.md §3.2): locked worlds / lessons with an unlock button; loads the profile's own `Journey`
+ * (bypassing the store's) and unlocks in the subject of the nearest `SubjectScopeProvider` (the active one without it). */
 export function UnlockPanel({ profileId }: UnlockPanelProps): JSX.Element {
   const { t } = useTranslation();
-  const services = useServices();
+  const services = useSubjectScope();
   const characters = usePack().core.characters;
-  const parentUnlockTarget = useAppStore((state) => state.parentUnlockTarget);
   const [busyId, setBusyId] = useState<string | null>(null);
   const { value: journey, reload: refresh } = useAsync(
     () => loadJourney(services.deps, profileId),
@@ -34,14 +34,14 @@ export function UnlockPanel({ profileId }: UnlockPanelProps): JSX.Element {
 
   async function unlockWorld(worldId: string): Promise<void> {
     setBusyId(worldId);
-    await parentUnlockTarget(profileId, { type: 'world', worldId });
+    await parentUnlock(services.deps, profileId, { type: 'world', worldId });
     await refresh();
     setBusyId(null);
   }
 
   async function unlockLesson(lessonId: string): Promise<void> {
     setBusyId(lessonId);
-    await parentUnlockTarget(profileId, { type: 'lesson', lessonId });
+    await parentUnlock(services.deps, profileId, { type: 'lesson', lessonId });
     await refresh();
     setBusyId(null);
   }

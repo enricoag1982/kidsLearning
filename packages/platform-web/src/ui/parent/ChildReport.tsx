@@ -1,11 +1,12 @@
+import { useState } from 'react';
 import type { JSX, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import type { ChildReport, GameRecord, Lesson, Profile } from '@learn/platform-core';
-import { buildChildReport } from '@learn/platform-core';
+import { buildChildReport, loadJourney } from '@learn/platform-core';
 import { usePack } from '../../app/subject.ts';
 import type { ParentPanels } from '../../app/subject.ts';
-import { useServices } from '../../app/store.ts';
+import { useAppStore } from '../../app/store.ts';
 import { tContent } from '../../content-text.ts';
 import { RankPill } from '../RankPill.tsx';
 import { ChevronRightIcon } from '../ds/icons.tsx';
@@ -14,6 +15,7 @@ import { ScreenHeader } from '../ds/Screen.tsx';
 import { useAsync } from '../ds/useAsync.ts';
 import { AvatarBadge } from '../ds/AvatarBadge.tsx';
 import { PARENT_INFO_PANEL, PARENT_NOTE, PARENT_SECONDARY_BUTTON } from './parent-styles.ts';
+import { SubjectChips, SubjectScopeProvider, useSubjectScope } from './subject-scope.tsx';
 
 const DATE_FORMAT = new Intl.DateTimeFormat('en', { month: 'short', day: 'numeric' });
 
@@ -111,15 +113,26 @@ export interface ChildReportScreenProps {
   readonly onOpenSettings: () => void;
 }
 
-/** Parent "child report" (app-structure.md §11): progress, concept accuracy, minutes, games, badges, assessments; read-only. */
-export function ChildReportScreen({
+/** The scoped subject's rank next to the child's name (nothing until its journey loads). */
+function ReportRank({ profileId }: { readonly profileId: string }): JSX.Element {
+  const scope = useSubjectScope();
+  const { value: rank } = useAsync(
+    async () => (await loadJourney(scope.deps, profileId)).rank,
+    [scope, profileId],
+  );
+  return <RankPill rank={rank} compact />;
+}
+
+/** The subject-bound sections of the report, for the subject of the nearest `SubjectScopeProvider`. */
+function ReportSections({
   profileId,
   profiles,
-  onBack,
-  onOpenSettings,
-}: ChildReportScreenProps): JSX.Element {
+}: {
+  readonly profileId: string;
+  readonly profiles: readonly Profile[];
+}): JSX.Element {
   const { t } = useTranslation();
-  const services = useServices();
+  const services = useSubjectScope();
   const pack = usePack();
   const { value: report } = useAsync(
     () => buildChildReport(services.deps, profileId),
@@ -136,36 +149,7 @@ export function ChildReportScreen({
   const maxMinutes = Math.max(1, ...(report?.minutesByDay.map((day) => day.minutes) ?? [0]));
 
   return (
-    <div className="flex flex-col gap-4">
-      <ScreenHeader
-        look="parent"
-        action="back"
-        actionLabel={t('parent.back')}
-        onAction={onBack}
-        icon={<ChevronLeftIcon />}
-      >
-        {report && (
-          <>
-            <AvatarBadge
-              avatar={report.profile.avatar}
-              className="h-11 w-11 flex-shrink-0 overflow-hidden rounded-full p-1.5"
-            />
-            <div className="flex flex-1 flex-col">
-              <span className="text-base font-extrabold text-ink">{report.profile.nickname}</span>
-              <RankPill rank={report.rank} compact />
-            </div>
-          </>
-        )}
-        <button
-          type="button"
-          onClick={onOpenSettings}
-          className={`${PARENT_SECONDARY_BUTTON} flex-shrink-0`}
-        >
-          {t('parent.settings')}
-          <ChevronRightIcon />
-        </button>
-      </ScreenHeader>
-
+    <>
       {!report ? (
         <p className={PARENT_INFO_PANEL}>{t('parent.report.loading')}</p>
       ) : (
@@ -360,6 +344,61 @@ export function ChildReportScreen({
           </Section>
         </>
       )}
+    </>
+  );
+}
+
+/** Parent "child report" (app-structure.md §11): progress, concept accuracy, minutes, games, badges, assessments; read-only. With
+ * several subjects, chips choose the subject whose progress, games, badges and assessments show (`docs/multi-subject.md` D11). */
+export function ChildReportScreen({
+  profileId,
+  profiles,
+  onBack,
+  onOpenSettings,
+}: ChildReportScreenProps): JSX.Element {
+  const { t } = useTranslation();
+  const activeSubjectId = useAppStore((state) => state.subjectId);
+  const [subjectId, setSubjectId] = useState(activeSubjectId);
+  const profile = profiles.find((entry) => entry.id === profileId);
+
+  return (
+    <div className="flex flex-col gap-4">
+      <ScreenHeader
+        look="parent"
+        action="back"
+        actionLabel={t('parent.back')}
+        onAction={onBack}
+        icon={<ChevronLeftIcon />}
+      >
+        {profile && (
+          <>
+            <AvatarBadge
+              avatar={profile.avatar}
+              className="h-11 w-11 flex-shrink-0 overflow-hidden rounded-full p-1.5"
+            />
+            <div className="flex flex-1 flex-col">
+              <span className="text-base font-extrabold text-ink">{profile.nickname}</span>
+              <SubjectScopeProvider subjectId={subjectId} fallback={null}>
+                <ReportRank profileId={profileId} />
+              </SubjectScopeProvider>
+            </div>
+          </>
+        )}
+        <button
+          type="button"
+          onClick={onOpenSettings}
+          className={`${PARENT_SECONDARY_BUTTON} flex-shrink-0`}
+        >
+          {t('parent.settings')}
+          <ChevronRightIcon />
+        </button>
+      </ScreenHeader>
+
+      <SubjectChips value={subjectId} onChange={setSubjectId} />
+
+      <SubjectScopeProvider subjectId={subjectId}>
+        <ReportSections profileId={profileId} profiles={profiles} />
+      </SubjectScopeProvider>
     </div>
   );
 }

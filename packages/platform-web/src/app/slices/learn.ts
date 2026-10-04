@@ -3,7 +3,6 @@ import {
   lessonStatus,
   loadPracticeTasks,
   loadWarmUp,
-  parentUnlock,
   planPlacement,
   planTestOutLesson,
   planTestOutWorld,
@@ -14,7 +13,6 @@ import {
   type AssessmentScore,
   type ConceptTask,
   type Lesson,
-  type ParentUnlockTarget,
 } from '@learn/platform-core';
 import type { Route } from '../routes.ts';
 import { backAndRefresh, type AppGet, type SliceCreator } from '../store.ts';
@@ -49,8 +47,6 @@ export interface LearnSlice {
   readonly advancePlacementWorld: () => void;
   /** Ends placement (all worlds done, one failed, or closed early: "can be skipped any time, keeps what passed"); Home, refreshing progress. */
   readonly finishPlacement: () => void;
-  /** Parent area "Unlock": unlocks one lesson or world for `profileId` (domain-model.md §3.2, `masteredVia: 'parent'`). */
-  readonly parentUnlockTarget: (profileId: string, target: ParentUnlockTarget) => Promise<void>;
   /** Practice "Daily warm-up": loads today's tasks and opens the run screen (a no-op if none due; guards a stale click). */
   readonly startPracticeWarmUp: () => Promise<void>;
   readonly startPracticeTopic: (conceptId: string) => Promise<void>;
@@ -192,11 +188,6 @@ export const createLearnSlice: SliceCreator<LearnSlice> = (set, get) => {
     },
 
     finishPlacement: backAndRefresh(get, 'home', { gate: true }),
-
-    async parentUnlockTarget(profileId: string, target) {
-      const { services } = get();
-      await parentUnlock(services.deps, profileId, target);
-    },
 
     async startPracticeWarmUp() {
       const { profile, services } = get();
