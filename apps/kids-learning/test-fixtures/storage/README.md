@@ -18,3 +18,9 @@ pnpm exec playwright test e2e/generate-fixture.spec.ts --project=chromium`); mov
 
 Per-tag: v1.0.0/v1.1.0 label it "Password", no weekend limit/"Play until"/share (M7.1/M7.2+ only).
 No `GameRecord` any tag (full game needs World 4, too costly here) or `session-logs`/`unlocks`.
+
+**Multi-subject recordings** (the deployed `kids-learning` app's "Export all", v6 format, one section per subject; `AppConfig.backupAppId` file, no legacy conversion):
+
+| Folder | Holds | Replayed by |
+|---|---|---|
+| `kids-m12.5/` | `backup-all.json` at tag `m12.5`, child Mia: chess `squares` lesson; math demo world `adding` (all 3 lessons, `number-parade` won once, badges `first-sums` + `star-counter`, 3 concepts in review: `add-within-5` seeded to box 3, the others box 1); coding `seq-order` (box 2, one real warm-up) + `seq-arrows` (`first-program`). Played through the UI by an adapted copy of `generate-fixture.spec.ts` in the `m12.5` scratch worktree (not kept), only the box seed through `withAppStorage`. **Last record before the math demo retires (`m13.10`).** | `storage-compat.test.ts` (`merged-into-empty` / `merged-into-v2.0.0` snapshots, all 3 subjects registered), `src/retired-content.test.tsx` (its math progress against content without `adding`) |
