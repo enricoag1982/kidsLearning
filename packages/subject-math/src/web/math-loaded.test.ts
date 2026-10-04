@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { CARD_KIND_UI } from '@learn/platform-web/kinds/cards/ui-registry.ts';
 import { mathEntry } from '../entry.ts';
+import { arrayUi } from '../kinds/array/ui.ts';
 import { numberLineUi } from '../kinds/number-line/ui.ts';
 import { placeValueUi } from '../kinds/place-value/ui.ts';
 import { MATH_KIND_UI } from './kinds/ui-registry.ts';
@@ -31,9 +32,10 @@ describe('mathEntry.load', () => {
     expect(content.badges?.().map((badge) => badge.id)).toEqual(['first-sums', 'star-counter']);
   });
 
-  it('draws the card kit kinds, the number line and place-value, in math’s own UI registry (the kit UIs, same objects)', async () => {
+  it('draws the card kit kinds, the number line, place-value and the array, in math’s own UI registry (the kit UIs, same objects)', async () => {
     const { pack } = await mathEntry.load();
     expect(Object.keys(pack.kinds).sort()).toEqual([
+      'array',
       'choice',
       'number-entry',
       'number-line',
@@ -47,6 +49,7 @@ describe('mathEntry.load', () => {
     }
     expect(pack.kinds['number-line']).toBe(numberLineUi);
     expect(pack.kinds['place-value']).toBe(placeValueUi);
+    expect(pack.kinds['array']).toBe(arrayUi);
     // Every kind the core registers has a UI, and the other way round.
     expect(Object.keys(pack.kinds).sort()).toEqual(Object.keys(pack.core.kinds).sort());
   });
