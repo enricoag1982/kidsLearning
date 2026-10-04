@@ -1,5 +1,5 @@
 // The math `SubjectWeb` pack: the card kit's web (card prompt, surfaces) over the compiled math content, with math's kind UI
-// registry in place of the kit's, so math's own kinds (`number-line`, `place-value`; m13.8: `array`) join `MATH_KIND_UI`.
+// registry in place of the kit's, so math's own kinds (`number-line`, `place-value`, `array`) join `MATH_KIND_UI`.
 // The dev playground (`/#math`) shows them on fixture exercises.
 import type { BadgeDef, CompiledContent, TracksCatalog } from '@learn/platform-core';
 import { createBundledContentSource } from '@learn/platform-web/adapters/content/bundled-content-source.ts';

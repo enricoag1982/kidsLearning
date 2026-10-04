@@ -377,7 +377,9 @@ describe('array UI: hints', () => {
     fireEvent.click(check());
     expect(session().dataset['solved']).toBe('true');
     expect(screen.getByTestId('done').dataset['stars']).toBe('1');
+    // The outlines make way for the corner's good ring.
     expect(highlightAt(3, 2)).toBe('good');
+    expect(highlights()).toHaveLength(1);
   });
 
   it('the hint outlines read the def: a single row, the whole grid, a free item', () => {

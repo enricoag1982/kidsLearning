@@ -1,8 +1,9 @@
 // Dev-only playground of math's own kind UIs (`/#math`): the samples of each kind (`number-line`: an exact item on three line lengths,
-// an estimate, a list of numbered ticks, a reason; `place-value`: 3 and 4 columns, a zero, a start, a reason, a 9; each with its guided
-// try first), one at a time, in the real lesson step (instruction bubble, hints, Skip on a guided try), on a throw-away in-memory
-// profile. No shipped lesson uses these kinds yet, so the exercises are the fixture lessons' (`web/testing/*`). Needs the Math subject
-// to be the app's active one (the pack's `dev` screens are the active pack's), so open it once from the hub first.
+// an estimate, a list of numbered ticks, a reason; `place-value`: 3 and 4 columns, a zero, a start, a reason, a 9; `array`: rows
+// fixed, rows free, the whole grid, a single row, a reason; each with its guided try first), one at a time, in the real lesson step
+// (instruction bubble, hints, Skip on a guided try), on a throw-away in-memory profile. No shipped lesson uses these kinds yet, so the
+// exercises are the fixture lessons' (`web/testing/*`). Needs the Math subject to be the app's active one (the pack's `dev` screens
+// are the active pack's), so open it once from the hub first.
 import { useEffect, useState } from 'react';
 import type { JSX } from 'react';
 import i18next from 'i18next';
@@ -16,6 +17,7 @@ import { createMemoryStorage } from '@learn/platform-web/testing/memory-storage.
 import { ExerciseStep } from '@learn/platform-web/ui/lesson/ExerciseStep.tsx';
 import type { MathExerciseDef, MathLesson } from '../../core/types.ts';
 import { mathWeb } from '../math-pack.ts';
+import { ARRAY_CATALOG, ARRAY_LESSON, ARRAY_TEXTS } from '../testing/array-fixture.ts';
 import { LINE_LESSON, LINE_TEXTS } from '../testing/line-fixture.ts';
 import { PLACE_VALUE_TEXTS, fixtureLesson } from '../testing/place-value-fixtures.ts';
 
@@ -23,7 +25,7 @@ interface Sample {
   readonly label: string;
   readonly def: MathExerciseDef;
   readonly guided: boolean;
-  /** The lesson the step is drawn in. */
+  /** The lesson the step is drawn in (the lesson step saves its result there). */
   readonly lesson: MathLesson;
 }
 
@@ -43,11 +45,12 @@ function samplesOf(lesson: MathLesson): readonly Sample[] {
 const GROUPS: readonly SampleGroup[] = [
   { title: 'Number line', samples: samplesOf(LINE_LESSON) },
   { title: 'Place value', samples: samplesOf(fixtureLesson) },
+  { title: 'Arrays', samples: samplesOf(ARRAY_LESSON) },
 ];
 
 const SAMPLES: readonly Sample[] = GROUPS.flatMap((group) => group.samples);
 
-/** One track with both fixture worlds, and the ranks the Home header needs. */
+/** The tracks of the fixture worlds (numbers: lines, adding; times: arrays), and the ranks the Home header needs. */
 const PLAYGROUND_CATALOG: TracksCatalog = {
   tracks: [
     {
@@ -71,6 +74,7 @@ const PLAYGROUND_CATALOG: TracksCatalog = {
         },
       ],
     },
+    ...ARRAY_CATALOG.tracks,
   ],
   ranks: [
     { id: 'counter', after: 'start' },
@@ -83,7 +87,7 @@ const playgroundWeb: SubjectWeb = {
   ...mathWeb,
   createServices: () => ({
     content: makeContentSource({
-      lessons: [LINE_LESSON, fixtureLesson],
+      lessons: [LINE_LESSON, fixtureLesson, ARRAY_LESSON],
       minigames: [],
       catalog: PLAYGROUND_CATALOG,
       badges: [],
@@ -103,8 +107,10 @@ const PLAYGROUND_APP = {
 
 /** The fixtures' texts into the loaded bundles (namespace by namespace, next to the real math ones). */
 function addFixtureTexts(): boolean {
-  for (const [namespace, texts] of Object.entries(LINE_TEXTS)) {
-    i18next.addResourceBundle('en', namespace, texts, true, true);
+  for (const fixture of [LINE_TEXTS, ARRAY_TEXTS]) {
+    for (const [namespace, texts] of Object.entries(fixture)) {
+      i18next.addResourceBundle('en', namespace, texts, true, true);
+    }
   }
   i18next.addResourceBundle('en', 'lessons', PLACE_VALUE_TEXTS, true, true);
   return true;

@@ -247,8 +247,8 @@ describe('texts', () => {
 
   it('keeps no text of the retired problem card in the English bundle', () => {
     const common = locales.en?.common as Record<string, unknown> | undefined;
-    // `math.notes` / `math.hints` / `math.line` / `math.pv` hold the number line's (m13.6) and the place-value kind's (m13.7)
-    // texts, not the retired card's.
+    // `math.notes` / `math.hints` / `math.line` / `math.pv` / `math.array` hold the number line's (m13.6), the place-value kind's
+    // (m13.7) and the array kind's (m13.8) texts, not the retired card's.
     const math = (common?.math ?? {}) as Record<string, unknown>;
     for (const key of [
       'pad-label',

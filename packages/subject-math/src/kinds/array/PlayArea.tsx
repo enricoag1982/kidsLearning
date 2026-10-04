@@ -85,7 +85,10 @@ function ArrayPlay({
     }
   }
 
-  const highlights = hintOutline(def.rows, def.cols, core.hintLevel);
+  // The hint outlines go once the array is right: the corner's `good` ring is all that is left to look at.
+  const highlights: Record<string, GridHighlight> = solved
+    ? {}
+    : hintOutline(def.rows, def.cols, core.hintLevel);
   if (shape !== null && (solved || wrongHere)) {
     highlights[cellKey({ x: shape.cols - 1, y: shape.rows - 1 })] = solved ? 'good' : 'bad';
   }
