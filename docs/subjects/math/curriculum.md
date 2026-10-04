@@ -1,6 +1,6 @@
-# Math — curriculum (v1.2: W1 shipped in `m13.10`; W2 in `m13.11`, W3 in `m13.14`)
+# Math — curriculum (v1.2: W1 shipped in `m13.10`, W2 in `m13.11`; W3 in `m13.14`)
 
-Lesson / exercise design for W1–W3 of [plan.md](plan.md) §2. A world's rows are its plan until its iteration lands, then what shipped (like `docs/subjects/coding/curriculum.md`), plus the content review log (§6). W1 Number Meadow is shipped (`m13.10`); W2 and W3 are still the plan.
+Lesson / exercise design for W1–W3 of [plan.md](plan.md) §2. A world's rows are its plan until its iteration lands, then what shipped (like `docs/subjects/coding/curriculum.md`), plus the content review log (§6). W1 Number Meadow (`m13.10`) and W2 Mental Math Mountain (`m13.11`) are shipped; W3 is still the plan.
 
 ## 1. Shape
 
@@ -10,7 +10,7 @@ Lesson / exercise design for W1–W3 of [plan.md](plan.md) §2. A world's rows a
 | Characters | Owl narrates; the Hedgehog teaches (every lesson; the math demo's character and the hub icon) |
 | Ranks | `counter` (start) → `builder` (W1) → `climber` (W2) → `multiplier` (W3) |
 | Lesson | story 2–3 sentences (Owl + Hedgehog, the rule), demo = full worked example (fading: guided 1 leaves the last step, guided 2 two steps), 2 guided, 6 scored, ≥ 1 easier variant for the hardest scored item, concept = lesson id |
-| CPA | guided and the first 4 scored may show pictures (blocks, line, groups, array); the last 2 scored are symbols only (W1: all lessons but `pv-line`, whose table has one symbol item, `nl-half`, last) |
+| CPA | guided and the first 4 scored may show pictures (blocks, line, groups, array); the last 2 scored are symbols only (W1: all lessons but `pv-line`, whose table has one symbol item, `nl-half`, last; W2 has no pictures: bonds, sums and stories are symbols or text, §2 W2) |
 | Generated | every guided / scored / variant / boss round comes from a template (§3) with a stored seed; stories, demos, word-problem frames and reasons are authored |
 | Reasons | a wrong answer matching a known bug speaks its reason (§3 "Bugs"); any other wrong answer gets the kind's default note |
 | Stars | card kit: 3 = no error, no hint; 2 = 1 error or hint 1; 1 = otherwise. Mastery = mean ≥ 2.4 |
@@ -40,17 +40,23 @@ Ranks `counter` (start) → `builder` (after `world:number-meadow`). Badges: `nu
 
 Retired in `m13.10`: the demo world `adding` (lessons `add-within-5`, `add-within-10`, `take-away`, boss `number-parade`, rank `adder`, badge `first-sums`, their texts). Stored progress for them is tolerated (G8, `m13.4`): the backup / merge keep it, total stars count it ("nothing is lost"), no Journey node, warm-up and Practice ignore its concepts (`apps/kids-learning/src/retired-content.test.tsx`, e2e `math/backup.spec.ts`).
 
-### W2 Mental Math Mountain — boss Market Orders
+### W2 Mental Math Mountain (mental strategies) — shipped in `m13.11`
 
-| Lesson | Title | Guided | Scored (6) | Variant |
-|---|---|---|---|---|
-| `mm-bonds` | Number bonds | 2 `bond-missing` (10; 20) | 2 `bond-missing` 10 / 20 · 2 `bond-missing` 100 · 1 `bond-pairs` · 1 `equals-balance` | `bond-missing` 100 in tens |
-| `mm-doubles` | Doubles and halves | `double`, `near-double` | 2 `double` · 2 `near-double` · 2 `halve` | `double` ≤ 20 |
-| `mm-bridge` | Bridge through ten | 2 `bridge-add` (line picture) | 4 `bridge-add` · 2 `count-up` | `bridge-add` ones sum 11–12 |
-| `mm-tens` | Tens, hundreds, nearly | `tens-hundreds`, `compensate` | 2 `tens-hundreds` · 3 `compensate` · 1 `equals-balance` | `compensate` + 9 |
-| `mm-problems` | Story problems | 2 `story` (part-whole; change) | 6 `story` (2 part-whole, 2 change, 2 comparison; one comparison uses "more" with a subtraction) | `story` part-whole ≤ 20 |
+`packages/subject-math/content/`: `lessons/mental-mountain/<lesson>.yaml`, `minigames/market-orders.yaml`, `tracks.yaml`, `badges.yaml`, texts in `locales/en/` (`journey.yaml`, `rewards.yaml`, `lessons.yaml`: the lessons' title / story / demo, `templates.*`, `bugs.*`, `stories.*`). World `mental-mountain` ("Mental Math Mountain", habitat `mountains`, order 2 of track `numbers`), boss `market-orders`. Taught by the Hedgehog (every lesson); the Owl narrates ("Owl says: …"). Concept id = lesson id; every guided / scored / variant exercise and every boss round is a `generate:` entry (§3) with a stored seed, so every instruction is a generated text (`lessons:gen.<id>.text`); a story problem's text is one of the authored `stories.*` sentences with its two numbers filled in.
 
-Market Orders (`series`, 5 rounds): `story` rounds, a customer animal per round, mixed strategies.
+| Lesson | Title | Concept | Kinds (guided / scored) | Guided | Scored (6) | Easier variant | Boss |
+|---|---|---|---|---|---|---|---|
+| `mm-bonds` | Number bonds | `mm-bonds` | number-entry / number-entry, choice | 2 `bond-missing` (10; 20) | 2 `bond-missing` (10; 20) · 2 `bond-missing` 100 · 1 `bond-pairs` (100) · 1 `equals-balance` | 1 `bond-missing` 100 in tens (for `bonds-hundred-1`) | — |
+| `mm-doubles` | Doubles and halves | `mm-doubles` | number-entry / number-entry | `double` (≤ 20), `near-double` (≤ 20) | 2 `double` (≤ 50) · 2 `near-double` (≤ 50) · 2 `halve` (≤ 100) | 1 `double` ≤ 20 (for `dbl-big-1`) | — |
+| `mm-bridge` | Bridge through ten | `mm-bridge` | number-entry / number-entry | 2 `bridge-add` (ones sum 11–13) | 4 `bridge-add` (3 with ones sum 11–16, 1 with 16–18) · 2 `count-up` | 1 `bridge-add` ones sum 11–12 (for `bridge-hard-1`) | — |
+| `mm-tens` | Tens, hundreds, nearly | `mm-tens` | number-entry / number-entry | `tens-hundreds` (+ 10), `compensate` (+ 9) | 2 `tens-hundreds` (− 10; + 100) · 3 `compensate` (− 9; + 99; − 99) · 1 `equals-balance` | 1 `compensate` + 9 (for `comp-minus-1`) | — |
+| `mm-problems` | Story problems | `mm-problems` | number-entry / number-entry | 2 `story` (part-whole; change: add) | 6 `story` (2 part-whole, 1 change: add, 1 change: take away, 2 comparison) | 1 `story` part-whole ≤ 20 (for `story-part-1`) | Market Orders (world boss) |
+
+Totals: 5 lessons, 10 guided, 30 scored, 5 easier variants, 5 boss rounds = 50 exercises (every one generated); 65 new voice clips. The scored order keeps the symbols last (CPA, §1): there are no pictures in W2 (see §3 "W2 templates as built").
+
+Market Orders (`market-orders`, `series`, `errors3: 0`, `errors2: 2`, concept `mm-problems`, `unlockAfter: mm-problems`, title "Market Orders", goal "Help the market animals with their orders!"): 5 `story` rounds of mixed frames, one customer animal per round: add the parts (Bear), take away (Rabbit), compare "how many more" (Elephant), add more (Penguin), take away (Panda). It is the world boss on the Journey once the five lessons are done.
+
+Ranks `counter` (start) → `builder` (after `world:number-meadow`) → `climber` (after `world:mental-mountain`). Badges: `number-builder`, `mountain-climber` ("Mountain Climber": `mastered` `world:mental-mountain`, "Master Mental Math Mountain and beat Market Orders"), `star-counter` (generic).
 
 ### W3 Times-Table Forest — boss Race to 20
 
@@ -72,7 +78,7 @@ Race to 20 (`duel`) — **built in `m13.13`** (`minigames/race-to-20.yaml`; game
 | Bot | the unlock lesson's character: Owl up to `m13.13` (`take-away`); since `m13.10` the Hedgehog (`pv-round`), "Hedgie". Board lines are spoken after each move: "Hedgie adds 2. Now it's 7." / "You add 1. Now it's 4." (every step and total below 20: 54 + 54 clips) and "Your turn!" |
 | Board | number track 0–20 (two rows of 10 on a phone, one row on a tablet), token on the total, last move's stones green (kid) / blue with a paw (bot), +1 +2 +3 buttons (80 px) |
 
-Totals (plan): 16 lessons, 32 guided, 96 scored, ≥ 16 variants, 10 series rounds + 1 duel. Shipped so far: W1 (5 lessons, 5 rounds) + the duel.
+Totals (plan): 16 lessons, 32 guided, 96 scored, ≥ 16 variants, 10 series rounds + 1 duel. Shipped so far: W1 and W2 (10 lessons, 10 rounds) + the duel.
 
 ## 3. Templates
 
@@ -93,15 +99,17 @@ Kinds: card kit `choice` / `true-false` / `number-entry` / `order`; math `number
 | `round-ten` | choice (the 2 tens) | `max` 100 / 1000, `five` | ten | `truncate`, `five-down` | built (m13.9) |
 | `round-hundred` | number-entry | `max` 1 000 / 10 000, `five` | hundred | `truncate`, `five-down` | built (m13.9) |
 | `round-tf` | true-false | `to` 10 / 100, `max`; "47 → 50" | bool | `truncate`, `five-down` | built (m13.9) |
-| `bond-missing` | number-entry | total 10 / 20 / 100; a + □ = total | total − a | `digit-tens` | planned (m13.11) |
-| `bond-pairs` | choice (3 pairs) | total | pair | `digit-tens` | planned (m13.11) |
-| `double` / `near-double` / `halve` | number-entry | n ≤ 50 / n + (n + 1) / even ≤ 100 | — | `tens-only` | planned (m13.11) |
-| `bridge-add` | number-entry (+ line picture in guided) | ones sum 11–18 | a + b | `off-by-one`, `off-by-ten` | planned (m13.11) |
-| `count-up` | number-entry | b − a across a ten, difference ≤ 12 | b − a | `off-by-ten` | planned (m13.11) |
-| `tens-hundreds` | number-entry | n ± 10 / 100 | — | `wrong-place` | planned (m13.11) |
-| `compensate` | number-entry | n ± 9 / 99 | — | `forgot-adjust` | planned (m13.11) |
-| `equals-balance` | number-entry | 7 + 5 = 6 + □ | 6 | `answer-next` | planned (m13.11) |
-| `story` | number-entry | authored frame (part-whole / change / comparison) × numbers | — | `wrong-op` | planned (m13.11) |
+| `bond-missing` | number-entry | `total` 10 / 20 / 100, `tensOnly` (100 only); "64 + ? = 100" | total − a | `digit-tens` | built (m13.11) |
+| `bond-pairs` | choice (3 pairs) | `total` 10 / 20 / 100; "64 + 36" with the pairs 10 too many (`digit-tens`) and 10 too few (± 1 for 10 / 20) | pair | `digit-tens` | built (m13.11) |
+| `double` | number-entry | `max` 20 / 50; "Double 34." + card "34 + 34" | 2n | `tens-only` | built (m13.11) |
+| `near-double` | number-entry | `max` 10–50; card "35 + 36" | 2n + 1 | `off-by-one` | built (m13.11) |
+| `halve` | number-entry | `max` 20–100, even from 12 | n / 2 | `halve-tens-only` | built (m13.11) |
+| `bridge-add` | number-entry | `onesSum` [min, max] within 11–18, `max` 20–100; "38 + 7" | a + b | `off-by-one`, `off-by-ten` | built (m13.11) |
+| `count-up` | number-entry | `maxDiff` 4–12; "82 − 76" across a ten | b − a | `off-by-ten` | built (m13.11) |
+| `tens-hundreds` | number-entry | `step` 10 / 100, `op` + / −; "347 + 10", one digit changes | n ± step | `wrong-place` | built (m13.11) |
+| `compensate` | number-entry | `near` 9 / 99, `op` + / −; "46 + 99" | n ± near | `forgot-adjust` | built (m13.11) |
+| `equals-balance` | number-entry | `max` 10–20; "7 + 5 = 6 + ?" | a + b − c | `answer-next` | built (m13.11) |
+| `story` | number-entry (text only) | `frame` part-whole / change-add / change-take / compare, `max` 20–100; 4 authored sentences per frame (`stories.*`) | a ± b | `wrong-op` | built (m13.11) |
 | `groups` | number-entry + emoji groups | k ≤ 5 groups of n ≤ 5 | k × n | `add-factors` | planned (m13.14) |
 | `groups-choice` | choice | "3 groups of 4" → 4 + 4 + 4 / 3 + 4 / 3 + 3 + 3 + 3 | 4 + 4 + 4 | `add-factors` | planned (m13.14) |
 | `array-build` | array | rows × cols ≤ 6 × 6 (rows fixed by the text) | rows, cols | — | planned (m13.14) |
@@ -111,7 +119,7 @@ Kinds: card kit `choice` / `true-false` / `number-entry` / `order`; math `number
 
 Bugs (one authored reason sentence each, spoken when the wrong answer matches):
 
-| Bug | Wrong answer | Reason (W1 bugs: the text shipped in `lessons.yaml` `bugs:` by m13.9; the rest are drafts) |
+| Bug | Wrong answer | Reason (W1 and W2 bugs: the text shipped in `lessons.yaml` `bugs:` by m13.9 / m13.11; the W3 ones are drafts) |
 |---|---|---|
 | `append` | 2005 for 2 H 0 T 5 O | "Each place holds one digit: 2 hundreds is 200, not 2000." |
 | `swap` | 250 for 205 | "Look at the order: hundreds, then tens, then ones." |
@@ -121,10 +129,11 @@ Bugs (one authored reason sentence each, spoken when the wrong answer matches):
 | `truncate` | rounds down always | "Rounding down every time? Check which number is nearer." |
 | `five-down` | 5 rounds down | "Right in the middle? It goes up to the bigger number." |
 | `digit-tens` | each digit to 10 (64 → 46) | "The tens make 90, then the ones make 10 more." |
-| `tens-only` | doubles the tens only | "Double the tens and the ones." |
+| `tens-only` | doubles the tens only (34 → 64) | "Double the tens and the ones." |
+| `halve-tens-only` | halves the tens only (74 → 39) | "Halve the tens and the ones." |
 | `off-by-one` / `off-by-ten` | ± 1 / ± 10 | "So close! Count the last jump again." / "Check the tens." |
-| `wrong-place` | changed the ones | "Ten more changes the tens digit." |
-| `forgot-adjust` | + 100 without − 1 | "Adding 99 is adding 100, then taking 1 away." |
+| `wrong-place` | changed the place below (347 + 10 = 348, 347 + 100 = 357) | "Ten changes the tens digit. A hundred changes the hundreds digit." |
+| `forgot-adjust` | the round number without the 1 (46 + 99 = 146, 146 − 99 = 46) | "You used the round number. Now fix the answer by 1." |
 | `answer-next` | 7 + 5 = 12 | "The equals sign means both sides are the same." |
 | `wrong-op` | added instead of subtracted (or back) | "Read it again: does the number get bigger or smaller?" |
 | `add-factors` | 3 + 4 for 3 × 4 | "Times means groups: 3 groups of 4." |
@@ -152,6 +161,27 @@ Code: `packages/subject-math/src/content/templates/` (`numeral`, `bugs`, `place-
 | `pv-read` / `pv-which` text | fixed in `m13.10`: every non-zero place count is drawn from 2–9 (0 stays: "0 tens"), `check` rejects a card with a 1, a 1 000-seed test asserts no text says "1 hundreds" / "1 tens" / "1 ones" / "1 thousands" | the resolver pluralises one `count` var, not one per place; `pv-build` (no plural) still draws 1–9 |
 | `round-easy` "far from the middle" | no template lever: the stored seed draws 31 (ones 1, 2, 8 or 9), a test pins it | one lever per item; a `far` param is not worth a template change |
 
+### W2 templates as built (`m13.11`)
+
+Code: `packages/subject-math/src/content/templates/` (`arithmetic`, `bonds`, `doubles`, `bridge`, `tens`, `story`, registered in `index`); texts: `lessons.yaml` `templates.<id>` (`compensate-add` / `compensate-take` for the two operations; none for `story`), `stories.<frame>-<n>` and `bugs.<id>`; tests run every parameter set of §2 over 1 000 seeds, solve each item again from its English sentence and card, and break every `check` by hand; `registry.test.ts` lists the 24 templates and their texts.
+
+| Item | As built | Why |
+|---|---|---|
+| Reason texts `wrong-place`, `forgot-adjust` | reworded (tables above) | the drafts fit only "+ 10" / "adding 99"; the templates cover ± and 10 / 100, 9 / 99, and a `bugs.*` text is one fixed sentence |
+| `halve-tens-only` | a 9th W2 bug id with its own sentence, used by `halve` | `tens-only` says "Double …" |
+| Params | `max` / `maxDiff` are integer ranges (`story` and `bridge-add` 20–100, `halve` 20–100, `near-double` 10–50, `equals-balance` 10–20, `count-up` 4–12); `double` `max` 20 or 50; `bond-pairs` totals 10 / 20 / 100 | the lesson's value is one point of the range; a lower end gives the easier variants |
+| `story` check | the card is text only and the generated sentence is not available to `check`, which re-derives the two numbers from the answer and the `wrong-op` value (their sum and difference); the tests solve every item from its English sentence | the build-time `check` reads the item, not the generated texts |
+| `story` frames | 4 authored sentences per frame (16 `stories.*`), two numbers `{{a}}` `{{b}}`; add frames: different numbers ≥ 2, total ≤ `max`; take-away and comparison: the larger 5–`max`, the smaller ≥ 2, difference ≥ 2; a comparison always asks "how many more … than" (a subtraction) and `{{a}}`, the larger, may come second in the sentence (2 of 4 do) | "no keyword that points at the wrong operation" except the comparison's "more" (tests); animals are the app's avatars |
+| `wrong-op` | always present: the difference (larger − smaller) for an add story, the sum for a take-away or comparison; plan: "when ≥ 0" | a child who subtracts takes the smaller from the larger |
+| `bond-missing` / `bond-pairs` | the first number is 11–89 with no zero digit (`tensOnly`: a multiple of 10); `digit-tens` = the partner with each digit taken to 10 (always the answer + 10); the wrong pairs add 110 (`digit-tens`) and 90 (no reason) for 100, ± 1 (no reason) for 10 / 20; 10 / 20 take any first number | the partner and the partner ± 10 stay 11–89 |
+| `double`, `halve`, `near-double` | `double` from 6 (≤ 20) or 11 (≤ 50); `halve` even from 12; `near-double` from 6; `tens-only` / `halve-tens-only` only when the number has a tens and a ones digit (not 0), the plain double of the smaller number is `off-by-one` | a multiple of 10 doubles right either way; a single digit has no tens |
+| `bridge-add` | first number 0–8 tens and a ones digit 2–9, second number 2–9, so the ones always cross a ten (8 + 5 included); **the plan's line picture is not built** (the number-entry card has no picture slot; same decision as `round-ten` in W1): the story and demo name the jump to the ten | no platform change in this iteration |
+| `count-up` | smaller number 11–89 not a multiple of 10, larger in the next ten and not on it, difference 2–`maxDiff`; `off-by-ten` = answer + 10 | the plan names no direction |
+| `tens-hundreds`, `compensate` | 3-digit numbers, no carry or borrow (the changing digit 0–8 to add, 1–9 / 2–9 to take away); `compensate` ones 2–8, n 12–98 (102–998 to take away 99), text "Add 10, then take 1 away." / "Take away 100, then add 1 back." + "What is it?" | one concept per item |
+| `equals-balance` | both addends ≥ 2, sum 4–`max`, the number after the equals sign is neither addend, the left sum is `answer-next` | no copy of an addend as the answer |
+| Pad | `maxDigits` is widened only when a reason is longer than the answer (a take-away or comparison story: the sum, 3 digits) | a typed wrong number must fit |
+| Test kit | `overSeeds` / `wordingProblems` take a word limit (stories 20, other cards 14) | story sentences have two sentences and a question |
+
 ## 4. Rules for the build
 
 | Rule | Where |
@@ -164,7 +194,9 @@ Code: `packages/subject-math/src/content/templates/` (`numeral`, `bugs`, `place-
 | Instructions ≤ 14 words; text names what to do ("Build 305 with blocks.") | content tests |
 | Content review rule (CLAUDE.md): every choice / true-false text has exactly one reading that leads to the answer | review log in this file |
 
-## 5. W1 exercises (as shipped, `m13.10`)
+## 5. Exercises as shipped
+
+### W1 (`m13.10`)
 
 Columns: generated id (`<stem>-<n>`, from the entry's `id`); template and stored seed (params in the YAML; **never change a seed or a count of a released lesson**: stored stars sit on the ids, tests pin them: `src/content/number-meadow.test.ts`); the card as drawn; the answer (the right option in bold); what it practises. Texts: [lessons.yaml](../../../packages/subject-math/content/locales/en/lessons.yaml) (`templates.*`, `bugs.*`, the lessons' story / demo).
 
@@ -250,9 +282,95 @@ Columns: generated id (`<stem>-<n>`, from the entry's `id`); template and stored
 
 Stories ("Owl says: …", Hedgie, 2–3 sentences) and demos (a worked example with its card) are authored per lesson; the demo cards are `205`, `406 < 460`, `300`, `3405`, `47 → 50`.
 
+### W2 (`m13.11`)
+
+Same columns; seeds and counts are frozen by `src/content/mental-mountain.test.ts` (never change a seed or a count of a released lesson). A story problem's card column is its sentence (the card has no picture), its answer is bold.
+
+#### `mm-bonds`
+
+| id | template, seed | card | answer / options | practises |
+|---|---|---|---|---|
+| `bonds-g-ten-1` (guided) | `bond-missing` @1 | 6 + ? = 10 | 4 | first bond: 6 and 4 make 10 |
+| `bonds-g-twenty-1` (guided) | `bond-missing` @1 | 12 + ? = 20 | 8 | bond to 20: 12 and 8 |
+| `bonds-ten-1` | `bond-missing` @0 | 3 + ? = 10 | 7 | bond to 10 (3 and 7) |
+| `bonds-twenty-1` | `bond-missing` @0 | 6 + ? = 20 | 14 | bond to 20 (6 and 14) |
+| `bonds-hundred-1` | `bond-missing` @2 | 63 + ? = 100 | 37 | bond to 100 with tens and ones: the tens make 90, the ones 10 (the `digit-tens` bug; easier: `bonds-easy-1`) |
+| `bonds-rest-1` | `bond-missing` @5 | 67 + ? = 100 | 33 | bond to 100 again, another pair |
+| `bonds-pair-1` | `bond-pairs` @9 | Which two numbers make 100? | 28 + 82 **28 + 72** 28 + 62 | pick the pair that makes 100: 110 is `digit-tens`, 90 is a ten short |
+| `bonds-gap-1` | `equals-balance` @11 | 10 + 6 = 9 + ? | 7 | the equals sign: both sides the same (the `answer-next` bug) |
+| `bonds-easy-1` (easier) | `bond-missing` @1 | 60 + ? = 100 | 40 | bond to 100 in whole tens (easier) |
+
+#### `mm-doubles`
+
+| id | template, seed | card | answer / options | practises |
+|---|---|---|---|---|
+| `dbl-g-1` (guided) | `double` @6 | 13 + 13 | 26 | double 13: tens and ones both double |
+| `near-g-1` (guided) | `near-double` @1 | 14 + 15 | 29 | near double: double 14 and 1 more |
+| `dbl-big-1` | `double` @1 | 36 + 36 | 72 | double up to 50 (the `tens-only` bug; easier: `dbl-easy-1`) |
+| `dbl-more-1` | `double` @0 | 21 + 21 | 42 | double up to 50 |
+| `near-1` | `near-double` @2 | 38 + 39 | 77 | near double (the plain double is `off-by-one`) |
+| `near-2` | `near-double` @2 | 20 + 21 | 41 | near double across a ten (20 + 21) |
+| `half-1` | `halve` @3 | 76 | 38 | half of an even number to 100 (the `halve-tens-only` bug) |
+| `half-2` | `halve` @3 | 14 | 7 | half of a small even number |
+| `dbl-easy-1` (easier) | `double` @13 | 14 + 14 | 28 | a double up to 20 (easier) |
+
+#### `mm-bridge`
+
+| id | template, seed | card | answer / options | practises |
+|---|---|---|---|---|
+| `bridge-g-1` (guided) | `bridge-add` @1 | 7 + 5 | 12 | make a ten first, within 20 |
+| `bridge-g-2` (guided) | `bridge-add` @1 | 86 + 7 | 93 | make a ten first, 2-digit number |
+| `bridge-1` | `bridge-add` @2 | 28 + 6 | 34 | bridge through ten (the `off-by-one` and `off-by-ten` bugs) |
+| `bridge-2` | `bridge-add` @2 | 45 + 9 | 54 | bridge through ten |
+| `bridge-3` | `bridge-add` @2 | 59 + 3 | 62 | bridge through ten, small second number |
+| `bridge-hard-1` | `bridge-add` @5 | 69 + 8 | 77 | ones adding to 16-18 (easier: `bridge-easy-1`) |
+| `count-1` | `count-up` @4 | 45 − 39 | 6 | count up across a ten (the `off-by-ten` bug) |
+| `count-2` | `count-up` @4 | 22 − 14 | 8 | count up across a ten |
+| `bridge-easy-1` (easier) | `bridge-add` @5 | 67 + 5 | 72 | ones adding to 11-12 (easier) |
+
+#### `mm-tens`
+
+| id | template, seed | card | answer / options | practises |
+|---|---|---|---|---|
+| `tens-g-1` (guided) | `tens-hundreds` @5 | 762 + 10 | 772 | ten more: only the tens digit changes |
+| `comp-g-1` (guided) | `compensate` @6 | 52 + 9 | 61 | add 9 as 10, then take 1 away |
+| `tens-ten-1` | `tens-hundreds` @4 | 932 − 10 | 922 | ten less (the `wrong-place` bug) |
+| `tens-hundred-1` | `tens-hundreds` @2 | 632 + 100 | 732 | a hundred more: only the hundreds digit changes |
+| `comp-nine-1` | `compensate` @2 | 74 − 9 | 65 | take away 9 as 10, then add 1 back |
+| `comp-ninety-1` | `compensate` @5 | 77 + 99 | 176 | add 99 as 100, then take 1 away (the `forgot-adjust` bug) |
+| `comp-minus-1` | `compensate` @2 | 733 − 99 | 634 | take away 99 as 100, then add 1 back (easier: `comp-easy-1`) |
+| `tens-gap-1` | `equals-balance` @15 | 6 + 7 = 5 + ? | 8 | the equals sign again (the `answer-next` bug) |
+| `comp-easy-1` (easier) | `compensate` @3 | 72 + 9 | 81 | add 9 (easier) |
+
+#### `mm-problems`
+
+| id | template, seed | card | answer / options | practises |
+|---|---|---|---|---|
+| `story-g-parts-1` (guided) | `story` @8 | Bear sold 17 loaves in the morning and 53 in the afternoon. How many loaves did Bear sell? | **70** | part-whole: the parts come together, add |
+| `story-g-change-1` (guided) | `story` @15 | Frog has 25 stickers. A friend gives Frog 32 more. How many stickers does Frog have now? | **57** | change: more are added, add |
+| `story-part-1` | `story` @5 | Fox has 68 red berries and 25 blue berries. How many berries in all? | **93** | part-whole with carrying (easier: `story-easy-1`) |
+| `story-parts-1` | `story` @12 | Rabbit picked 29 carrots and Cat picked 7 carrots. How many carrots did they pick together? | **36** | part-whole, a different story |
+| `story-gets-1` | `story` @9 | Penguin had 21 fish. Then Penguin caught 68 more. How many fish does Penguin have now? | **89** | change, more added |
+| `story-gives-1` | `story` @11 | Panda baked 54 buns and sold 29 of them. How many buns are left? | **25** | change, some taken away |
+| `story-more-1` | `story` @5 | Elephant has 71 peanuts. Penguin has 54 peanuts. How many more peanuts does Elephant have than Penguin? | **17** | comparison: "how many more" is a subtraction |
+| `story-fewer-1` | `story` @15 | Cat has 11 stickers. Bear has 27 stickers. How many more stickers does Bear have than Cat? | **16** | comparison, the smaller number comes first in the story |
+| `story-easy-1` (easier) | `story` @15 | Bear sold 6 loaves in the morning and 7 in the afternoon. How many loaves did Bear sell? | **13** | part-whole story up to 20 (easier) |
+
+#### Market Orders
+
+| id | template, seed | card | answer / options | practises |
+|---|---|---|---|---|
+| `order-parts-1` | `story` @2 | Bear sold 73 loaves in the morning and 10 in the afternoon. How many loaves did Bear sell? | **83** | add the parts |
+| `order-left-1` | `story` @13 | Rabbit had 59 carrots. Rabbit ate 22 of them. How many carrots are left? | **37** | take away: how many are left |
+| `order-more-1` | `story` @4 | Elephant has 93 peanuts. Penguin has 31 peanuts. How many more peanuts does Elephant have than Penguin? | **62** | compare: how many more |
+| `order-gets-1` | `story` @13 | Penguin had 56 fish. Then Penguin caught 17 more. How many fish does Penguin have now? | **73** | add more |
+| `order-gives-1` | `story` @10 | Panda baked 53 buns and sold 47 of them. How many buns are left? | **6** | take away: how many are left |
+
+Demos (a worked example with its card): `64 + 36 = 100`, `35 + 36`, `38 + 7`, `46 + 99`, `12 + 5`; the stories ("Owl says: …", Hedgie, 2–3 sentences) are authored per lesson.
+
 ## 6. Content review log
 
-CLAUDE.md rule: every choice / true-false / setup text is checked against its card so exactly one reading leads to the accepted answer; no distractor items. The checks are run on the shipped cards by `src/content/number-meadow.test.ts` (re-derived from the compiled defs, not through the templates' own `check`) and over 1 000 seeds per template combination.
+CLAUDE.md rule: every choice / true-false / setup text is checked against its card so exactly one reading leads to the accepted answer; no distractor items. The checks are run on the shipped cards by `src/content/number-meadow.test.ts` (W1, checks 1–20) and `src/content/mental-mountain.test.ts` (W2, checks 21–32) (re-derived from the compiled defs and the English sentences, not through the templates' own `check`) and over 1 000 seeds per template combination.
 
 | Check | What was checked | Result |
 |---|---|---|
@@ -276,5 +394,20 @@ CLAUDE.md rule: every choice / true-false / setup text is checked against its ca
 | 18 | Voice: every story, demo, instruction, reason, the Number Train goal and Race to 20's Hedgie lines are in the inventory with generated audio (`pnpm voice:check`) | ok |
 | 19 | The retired `adding` world: nothing of it left in the content or its texts; stored progress still imports and counts (G8) | ok |
 | 20 | Placement, test-out of a lesson and of the world, and the parent unlock run on the shipped content (`src/content/placement.test.ts`): 4 of 4 passes World 1 via placement, the boss stays to play, Number Builder fires once it is won | ok |
+| 21 | `bond-missing` "What number makes 100?" (63 + ? = 100): the card repeats the total, the answer completes it (37); for a bond to 100 the number with each digit taken to 10 (47) speaks `digit-tens`, a bond in whole tens has no such number (`bonds-easy-1`) | ok |
+| 22 | `bond-pairs` "Which two numbers make 100?": 3 pairs with the same first number (28), exactly one adds to 100 and is the answer, the pair adding 110 speaks `digit-tens`, the pair adding 90 has no reason; the right pair is not always in the same place | ok |
+| 23 | `equals-balance` "Both sides must be the same. What goes in the gap?" (10 + 6 = 9 + ?): both sides make 16, the gap is 7, never an addend; writing 16 speaks `answer-next` | ok |
+| 24 | `double` "Double 36." (card 36 + 36), `near-double` "Use a double to help. What is the total?" (38 + 39), `halve` "What is half of 76?": the card and the sentence agree, one answer; doubling the tens only (66 for 72) and halving the tens only (41 for 38) speak `tens-only` / `halve-tens-only` only where the ones digit is used; the plain double of a near double speaks `off-by-one` | ok |
+| 25 | `bridge-add` "Make a ten first. What is the total?" (69 + 8) and `count-up` "Count up from the smaller number. How many?" (45 − 39): the ones cross a ten, one answer; one jump / one ten short speak `off-by-one` / `off-by-ten`; the count-up pair is either side of a ten, not on it | ok |
+| 26 | `tens-hundreds` "What is the answer?" (932 − 10): one digit changes, no carry; the next place down (931) speaks `wrong-place`. `compensate` "Add 100, then take 1 away. What is it?" (77 + 99): the sentence names the card's round number (99 + 1) and its operation; the round number alone (177) speaks `forgot-adjust` | ok |
+| 27 | Stories: every sentence has two numbers and one operation by its frame (read back from the English sentence): add the parts / more, take away "left", compare "how many more … than" a subtraction of the larger by the smaller, the animal asked about holds the larger number; the other operation speaks `wrong-op`; no add story says left / fewer / less / remain / away, no take-away story says in all / together / total / more / now / both; every name is one of the app's animals | ok |
+| 28 | Mix of frames: Story problems has 2 part-whole, 1 change (add), 1 change (take away), 2 comparisons (6 different stories); Market Orders is a part-whole, a take-away, a comparison, an add and a take-away, each for another customer animal (Bear, Rabbit, Elephant, Penguin, Panda) | ok |
+| 29 | Stories and demos: 2–3 sentences, "Owl says:" and Hedgie in every story, every demo works one example with its card (64 + 36 = 100, 35 + 36, 38 + 7, 46 + 99, 12 + 5) | ok |
+| 30 | CPA: W2 has no pictures (a bond, a sum and a story are symbols or text), so the last 2 scored items of every lesson are symbols or text; the plan's line picture for the bridging guided tries is not built (§3 "W2 templates as built") | ok (exception) |
+| 31 | Easier variants: one per lesson, for the hardest scored item, with the property the table names (bond in whole tens; double ≤ 20 for a double up to 50; ones sum 11–12 for 16–18; + 9 for − 99; part-whole story ≤ 20 for one with carrying) | ok |
+| 32 | No two alike items in a lesson (same sentence, card and options, whatever the id) | ok |
+| 33 | Voice: every story, demo, instruction, reason and the Market Orders goal are in the inventory with generated audio (`pnpm voice:check`); the Journey / reward texts of W2 are new texts of the same kind | ok |
+| 34 | Placement, test-out of a lesson and of the world, and the parent unlock run on both worlds (`src/content/placement.test.ts`): 4 of 4 passes World 2 via placement, the boss stays to play, Mountain Climber fires once Market Orders is won | ok |
+| 35 | Reworded bug sentences fit every item that can speak them: `wrong-place` (+ / −, 10 / 100), `forgot-adjust` (9 / 99, + / −), each at most 14 words | ok |
 
-Manual checks still open (owner, `docs/release.md` §1): a child's first run of `pv-hto` (blocks on the iPad / Android tablet), the number line with a finger on a phone.
+Manual checks still open (owner, `docs/release.md` §1): a child's first run of `pv-hto` (blocks on the iPad / Android tablet), the number line with a finger on a phone, a child's first story problems (are the sentences readable aloud and on screen at 8; is the "how many more" comparison understood).
