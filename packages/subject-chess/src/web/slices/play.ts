@@ -44,7 +44,7 @@ export interface PlaySlice {
 
   readonly startFullGame: (level: number) => void;
   readonly exitFullGame: () => void;
-  /** Recomputes the "Automatic level" suggestion (`docs/computer-opponent.md` §5) after a full game at `level`; sets `levelUpSuggestion` when it moves up. */
+  /** Recomputes the "Automatic level" suggestion (`docs/subjects/chess/computer-opponent.md` §5) after a full game at `level`; sets `levelUpSuggestion` when it moves up. */
   readonly updateAutomaticLevel: (level: number) => Promise<void>;
   /** Play's "vs Friend" card: opens the setup sheet, resetting its choices (board mode defaults
    * to face-to-face on a tablet-width screen, pass-and-play otherwise). */

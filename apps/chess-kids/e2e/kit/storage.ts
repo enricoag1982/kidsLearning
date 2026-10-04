@@ -157,7 +157,7 @@ export async function seedMiniGameWon(
 
 /**
  * Seeds `count` full-game wins vs `opponentLevel` — used to unlock a higher computer level without
- * playing every prerequisite game through the UI (`docs/computer-opponent.md` §3: 3 full-game
+ * playing every prerequisite game through the UI (`docs/subjects/chess/computer-opponent.md` §3: 3 full-game
  * wins vs the level right below unlocks the next one).
  */
 export async function seedGameRecordWins(

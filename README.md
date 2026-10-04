@@ -1,9 +1,18 @@
-# Chess for Kids
+# Kids Learning
 
-An offline, ad-free chess learning app that teaches an absolute beginner how to play, one small
-idea at a time — through animal-themed lessons, mini-games, and a friendly computer opponent.
+An offline, ad-free learning app for children aged 8–9: one app, several subjects, each taught one
+small idea at a time through animal-themed lessons, mini-games and spoken instructions.
 
-**Live app:** https://enricoag1982.github.io/learningChess/
+**Live app:** https://enricoag1982.github.io/kidsLearning/
+
+| Subject | Status |
+|---|---|
+| Chess | Basics (5 worlds, 23 lessons), computer opponent (5 levels), play vs a friend; 3 paths planned |
+| Math | Demo (1 world, 3 lessons); full course planned (v1.2) |
+| Coding, Logic | Planned (v1.1, v1.3) — [`docs/new-subjects.md`](docs/new-subjects.md) |
+
+Forked from [learningChess](https://github.com/enricoag1982/learningChess) (Chess for Kids v4.1.0);
+multi-subject plan: [`docs/multi-subject.md`](docs/multi-subject.md).
 
 ## Who it's for
 
@@ -13,7 +22,7 @@ started.
 
 ## How a lesson works
 
-Each lesson walks through five steps:
+Each lesson walks through five steps (chess shown):
 
 1. **Story** — a piece character (the Rook, the Bishop, …), guided by Owl, introduces the idea.
 2. **Demo** — Owl shows the move on the board.
@@ -26,7 +35,7 @@ Each lesson walks through five steps:
 Progress, stars, and rewards (your pieces, badges, a streak) are saved automatically and never
 leave the device.
 
-## The Basics (Worlds 1–5)
+## Chess: the Basics (Worlds 1–5)
 
 | World | Habitat | Teaches |
 |---|---|---|
@@ -36,7 +45,7 @@ leave the device.
 | 4 · Check & Mate | Mountains | Check, escaping check, checkmate, mate in 1, stalemate |
 | 5 · Full Rules | River | Castling, en passant, draws — then a full game vs. the computer |
 
-After the Basics, three paths continue: **Openings**, **Tactics**, and **Checkmates & Endgames**.
+After the Basics, three paths are planned: **Openings**, **Tactics**, and **Checkmates & Endgames**.
 
 ## Screenshots
 
@@ -64,12 +73,14 @@ pnpm dev:math          # math demo app (proves the platform is reusable; not dep
 
 | Doc | Content |
 |---|---|
-| [`docs/teaching-process.md`](docs/teaching-process.md) | Pedagogy: principles, learning loop, phases, mini-games |
-| [`docs/curriculum.md`](docs/curriculum.md) | Full lesson list and mini-game catalogue |
+| [`docs/multi-subject.md`](docs/multi-subject.md) | Multi-subject app plan (v1.0) |
+| [`docs/new-subjects.md`](docs/new-subjects.md) | Subject ideas, ranking |
+| [`docs/subjects/chess/teaching-process.md`](docs/subjects/chess/teaching-process.md) | Chess pedagogy: principles, learning loop, phases, mini-games |
+| [`docs/subjects/chess/curriculum.md`](docs/subjects/chess/curriculum.md) | Chess lesson list and mini-game catalogue |
 | [`docs/app-structure.md`](docs/app-structure.md) | Modes, profiles, navigation, progression |
 | [`docs/domain-model.md`](docs/domain-model.md) | Entities, exercise types, rules |
 | [`docs/architecture.md`](docs/architecture.md) | Stack, layers, repo layout, decisions |
-| [`docs/computer-opponent.md`](docs/computer-opponent.md) | Bot levels (Mouse → Bear) |
+| [`docs/subjects/chess/computer-opponent.md`](docs/subjects/chess/computer-opponent.md) | Bot levels (Mouse → Bear) |
 | [`docs/rewards.md`](docs/rewards.md) | Stars, badges, streak |
 | [`docs/non-functional.md`](docs/non-functional.md) | Offline, accessibility, privacy, performance |
 | [`docs/screens.md`](docs/screens.md) | UI rules and screen list |

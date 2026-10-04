@@ -221,7 +221,7 @@ describe('VersusStep (via BossStep dispatching on mode)', () => {
     expect(screen.getByRole('button', { name: /^a2, white pawn$/ })).toBeTruthy();
   });
 
-  // Aids per level (docs/computer-opponent.md §4): Mouse/Rabbit unlimited take-back + danger
+  // Aids per level (docs/subjects/chess/computer-opponent.md §4): Mouse/Rabbit unlimited take-back + danger
   // ring on; Fox 3 take-backs/game, danger off by default; Wolf/Bear no take-back, danger off.
   describe('aids by level', () => {
     it('Fox: danger ring is off by default (Mouse/Rabbit: on)', async () => {

@@ -1,4 +1,4 @@
-# Screens — Chess for Kids
+# Screens — Kids Learning
 
 Related: [app-structure.md](app-structure.md). Visual sketches: [canvas](https://claude.ai/artifact/HohYgZ3J9mqBrsamJnin5S) (private until shared).
 

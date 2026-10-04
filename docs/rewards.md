@@ -1,4 +1,4 @@
-# Rewards — Chess for Kids
+# Rewards — Kids Learning
 
 Related: [app-structure.md](app-structure.md), [domain-model.md](domain-model.md).
 

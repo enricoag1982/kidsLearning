@@ -80,7 +80,7 @@ describe('escape-the-check and mate-hunt (series) play every round for 3 stars',
   });
 });
 
-describe('World 4 exercise counts match docs/curriculum.md and the M3.3 spec', () => {
+describe('World 4 exercise counts match docs/subjects/chess/curriculum.md and the M3.3 spec', () => {
   const EXPECTED: readonly { readonly id: string; readonly exerciseCount: number }[] = [
     { id: 'check', exerciseCount: 8 },
     { id: 'escape-check', exerciseCount: 10 },

@@ -1,6 +1,6 @@
-# Domain Model — Chess for Kids
+# Domain Model — Kids Learning
 
-Related: [teaching-process.md](teaching-process.md), [app-structure.md](app-structure.md), [architecture.md](architecture.md).
+Related: [teaching-process.md](subjects/chess/teaching-process.md), [app-structure.md](app-structure.md), [architecture.md](architecture.md).
 
 Two groups of entities:
 - **Content** (static, authored in `packages/subject-chess/content`, read-only at runtime).
@@ -30,7 +30,7 @@ Character 1─1 piece type
 | Character | `id` (`rook`, …), `piece`, `nameKey`, `storyKey` |
 | Rank | `id` (`pawn` … `king`), `after` (world id, track id, or `all-tracks`) |
 | BadgeDef | `id`, `category` (`milestone` / `skill` / `play` / `habit`), `nameKey`/`conditionKey` (derived from `id`: `rewards:badges.<id>.name`/`.condition`, not authored per badge), `condition` (`type` + `thresholds[]` (1 = single-tier, 3 = bronze/silver/gold) + type-specific params) — see [rewards.md](rewards.md) §4 |
-| BotLevel | `level` (1–5), `name` (`mouse` … `bear`), `random`, `shallow`, `depth`, `book`, `queenHomeMoves`, `aids` — see [computer-opponent.md](computer-opponent.md) |
+| BotLevel | `level` (1–5), `name` (`mouse` … `bear`), `random`, `shallow`, `depth`, `book`, `queenHomeMoves`, `aids` — see [computer-opponent.md](subjects/chess/computer-opponent.md) |
 
 ### 1.1 Position
 - Authored as board diagram or FEN; parsed to `Position { pieces, markers { stars, blocked }, toMove }`.

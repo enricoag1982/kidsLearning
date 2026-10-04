@@ -1,4 +1,4 @@
-# Non-Functional Requirements — Chess for Kids
+# Non-Functional Requirements — Kids Learning
 
 Related: [architecture.md](architecture.md), [app-structure.md](app-structure.md).
 

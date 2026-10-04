@@ -1,6 +1,6 @@
-# Curriculum — Lesson List
+# Curriculum — Chess
 
-Related: [teaching-process.md](teaching-process.md), [domain-model.md](domain-model.md).
+Related: [teaching-process.md](teaching-process.md), [domain-model.md](../../domain-model.md).
 
 - Each lesson: story → demo → 2 guided tries → exercises → boss.
 - Exercise counts exclude guided tries and easier variants.

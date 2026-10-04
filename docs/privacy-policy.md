@@ -1,4 +1,4 @@
-# Privacy Policy — Chess for Kids
+# Privacy Policy — Kids Learning
 
 Same text as the in-app page (parent area → Privacy; linked from the first-run parent password
 screen). Source of truth for wording: `common:parent.privacy.*` (`packages/platform-content/locales/en/common.yaml`).
@@ -27,4 +27,4 @@ parent area.
 
 ## Questions?
 
-Open an issue on the project's GitHub repository: https://github.com/enricoag1982/learningChess/issues
+Open an issue on the project's GitHub repository: https://github.com/enricoag1982/kidsLearning/issues

@@ -1,6 +1,6 @@
-# Roadmap — Chess for Kids
+# Roadmap — Kids Learning
 
-Related: [app-structure.md](app-structure.md), [curriculum.md](curriculum.md), [architecture.md](architecture.md).
+Related: [app-structure.md](app-structure.md), [curriculum.md](subjects/chess/curriculum.md), [architecture.md](architecture.md).
 
 Sizes: S ≈ days, M ≈ 1–2 weeks, L ≈ 3–4 weeks (one developer + AI assistance; content in parallel).
 
@@ -97,6 +97,7 @@ Content track: Worlds 1–2 ready by M2, 3–4 by M3, 5 by M4, illustrations by 
 | `m8.1` | v4 R0a: golden snapshot of compiled content; storage / backup fixtures recorded with real `v1.0.0`, `v1.1.0`, `v2.0.0` builds, compat unit + e2e tests |
 | `m8.2` | v4 R0b: faster CI (slow tests in a parallel job, sharded e2e, a11y walk once, unused font subsets out of the precache) |
 | `m8.3`… | v4 R1–R5 (`docs/refactor-v4.md` §5) |
+| `m11.1`… | Multi-subject app v1.0 (`docs/multi-subject.md` §4); repo `kidsLearning` from here |
 
 M5 run order (2026-09-25): `m5.1` ∥ `m5.4` → `m5.2` ∥ `m5.5` → `m5.3` last (design pass covers the new M5.2 / M5.5 screens and refreshes the README screenshots) → `m5`.
 
@@ -123,8 +124,12 @@ M5 run order (2026-09-25): `m5.1` ∥ `m5.4` → `m5.2` ∥ `m5.5` → `m5.3` la
 | M8 | v4 learning-platform refactor | `docs/refactor-v4.md`; iterations §3 `m8.x`; released as `v4.0.0` |
 | M9 | Post-v4 owner requests (done) | Real piece names (`m9.1`), release `v4.1.0` (`m9.2`) |
 | M10 | Follow-ups F4–F9 (done) | §3.2: Bear strength + time-cut safety, platform cleanup, check ring in series rounds, README screenshots (`m10.1`–`m10.5`) |
-| M11 | Store apps | Capacitor Android + iPad, native storage, store listings |
-| M12 | Paths | Openings, Tactics, Checkmates & Endgames; Lichess puzzle import; path badges |
+| M11 | Multi-subject app (`kidsLearning` v1.0) | One app hosting chess + math demo; generic platform kit; `docs/multi-subject.md` §4 (`m11.1`–`m11.8`) |
+| M12 | Coding (v1.1) | Research + plan in `docs/subjects/coding/`, then iterations |
+| M13 | Math (v1.2) | Full curriculum on the math demo; `docs/subjects/math/` |
+| M14 | Logic (v1.3) | `docs/subjects/logic/` |
+| M15 | Store apps | Capacitor Android + iPad, native storage, store listings (was M11) |
+| M16 | Chess paths | Openings, Tactics, Checkmates & Endgames; Lichess puzzle import; path badges (was M12) |
 | v2 → M7 | Time controls + device sharing (offline, no server; owner 2026-09-25; iterations §3 `m7.x`; ships as `v2.0.0`) | Do: 5-min warning (app-level notice, calm screens only), limits per weekday, allowed hours; optional: Play vs Learning limits, holiday overrides, detailed time log. Sharing: merge rules + "Send to other device" file (share sheet) → import merges |
 | Later, maybe | Online | Parent login, online play with friends, automatic sync ("family code": end-to-end encrypted blob on a tiny free store, same merge rules) — only if file sharing proves annoying; hooks stay in code |
 | v3 | Nicer media | → M6; later languages reuse the M6 audio pipeline |

@@ -2,7 +2,7 @@ import type { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PARENT_INFO_PANEL, PARENT_PRIMARY_BUTTON } from './parent-styles.ts';
 
-const ISSUES_URL = 'https://github.com/enricoag1982/learningChess/issues';
+const ISSUES_URL = 'https://github.com/enricoag1982/kidsLearning/issues';
 
 /** Policy body (non-functional.md §3; hand-synced with `docs/privacy-policy.md`), shared by `PrivacyScreen` and the first-run
  * `PrivacyDialog`; exported here, in the eager bundle, since it is reached before the parent gate. */

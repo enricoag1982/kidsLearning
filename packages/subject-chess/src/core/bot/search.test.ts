@@ -57,7 +57,7 @@ describe('determinism', () => {
   });
 
   // Bear alone uses the transposition table / killer moves / time-capped iterative deepening
-  // (`docs/computer-opponent.md` §3/§8 "Bear speed") — the level most likely to lose determinism
+  // (`docs/subjects/chess/computer-opponent.md` §3/§8 "Bear speed") — the level most likely to lose determinism
   // to a wall-clock-driven search. Every depth `chooseBySearch` uses is always a fully completed,
   // exact alpha-beta pass (`negamax`'s own doc comment), so this holds regardless of machine speed.
   it('Bear picks the same move for the same state and seed, several times over', () => {

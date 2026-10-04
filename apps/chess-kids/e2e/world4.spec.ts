@@ -143,7 +143,7 @@ test.describe('World 4 world boss: first-game (seeded smoke test)', () => {
  * own `MiniGameProgress` win (the world boss, needed for World 4 to count as "mastered" at all —
  * `docs/domain-model.md` §3), then: starts a full game vs Mouse from Play, plays 3 kid moves with
  * fast bot replies, and leaves mid-game — recorded as `abandoned`, not a loss (`GameRecord`,
- * `docs/computer-opponent.md` §6).
+ * `docs/subjects/chess/computer-opponent.md` §6).
  */
 test.describe('Play -> vs Computer: full game (M3.5, seeded smoke test)', () => {
   test('starts a full game vs Mouse, plays 3 kid moves, and leaving mid-game records it abandoned', async ({
