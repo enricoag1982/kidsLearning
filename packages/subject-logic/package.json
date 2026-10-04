@@ -15,7 +15,8 @@
   "scripts": {
     "build": "node scripts/build-content.ts",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:slow": "vitest run --config vitest.slow.config.ts --passWithNoTests"
   },
   "dependencies": {
     "@learn/platform-content": "workspace:*",

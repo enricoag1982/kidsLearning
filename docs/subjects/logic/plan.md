@@ -45,6 +45,7 @@ Next versions: Mirror Meadow (spatial), Maze Mountain, Clue Cove (true / false, 
 | L6 | Voice budget ≤ 230 clips (≈ 3 MB; 17.5 of 25 MB used after M13): one fixed sentence per template variant, grid notes worded by technique only (no digits / coordinates), transitive "taller than" items authored | audio budget |
 | L7 | Nim / tic-tac-toe move to v1.4 (Plan Ahead); tic-tac-toe needs a draw-aware `duel` (game value win / draw / loss); one-pile Nim = Race to 20, so logic Nim uses two equal piles | scope |
 | L8 | `subject-logic` stays out of the app until W1 plays (`m14.9` registers it) | master deploys on every push |
+| L9 | Sudoku techniques are an allowed set per lesson, not a level hierarchy (`LESSON_TECHNIQUES`): last cell; last cell + only place; last cell + only number; 6 × 6 = last cell + only number. A generated puzzle uses the lesson's technique at least once and nothing outside its set (m14.6, 2026-10-04) | exhaustive check of all 4 × 4 grids × clue sets: when "only place" is allowed, "only number" is never needed (6 × 6: 1 in 200), so a level ladder cannot produce "only number" puzzles |
 
 Authored: stories, art, wording, transitive line-up items, the picture library.
 
