@@ -1,0 +1,256 @@
+// The card kit end to end: a subject made only of YAML (platform-content's card fixture) plus the three factory calls
+// (`createCardCore`, `createCardContent`, `createCardWeb`), opened in the real App and played through the real UI. Each exercise is
+// solved by the kit's own e2e driver from the kind's own `solution()`, the way a Playwright spec would.
+import { fireEvent, render, screen } from '@testing-library/react';
+import i18next from 'i18next';
+import { beforeAll, describe, expect, it } from 'vitest';
+import {
+  createProfile,
+  loadProgress,
+  selectProfile,
+  setupParentPassword,
+} from '@learn/platform-core';
+import type { AppConfig } from '@learn/platform-core';
+import type {
+  CardExerciseDef,
+  CardState,
+} from '@learn/platform-core/domain/exercise/kinds/cards/def';
+import { cardKindOf } from '@learn/platform-core/domain/exercise/kinds/cards/kinds';
+import { cardSolutionOf } from '@learn/platform-core/domain/exercise/kinds/cards/solutions';
+import App from './App.tsx';
+import { createAppServices } from './app/services.ts';
+import { tContent } from './content-text.ts';
+import { initI18n } from './i18n.ts';
+import { cardKindE2EOf } from './kinds/cards/e2e-registry.ts';
+import type { CardKindE2E } from './kinds/cards/e2e-registry.ts';
+import { cardFixture, cardLocales, createCardTestEntry } from './testing/card-test-entry.tsx';
+import { createFakePasswordFileWriter } from './testing/fake-password-file-writer.ts';
+import { jsdomPage } from './testing/jsdom-page.ts';
+import { createMemoryStorage } from './testing/memory-storage.ts';
+
+const APP: Omit<AppConfig, 'version'> = {
+  title: 'Cards app',
+  storagePrefix: 'cards:',
+  backupAppId: 'cards',
+  backupFilePrefix: 'cards',
+  parentCodeFilePrefix: 'cards-code',
+};
+
+const [lesson] = cardFixture.content.lessons;
+if (lesson === undefined) throw new Error('the card fixture has no lesson');
+const GUIDED = lesson.guided as readonly CardExerciseDef[];
+const EXERCISES = lesson.exercises as readonly CardExerciseDef[];
+function exerciseOf(id: string): CardExerciseDef {
+  const def = EXERCISES.find((entry) => entry.id === id);
+  if (def === undefined) throw new Error(`the card fixture has no exercise "${id}"`);
+  return def;
+}
+const CHOICE = exerciseOf('count-01');
+const TRUE_FALSE = exerciseOf('count-02');
+const NUMBER_ENTRY = exerciseOf('count-03');
+const ORDER = exerciseOf('count-04');
+
+beforeAll(() => {
+  initI18n(cardLocales as Parameters<typeof initI18n>[0]);
+});
+
+/** A text key as the app resolves it (`lessons:count-01-opt-c`, `cards.true`). */
+const text = (key: string): string => tContent(i18next.t, key);
+const page = jsdomPage() as unknown as Parameters<CardKindE2E['perform']>[0];
+
+/** The one-subject app on a fresh storage with a parent code and the profile `Mia`, her subject data in `app.subjectData`. */
+async function cardApp() {
+  const app = createAppServices([createCardTestEntry()], APP, createMemoryStorage());
+  const services = await app.activate('cards');
+  const testServices = {
+    ...services,
+    deps: { ...services.deps, passwordFile: createFakePasswordFileWriter() },
+  };
+  await setupParentPassword(testServices.deps, '1234');
+  const profile = await createProfile(testServices.deps, 'Mia', 'fox');
+  await selectProfile(testServices.deps, profile.id);
+  return { app, services: testServices, profileId: profile.id };
+}
+
+const click = (name: string | RegExp): void => {
+  fireEvent.click(screen.getByRole('button', { name }));
+};
+
+/** Profile picker → Home → Start → Story → Demo: the lesson's first guided try is showing. */
+async function openLesson(): Promise<void> {
+  fireEvent.click(await screen.findByRole('button', { name: /Mia/ }));
+  const decline = screen.queryByRole('button', { name: 'No, start at World 1' });
+  if (decline !== null) fireEvent.click(decline);
+  fireEvent.click(await screen.findByRole('button', { name: /Start/ }));
+  fireEvent.click(await screen.findByRole('button', { name: /Let me try/ })); // Story -> Demo
+  fireEvent.click(await screen.findByRole('button', { name: /^Next/ })); // Demo -> first guided try
+}
+
+type Action = ReturnType<typeof actionsOf>[number];
+
+/** Folds `actions` the way the e2e kit does: `kind.act` purely, then the kind's driver on the page; returns the core state. */
+async function play(
+  def: CardExerciseDef,
+  actions: readonly Action[],
+  from: CardState = cardKindOf(def).init(def),
+): Promise<CardState> {
+  const kind = cardKindOf(def);
+  const driver = cardKindE2EOf(def.type);
+  let state = from;
+  for (const action of actions) {
+    const before = state;
+    const { state: next, outcome } = kind.act(before, action, null);
+    await driver.perform(page, action, { def, before, outcome, text });
+    state = next;
+  }
+  return state;
+}
+
+function actionsOf(def: CardExerciseDef, which: 'solution' | 'wrong') {
+  const solution = cardSolutionOf(def);
+  return which === 'solution'
+    ? solution.solution(def, null)
+    : (solution.wrongAction?.(def, null) ?? []);
+}
+
+const solve = (def: CardExerciseDef): Promise<CardState> => play(def, actionsOf(def, 'solution'));
+
+/** Solved: the success panel (and its autosave) is there; Next goes on. */
+async function next(): Promise<void> {
+  fireEvent.click(await screen.findByRole('button', { name: /^Next/ }));
+}
+
+const instruction = (def: CardExerciseDef): string => text(def.textKey);
+
+/** The note inside the Owl bubble under the instruction. */
+async function expectNote(note: string): Promise<void> {
+  expect(await screen.findByText(note)).toBeTruthy();
+}
+
+describe('a card subject end to end', () => {
+  it('plays every kind through the real UI: 3 stars each on a run with no error, the lesson completes', async () => {
+    const { app, services, profileId } = await cardApp();
+    render(<App services={services} />);
+    await openLesson();
+
+    for (const def of GUIDED) {
+      await screen.findByText(instruction(def));
+      await solve(def);
+      await next();
+    }
+    for (const def of EXERCISES) {
+      await screen.findByText(instruction(def));
+      await solve(def);
+      await expectNote('Amazing!');
+      await next();
+    }
+
+    await screen.findByText('Lesson complete!');
+    expect(screen.getByText('+12 stars')).toBeTruthy();
+    expect(screen.getByTestId('stars-row').querySelectorAll('.reward-star-pop')).toHaveLength(3);
+    const saved = await loadProgress(services.deps, profileId);
+    const progress = saved.find((entry) => entry.lessonId === lesson.id);
+    expect(progress?.bestStars).toEqual(Object.fromEntries(EXERCISES.map((def) => [def.id, 3])));
+    // The subject's data lives in the subject's own store.
+    expect(await app.subjectData.cards?.progress.listLessons(profileId)).toHaveLength(1);
+  });
+
+  it("a wrong first try speaks the kind's own note and costs a star; the next try still solves", async () => {
+    const { services, profileId } = await cardApp();
+    render(<App services={services} />);
+    await openLesson();
+    for (const def of GUIDED) {
+      await solve(def);
+      await next();
+    }
+
+    const notes = [
+      [CHOICE, 'Not quite! Try again.'],
+      [TRUE_FALSE, 'Not quite! Try again.'],
+      [NUMBER_ENTRY, 'Not that number. Try again!'],
+      [ORDER, 'Not that one. Try another!'],
+    ] as const;
+    for (const [def, note] of notes) {
+      await screen.findByText(instruction(def));
+      const afterWrong = await play(def, actionsOf(def, 'wrong'));
+      expect(afterWrong).toMatchObject({ errors: 1, solved: false });
+      await expectNote(note);
+      await play(def, actionsOf(def, 'solution'), afterWrong);
+      await expectNote('Well done!');
+      await next();
+    }
+
+    await screen.findByText('Lesson complete!');
+    expect(screen.getByText('+8 stars')).toBeTruthy();
+    const progress = (await loadProgress(services.deps, profileId)).find(
+      (entry) => entry.lessonId === lesson.id,
+    );
+    expect(progress?.bestStars).toEqual(Object.fromEntries(EXERCISES.map((def) => [def.id, 2])));
+  });
+
+  it("speaks each kind's hints and shows what they do on the cards", async () => {
+    const { services } = await cardApp();
+    render(<App services={services} />);
+    await openLesson();
+    for (const def of GUIDED) {
+      await solve(def);
+      await next();
+    }
+    const hint = (): void => {
+      click('Hint');
+    };
+
+    // choice: the first hint rules one wrong option out.
+    await screen.findByText(instruction(CHOICE));
+    hint();
+    await expectNote('One choice is ruled out.');
+    expect(screen.getByRole('button', { name: '2' }).hasAttribute('disabled')).toBe(true);
+    await solve(CHOICE);
+    await next();
+
+    // true-false: nudges twice, then the third hint outlines the right button.
+    await screen.findByText(instruction(TRUE_FALSE));
+    hint();
+    await expectNote('Look closely.');
+    hint();
+    hint();
+    await expectNote('Here is the answer.');
+    expect(screen.getByRole('button', { name: 'False' }).className).toContain('tap-border-go');
+    await solve(TRUE_FALSE);
+    await next();
+
+    // number-entry: nudge, then the first digit is typed in, then the whole answer.
+    await screen.findByText(instruction(NUMBER_ENTRY));
+    hint();
+    await expectNote('Look closely.');
+    hint();
+    await expectNote('It starts with 1.');
+    expect(screen.getByRole('status', { name: 'Your answer: 1' })).toBeTruthy();
+    hint();
+    await expectNote('Here is the answer.');
+    expect(screen.getByRole('status', { name: 'Your answer: 12' })).toBeTruthy();
+    click('Check');
+    await next();
+
+    // order: the next slot, one wrong card dimmed, then the next right card placed.
+    await screen.findByText(instruction(ORDER));
+    hint();
+    await expectNote('Which one comes next?');
+    hint();
+    await expectNote('One choice is ruled out.');
+    expect(screen.getByRole('button', { name: '3' }).hasAttribute('disabled')).toBe(true);
+    hint();
+    await expectNote('Here is the answer.');
+    expect(screen.getByRole('listitem', { name: 'Place 1 of 3: 1' })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: '1' })).toBeNull();
+    // The dimmed card is free again once its slot is filled.
+    expect(screen.getByRole('button', { name: '3' }).hasAttribute('disabled')).toBe(false);
+    await play(ORDER, [
+      { type: 'place-item', itemId: 'two' },
+      { type: 'place-item', itemId: 'three' },
+    ]);
+    await next();
+
+    await screen.findByText('Lesson complete!');
+  });
+});

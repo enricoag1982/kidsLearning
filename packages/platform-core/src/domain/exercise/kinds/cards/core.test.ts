@@ -8,6 +8,7 @@ import {
   playCardWrongThenSolve,
 } from '../../../../testing/cards.ts';
 import { createSubjectRuntime } from '../../../runtime.ts';
+import { completeRound, seriesStars, startSeries } from '../../modes/series/engine.ts';
 import { exerciseNote } from '../../../notes.ts';
 import type { Resolve } from '../../../notes.ts';
 import { createCardCore } from './core.ts';
@@ -70,6 +71,29 @@ describe('createCardCore', () => {
   it('every registered type has a sample, a kind and a solution entry', () => {
     expect([...CARD_TYPES].sort()).toEqual(Object.keys(CARD_SAMPLES).sort());
     expect(Object.keys(CARD_SOLUTIONS).sort()).toEqual([...CARD_TYPES].sort());
+  });
+});
+
+describe('a series over the card kinds', () => {
+  const series = { id: 'parade', concept: 'counting', rounds: defs, errors3: 0, errors2: 2 };
+
+  it('plays one round of each kind, 3 stars with no mistake', () => {
+    let state = startSeries(series, core.kinds);
+    for (const def of defs) {
+      expect(state.round.def).toBe(def);
+      state = completeRound(state, playCardSolution(def), core.kinds);
+    }
+    expect(state).toMatchObject({ done: true, mistakes: 0 });
+    expect(seriesStars(state)).toBe(3);
+  });
+
+  it('counts errors and hint levels of every round as mistakes', () => {
+    let state = startSeries(series, core.kinds);
+    for (const def of defs) {
+      state = completeRound(state, playCardWrongThenSolve(def), core.kinds);
+    }
+    expect(state.mistakes).toBe(4);
+    expect(seriesStars(state)).toBe(1);
   });
 });
 
