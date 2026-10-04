@@ -198,6 +198,7 @@ export type {
   MiniGameStateBase,
 } from './domain/subject.ts';
 export { createSubjectRuntime } from './domain/runtime.ts';
+export type { SubjectManifest } from './domain/subjects.ts';
 export {
   SUBJECT_ID_PATTERN,
   assertSubjectIds,

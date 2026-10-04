@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import type {
   AppConfig,
   AppDeps,
@@ -12,8 +12,9 @@ import { buildBackupFile, parseBackupFile } from '@learn/platform-core/backup';
 import { importMerged } from '@learn/platform-core/merge';
 import { makeProgress } from '@learn/platform-core/testing';
 import { createMemoryStorage } from '../testing/memory-storage.ts';
-import { createTestPack } from '../testing/test-pack.ts';
-import { createServices } from './services.ts';
+import { createTestEntry, createTestPack } from '../testing/test-pack.ts';
+import type { LoadedSubject } from './subject.ts';
+import { createAppServices, createServices } from './services.ts';
 
 const APP: Omit<AppConfig, 'version'> = {
   storagePrefix: 'app:',
@@ -63,26 +64,30 @@ const LOG: SessionLog = {
   updatedAt: NOW,
 };
 
-function twoSubjects(storage = createMemoryStorage()) {
-  const services = createServices([createTestPack('a'), createTestPack('b')], APP, storage);
-  const a = services.subjectDeps.a;
-  const b = services.subjectDeps.b;
-  if (a === undefined || b === undefined) throw new Error('subject deps missing');
-  return { services, storage, a, b };
+/** Two subjects over `storage`, both activated: what the app shell has after the user opened each. */
+function twoSubjects(storage = createMemoryStorage(), config: Omit<AppConfig, 'version'> = APP) {
+  const packA = createTestPack('a');
+  const packB = createTestPack('b');
+  const app = createAppServices([createTestEntry(packA), createTestEntry(packB)], config, storage);
+  const servicesA = app.activateLoaded('a', { pack: packA, locales: {} });
+  const servicesB = app.activateLoaded('b', { pack: packB, locales: {} });
+  return { app, storage, servicesA, servicesB, a: servicesA.deps, b: servicesB.deps };
 }
 
 function keysOf(storage: Storage): string[] {
   return Array.from({ length: storage.length }, (_, i) => storage.key(i) ?? '');
 }
 
-describe('createServices: several subjects', () => {
-  it('builds scoped deps and services per subject; the active one is the first pack', () => {
-    const { services, a, b } = twoSubjects();
+describe('createAppServices: several subjects', () => {
+  it('builds scoped deps and services per subject', () => {
+    const { servicesA, servicesB, a, b } = twoSubjects();
 
-    expect(Object.keys(services.subjectDeps)).toEqual(['a', 'b']);
-    expect(Object.keys(services.subjectServices)).toEqual(['a', 'b']);
-    expect(services.deps).toBe(a);
-    expect(services.subject).toBe(services.subjectServices.a);
+    expect(servicesA.subjectId).toBe('a');
+    expect(servicesB.subjectId).toBe('b');
+    expect(servicesA.deps).toBe(a);
+    expect(servicesA.subject).not.toBe(servicesB.subject);
+    expect(a.subjectId).toBe('a');
+    expect(b.subjectId).toBe('b');
     expect(a.subject).not.toBe(b.subject);
     expect(a.content).not.toBe(b.content);
   });
@@ -161,17 +166,17 @@ describe('createServices: several subjects', () => {
     expect(await b.rewards?.listSessionLogs('p1')).toEqual([]);
   });
 
-  it('a second createServices over the same storage reads the same per-subject data', async () => {
+  it('a second createAppServices over the same storage reads the same per-subject data', async () => {
     const { storage, a } = twoSubjects();
     await a.progress.saveLesson(makeProgress({ profileId: 'p1', lessonId: 'rook' }));
 
-    const again = createServices([createTestPack('a'), createTestPack('b')], APP, storage);
-    expect(await again.subjectDeps.a?.progress.getLesson('p1', 'rook')).toBeDefined();
-    expect(await again.subjectDeps.b?.progress.getLesson('p1', 'rook')).toBeUndefined();
+    const again = twoSubjects(storage);
+    expect(await again.a.progress.getLesson('p1', 'rook')).toBeDefined();
+    expect(await again.b.progress.getLesson('p1', 'rook')).toBeUndefined();
   });
 });
 
-describe('createServices: backup across subjects', () => {
+describe('createAppServices: backup across subjects', () => {
   async function seedBoth(a: AppDeps, b: AppDeps): Promise<void> {
     await a.profiles.save(PROFILE);
     await a.progress.saveLesson(
@@ -212,16 +217,14 @@ describe('createServices: backup across subjects', () => {
     await importMerged(target.a, incoming, []);
 
     // Fresh services over the same storage: what the next app start reads.
-    const again = createServices([createTestPack('a'), createTestPack('b')], APP, target.storage);
-    const a = again.subjectDeps.a;
-    const b = again.subjectDeps.b;
-    expect((await a?.progress.getLesson('p1', 'intro'))?.bestStars).toEqual({ e1: 1 });
-    expect((await b?.progress.getLesson('p1', 'intro'))?.bestStars).toEqual({ e1: 3 });
-    expect(await a?.rewards?.listEarnedBadges('p1')).toEqual([BADGE]);
-    expect(await b?.rewards?.listEarnedBadges('p1')).toEqual([]);
-    expect(await a?.rewards?.getStreak('p1')).toEqual(STREAK);
-    expect(await b?.rewards?.listSessionLogs('p1')).toEqual([LOG]);
-    expect((await a?.profiles.list())?.map((profile) => profile.id)).toEqual(['p1']);
+    const { a, b } = twoSubjects(target.storage);
+    expect((await a.progress.getLesson('p1', 'intro'))?.bestStars).toEqual({ e1: 1 });
+    expect((await b.progress.getLesson('p1', 'intro'))?.bestStars).toEqual({ e1: 3 });
+    expect(await a.rewards?.listEarnedBadges('p1')).toEqual([BADGE]);
+    expect(await b.rewards?.listEarnedBadges('p1')).toEqual([]);
+    expect(await a.rewards?.getStreak('p1')).toEqual(STREAK);
+    expect(await b.rewards?.listSessionLogs('p1')).toEqual([LOG]);
+    expect((await a.profiles.list()).map((profile) => profile.id)).toEqual(['p1']);
     expect(keysOf(target.storage)).toEqual(
       expect.arrayContaining(['app-a:lesson-progress', 'app-b:lesson-progress', 'app:streaks']),
     );
@@ -243,14 +246,10 @@ describe('createServices: backup across subjects', () => {
   });
 
   it('a legacy flat file lands in the subject its app id maps to', async () => {
-    const services = createServices(
-      [createTestPack('a'), createTestPack('b')],
-      { ...APP, legacyBackupApps: { 'old-app': 'b' } },
-      createMemoryStorage(),
-    );
-    const a = services.subjectDeps.a;
-    const b = services.subjectDeps.b;
-    if (a === undefined || b === undefined) throw new Error('subject deps missing');
+    const { a, b } = twoSubjects(createMemoryStorage(), {
+      ...APP,
+      legacyBackupApps: { 'old-app': 'b' },
+    });
     const legacy = {
       app: 'old-app',
       schemaVersion: 5,
@@ -307,8 +306,9 @@ describe('createServices: backup across subjects', () => {
 describe('createServices: one subject', () => {
   it('may keep the shared prefix as its own store (keys unchanged)', async () => {
     const storage = createMemoryStorage();
+    const pack = createTestPack('a');
     const services = createServices(
-      [createTestPack('a')],
+      [pack],
       { ...APP, subjectStoragePrefix: () => 'app:' },
       storage,
     );
@@ -318,7 +318,7 @@ describe('createServices: one subject', () => {
       expect.arrayContaining(['app:schema-version', 'app:lesson-progress']),
     );
     expect(keysOf(storage).every((key) => key.startsWith('app:'))).toBe(true);
-    expect(services.deps).toBe(services.subjectDeps.a);
+    expect(services.app.activateLoaded('a', { pack, locales: {} })).toBe(services);
   });
 
   it('uses the default sibling prefix when the app has no override', async () => {
@@ -327,6 +327,157 @@ describe('createServices: one subject', () => {
     await services.deps.progress.saveLesson(makeProgress({ profileId: 'p1', lessonId: 'rook' }));
 
     expect(keysOf(storage)).toContain('app-a:lesson-progress');
+  });
+});
+
+describe('createAppServices: lazy activation', () => {
+  function countedEntries(
+    storage = createMemoryStorage(),
+    config: Omit<AppConfig, 'version'> = APP,
+  ) {
+    const packs = { a: createTestPack('a'), b: createTestPack('b') };
+    const loads = {
+      a: vi.fn((): Promise<LoadedSubject> => Promise.resolve({ pack: packs.a, locales: {} })),
+      b: vi.fn((): Promise<LoadedSubject> => Promise.resolve({ pack: packs.b, locales: {} })),
+    };
+    const app = createAppServices(
+      [createTestEntry(packs.a, { load: loads.a }), createTestEntry(packs.b, { load: loads.b })],
+      config,
+      storage,
+    );
+    return { app, packs, loads, storage };
+  }
+
+  it('loads nothing until a subject is activated, and each pack once however often it is activated', async () => {
+    const { app, loads } = countedEntries();
+    expect(loads.a).not.toHaveBeenCalled();
+    expect(loads.b).not.toHaveBeenCalled();
+
+    const first = await app.activate('a');
+    const again = await app.activate('a');
+    const concurrent = await Promise.all([app.activate('b'), app.activate('b'), app.activate('a')]);
+
+    expect(loads.a).toHaveBeenCalledTimes(1);
+    expect(loads.b).toHaveBeenCalledTimes(1);
+    expect(again.deps).toBe(first.deps);
+    expect(again.subject).toBe(first.subject);
+    expect(concurrent[0].deps).toBe(concurrent[1].deps);
+    expect(concurrent[2].deps).toBe(first.deps);
+  });
+
+  it('builds a subject services object once: `pack.createServices()` runs once per subject', async () => {
+    const { app, packs } = countedEntries();
+    const spy = vi.spyOn(packs.a, 'createServices');
+
+    await app.activate('a');
+    await app.activate('a');
+    app.activateLoaded('a', { pack: packs.a, locales: {} });
+
+    expect(spy).toHaveBeenCalledTimes(1);
+  });
+
+  it('exposes every subject repository set before any activation', async () => {
+    const { app, loads } = countedEntries();
+
+    await app.subjectData.a?.progress.saveLesson(
+      makeProgress({ profileId: 'p1', lessonId: 'rook' }),
+    );
+
+    expect(Object.keys(app.subjectData)).toEqual(['a', 'b']);
+    expect(await app.subjectData.a?.progress.getLesson('p1', 'rook')).toBeDefined();
+    expect(await app.subjectData.b?.progress.getLesson('p1', 'rook')).toBeUndefined();
+    expect(loads.a).not.toHaveBeenCalled();
+  });
+
+  it('activated subjects share the profile and settings repositories and keep progress apart', async () => {
+    const { app } = countedEntries();
+    const a = await app.activate('a');
+    const b = await app.activate('b');
+    await a.deps.progress.saveLesson(makeProgress({ profileId: 'p1', lessonId: 'rook' }));
+
+    expect(a.deps.profiles).toBe(b.deps.profiles);
+    expect(a.deps.settings).toBe(b.deps.settings);
+    expect(a.deps.subjectData).toBe(app.subjectData);
+    expect(await a.deps.progress.getLesson('p1', 'rook')).toBeDefined();
+    expect(await b.deps.progress.getLesson('p1', 'rook')).toBeUndefined();
+    expect(a.app).toBe(app);
+    expect(a.pack.core.id).toBe('a');
+    expect(b.pack.core.id).toBe('b');
+  });
+
+  it('hands the loaded locales through on the activated services', async () => {
+    const pack = createTestPack('a');
+    const locales = { en: { common: { app: { title: 'A' } } } };
+    const app = createAppServices([createTestEntry(pack, { locales })], APP, createMemoryStorage());
+
+    expect((await app.activate('a')).locales).toBe(locales);
+  });
+
+  it('throws on an unknown id, and on a loaded pack whose core id differs', async () => {
+    const { app, packs } = countedEntries();
+
+    await expect(app.activate('nope')).rejects.toThrow(/unknown subject "nope"/);
+    expect(() => app.activateLoaded('nope', { pack: packs.a, locales: {} })).toThrow(
+      /unknown subject "nope"/,
+    );
+    expect(() => app.activateLoaded('b', { pack: packs.a, locales: {} })).toThrow(
+      /subject "b".*core id "a"/,
+    );
+  });
+
+  it('does not cache a failed load: the next activate loads again', async () => {
+    const pack = createTestPack('a');
+    const load = vi
+      .fn<() => Promise<LoadedSubject>>()
+      .mockRejectedValueOnce(new Error('chunk missing'))
+      .mockResolvedValue({ pack, locales: {} });
+    const app = createAppServices([createTestEntry(pack, { load })], APP, createMemoryStorage());
+
+    await expect(app.activate('a')).rejects.toThrow('chunk missing');
+    expect((await app.activate('a')).subjectId).toBe('a');
+    expect(load).toHaveBeenCalledTimes(2);
+  });
+
+  describe('initialSubjectId', () => {
+    async function settingsOver(storage: Storage, settings: object): Promise<void> {
+      // Same storage, same shared repository: write through a second app over it.
+      const { app } = countedEntries(storage);
+      const a = await app.activate('a');
+      const current = await a.deps.settings.get();
+      await a.deps.settings.save({ ...current, ...settings });
+    }
+
+    it('is the first entry without settings', async () => {
+      const { app } = countedEntries();
+      expect(await app.initialSubjectId()).toBe('a');
+    });
+
+    it("is the last profile's last subject when that subject is registered", async () => {
+      const storage = createMemoryStorage();
+      await settingsOver(storage, {
+        lastProfileId: 'p1',
+        lastSubjectByProfile: { p1: 'b', p2: 'a' },
+      });
+
+      expect(await countedEntries(storage).app.initialSubjectId()).toBe('b');
+    });
+
+    it('is the first entry when that subject is not registered', async () => {
+      const storage = createMemoryStorage();
+      await settingsOver(storage, { lastProfileId: 'p1', lastSubjectByProfile: { p1: 'gone' } });
+
+      expect(await countedEntries(storage).app.initialSubjectId()).toBe('a');
+    });
+
+    it('is the first entry without a last profile or without an entry for it', async () => {
+      const noProfile = createMemoryStorage();
+      await settingsOver(noProfile, { lastSubjectByProfile: { p1: 'b' } });
+      const otherProfile = createMemoryStorage();
+      await settingsOver(otherProfile, { lastProfileId: 'p2', lastSubjectByProfile: { p1: 'b' } });
+
+      expect(await countedEntries(noProfile).app.initialSubjectId()).toBe('a');
+      expect(await countedEntries(otherProfile).app.initialSubjectId()).toBe('a');
+    });
   });
 });
 

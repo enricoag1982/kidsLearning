@@ -30,7 +30,13 @@ import { LocalStorageSettingsRepository } from '../adapters/storage/local-settin
 import type { LocalStore } from '../adapters/storage/local-store.ts';
 import { openLocalStore, SCHEMA_VERSION } from '../adapters/storage/local-store.ts';
 import { MIGRATIONS } from '../adapters/storage/migrations.ts';
-import type { SubjectServices, SubjectWeb } from './subject.ts';
+import type {
+  HomeTileColors,
+  LoadedSubject,
+  SubjectEntry,
+  SubjectServices,
+  SubjectWeb,
+} from './subject.ts';
 
 /** `AppDeps.backupFileWriter`/`backupImporter`: read only from the lazy-loaded Parent area, so
  * their implementations are fetched on first use, not shipped in the initial bundle. */
@@ -57,22 +63,45 @@ function createLazyBackupImporter(
   };
 }
 
-export interface Services {
-  /** The active subject's deps: the first pack until `m11.4` adds switching. */
-  readonly deps: AppDeps;
+/** App-wide services: built once, no subject active (`docs/multi-subject.md` D4, D7). Shared repositories live in the
+ * scoped deps of an activated subject; there is no shared-only `AppDeps` view. */
+export interface AppServices {
+  readonly subjects: readonly SubjectEntry[];
+  /** Every registered subject's own repositories by subject id, usable before any pack loads. */
+  readonly subjectData: Readonly<Record<string, SubjectDataRepositories>>;
   readonly narrator: Narrator;
-  /** The active subject's services: the first pack until `m11.4` adds switching. */
-  readonly subject: SubjectServices;
-  /** Scoped `AppDeps` per subject id: shared repositories (profiles, settings, …) are the same instances in every one, the
-   * subject's own repositories and content differ. `deps` is one of these. */
-  readonly subjectDeps: Readonly<Record<string, AppDeps>>;
-  /** Each subject's own runtime services per subject id; `subject` is one of these. */
-  readonly subjectServices: Readonly<Record<string, SubjectServices>>;
   /** Gates `narrator` on the active profile's "voice" setting (app-structure.md §11); set at every profile select. */
   setVoiceEnabled(enabled: boolean): void;
   /** Active nickname, stripped from narrated text before the audio lookup (`docs/voice.md`); set with `setVoiceEnabled`. */
   setNickname(nickname: string | null): void;
   /** Parent "Test voice" (`ChildSettings.tsx`): speaks `text` through the audio narrator, ignoring the voice setting, and reports if generated audio played. */
+  testVoice(text: string): Promise<AudioNarratorOutcome>;
+  /** Loads `id`'s pack once (cached promise), builds its scoped deps once, returns `Services` with it active. */
+  activate(id: string): Promise<Services>;
+  /** Same, for an already-loaded subject (tests, single-subject sync path); caches like `activate`. */
+  activateLoaded(id: string, loaded: LoadedSubject): Services;
+  /** `lastSubjectByProfile[lastProfileId]` when that subject is registered, else the first entry's id. */
+  initialSubjectId(): Promise<string>;
+}
+
+/** The app's services with one subject active. Several `Services` objects of one subject may exist, all sharing the
+ * same `deps` and `subject` instances. */
+export interface Services {
+  readonly app: AppServices;
+  readonly subjectId: string;
+  readonly pack: SubjectWeb;
+  readonly locales: LoadedSubject['locales'];
+  /** The active subject's scoped deps: shared repositories (profiles, settings, …) are the same instances in every
+   * subject's, the subject's own repositories and content differ. */
+  readonly deps: AppDeps;
+  readonly narrator: Narrator;
+  /** The active subject's own runtime services. */
+  readonly subject: SubjectServices;
+  /** Same as `app.setVoiceEnabled`. */
+  setVoiceEnabled(enabled: boolean): void;
+  /** Same as `app.setNickname`. */
+  setNickname(nickname: string | null): void;
+  /** Same as `app.testVoice`. */
   testVoice(text: string): Promise<AudioNarratorOutcome>;
 }
 
@@ -115,18 +144,27 @@ function checkedSubjectPrefixes(
   });
 }
 
-/** Composition root: wires one scoped `AppDeps` per subject (`packs`) to the web adapters. Profiles, settings, parent code, the
- * streak and session logs live in the shared store (`appConfig.storagePrefix`); each subject's progress, attempts, game records,
- * badges and assessment live in its own (`subjectStoragePrefix`). */
-export function createServices(
-  packs: readonly SubjectWeb[],
+/** One subject's own repositories, built with the app and shared by every `Services` of that subject. */
+interface SubjectRepositories {
+  readonly progress: LocalStorageProgressRepository;
+  readonly gameRecords: LocalStorageGameRecordRepository;
+  readonly assessment: LocalStorageAssessmentRepository;
+  readonly rewards: LocalStorageRewardsRepository;
+}
+
+/** Composition root: wires the shared services and every subject's repositories to the web adapters; a subject's pack is
+ * loaded and its scoped `AppDeps` built on `activate`. Profiles, settings, parent code, the streak and session logs live in
+ * the shared store (`appConfig.storagePrefix`); each subject's progress, attempts, game records, badges and assessment live
+ * in its own (`subjectStoragePrefix`). */
+export function createAppServices(
+  subjects: readonly SubjectEntry[],
   appConfig: Omit<AppConfig, 'version'>,
   storage: Storage = window.localStorage,
-): Services {
-  const ids = packs.map((pack) => pack.core.id);
+): AppServices {
+  const ids = subjects.map((entry) => entry.manifest.id);
   assertSubjectIds(ids);
   const prefixes = checkedSubjectPrefixes(appConfig, ids);
-  const settingsSlot = composeSettingsSlots(packs.map((pack) => pack.core.settings));
+  const settingsSlot = composeSettingsSlots(subjects.map((entry) => entry.manifest.settings));
   const sharedStore = openLocalStore(storage, {
     migrations: MIGRATIONS,
     keyPrefix: appConfig.storagePrefix,
@@ -150,10 +188,9 @@ export function createServices(
   };
 
   const subjectData: Record<string, SubjectDataRepositories> = {};
-  const subjectDeps: Record<string, AppDeps> = {};
-  const subjectServices: Record<string, SubjectServices> = {};
-  for (const [index, pack] of packs.entries()) {
-    const id = pack.core.id;
+  const repositories: Record<string, SubjectRepositories> = {};
+  for (const [index, entry] of subjects.entries()) {
+    const id = entry.manifest.id;
     const prefix = prefixes[index];
     if (prefix === undefined) {
       throw new Error(`no storage prefix for subject "${id}"`);
@@ -163,31 +200,12 @@ export function createServices(
         ? sharedStore
         : openLocalStore(storage, { migrations: MIGRATIONS, keyPrefix: prefix });
     subjectStores[id] = subjectStore;
-    const { content, subject } = pack.createServices();
     const progress = new LocalStorageProgressRepository(subjectStore);
     const gameRecords = new LocalStorageGameRecordRepository(subjectStore);
     const assessment = new LocalStorageAssessmentRepository(subjectStore);
     const rewards = new LocalStorageRewardsRepository(subjectStore, sharedStore);
     subjectData[id] = { progress, gameRecords, assessment, badges: rewards };
-    subjectServices[id] = subject;
-    subjectDeps[id] = {
-      ...shared,
-      progress,
-      gameRecords,
-      rewards,
-      assessment,
-      content,
-      subject: createSubjectRuntime(pack.core, settingsSlot),
-      subjectData,
-      subjectId: id,
-    };
-  }
-
-  const [first] = ids;
-  const deps = first === undefined ? undefined : subjectDeps[first];
-  const activeSubject = first === undefined ? undefined : subjectServices[first];
-  if (deps === undefined || activeSubject === undefined) {
-    throw new Error('no subject registered');
+    repositories[id] = { progress, gameRecords, assessment, rewards };
   }
 
   // Pre-generated Kokoro audio per narrated text (docs/voice.md), Web Speech as the fallback for
@@ -199,12 +217,60 @@ export function createServices(
   });
   const narrator = createGatedNarrator(audioNarrator);
 
-  return {
-    deps,
+  const [firstId] = ids;
+  if (firstId === undefined) {
+    throw new Error('no subject registered');
+  }
+  const entryById = new Map(subjects.map((entry) => [entry.manifest.id, entry] as const));
+  const loads = new Map<string, Promise<LoadedSubject>>();
+  const activated = new Map<string, Services>();
+
+  function activateLoaded(id: string, loaded: LoadedSubject): Services {
+    const repos = repositories[id];
+    if (repos === undefined) {
+      throw new Error(`unknown subject "${id}"`);
+    }
+    if (loaded.pack.core.id !== id) {
+      throw new Error(`subject "${id}": the loaded pack has core id "${loaded.pack.core.id}"`);
+    }
+    const cached = activated.get(id);
+    if (cached !== undefined) {
+      return cached;
+    }
+    const { pack, locales } = loaded;
+    const { content, subject } = pack.createServices();
+    const deps: AppDeps = {
+      ...shared,
+      ...repos,
+      content,
+      subject: createSubjectRuntime(pack.core, settingsSlot),
+      subjectData,
+      subjectId: id,
+    };
+    const services: Services = {
+      app,
+      subjectId: id,
+      pack,
+      locales,
+      deps,
+      narrator,
+      subject,
+      setVoiceEnabled: (enabled) => {
+        app.setVoiceEnabled(enabled);
+      },
+      setNickname: (nickname) => {
+        app.setNickname(nickname);
+      },
+      testVoice: (text) => app.testVoice(text),
+    };
+    activated.set(id, services);
+    return services;
+  }
+
+  const app: AppServices = {
+    subjects,
+    subjectData,
     narrator,
-    subject: activeSubject,
-    subjectDeps,
-    subjectServices,
     setVoiceEnabled: (enabled) => {
       narrator.setEnabled(enabled);
     },
@@ -217,5 +283,56 @@ export function createServices(
       // only for type safety (`lastOutcome()` is `| null` before any call ever completes).
       return audioNarrator.lastOutcome() ?? { kind: 'fallback', reason: 'no-audio-context' };
     },
+    async activate(id) {
+      const entry = entryById.get(id);
+      if (entry === undefined) {
+        throw new Error(`unknown subject "${id}"`);
+      }
+      let loading = loads.get(id);
+      if (loading === undefined) {
+        const started = entry.load();
+        loading = started;
+        loads.set(id, started);
+        // A failed load is not cached: the next `activate` tries again.
+        started.catch(() => {
+          loads.delete(id);
+        });
+      }
+      return activateLoaded(id, await loading);
+    },
+    activateLoaded,
+    async initialSubjectId() {
+      const { lastProfileId, lastSubjectByProfile } = await shared.settings.get();
+      const last = lastProfileId === null ? undefined : lastSubjectByProfile?.[lastProfileId];
+      return last !== undefined && entryById.has(last) ? last : firstId;
+    },
   };
+  return app;
+}
+
+/** The neutral hub colours of {@link createServices}' wrapped packs (never shown: those apps have one subject). */
+const NEUTRAL_TILE_COLORS: HomeTileColors = { bg: '#F1E9D8', fg: '#4B3A63', ledge: '#352945' };
+
+/** Sync convenience (tests, single-subject callers): entries from already-loaded packs (no locales), the first pack active. */
+export function createServices(
+  packs: readonly SubjectWeb[],
+  appConfig: Omit<AppConfig, 'version'>,
+  storage: Storage = window.localStorage,
+): Services {
+  const entries: SubjectEntry[] = packs.map((pack) => ({
+    manifest: {
+      id: pack.core.id,
+      settings: pack.core.settings,
+      names: { en: pack.core.id },
+      icon: '',
+      colors: NEUTRAL_TILE_COLORS,
+    },
+    load: () => Promise.resolve({ pack, locales: {} }),
+  }));
+  const app = createAppServices(entries, appConfig, storage);
+  const [first] = packs;
+  if (first === undefined) {
+    throw new Error('no subject registered');
+  }
+  return app.activateLoaded(first.core.id, { pack: first, locales: {} });
 }

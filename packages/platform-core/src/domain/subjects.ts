@@ -2,6 +2,12 @@
 // settings slot that every registered subject's slot folds into (`docs/multi-subject.md` D2, D6).
 import type { AppConfig, SubjectSettingsSlot } from './subject.ts';
 
+/** What the app needs of a subject before its pack loads (multi-subject.md D7). */
+export interface SubjectManifest {
+  readonly id: string;
+  readonly settings: SubjectSettingsSlot;
+}
+
 export const SUBJECT_ID_PATTERN = /^[a-z][a-z0-9-]*$/;
 
 /** Throws on an empty list, an id not matching {@link SUBJECT_ID_PATTERN}, or a duplicate. */

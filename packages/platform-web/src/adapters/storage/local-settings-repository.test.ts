@@ -49,6 +49,20 @@ describe('LocalStorageSettingsRepository', () => {
     expect((await repo.get()).storagePersisted).toBe(true);
   });
 
+  it('keeps lastSubjectByProfile through a save / get round trip; absent stays absent', async () => {
+    const repo = new LocalStorageSettingsRepository(openTestStore());
+    await repo.save({
+      lastProfileId: null,
+      suggestedLevels: {},
+      profileSettings: {},
+      lastSubjectByProfile: { 'profile-1': 'math' },
+    });
+    expect((await repo.get()).lastSubjectByProfile).toEqual({ 'profile-1': 'math' });
+
+    await repo.save({ lastProfileId: null, suggestedLevels: {}, profileSettings: {} });
+    expect(await repo.get()).not.toHaveProperty('lastSubjectByProfile');
+  });
+
   it('saves and reads back per-profile settings (M5.1)', async () => {
     const repo = new LocalStorageSettingsRepository(openTestStore());
     const settings = {

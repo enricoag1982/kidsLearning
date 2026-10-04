@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./src/chess.ts",
+    "./entry": "./src/entry.ts",
     "./bot-worker": "./src/bot-worker.ts",
     "./testing": "./src/testing/index.ts",
     "./content": "./src/content/chess-content.ts",

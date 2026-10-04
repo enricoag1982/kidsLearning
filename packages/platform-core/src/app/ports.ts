@@ -93,6 +93,8 @@ export interface AppSettings {
   readonly suggestedLevels: Readonly<Record<string, number>>;
   /** Parent "Settings per child", by profile id; absent reads back as `DEFAULT_PROFILE_SETTINGS`. */
   readonly profileSettings: Readonly<Record<string, ProfileSettings>>;
+  /** Last active subject id per profile id (the app shell's subjects hub, `docs/multi-subject.md` D9); device-only, absent until a subject was chosen. */
+  readonly lastSubjectByProfile?: Readonly<Record<string, string>>;
   /** Result of the one `navigator.storage.persist()` request; `undefined` until it settles or when unavailable. */
   readonly storagePersisted?: boolean;
   /** This device's random id (`getOrCreateDeviceId`), created lazily, never regenerated; stamps its `SessionLog` rows so a
@@ -139,7 +141,7 @@ export interface BackupFileWriter {
 
 export type DeviceOnlySettings = Pick<
   AppSettings,
-  'lastProfileId' | 'suggestedLevels' | 'storagePersisted' | 'deviceId'
+  'lastProfileId' | 'suggestedLevels' | 'lastSubjectByProfile' | 'storagePersisted' | 'deviceId'
 >;
 
 export interface MergeWriteOptions {

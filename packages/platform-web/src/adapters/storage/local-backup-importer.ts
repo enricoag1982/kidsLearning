@@ -71,11 +71,13 @@ function toSharedRecords(file: BackupFile, options: MergeWriteOptions): RawRecor
     }
   }
 
-  const { lastProfileId, suggestedLevels, storagePersisted, deviceId } = options.deviceSettings;
+  const { lastProfileId, suggestedLevels, lastSubjectByProfile, storagePersisted, deviceId } =
+    options.deviceSettings;
   const settings: AppSettings = {
     lastProfileId,
     suggestedLevels,
     profileSettings,
+    ...(lastSubjectByProfile === undefined ? {} : { lastSubjectByProfile }),
     ...(storagePersisted === undefined ? {} : { storagePersisted }),
     ...(deviceId === undefined ? {} : { deviceId }),
   };

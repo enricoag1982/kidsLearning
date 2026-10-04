@@ -1,9 +1,11 @@
-import type { AppDeps, ContentSource } from '@learn/platform-core';
+import type { AppDeps, ContentSource, SubjectDataRepositories } from '@learn/platform-core';
 import { createSubjectRuntime } from '@learn/platform-core';
 import { bot } from '../../chess.ts';
 import { CHESS_APP_CONFIG, chessCore } from '../../core/chess-core.ts';
+import { chessEntry } from '../../entry.ts';
 import { createWorkerBotPlayer } from '../adapters/bot/worker-bot-player.ts';
 import { createBundledContentSource } from '../adapters/content/bundled-content-source.ts';
+import { chessWeb } from '../chess-pack.ts';
 import { createCryptoIds } from '@learn/platform-web/adapters/ids.ts';
 import { createSystemClock } from '@learn/platform-web/adapters/clock.ts';
 import { LocalStorageAssessmentRepository } from '@learn/platform-web/adapters/storage/local-assessment-repository.ts';
@@ -19,7 +21,7 @@ import {
   SCHEMA_VERSION,
 } from '@learn/platform-web/adapters/storage/local-store.ts';
 import { MIGRATIONS } from '@learn/platform-web/adapters/storage/migrations.ts';
-import type { Services } from '@learn/platform-web/app/services.ts';
+import type { AppServices, Services } from '@learn/platform-web/app/services.ts';
 import { createFakeBackupFileWriter } from '@learn/platform-web/testing/fake-backup-file-writer.ts';
 import { createFakeNarrator } from '@learn/platform-web/testing/fake-narrator.ts';
 import { createFakePasswordFileWriter } from '@learn/platform-web/testing/fake-password-file-writer.ts';
@@ -41,12 +43,19 @@ export function createTestServices(
     migrations: MIGRATIONS,
     keyPrefix: CHESS_APP_CONFIG.storagePrefix,
   });
+  const progress = new LocalStorageProgressRepository(store);
+  const gameRecords = new LocalStorageGameRecordRepository(store);
+  const rewards = new LocalStorageRewardsRepository(store);
+  const assessment = new LocalStorageAssessmentRepository(store);
+  const subjectData: Readonly<Record<string, SubjectDataRepositories>> = {
+    [chessCore.id]: { progress, gameRecords, assessment, badges: rewards },
+  };
   const deps: AppDeps = {
     profiles: new LocalStorageProfileRepository(store),
-    progress: new LocalStorageProgressRepository(store),
-    gameRecords: new LocalStorageGameRecordRepository(store),
-    rewards: new LocalStorageRewardsRepository(store),
-    assessment: new LocalStorageAssessmentRepository(store),
+    progress,
+    gameRecords,
+    rewards,
+    assessment,
     clock: createSystemClock(),
     ids: createCryptoIds(),
     content: content === 'bundled' ? createBundledContentSource() : content,
@@ -61,17 +70,17 @@ export function createTestServices(
     subject: createSubjectRuntime(chessCore),
     app: { ...CHESS_APP_CONFIG, version: __APP_VERSION__ },
     subjectId: chessCore.id,
+    subjectData,
   };
 
   const narrator = createFakeNarrator();
   const subject = { botPlayer: createWorkerBotPlayer(), content: createBundledContentSource() };
 
-  return {
-    deps,
+  // One subject: `activate` hands back this same object, as the real one does for an already activated subject.
+  const app: AppServices = {
+    subjects: [chessEntry],
+    subjectData,
     narrator,
-    subject,
-    subjectDeps: { [chessCore.id]: deps },
-    subjectServices: { [chessCore.id]: subject },
     setVoiceEnabled: (enabled) => {
       narrator.setEnabled(enabled);
     },
@@ -84,5 +93,25 @@ export function createTestServices(
     // that needs the other outcome overrides `services.testVoice` directly (`Services.testVoice`
     // is not `readonly`, same as `setVoiceEnabled`/`setNickname` above).
     testVoice: () => Promise.resolve({ kind: 'audio' }),
+    activate: () => Promise.resolve(services),
+    activateLoaded: () => services,
+    initialSubjectId: () => Promise.resolve(chessCore.id),
   };
+  const services: Services = {
+    app,
+    subjectId: chessCore.id,
+    pack: chessWeb,
+    locales: {},
+    deps,
+    narrator,
+    subject,
+    setVoiceEnabled: (enabled) => {
+      app.setVoiceEnabled(enabled);
+    },
+    setNickname: (nickname) => {
+      app.setNickname(nickname);
+    },
+    testVoice: (text) => app.testVoice(text),
+  };
+  return services;
 }

@@ -207,6 +207,21 @@ describe('LocalStorageBackupImporter: shared store + per-subject stores', () => 
     });
   });
 
+  it('carries lastSubjectByProfile from the device settings into the shared settings; absent stays absent', async () => {
+    const device = openDevice();
+    const file = fileWith({ a: emptySection() });
+
+    await importerFor(device).writeMerged(file, {
+      deviceSettings: { ...DEVICE_SETTINGS, lastSubjectByProfile: { p1: 'b' } },
+    });
+    expect(stored(device.storage, 'app:settings')).toMatchObject({
+      lastSubjectByProfile: { p1: 'b' },
+    });
+
+    await importerFor(device).writeMerged(file, { deviceSettings: DEVICE_SETTINGS });
+    expect(stored(device.storage, 'app:settings')).not.toHaveProperty('lastSubjectByProfile');
+  });
+
   it('ignores subjects without a registered store, and writes a registered one the file lacks as empty', async () => {
     const device = openDevice();
     device.b.write('lesson-progress', { 'p1:old': makeProgress({ lessonId: 'old' }) });
