@@ -132,7 +132,7 @@
     "slot-locked": "Slot {{n}}: {{tile}}, locked",
     "tile": "Tile {{n}}: {{tile}}",
     "tile-bug": "Tile {{n}}: {{tile}}, the bug",
-    "times": "Repeat {{times}} times, tap to change"
+    "times": "Slot {{n}}: Repeat {{times}} times, tap to change"
    },
    "tiles": {
     "down": "Step down",

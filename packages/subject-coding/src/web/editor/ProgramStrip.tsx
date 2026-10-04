@@ -241,7 +241,7 @@ function RepeatBlock({ index, tile, props, slotName }: BlockProps): JSX.Element 
         <button
           type="button"
           disabled={busy}
-          aria-label={tContent(t, 'coding.strip.times', { times: tile.times })}
+          aria-label={tContent(t, 'coding.strip.times', { n: index + 1, times: tile.times })}
           data-iterating={iterating}
           onClick={() => {
             onCycleTimes?.(index);

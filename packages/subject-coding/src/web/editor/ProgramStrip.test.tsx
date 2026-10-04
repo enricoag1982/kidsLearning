@@ -114,13 +114,13 @@ describe('ProgramStrip, a repeat block in edit mode', () => {
     edit({ slots, onRemove: vi.fn(), onToggleRepeat: vi.fn(), onCycleTimes: vi.fn() });
     const block = within(screen.getByRole('group', { name: 'Slot 2: Repeat 3 times' }));
     expect(block.getByRole('button', { name: 'Put tiles inside slot 2' })).toBeTruthy();
-    expect(block.getByRole('button', { name: 'Repeat 3 times, tap to change' }).textContent).toBe(
-      '×3',
-    );
+    expect(
+      block.getByRole('button', { name: 'Slot 2: Repeat 3 times, tap to change' }).textContent,
+    ).toBe('×3');
     expect(block.getAllByRole('button').map((button) => button.getAttribute('aria-label'))).toEqual(
       [
         'Put tiles inside slot 2',
-        'Repeat 3 times, tap to change',
+        'Slot 2: Repeat 3 times, tap to change',
         'Slot 2, inside the repeat: Step down',
         'Slot 2, inside the repeat: Step up',
       ],
@@ -132,7 +132,7 @@ describe('ProgramStrip, a repeat block in edit mode', () => {
     const onToggleRepeat = vi.fn();
     const onCycleTimes = vi.fn();
     edit({ slots, onRemove, onToggleRepeat, onCycleTimes });
-    fireEvent.click(screen.getByRole('button', { name: 'Repeat 3 times, tap to change' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Slot 2: Repeat 3 times, tap to change' }));
     fireEvent.click(screen.getByRole('button', { name: 'Put tiles inside slot 2' }));
     fireEvent.click(screen.getByRole('button', { name: 'Slot 2, inside the repeat: Step up' }));
     expect(onCycleTimes).toHaveBeenCalledWith(1);
@@ -170,7 +170,7 @@ describe('ProgramStrip, a repeat block in edit mode', () => {
         'active'
       ],
     ).toBe('true');
-    const badge = screen.getByRole('button', { name: 'Repeat 3 times, tap to change' });
+    const badge = screen.getByRole('button', { name: 'Slot 2: Repeat 3 times, tap to change' });
     expect(badge.textContent).toBe('2 of 3');
     expect(badge.dataset['iterating']).toBe('true');
   });

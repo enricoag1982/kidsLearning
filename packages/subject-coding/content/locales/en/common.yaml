@@ -45,7 +45,7 @@ coding:
     slot-empty: 'Slot {{n}}, empty'
     inside: 'Slot {{n}}, inside the repeat: {{tile}}'
     inside-empty: 'Slot {{n}}, inside the repeat, empty'
-    times: 'Repeat {{times}} times, tap to change'
+    times: 'Slot {{n}}: Repeat {{times}} times, tap to change'
     fill: 'Put tiles inside slot {{n}}'
     loop: '{{iteration}} of {{times}}'
     tile: 'Tile {{n}}: {{tile}}'
