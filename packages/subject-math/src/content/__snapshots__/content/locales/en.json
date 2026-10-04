@@ -55,6 +55,22 @@
     "round-of": "Round {{current}} of {{total}}"
    }
   },
+  "cards": {
+   "entry-label": "Your answer: {{value}}",
+   "erase": "Delete",
+   "false": "False",
+   "hint-first-digit": "It starts with {{digit}}.",
+   "hint-look": "Look closely.",
+   "number-wrong": "Not that number. Try again!",
+   "order-hint": "Which one comes next?",
+   "order-pool": "Cards to place",
+   "order-slots": "Your order",
+   "order-wrong": "Not that one. Try another!",
+   "pad-label": "Number pad",
+   "slot-empty": "Place {{n}} of {{total}}, empty",
+   "slot-filled": "Place {{n}} of {{total}}: {{item}}",
+   "true": "True"
+  },
   "celebration": {
    "continue": "Continue",
    "heading": "New badge!",

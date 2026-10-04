@@ -1,0 +1,36 @@
+id: count-up
+order: 1
+concept: counting
+character: fox
+demo:
+  prompt: { emoji: 🍎🍎🍎, big: 3 }
+guided:
+  - id: count-g1
+    type: true-false
+    prompt: { emoji: 🍎🍎 }
+    answer: true
+exercises:
+  - id: count-01
+    type: choice
+    prompt: { emoji: 🍎🍎🍎 }
+    options:
+      - { id: a, big: 2 }
+      - { id: b, big: 3 }
+      - { id: c, text: count-01-opt-c, emoji: 🖐️ }
+    answer: b
+  - id: count-02
+    type: true-false
+    prompt: { big: 2 + 2 = 5 }
+    answer: false
+  - id: count-03
+    type: number-entry
+    prompt: { big: 7 + 5 }
+    answer: 12
+  - id: count-04
+    type: order
+    prompt: { emoji: 🔢 }
+    items:
+      - { id: three, big: 3 }
+      - { id: one, big: 1 }
+      - { id: two, text: count-04-two, big: 2 }
+    answer: [one, two, three]

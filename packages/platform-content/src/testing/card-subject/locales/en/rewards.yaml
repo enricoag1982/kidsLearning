@@ -1,0 +1,5 @@
+badges:
+  first-stars:
+    name: First Stars
+    condition_one: 'Earn {{count}} star'
+    condition_other: 'Earn {{count}} stars'

@@ -271,6 +271,22 @@ exercise:
   praise-3: Amazing!
   praise-2: Well done!
   praise-1: Good try!
+cards:
+  # The card kit's kinds (true-false, number-entry, order); `true` / `false` are quoted, YAML reads them as booleans.
+  'true': 'True'
+  'false': 'False'
+  pad-label: Number pad
+  erase: Delete
+  entry-label: 'Your answer: {{value}}'
+  order-slots: Your order
+  order-pool: Cards to place
+  slot-filled: 'Place {{n}} of {{total}}: {{item}}'
+  slot-empty: 'Place {{n}} of {{total}}, empty'
+  hint-look: Look closely.
+  hint-first-digit: 'It starts with {{digit}}.'
+  number-wrong: Not that number. Try again!
+  order-hint: Which one comes next?
+  order-wrong: Not that one. Try another!
 boss:
   ended: Good try!
   series:

@@ -1,0 +1,46 @@
+// The card kit's `SubjectContent`: a subject made only of YAML + art gets its whole content behaviour from this one call.
+import type { CardDefOf, CardType } from '@learn/platform-core/domain/exercise/kinds/cards/def';
+import type { z } from 'zod';
+import { createExerciseSchema } from '../../lesson-schema.ts';
+import { createSeriesContent } from '../../modes/series.ts';
+import type { BadgesContent, SubjectContent } from '../../subject.ts';
+import type { ExerciseKindContent } from '../kind-content.ts';
+import { cardChoice } from './choice.ts';
+import { numberEntry } from './number-entry.ts';
+import { order } from './order.ts';
+import { cardDemo, cardStimulus } from './stimulus.ts';
+import { trueFalse } from './true-false.ts';
+
+/** The four kinds, by `type`. */
+export const CARD_KIND_CONTENT = {
+  choice: cardChoice,
+  'true-false': trueFalse,
+  'number-entry': numberEntry,
+  order,
+} as const satisfies {
+  readonly [T in CardType]: ExerciseKindContent<CardDefOf<T>, z.ZodType>;
+};
+
+export const cardExerciseSchema = createExerciseSchema(CARD_KIND_CONTENT, cardStimulus);
+
+/** No badge condition beyond the engine's generic ones. */
+const cardBadges: BadgesContent = { fields: {}, validate: () => undefined };
+
+export interface CardContentOptions {
+  /** Lesson characters that double as an "animal friend" once their lesson is done (one source with `createCardCore`). */
+  readonly characters: Readonly<Record<string, { readonly topicKey: string }>>;
+}
+
+/** The four card kinds, the `series` boss over them, the `prompt` stimulus and demo; no default mini-game mode, no extra
+ * badge fields, no voice templates beyond the generic ones. */
+export function createCardContent({ characters }: CardContentOptions): SubjectContent {
+  return {
+    kinds: CARD_KIND_CONTENT,
+    modes: { series: createSeriesContent(cardExerciseSchema) },
+    stimulus: cardStimulus,
+    demo: cardDemo,
+    badges: cardBadges,
+    characters,
+    voiceTemplates: () => undefined,
+  };
+}
