@@ -7,33 +7,33 @@ errors2: 2
 rounds:
   - id: number-parade-r1
     type: number-entry
-    problem: 3 + 4
+    prompt: { big: 3 + 4 }
     answer: 7
   - id: number-parade-r2
     type: choice
-    problem: 9 - 3
+    prompt: { big: 9 - 3 }
     options:
-      - { id: a, value: 5 }
-      - { id: b, value: 6 }
-      - { id: c, value: 7 }
+      - { id: a, big: 5 }
+      - { id: b, big: 6 }
+      - { id: c, big: 7 }
     answer: b
   - id: number-parade-r3
     type: number-entry
-    problem: 5 + 5
+    prompt: { big: 5 + 5 }
     answer: 10
   - id: number-parade-r4
     type: number-entry
-    problem: 8 - 2
+    prompt: { big: 8 - 2 }
     answer: 6
   - id: number-parade-r5
     type: choice
-    problem: 6 + 2
+    prompt: { big: 6 + 2 }
     options:
-      - { id: a, value: 7 }
-      - { id: b, value: 8 }
-      - { id: c, value: 9 }
+      - { id: a, big: 7 }
+      - { id: b, big: 8 }
+      - { id: c, big: 9 }
     answer: b
   - id: number-parade-r6
     type: number-entry
-    problem: 7 - 4
+    prompt: { big: 7 - 4 }
     answer: 3

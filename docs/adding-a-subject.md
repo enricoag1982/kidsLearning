@@ -51,7 +51,7 @@ Layout: `tracks.yaml` (worlds, ranks), `badges.yaml`, `lessons/<world>/<lesson>.
 |---|---|---|
 | `choice` | `options` (≥ 2 items), `answer` (option id) | option ids unique; `answer` is an option |
 | `true-false` | `answer: true \| false`; the statement = text + prompt | none |
-| `number-entry` | `answer` 0–9999, `maxDigits` 1–4 (default `max(2, digits of answer)`) | answer fits `maxDigits` |
+| `number-entry` | `answer` 0–99999, `maxDigits` 1–5 (default `max(2, digits of answer)`) | answer fits `maxDigits` |
 | `order` | `items` (≥ 2, display order), `answer` (every item id, right order) | ids unique; `answer` is a permutation; differs from display order |
 
 ```yaml
@@ -71,11 +71,11 @@ Layout: `tracks.yaml` (worlds, ranks), `badges.yaml`, `lessons/<world>/<lesson>.
 
 | Need | Where | Example |
 |---|---|---|
-| Own exercise kind | core kind + `solution` + content kind + UI + e2e driver, registered in the subject's registries; type dispatch only via registries (`dispatchGuard`) | `subject-chess/src/kinds/`, `subject-math/src/kinds/` |
+| Own exercise kind | core kind + `solution` + content kind + UI + e2e driver, registered in the subject's registries; type dispatch only via registries (`dispatchGuard`) | `subject-chess/src/kinds/`, `subject-coding/src/kinds/` |
 | Own mini-game mode | mode def + content + UI | `subject-chess/src/modes/` |
 | Routes, home tiles, store slice, parent panels, surfaces, `characterArt` | optional `SubjectWeb` fields | `subject-chess/src/web/chess-pack.ts` |
 | Profile settings | own `SubjectSettingsSlot`; field names unique across subjects | chess `computerLevel` |
-| Mix | `createCardCore({ notes })`, `characterColor`; start from `subject-math` for a hand-built pack | `subject-math/` |
+| Mix | `createCardCore({ notes })`, `characterColor`; start from `subject-coding` (card kit + own kinds) for a hand-built pack | `subject-coding/` |
 | Items that differ only by numbers | `generate:` entries + a template (§6) | `platform-content/src/testing/card-fixture.ts` (`fixture-add`) |
 
 Layers and boundary lint: [architecture.md](architecture.md) §3 (platform never imports a subject; `src/core`, `src/content` stay React-free).

@@ -107,7 +107,6 @@
    "easier-offer": "This one is tricky. Want an easier one?",
    "hint": "Hint",
    "hint-answer": "Here is the answer.",
-   "hint-look": "Look closely.",
    "hint-remove-option": "One choice is ruled out.",
    "praise-1": "Good try!",
    "praise-2": "Well done!",
@@ -179,14 +178,6 @@
    }
   },
   "loading": "Loading…",
-  "math": {
-   "entry-label": "Your answer: {{value}}",
-   "erase": "Delete",
-   "hint-count-back": "Start at {{a}} and count back {{b}}.",
-   "hint-count-on": "Start at {{a}} and count on {{b}}.",
-   "hint-dots": "Count the dots.",
-   "pad-label": "Number pad"
-  },
   "new-player": {
    "avatar": {
     "primary": "Let's play!",

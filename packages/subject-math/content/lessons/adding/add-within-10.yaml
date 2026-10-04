@@ -3,33 +3,33 @@ order: 2
 concept: add-within-10
 character: owl
 demo:
-  problem: 6 + 3
+  prompt: { big: 6 + 3 }
 guided:
   - id: add10-g1
     type: number-entry
-    problem: 4 + 3
+    prompt: { big: 4 + 3 }
     answer: 7
 exercises:
   - id: add10-01
     type: choice
-    problem: 5 + 3
+    prompt: { big: 5 + 3 }
     options:
-      - { id: a, value: 7 }
-      - { id: b, value: 8 }
-      - { id: c, value: 9 }
+      - { id: a, big: 7 }
+      - { id: b, big: 8 }
+      - { id: c, big: 9 }
     answer: b
   - id: add10-02
     type: number-entry
-    problem: 6 + 2
+    prompt: { big: 6 + 2 }
     answer: 8
   - id: add10-03
     type: number-entry
-    problem: 4 + 5
+    prompt: { big: 4 + 5 }
     answer: 9
   - id: add10-04
     type: choice
-    problem: 7 + 3
+    prompt: { big: 7 + 3 }
     options:
-      - { id: a, value: 9 }
-      - { id: b, value: 10 }
+      - { id: a, big: 9 }
+      - { id: b, big: 10 }
     answer: b

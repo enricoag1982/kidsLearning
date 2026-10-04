@@ -1,10 +1,11 @@
 // Plays a def with its own kind's `solution()` / `wrongAction()`: proves the engine accepts the authored answer end to end.
-import type { MathExerciseDef, MathState } from '../core/types.ts';
+import type { MathExerciseDef } from '../core/types.ts';
 import { kindOf } from '../kinds/index.ts';
-import type { MathAction } from '../kinds/index.ts';
+import type { MathAction, MathState } from '../kinds/index.ts';
 import { solutionOf } from '../kinds/solutions.ts';
 
-function play(
+/** The kind's own `act` folded over `actions`, from `from` (default a fresh state). */
+export function play(
   def: MathExerciseDef,
   actions: readonly MathAction[],
   from: MathState = kindOf(def).init(def),

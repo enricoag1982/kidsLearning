@@ -250,11 +250,11 @@ describe('card true-false', () => {
 });
 
 describe('card number-entry', () => {
-  it('takes an integer answer from 0 to 9999', () => {
-    for (const answer of [0, 9, 12, 100, 9999]) {
+  it('takes an integer answer from 0 to 99 999', () => {
+    for (const answer of [0, 9, 12, 100, 9999, 10000, 99999]) {
       expect(issuesOf(numberEntry({ answer }))).toEqual([]);
     }
-    for (const answer of [-1, 10000, 1.5, '12']) {
+    for (const answer of [-1, 100000, 1.5, '12']) {
       expect(issuesOf(numberEntry({ answer }))).toHaveLength(1);
     }
   });
@@ -262,15 +262,16 @@ describe('card number-entry', () => {
   it('defaults maxDigits to the answer digits, at least 2', () => {
     const maxDigits = (answer: number): number | undefined =>
       (compile(numberEntry({ answer })) as { maxDigits?: number } | null)?.maxDigits;
-    expect([0, 5, 12, 123, 9999].map(maxDigits)).toEqual([2, 2, 2, 3, 4]);
+    expect([0, 5, 12, 123, 9999, 10000, 99999].map(maxDigits)).toEqual([2, 2, 2, 3, 4, 5, 5]);
     expect(
       (compile(numberEntry({ answer: 5, maxDigits: 1 })) as { maxDigits?: number }).maxDigits,
     ).toBe(1);
   });
 
-  it('rejects maxDigits outside 1-4 and an answer that does not fit its maxDigits', () => {
+  it('rejects maxDigits outside 1-5 and an answer that does not fit its maxDigits', () => {
     expect(issuesOf(numberEntry({ maxDigits: 0 }))).toHaveLength(1);
-    expect(issuesOf(numberEntry({ maxDigits: 5 }))).toHaveLength(1);
+    expect(issuesOf(numberEntry({ maxDigits: 5 }))).toEqual([]);
+    expect(issuesOf(numberEntry({ maxDigits: 6 }))).toHaveLength(1);
     expect(issuesOf(numberEntry({ answer: 123, maxDigits: 2 }))).toEqual([
       'where: answer 123 has 3 digits but maxDigits is 2',
     ]);
@@ -323,9 +324,9 @@ describe('card number-entry reasons', () => {
     expect(issuesOf(numberEntry({ answer: 120, ...reasons(350) }))).toEqual([]);
   });
 
-  it('rejects a value outside 0-9999, an empty list, a bad text ref and an unknown field', () => {
+  it('rejects a value outside 0-99 999, an empty list, a bad text ref and an unknown field', () => {
     expect(issuesOf(numberEntry({ reasons: [{ value: -1, text: 'why' }] }))).toHaveLength(1);
-    expect(issuesOf(numberEntry({ reasons: [{ value: 10000, text: 'why' }] }))).toHaveLength(1);
+    expect(issuesOf(numberEntry({ reasons: [{ value: 100000, text: 'why' }] }))).toHaveLength(1);
     expect(issuesOf(numberEntry({ reasons: [] }))).toHaveLength(1);
     expect(issuesOf(numberEntry({ reasons: [{ value: 3, text: 'Not A Ref' }] }))).toHaveLength(1);
     expect(issuesOf(numberEntry({ reasons: [{ value: 3, text: 'why', extra: 1 }] }))).toHaveLength(

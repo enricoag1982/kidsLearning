@@ -85,6 +85,12 @@ describe('number-entry UI', () => {
     expect(output('Your answer: 1').className).not.toContain('line-through');
   });
 
+  it('shows a five-digit entry (answers up to 99 999) whole, in the same strip', async () => {
+    await renderPlayArea({ entry: '10000' }, undefined, { ...def, answer: 10000, maxDigits: 5 });
+    expect(output('Your answer: 10000').textContent).toBe('10000');
+    expect(output('Your answer: 10000').parentElement?.className).toContain('text-5xl');
+  });
+
   it('shows the answer in green and the done block once solved', async () => {
     await renderPlayArea({ entry: '12', solved: true });
     expect(output('Your answer: 12').className).toContain('text-go');

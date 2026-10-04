@@ -14,9 +14,9 @@ export interface NumberEntryReason {
 /** Type the answer on a number pad. */
 export interface NumberEntryDef extends CardDefBase {
   readonly type: 'number-entry';
-  /** A whole number, 0-9999. */
+  /** A whole number, 0-99 999. */
   readonly answer: number;
-  /** Digits the pad accepts (content: at least the answer's own, at most 4). */
+  /** Digits the pad accepts (content: at least the answer's own, at most 5). */
   readonly maxDigits: number;
   /** Wrong values with a spoken reason (instead of the default wrong note). */
   readonly reasons?: readonly NumberEntryReason[];

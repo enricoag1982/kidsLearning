@@ -1,13 +1,14 @@
-// The authored math content: every exercise plays through its own kind, and every text it or the app shell reads exists.
+// The authored math content: every exercise plays through its own kind, every sum is right, and every text it or the app shell reads
+// exists.
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { compileAll } from '@learn/platform-content/compile-all';
 import type { LocaleTree } from '@learn/platform-content/schema';
+import type { CardFeedback } from '@learn/platform-core/domain/exercise/kinds/cards/notes';
 import { exerciseNote } from '@learn/platform-core/domain/notes';
 import type { Resolve } from '@learn/platform-core/domain/notes';
-import { MATH_NOTES } from '../core/notes.ts';
-import type { MathFeedback } from '../core/notes.ts';
+import { MATH_CHARACTERS, mathCore } from '../core/math-core.ts';
 import type { MathContent, MathExerciseDef } from '../core/types.ts';
 import { playSolution, playWrongThenSolve, starsFor } from '../testing/play.ts';
 import { mathContent } from './math-content.ts';
@@ -46,6 +47,15 @@ describe.each(allExercises())('$where ($exercise.type)', ({ exercise }) => {
   });
 });
 
+/** `a + b` / `a - b` as the kid reads it on the card, and its result. */
+function sumOf(big: string | undefined): { readonly text: string; readonly result: number } | null {
+  const match = /^(\d+) ([+-]) (\d+)$/.exec(big ?? '');
+  if (match === null) return null;
+  const a = Number(match[1]);
+  const b = Number(match[3]);
+  return { text: big ?? '', result: match[2] === '+' ? a + b : a - b };
+}
+
 describe('the authored world', () => {
   it('has 3 lessons of 1 guided and 4 exercises, taught by Hedgie then Owl', () => {
     const byOrder = [...content.lessons].sort((a, b) => a.order - b.order);
@@ -65,12 +75,91 @@ describe('the authored world', () => {
     ]);
   });
 
-  it('uses both kinds and both operators', () => {
+  it('keeps every lesson, exercise, round and concept id of the build before the card kit (stored progress keeps matching)', () => {
+    expect(
+      content.lessons.map((lesson) => [
+        lesson.id,
+        lesson.concept,
+        lesson.guided.map((exercise) => exercise.id),
+        lesson.exercises.map((exercise) => exercise.id),
+      ]),
+    ).toEqual([
+      [
+        'add-within-10',
+        'add-within-10',
+        ['add10-g1'],
+        ['add10-01', 'add10-02', 'add10-03', 'add10-04'],
+      ],
+      ['add-within-5', 'add-within-5', ['add5-g1'], ['add5-01', 'add5-02', 'add5-03', 'add5-04']],
+      [
+        'take-away',
+        'take-away',
+        ['takeaway-g1'],
+        ['takeaway-01', 'takeaway-02', 'takeaway-03', 'takeaway-04'],
+      ],
+    ]);
+    expect(
+      content.minigames.map((game) => [
+        game.id,
+        game.concept,
+        game.rounds.map((round) => round.id),
+      ]),
+    ).toEqual([
+      [
+        'number-parade',
+        'add-within-10',
+        [
+          'number-parade-r1',
+          'number-parade-r2',
+          'number-parade-r3',
+          'number-parade-r4',
+          'number-parade-r5',
+          'number-parade-r6',
+        ],
+      ],
+    ]);
+    for (const { where, exercise } of allExercises()) {
+      expect(exercise.textKey, where).toBe(`lessons:${exercise.id}`);
+    }
+    for (const lesson of content.lessons) {
+      expect(lesson.demo.textKey).toBe(`lessons:${lesson.id}.demo`);
+    }
+  });
+
+  it('uses the card kinds choice and number-entry, and both operators', () => {
     const exercises = allExercises().map(({ exercise }) => exercise);
     expect(new Set(exercises.map((exercise) => exercise.type))).toEqual(
       new Set(['choice', 'number-entry']),
     );
-    expect(new Set(exercises.map((exercise) => exercise.problem?.op))).toEqual(new Set(['+', '-']));
+    const operators = exercises.map((exercise) => / ([+-]) /.exec(exercise.prompt?.big ?? '')?.[1]);
+    expect(new Set(operators)).toEqual(new Set(['+', '-']));
+  });
+
+  it('every sum on a card, in an exercise or a demo, is right: the answer is its result, never below zero', () => {
+    for (const { where, exercise } of allExercises()) {
+      const sum = sumOf(exercise.prompt?.big);
+      expect(sum, `${where}: a sum or a difference on the card`).not.toBeNull();
+      if (sum === null) continue;
+      expect(sum.result, `${where}: ${sum.text} is not below zero`).toBeGreaterThanOrEqual(0);
+      if (exercise.type === 'number-entry') {
+        expect(exercise.answer, `${where}: ${sum.text}`).toBe(sum.result);
+      } else if (exercise.type === 'choice') {
+        const matching = exercise.options.filter((option) => option.big === String(sum.result));
+        expect(
+          matching.map((option) => option.id),
+          `${where}: exactly one option is ${String(sum.result)}, and it is the answer`,
+        ).toEqual([exercise.answer]);
+        expect(
+          new Set(exercise.options.map((option) => option.big)).size,
+          `${where}: no two options alike`,
+        ).toBe(exercise.options.length);
+      }
+    }
+    for (const lesson of content.lessons) {
+      const sum = sumOf(lesson.demo.prompt?.big);
+      expect(sum, `${lesson.id} demo: a sum or a difference on the card`).not.toBeNull();
+      expect(sum?.result ?? -1, `${lesson.id} demo`).toBeGreaterThanOrEqual(0);
+    }
   });
 
   it('ends with the Number Parade world boss: 6 rounds, 3 stars up to 0 mistakes, 2 up to 2', () => {
@@ -142,30 +231,37 @@ describe('texts', () => {
     );
   });
 
-  it('the number pad, the topic and every character resolve', () => {
-    expect(resolve('math.pad-label')).toBe('Number pad');
-    expect(resolve('math.erase')).toBe('Delete');
-    expect(resolve('math.entry-label', { value: 7 })).toBe('Your answer: 7');
+  it('the number pad (the card kit’s), the topic and every character resolve', () => {
+    expect(resolve('cards.pad-label')).toBe('Number pad');
+    expect(resolve('cards.erase')).toBe('Delete');
+    expect(resolve('cards.entry-label', { value: 7 })).toBe('Your answer: 7');
     expect(resolve('topic.counter')).toBe('Counter');
     for (const lesson of content.lessons) {
       expect(resolve(`characters:${lesson.character}.name`)).not.toBe('');
     }
+    for (const character of Object.keys(MATH_CHARACTERS)) {
+      expect(resolve(`characters:${character}.name`), character).not.toBe('');
+    }
+  });
+
+  it('keeps no text of the retired problem card in the English bundle', () => {
+    const common = locales.en?.common as Record<string, unknown> | undefined;
+    expect(common?.math).toBeUndefined();
+    expect(
+      (common?.exercise as Record<string, unknown> | undefined)?.['hint-look'],
+    ).toBeUndefined();
   });
 
   it('every note the Owl bubble can say resolves, with no placeholder left', () => {
-    const problem = { a: 3, op: '+', b: 2 } as const;
-    const feedback: readonly MathFeedback[] = [
+    const feedback: readonly CardFeedback[] = [
       { kind: 'wrong-answer' },
+      { kind: 'number-wrong' },
+      { kind: 'order-wrong' },
       { kind: 'solved' },
       { kind: 'hint', hint: { kind: 'choice', level: 1, reveal: false } },
       { kind: 'hint', hint: { kind: 'choice', level: 3, reveal: true } },
       { kind: 'hint', hint: { kind: 'number-entry', level: 1, reveal: false } },
-      { kind: 'hint', hint: { kind: 'number-entry', level: 2, reveal: false } },
-      { kind: 'hint', hint: { kind: 'number-entry', level: 2, reveal: false, problem } },
-      {
-        kind: 'hint',
-        hint: { kind: 'number-entry', level: 2, reveal: false, problem: { ...problem, op: '-' } },
-      },
+      { kind: 'hint', hint: { kind: 'number-entry', level: 2, reveal: false, digit: '4' } },
       { kind: 'hint', hint: { kind: 'number-entry', level: 3, reveal: true } },
     ];
     for (const stars of [1, 2, 3] as const) {
@@ -175,12 +271,49 @@ describe('texts', () => {
             resolve,
             entry,
             { name: 'Owl', stars, vars: {} },
-            MATH_NOTES,
+            mathCore.notes,
             offer,
           );
           expect(note?.text, JSON.stringify(entry)).toMatch(/^[^{]+$/);
         }
       }
     }
+  });
+});
+
+describe('the voice inventory covers every note', () => {
+  const voice = compiled.voiceTexts.entries;
+  const notes = (source: string): string[] =>
+    voice.filter((entry) => entry.source === source).map((entry) => entry.text);
+
+  it('has the card notes of the two kinds the world uses: wrong, hints by level, the 1-3 star praise', () => {
+    const plain = notes('exercise-note');
+    for (const text of [
+      'Not quite! Try again.',
+      'Not that number. Try again!',
+      'One choice is ruled out.',
+      'Here is the answer.',
+      'Look closely.',
+      'It starts with 7.',
+      'Amazing!',
+      'Well done!',
+      'Good try!',
+    ]) {
+      expect(plain, text).toContain(text);
+    }
+    expect(plain.filter((text) => /^It starts with \d\.$/.test(text))).toHaveLength(10);
+  });
+
+  it('has the wrong notes joined with the easier offer', () => {
+    expect(notes('exercise-note-easier-offer')).toEqual(
+      expect.arrayContaining([
+        'Not quite! Try again. This one is tricky. Want an easier one?',
+        'Not that number. Try again! This one is tricky. Want an easier one?',
+      ]),
+    );
+  });
+
+  it('has no note of a kind the world does not use (order)', () => {
+    expect(notes('exercise-note')).not.toContain('Not that one. Try another!');
   });
 });
