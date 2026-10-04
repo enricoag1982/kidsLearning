@@ -103,8 +103,8 @@ describe('the coding e2e drivers', () => {
 });
 
 describe('the coding e2e drivers on the shipped content', () => {
-  it('cover every exercise: 8 lessons, Bug Squash and Fence Builder, of all five kinds the content uses', () => {
-    expect(SHIPPED).toHaveLength(79);
+  it('cover every exercise: 13 lessons and the three bosses, of all five kinds the content uses', () => {
+    expect(SHIPPED).toHaveLength(127);
     expect([...new Set(SHIPPED.map((def) => def.type))].sort()).toEqual([
       'choice',
       'find-bug',

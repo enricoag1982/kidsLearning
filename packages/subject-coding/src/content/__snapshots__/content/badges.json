@@ -50,5 +50,18 @@
    ],
    "scope": "world:looping-hills"
   }
+ },
+ {
+  "id": "woods-ranger",
+  "category": "milestone",
+  "nameKey": "rewards:badges.woods-ranger.name",
+  "conditionKey": "rewards:badges.woods-ranger.condition",
+  "condition": {
+   "type": "mastered",
+   "thresholds": [
+    1
+   ],
+   "scope": "world:turning-woods"
+  }
  }
 ]

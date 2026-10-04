@@ -31,15 +31,22 @@ describe('codingEntry.load', () => {
       'seq-collect',
       'seq-debug',
       'seq-order',
+      'turn-build',
+      'turn-debug',
+      'turn-facing',
+      'turn-jump',
+      'turn-loop',
     ]);
     expect(content.minigame('bug-squash')?.id).toBe('bug-squash');
     expect(content.minigame('fence-builder')?.id).toBe('fence-builder');
+    expect(content.minigame('left-right-rescue')?.id).toBe('left-right-rescue');
     expect(content.catalog?.().tracks.map((track) => track.id)).toEqual(['basics']);
     expect(content.badges?.().map((badge) => badge.id)).toEqual([
       'first-program',
       'bug-squasher',
       'meadow-walker',
       'hill-climber',
+      'woods-ranger',
     ]);
   });
 });

@@ -20,6 +20,11 @@
   "source": "exercise-note-easier-offer"
  },
  {
+  "key": "02570d7a4c967ada",
+  "text": "Turn left instead of turn right? Fox goes the wrong way. Swap the tile and Fox is fine!",
+  "source": "lesson-demo"
+ },
+ {
   "key": "045b54b9e6a6e5b6",
   "text": "Oops, bumped into a rock at step 3!",
   "source": "exercise-note"
@@ -80,6 +85,11 @@
   "source": "exercise-note"
  },
  {
+  "key": "10141d74ed99846e",
+  "text": "Owl says: now Fox walks like you do. Forward goes the way Fox faces. Turn left or turn right to face a new way!",
+  "source": "lesson-story"
+ },
+ {
   "key": "11e5b42b624740df",
   "text": "Oops, bumped into a rock at step 19! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
@@ -130,6 +140,11 @@
   "source": "exercise-note"
  },
  {
+  "key": "1c4ea56b75823e53",
+  "text": "Woods Ranger. Master Turning Woods and beat Left-Right Rescue",
+  "source": "badge-locked"
+ },
+ {
   "key": "1e4c922a1f0c3a8f",
   "text": "Oops, bumped into a rock at step 28!",
   "source": "exercise-note"
@@ -153,6 +168,11 @@
   "key": "223108cbdb75ae68",
   "text": "Oops, bumped into a rock at step 16!",
   "source": "exercise-note"
+ },
+ {
+  "key": "22700985b0128fcf",
+  "text": "Fox faces left. Turn right. Which way now?",
+  "source": "lesson-variant"
  },
  {
   "key": "238f5d3d5148d8d8",
@@ -205,6 +225,11 @@
   "source": "home"
  },
  {
+  "key": "2a191415f1c8d5eb",
+  "text": "Swap the wrong tile for the right one, then Run.",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "2ce6385b4392af8a",
   "text": "Oops, Fox hit the edge at step 12!",
   "source": "exercise-note"
@@ -238,6 +263,11 @@
   "key": "31add6db4ff8aab9",
   "text": "Oops, Fox hit the edge at step 21! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "32b5867a93056deb",
+  "text": "Owl says: a wall of rocks blocks the way! Jump goes two squares in one move, over one rock. Fox lands on the second square.",
+  "source": "lesson-story"
  },
  {
   "key": "32bede7309326c9e",
@@ -278,6 +308,11 @@
   "key": "349c873c4932454f",
   "text": "Oops, Fox hit the edge at step 32!",
   "source": "exercise-note"
+ },
+ {
+  "key": "35093d20ac4907e6",
+  "text": "Fox faces up. Turn right, and Fox faces right. Turn right again, and Fox faces down.",
+  "source": "lesson-demo"
  },
  {
   "key": "353e3940c7f89655",
@@ -355,14 +390,34 @@
   "source": "lesson-demo"
  },
  {
+  "key": "3e33cd13dcec1752",
+  "text": "Owl says: left and right can get mixed up! Watch Fox, find the tile that sends Fox the wrong way and fix it. A turn where Fox should walk is a bug too.",
+  "source": "lesson-story"
+ },
+ {
+  "key": "3e75c03030a302e9",
+  "text": "Fox faces up. Forward, forward, turn right, forward. Up, up, then right!",
+  "source": "lesson-demo"
+ },
+ {
   "key": "3edd48c01b9218b7",
   "text": "Collect the stars, then go to the flag.",
-  "source": "lesson-exercise"
+  "source": "minigame-round"
  },
  {
   "key": "3f2433d8271df047",
   "text": "Oops, bumped into a rock at step 34!",
   "source": "exercise-note"
+ },
+ {
+  "key": "3f79386ec55bd7de",
+  "text": "Owl says: a turn spins Fox around on the spot. Fox keeps facing that way until the next turn. Left and right are Fox's own left and right — look where Fox is facing!",
+  "source": "lesson-story"
+ },
+ {
+  "key": "4413e7b368d0b549",
+  "text": "You earned the Woods Ranger badge!",
+  "source": "celebration"
  },
  {
   "key": "44ee1e157e7f833d",
@@ -430,6 +485,11 @@
   "source": "exercise-note"
  },
  {
+  "key": "4f72752fcefdf4ea",
+  "text": "Owl says: Repeat works with turns too! Repeat forward and turn right, and Fox walks round in a square. Count the sides, and that is the number!",
+  "source": "lesson-story"
+ },
+ {
   "key": "509a32873c477317",
   "text": "Oops, bumped into a rock at step 25! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
@@ -438,6 +498,11 @@
   "key": "50f9bc1291ffea46",
   "text": "Oops, Fox hit the edge at step 6!",
   "source": "exercise-note"
+ },
+ {
+  "key": "536d38c65241c503",
+  "text": "Jump goes two squares. Fox flies over the rock and does not touch it!",
+  "source": "lesson-demo"
  },
  {
   "key": "53da3f0dc853dd43",
@@ -590,6 +655,11 @@
   "source": "exercise-note"
  },
  {
+  "key": "74009a417fe5c2d6",
+  "text": "Help Fox reach the flag. Jump over the rocks!",
+  "source": "lesson-guided"
+ },
+ {
   "key": "740848739cf3c789",
   "text": "Oops, bumped into a rock at step 23!",
   "source": "exercise-note"
@@ -620,6 +690,11 @@
   "source": "home"
  },
  {
+  "key": "77f918f9e4d823e2",
+  "text": "Woods Ranger",
+  "source": "badge-earned"
+ },
+ {
   "key": "7857c7a4611f15b7",
   "text": "Oops, bumped into a rock at step 9!",
   "source": "exercise-note"
@@ -645,6 +720,11 @@
   "source": "exercise-note"
  },
  {
+  "key": "7d7e389392827562",
+  "text": "Help Fox reach the flag. Tap the tiles, then press Run.",
+  "source": "lesson-guided"
+ },
+ {
   "key": "7da980de58570647",
   "text": "Oops, bumped into a rock at step 16! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
@@ -653,6 +733,11 @@
   "key": "7ec18b2ca2df890f",
   "text": "Oops, Fox hit the edge at step 36! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "810d690e9d139c3a",
+  "text": "You already know Turning Woods — 5 lessons are yours!",
+  "source": "assessment"
  },
  {
   "key": "82c4e72ef1f31d16",
@@ -683,6 +768,11 @@
   "key": "86c9a762229ce4a2",
   "text": "Oops, bumped into a rock at step 15! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "892a7812d3db37ae",
+  "text": "Fox's left and right! Collect every star, then reach the flag. How few mistakes can you make?",
+  "source": "minigame-goal"
  },
  {
   "key": "89791e892d32275d",
@@ -783,6 +873,16 @@
   "key": "984259059c49bc19",
   "text": "Oops, Fox hit the edge at step 33! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "99a1065695f06232",
+  "text": "Fox faces up. Turn right. Which way now?",
+  "source": "lesson-guided"
+ },
+ {
+  "key": "99d2c29accab400b",
+  "text": "Fox faces right. Turn left. Which way now?",
+  "source": "lesson-exercise"
  },
  {
   "key": "9a68cb524c36a1ad",
@@ -902,7 +1002,7 @@
  {
   "key": "b4f689af7043261c",
   "text": "Collect the stars, then go to the flag. Use Repeat!",
-  "source": "lesson-exercise"
+  "source": "lesson-variant"
  },
  {
   "key": "b57430425213f563",
@@ -935,6 +1035,11 @@
   "source": "exercise-note"
  },
  {
+  "key": "bacf363824380601",
+  "text": "Fox faces left. Turn right, turn left, turn left. Which way now?",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "bb337d48908fc8fa",
   "text": "Oops, bumped into a rock at step 29!",
   "source": "exercise-note"
@@ -948,6 +1053,11 @@
   "key": "be96f81d5e60d899",
   "text": "Good try!",
   "source": "exercise-note"
+ },
+ {
+  "key": "bf0089accd279fc0",
+  "text": "Forward, turn right, again and again. Fox draws a square!",
+  "source": "lesson-demo"
  },
  {
   "key": "bfcfe9bc562f0760",
@@ -1045,6 +1155,11 @@
   "source": "exercise-note"
  },
  {
+  "key": "d2a66dff9e8a48c1",
+  "text": "Fox faces down. Turn right, turn right, turn right. Which way now?",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "d346145c8ecd851a",
   "text": "Use Repeat to collect the stars and reach the flag.",
   "source": "minigame-round"
@@ -1132,7 +1247,7 @@
  {
   "key": "e241cdc894a86d9a",
   "text": "Collect the star, then go to the flag.",
-  "source": "lesson-variant"
+  "source": "minigame-round"
  },
  {
   "key": "e4590f27fcc03ecf",
@@ -1215,6 +1330,11 @@
   "source": "celebration"
  },
  {
+  "key": "f4093c870d31004d",
+  "text": "Fox faces up. Turn right, turn right. Which way now?",
+  "source": "lesson-guided"
+ },
+ {
   "key": "f40ec9ec257f37d3",
   "text": "Oops, Fox hit the edge at step 29!",
   "source": "exercise-note"
@@ -1243,6 +1363,11 @@
   "key": "f919647fa9466dc9",
   "text": "Oops, Fox hit the edge at step 24!",
   "source": "exercise-note"
+ },
+ {
+  "key": "fae58fd0ffa55e54",
+  "text": "World boss time: Left-Right Rescue!",
+  "source": "home"
  },
  {
   "key": "faf2fc7e5d1fcbba",

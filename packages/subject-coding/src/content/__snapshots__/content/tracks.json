@@ -26,7 +26,8 @@
      "track": "basics",
      "order": 3,
      "habitat": "forest",
-     "titleKey": "journey:worlds.turning-woods"
+     "titleKey": "journey:worlds.turning-woods",
+     "boss": "left-right-rescue"
     }
    ]
   }
@@ -43,6 +44,10 @@
   {
    "id": "looper",
    "after": "world:looping-hills"
+  },
+  {
+   "id": "turner",
+   "after": "world:turning-woods"
   }
  ]
 }

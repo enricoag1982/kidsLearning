@@ -3461,6 +3461,2238 @@
      ]
     }
    ]
+  },
+  {
+   "id": "turn-build",
+   "world": "turning-woods",
+   "order": 2,
+   "concept": "turn-build",
+   "character": "fox",
+   "titleKey": "lessons:turn-build.title",
+   "storyKey": "lessons:turn-build.story",
+   "demo": {
+    "textKey": "lessons:turn-build.demo",
+    "prompt": {
+     "emoji": "🦊",
+     "big": "↑ ↑ → →"
+    }
+   },
+   "guided": [
+    {
+     "id": "build-g1",
+     "concept": "turn-build",
+     "textKey": "lessons:ask-turn-guided",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 0,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right"
+     ],
+     "cap": 5,
+     "solution": [
+      {
+       "kind": "turn-right"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ]
+    },
+    {
+     "id": "build-g2",
+     "concept": "turn-build",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 2,
+       "y": 0
+      },
+      "start": {
+       "x": 0,
+       "y": 2
+      },
+      "heading": "up"
+     },
+     "program": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-right"
+      },
+      {
+       "kind": "forward"
+      }
+     ],
+     "answer": {
+      "x": 1,
+      "y": 0
+     }
+    }
+   ],
+   "exercises": [
+    {
+     "id": "build-01",
+     "concept": "turn-build",
+     "textKey": "lessons:ask-reach",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 0,
+       "y": 1
+      },
+      "start": {
+       "x": 2,
+       "y": 2
+      },
+      "heading": "up"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right"
+     ],
+     "cap": 6,
+     "solution": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-left"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ]
+    },
+    {
+     "id": "build-02",
+     "concept": "turn-build",
+     "textKey": "lessons:ask-reach",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 0,
+       "y": 2
+      },
+      "start": {
+       "x": 2,
+       "y": 0
+      },
+      "heading": "left"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right"
+     ],
+     "cap": 7,
+     "solution": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-left"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ]
+    },
+    {
+     "id": "build-03",
+     "concept": "turn-build",
+     "textKey": "lessons:ask-reach",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 2,
+       "y": 3
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "down"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right"
+     ],
+     "cap": 8,
+     "solution": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-left"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ]
+    },
+    {
+     "id": "build-04",
+     "concept": "turn-build",
+     "textKey": "lessons:ask-reach",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 3
+      },
+      "rocks": [
+       {
+        "x": 2,
+        "y": 0
+       },
+       {
+        "x": 2,
+        "y": 1
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 3,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right"
+     ],
+     "cap": 9,
+     "solution": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-right"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-left"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ],
+     "easier": "build-e1"
+    },
+    {
+     "id": "build-05",
+     "concept": "turn-build",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 0,
+       "y": 1
+      },
+      "start": {
+       "x": 2,
+       "y": 2
+      },
+      "heading": "up"
+     },
+     "program": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-left"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ],
+     "answer": {
+      "x": 0,
+      "y": 1
+     }
+    },
+    {
+     "id": "build-06",
+     "concept": "turn-build",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 0,
+       "y": 0
+      },
+      "start": {
+       "x": 3,
+       "y": 3
+      },
+      "heading": "left"
+     },
+     "program": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-right"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ],
+     "answer": {
+      "x": 1,
+      "y": 1
+     }
+    }
+   ],
+   "variants": [
+    {
+     "id": "build-e1",
+     "concept": "turn-build",
+     "textKey": "lessons:ask-reach",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 1,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right"
+     ],
+     "cap": 6,
+     "solution": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-right"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "turn-debug",
+   "world": "turning-woods",
+   "order": 5,
+   "concept": "turn-debug",
+   "character": "fox",
+   "titleKey": "lessons:turn-debug.title",
+   "storyKey": "lessons:turn-debug.story",
+   "demo": {
+    "textKey": "lessons:turn-debug.demo",
+    "prompt": {
+     "emoji": "🐞"
+    }
+   },
+   "guided": [
+    {
+     "id": "tbug-g1",
+     "concept": "turn-debug",
+     "textKey": "lessons:ask-bug-tile-guided",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 2,
+       "y": 0
+      },
+      "start": {
+       "x": 0,
+       "y": 2
+      },
+      "heading": "up"
+     },
+     "program": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-left"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ],
+     "bug": [
+      2
+     ],
+     "fix": {
+      "kind": "turn-right"
+     }
+    },
+    {
+     "id": "tbug-g2",
+     "concept": "turn-debug",
+     "textKey": "lessons:ask-bug-tile-guided",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 2,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ],
+     "bug": [
+      2
+     ],
+     "fix": {
+      "kind": "turn-right"
+     }
+    }
+   ],
+   "exercises": [
+    {
+     "id": "tbug-01",
+     "concept": "turn-debug",
+     "textKey": "lessons:ask-bug-tile",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 3,
+       "y": 1
+      },
+      "start": {
+       "x": 0,
+       "y": 3
+      },
+      "heading": "up"
+     },
+     "program": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-left"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ],
+     "bug": [
+      2
+     ],
+     "fix": {
+      "kind": "turn-right"
+     }
+    },
+    {
+     "id": "tbug-02",
+     "concept": "turn-debug",
+     "textKey": "lessons:ask-bug-tile",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 3,
+       "y": 3
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "down"
+     },
+     "program": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-right"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ],
+     "bug": [
+      3
+     ],
+     "fix": {
+      "kind": "turn-left"
+     }
+    },
+    {
+     "id": "tbug-03",
+     "concept": "turn-debug",
+     "textKey": "lessons:ask-bug-tile",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 2,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-right"
+      },
+      {
+       "kind": "turn-left"
+      },
+      {
+       "kind": "forward"
+      }
+     ],
+     "bug": [
+      3
+     ],
+     "fix": {
+      "kind": "forward"
+     }
+    },
+    {
+     "id": "tbug-04",
+     "concept": "turn-debug",
+     "textKey": "lessons:ask-bug-tile",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 3
+      },
+      "rocks": [
+       {
+        "x": 2,
+        "y": 0
+       },
+       {
+        "x": 2,
+        "y": 1
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 3,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-right"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-right"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ],
+     "bug": [
+      4
+     ],
+     "fix": {
+      "kind": "turn-left"
+     },
+     "easier": "tbug-e1"
+    },
+    {
+     "id": "tbug-05",
+     "concept": "turn-debug",
+     "textKey": "lessons:ask-fix-tile",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 0,
+       "y": 2
+      },
+      "start": {
+       "x": 2,
+       "y": 0
+      },
+      "heading": "left"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right"
+     ],
+     "cap": 5,
+     "solution": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-left"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ],
+     "prefilled": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-right"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ],
+     "locked": [
+      0,
+      1,
+      3,
+      4
+     ]
+    },
+    {
+     "id": "tbug-06",
+     "concept": "turn-debug",
+     "textKey": "lessons:ask-fix-tile",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 2,
+       "y": 3
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "down"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right"
+     ],
+     "cap": 6,
+     "solution": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-left"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ],
+     "prefilled": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-right"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ],
+     "locked": [
+      0,
+      1,
+      2,
+      4,
+      5
+     ]
+    }
+   ],
+   "variants": [
+    {
+     "id": "tbug-e1",
+     "concept": "turn-debug",
+     "textKey": "lessons:ask-bug-tile",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 0,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "turn-left"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ],
+     "bug": [
+      0
+     ],
+     "fix": {
+      "kind": "turn-right"
+     }
+    }
+   ]
+  },
+  {
+   "id": "turn-facing",
+   "world": "turning-woods",
+   "order": 1,
+   "concept": "turn-facing",
+   "character": "fox",
+   "titleKey": "lessons:turn-facing.title",
+   "storyKey": "lessons:turn-facing.story",
+   "demo": {
+    "textKey": "lessons:turn-facing.demo",
+    "prompt": {
+     "emoji": "🦊",
+     "big": "↑ → ↓"
+    }
+   },
+   "guided": [
+    {
+     "id": "facing-g1",
+     "concept": "turn-facing",
+     "textKey": "lessons:ask-facing-g1",
+     "prompt": {
+      "emoji": "🦊",
+      "big": "↑"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "up",
+       "big": "↑"
+      },
+      {
+       "id": "right",
+       "big": "→"
+      },
+      {
+       "id": "down",
+       "big": "↓"
+      },
+      {
+       "id": "left",
+       "big": "←"
+      }
+     ],
+     "answer": "right"
+    },
+    {
+     "id": "facing-g2",
+     "concept": "turn-facing",
+     "textKey": "lessons:ask-facing-g2",
+     "prompt": {
+      "emoji": "🦊",
+      "big": "↑"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "up",
+       "big": "↑"
+      },
+      {
+       "id": "right",
+       "big": "→"
+      },
+      {
+       "id": "down",
+       "big": "↓"
+      },
+      {
+       "id": "left",
+       "big": "←"
+      }
+     ],
+     "answer": "down"
+    }
+   ],
+   "exercises": [
+    {
+     "id": "facing-01",
+     "concept": "turn-facing",
+     "textKey": "lessons:ask-facing-01",
+     "prompt": {
+      "emoji": "🦊",
+      "big": "→"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "up",
+       "big": "↑"
+      },
+      {
+       "id": "right",
+       "big": "→"
+      },
+      {
+       "id": "down",
+       "big": "↓"
+      },
+      {
+       "id": "left",
+       "big": "←"
+      }
+     ],
+     "answer": "up"
+    },
+    {
+     "id": "facing-02",
+     "concept": "turn-facing",
+     "textKey": "lessons:ask-facing-02",
+     "prompt": {
+      "emoji": "🦊",
+      "big": "↓"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "up",
+       "big": "↑"
+      },
+      {
+       "id": "right",
+       "big": "→"
+      },
+      {
+       "id": "down",
+       "big": "↓"
+      },
+      {
+       "id": "left",
+       "big": "←"
+      }
+     ],
+     "answer": "right"
+    },
+    {
+     "id": "facing-03",
+     "concept": "turn-facing",
+     "textKey": "lessons:ask-facing-03",
+     "prompt": {
+      "emoji": "🦊",
+      "big": "←"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "up",
+       "big": "↑"
+      },
+      {
+       "id": "right",
+       "big": "→"
+      },
+      {
+       "id": "down",
+       "big": "↓"
+      },
+      {
+       "id": "left",
+       "big": "←"
+      }
+     ],
+     "answer": "down",
+     "easier": "facing-e1"
+    },
+    {
+     "id": "facing-04",
+     "concept": "turn-facing",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 0,
+       "y": 1
+      },
+      "start": {
+       "x": 2,
+       "y": 2
+      },
+      "heading": "up"
+     },
+     "program": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-left"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ],
+     "answer": {
+      "x": 0,
+      "y": 1
+     }
+    },
+    {
+     "id": "facing-05",
+     "concept": "turn-facing",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 0,
+       "y": 0
+      },
+      "start": {
+       "x": 3,
+       "y": 3
+      },
+      "heading": "left"
+     },
+     "program": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-right"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ],
+     "answer": {
+      "x": 1,
+      "y": 1
+     }
+    }
+   ],
+   "variants": [
+    {
+     "id": "facing-e1",
+     "concept": "turn-facing",
+     "textKey": "lessons:ask-facing-e1",
+     "prompt": {
+      "emoji": "🦊",
+      "big": "←"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "up",
+       "big": "↑"
+      },
+      {
+       "id": "right",
+       "big": "→"
+      },
+      {
+       "id": "down",
+       "big": "↓"
+      },
+      {
+       "id": "left",
+       "big": "←"
+      }
+     ],
+     "answer": "up"
+    }
+   ]
+  },
+  {
+   "id": "turn-jump",
+   "world": "turning-woods",
+   "order": 4,
+   "concept": "turn-jump",
+   "character": "fox",
+   "titleKey": "lessons:turn-jump.title",
+   "storyKey": "lessons:turn-jump.story",
+   "demo": {
+    "textKey": "lessons:turn-jump.demo",
+    "prompt": {
+     "emoji": "🦊⬛🚩"
+    }
+   },
+   "guided": [
+    {
+     "id": "jump-g1",
+     "concept": "turn-jump",
+     "textKey": "lessons:ask-jump-guided",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 3
+      },
+      "rocks": [
+       {
+        "x": 2,
+        "y": 0
+       },
+       {
+        "x": 2,
+        "y": 1
+       },
+       {
+        "x": 2,
+        "y": 2
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 4,
+       "y": 1
+      },
+      "start": {
+       "x": 0,
+       "y": 1
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right",
+      "jump"
+     ],
+     "cap": 5,
+     "solution": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "jump"
+      },
+      {
+       "kind": "forward"
+      }
+     ]
+    },
+    {
+     "id": "jump-g2",
+     "concept": "turn-jump",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 3
+      },
+      "rocks": [
+       {
+        "x": 2,
+        "y": 1
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 4,
+       "y": 1
+      },
+      "start": {
+       "x": 0,
+       "y": 1
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "jump"
+      }
+     ],
+     "answer": {
+      "x": 3,
+      "y": 1
+     }
+    }
+   ],
+   "exercises": [
+    {
+     "id": "jump-01",
+     "concept": "turn-jump",
+     "textKey": "lessons:ask-reach",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 4
+      },
+      "rocks": [
+       {
+        "x": 0,
+        "y": 2
+       },
+       {
+        "x": 1,
+        "y": 2
+       },
+       {
+        "x": 2,
+        "y": 2
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 1,
+       "y": 3
+      },
+      "start": {
+       "x": 1,
+       "y": 0
+      },
+      "heading": "down"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right",
+      "jump"
+     ],
+     "cap": 4,
+     "solution": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "jump"
+      }
+     ]
+    },
+    {
+     "id": "jump-02",
+     "concept": "turn-jump",
+     "textKey": "lessons:ask-reach",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 3
+      },
+      "rocks": [
+       {
+        "x": 0,
+        "y": 1
+       },
+       {
+        "x": 1,
+        "y": 1
+       },
+       {
+        "x": 2,
+        "y": 1
+       },
+       {
+        "x": 3,
+        "y": 1
+       },
+       {
+        "x": 4,
+        "y": 1
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 4,
+       "y": 0
+      },
+      "start": {
+       "x": 0,
+       "y": 2
+      },
+      "heading": "up"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right",
+      "jump"
+     ],
+     "cap": 6,
+     "solution": [
+      {
+       "kind": "jump"
+      },
+      {
+       "kind": "turn-right"
+      },
+      {
+       "kind": "jump"
+      },
+      {
+       "kind": "jump"
+      }
+     ]
+    },
+    {
+     "id": "jump-03",
+     "concept": "turn-jump",
+     "textKey": "lessons:ask-reach",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 4
+      },
+      "rocks": [
+       {
+        "x": 2,
+        "y": 0
+       },
+       {
+        "x": 2,
+        "y": 1
+       },
+       {
+        "x": 2,
+        "y": 2
+       },
+       {
+        "x": 2,
+        "y": 3
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 1,
+       "y": 3
+      },
+      "start": {
+       "x": 3,
+       "y": 0
+      },
+      "heading": "left"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right",
+      "jump"
+     ],
+     "cap": 6,
+     "solution": [
+      {
+       "kind": "jump"
+      },
+      {
+       "kind": "turn-left"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "jump"
+      }
+     ]
+    },
+    {
+     "id": "jump-04",
+     "concept": "turn-jump",
+     "textKey": "lessons:ask-reach",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 5
+      },
+      "rocks": [
+       {
+        "x": 2,
+        "y": 0
+       },
+       {
+        "x": 2,
+        "y": 1
+       },
+       {
+        "x": 2,
+        "y": 2
+       },
+       {
+        "x": 2,
+        "y": 3
+       },
+       {
+        "x": 3,
+        "y": 3
+       },
+       {
+        "x": 4,
+        "y": 3
+       },
+       {
+        "x": 2,
+        "y": 4
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 4,
+       "y": 4
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right",
+      "jump"
+     ],
+     "cap": 8,
+     "solution": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "jump"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-right"
+      },
+      {
+       "kind": "jump"
+      },
+      {
+       "kind": "jump"
+      }
+     ],
+     "easier": "jump-e1"
+    },
+    {
+     "id": "jump-05",
+     "concept": "turn-jump",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 3
+      },
+      "rocks": [
+       {
+        "x": 2,
+        "y": 1
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 4,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 1
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "jump"
+      },
+      {
+       "kind": "forward"
+      }
+     ],
+     "answer": {
+      "x": 4,
+      "y": 1
+     }
+    },
+    {
+     "id": "jump-06",
+     "concept": "turn-jump",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 1,
+        "y": 1
+       }
+      ],
+      "goal": {
+       "x": 4,
+       "y": 1
+      },
+      "start": {
+       "x": 0,
+       "y": 1
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "jump"
+      },
+      {
+       "kind": "forward"
+      }
+     ],
+     "answer": {
+      "x": 3,
+      "y": 1
+     }
+    }
+   ],
+   "variants": [
+    {
+     "id": "jump-e1",
+     "concept": "turn-jump",
+     "textKey": "lessons:ask-reach",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 3
+      },
+      "rocks": [
+       {
+        "x": 2,
+        "y": 0
+       },
+       {
+        "x": 2,
+        "y": 1
+       },
+       {
+        "x": 2,
+        "y": 2
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 3,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 1
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right",
+      "jump"
+     ],
+     "cap": 6,
+     "solution": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "jump"
+      },
+      {
+       "kind": "turn-right"
+      },
+      {
+       "kind": "forward"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "turn-loop",
+   "world": "turning-woods",
+   "order": 3,
+   "concept": "turn-loop",
+   "character": "fox",
+   "titleKey": "lessons:turn-loop.title",
+   "storyKey": "lessons:turn-loop.story",
+   "demo": {
+    "textKey": "lessons:turn-loop.demo",
+    "prompt": {
+     "emoji": "🦊",
+     "big": "→ ↓ ← ↑"
+    }
+   },
+   "guided": [
+    {
+     "id": "tloop-g1",
+     "concept": "turn-loop",
+     "textKey": "lessons:ask-stars-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 1,
+        "y": 0
+       },
+       {
+        "x": 1,
+        "y": 1
+       }
+      ],
+      "goal": {
+       "x": 0,
+       "y": 1
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right",
+      "repeat"
+     ],
+     "cap": 3,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 3,
+       "body": [
+        {
+         "kind": "forward"
+        },
+        {
+         "kind": "turn-right"
+        }
+       ]
+      }
+     ],
+     "mustLoop": true
+    },
+    {
+     "id": "tloop-g2",
+     "concept": "turn-loop",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 2,
+       "y": 1
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "repeat",
+       "times": 2,
+       "body": [
+        {
+         "kind": "forward"
+        },
+        {
+         "kind": "turn-right"
+        }
+       ]
+      }
+     ],
+     "answer": {
+      "x": 1,
+      "y": 1
+     }
+    }
+   ],
+   "exercises": [
+    {
+     "id": "tloop-01",
+     "concept": "turn-loop",
+     "textKey": "lessons:ask-stars-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 2,
+        "y": 0
+       },
+       {
+        "x": 2,
+        "y": 2
+       }
+      ],
+      "goal": {
+       "x": 0,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right",
+      "repeat"
+     ],
+     "cap": 4,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 3,
+       "body": [
+        {
+         "kind": "forward"
+        },
+        {
+         "kind": "forward"
+        },
+        {
+         "kind": "turn-right"
+        }
+       ]
+      }
+     ],
+     "mustLoop": true
+    },
+    {
+     "id": "tloop-02",
+     "concept": "turn-loop",
+     "textKey": "lessons:ask-stars-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 1,
+        "y": 1
+       },
+       {
+        "x": 2,
+        "y": 2
+       }
+      ],
+      "goal": {
+       "x": 3,
+       "y": 3
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right",
+      "repeat"
+     ],
+     "cap": 5,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 3,
+       "body": [
+        {
+         "kind": "forward"
+        },
+        {
+         "kind": "turn-right"
+        },
+        {
+         "kind": "forward"
+        },
+        {
+         "kind": "turn-left"
+        }
+       ]
+      }
+     ],
+     "mustLoop": true
+    },
+    {
+     "id": "tloop-03",
+     "concept": "turn-loop",
+     "textKey": "lessons:ask-stars-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 3,
+        "y": 0
+       },
+       {
+        "x": 3,
+        "y": 3
+       }
+      ],
+      "goal": {
+       "x": 0,
+       "y": 3
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right",
+      "repeat"
+     ],
+     "cap": 5,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 3,
+       "body": [
+        {
+         "kind": "forward"
+        },
+        {
+         "kind": "forward"
+        },
+        {
+         "kind": "forward"
+        },
+        {
+         "kind": "turn-right"
+        }
+       ]
+      }
+     ],
+     "mustLoop": true
+    },
+    {
+     "id": "tloop-04",
+     "concept": "turn-loop",
+     "textKey": "lessons:ask-stars-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 0,
+        "y": 0
+       },
+       {
+        "x": 3,
+        "y": 0
+       }
+      ],
+      "goal": {
+       "x": 0,
+       "y": 3
+      },
+      "start": {
+       "x": 3,
+       "y": 3
+      },
+      "heading": "up"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right",
+      "repeat"
+     ],
+     "cap": 5,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 3,
+       "body": [
+        {
+         "kind": "forward"
+        },
+        {
+         "kind": "forward"
+        },
+        {
+         "kind": "forward"
+        },
+        {
+         "kind": "turn-left"
+        }
+       ]
+      }
+     ],
+     "mustLoop": true,
+     "easier": "tloop-e1"
+    },
+    {
+     "id": "tloop-05",
+     "concept": "turn-loop",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 3,
+       "y": 3
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "repeat",
+       "times": 2,
+       "body": [
+        {
+         "kind": "forward"
+        },
+        {
+         "kind": "turn-right"
+        },
+        {
+         "kind": "forward"
+        },
+        {
+         "kind": "turn-left"
+        }
+       ]
+      }
+     ],
+     "answer": {
+      "x": 2,
+      "y": 2
+     }
+    },
+    {
+     "id": "tloop-06",
+     "concept": "turn-loop",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 2,
+       "y": 1
+      },
+      "start": {
+       "x": 0,
+       "y": 3
+      },
+      "heading": "up"
+     },
+     "program": [
+      {
+       "kind": "repeat",
+       "times": 2,
+       "body": [
+        {
+         "kind": "forward"
+        },
+        {
+         "kind": "forward"
+        },
+        {
+         "kind": "turn-right"
+        }
+       ]
+      }
+     ],
+     "answer": {
+      "x": 2,
+      "y": 1
+     }
+    }
+   ],
+   "variants": [
+    {
+     "id": "tloop-e1",
+     "concept": "turn-loop",
+     "textKey": "lessons:ask-stars-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 2,
+       "rows": 2
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 0,
+        "y": 1
+       },
+       {
+        "x": 1,
+        "y": 1
+       }
+      ],
+      "goal": {
+       "x": 1,
+       "y": 0
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "down"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right",
+      "repeat"
+     ],
+     "cap": 3,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 3,
+       "body": [
+        {
+         "kind": "forward"
+        },
+        {
+         "kind": "turn-left"
+        }
+       ]
+      }
+     ],
+     "mustLoop": true
+    }
+   ]
   }
  ],
  "minigames": [
@@ -4068,6 +6300,274 @@
    "titleKey": "lessons:fence-builder.title",
    "goalKey": "lessons:fence-builder.goal",
    "unlockAfter": "loop-debug"
+  },
+  {
+   "mode": "series",
+   "id": "left-right-rescue",
+   "concept": "turn-build",
+   "rounds": [
+    {
+     "id": "rescue-r1",
+     "concept": "turn-build",
+     "textKey": "lessons:ask-star",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 0,
+        "y": 2
+       }
+      ],
+      "goal": {
+       "x": 2,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "down"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right"
+     ],
+     "cap": 7,
+     "solution": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-left"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ]
+    },
+    {
+     "id": "rescue-r2",
+     "concept": "turn-build",
+     "textKey": "lessons:ask-stars",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 2,
+        "y": 0
+       },
+       {
+        "x": 2,
+        "y": 2
+       }
+      ],
+      "goal": {
+       "x": 0,
+       "y": 2
+      },
+      "start": {
+       "x": 4,
+       "y": 0
+      },
+      "heading": "left"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right"
+     ],
+     "cap": 10,
+     "solution": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-left"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-right"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ]
+    },
+    {
+     "id": "rescue-r3",
+     "concept": "turn-build",
+     "textKey": "lessons:ask-stars",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 2,
+        "y": 0
+       },
+       {
+        "x": 2,
+        "y": 2
+       }
+      ],
+      "goal": {
+       "x": 4,
+       "y": 3
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right"
+     ],
+     "cap": 11,
+     "solution": [
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-right"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-left"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ]
+    },
+    {
+     "id": "rescue-r4",
+     "concept": "turn-build",
+     "textKey": "lessons:ask-stars",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 2,
+        "y": 0
+       },
+       {
+        "x": 2,
+        "y": 1
+       },
+       {
+        "x": 3,
+        "y": 3
+       }
+      ],
+      "goal": {
+       "x": 4,
+       "y": 0
+      },
+      "start": {
+       "x": 4,
+       "y": 3
+      },
+      "heading": "up"
+     },
+     "tray": [
+      "forward",
+      "turn-left",
+      "turn-right"
+     ],
+     "cap": 12,
+     "solution": [
+      {
+       "kind": "turn-left"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-right"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "turn-right"
+      },
+      {
+       "kind": "forward"
+      },
+      {
+       "kind": "forward"
+      }
+     ]
+    }
+   ],
+   "errors3": 0,
+   "errors2": 2,
+   "titleKey": "lessons:left-right-rescue.title",
+   "goalKey": "lessons:left-right-rescue.goal",
+   "unlockAfter": "turn-debug"
   }
  ]
 }

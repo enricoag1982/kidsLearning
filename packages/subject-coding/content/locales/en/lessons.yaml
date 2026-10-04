@@ -49,6 +49,36 @@ loop-debug:
     Owl says: a loop can have bugs too. The number can be wrong, or one tile inside the loop.
     Watch Fox, find the wrong tile and fix it!
   demo: Count the steps Fox needs. If the number on the Repeat is wrong, that is the bug!
+turn-facing:
+  title: Which way am I facing?
+  story: >-
+    Owl says: a turn spins Fox around on the spot. Fox keeps facing that way until the next
+    turn. Left and right are Fox's own left and right — look where Fox is facing!
+  demo: Fox faces up. Turn right, and Fox faces right. Turn right again, and Fox faces down.
+turn-build:
+  title: Forward and turn
+  story: >-
+    Owl says: now Fox walks like you do. Forward goes the way Fox faces. Turn left or turn
+    right to face a new way!
+  demo: Fox faces up. Forward, forward, turn right, forward. Up, up, then right!
+turn-loop:
+  title: Turns in loops
+  story: >-
+    Owl says: Repeat works with turns too! Repeat forward and turn right, and Fox walks round
+    in a square. Count the sides, and that is the number!
+  demo: Forward, turn right, again and again. Fox draws a square!
+turn-jump:
+  title: Jump the gap
+  story: >-
+    Owl says: a wall of rocks blocks the way! Jump goes two squares in one move, over one rock.
+    Fox lands on the second square.
+  demo: Jump goes two squares. Fox flies over the rock and does not touch it!
+turn-debug:
+  title: Mirror bugs
+  story: >-
+    Owl says: left and right can get mixed up! Watch Fox, find the tile that sends Fox the
+    wrong way and fix it. A turn where Fox should walk is a bug too.
+  demo: Turn left instead of turn right? Fox goes the wrong way. Swap the tile and Fox is fine!
 ask-order: Put the pictures in order.
 ask-order-guided: Put the pictures in order. Tap the first step first.
 ask-first: Which step comes first?
@@ -69,12 +99,24 @@ ask-stars-loop: Collect the stars, then go to the flag. Use Repeat!
 ask-bug-tile: One tile is wrong. Tap it!
 ask-bug-tile-guided: Press Watch. One tile is wrong. Tap it!
 ask-fence: Use Repeat to collect the stars and reach the flag.
+ask-facing-g1: Fox faces up. Turn right. Which way now?
+ask-facing-g2: Fox faces up. Turn right, turn right. Which way now?
+ask-facing-01: Fox faces right. Turn left. Which way now?
+ask-facing-02: Fox faces down. Turn right, turn right, turn right. Which way now?
+ask-facing-03: Fox faces left. Turn right, turn left, turn left. Which way now?
+ask-facing-e1: Fox faces left. Turn right. Which way now?
+ask-turn-guided: Help Fox reach the flag. Tap the tiles, then press Run.
+ask-jump-guided: Help Fox reach the flag. Jump over the rocks!
+ask-fix-tile: Swap the wrong tile for the right one, then Run.
 bug-squash:
   title: Bug Squash
   goal: Find the wrong arrow in every program. How few mistakes can you make?
 fence-builder:
   title: Fence Builder
   goal: Build every fence with a Repeat. Stars are the fence posts! How few mistakes can you make?
+left-right-rescue:
+  title: Left-Right Rescue
+  goal: Fox's left and right! Collect every star, then reach the flag. How few mistakes can you make?
 card-hole: Dig a hole
 card-seed: Plant the seed
 card-water: Water it

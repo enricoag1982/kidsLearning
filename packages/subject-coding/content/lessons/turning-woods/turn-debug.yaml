@@ -1,0 +1,90 @@
+# W3 lesson 5: left and right swapped, or a turn where Fox should walk (and the other way round). Every hunt has exactly one tile
+# whose swap for another tile (forward or a turn) makes the program reach the flag, and it is the bug (checked in the content tests);
+# no stars. The two fix-its start from the buggy program with every slot locked but the bug's. Every level sets `heading`.
+# Texts: `ask-*` in locales/en/lessons.yaml.
+id: turn-debug
+order: 5
+concept: turn-debug
+character: fox
+demo:
+  prompt: { emoji: 🐞 }
+guided:
+  - id: tbug-g1
+    type: find-bug
+    text: ask-bug-tile-guided
+    map: ['..F', '...', 'S..']
+    heading: up
+    program: [forward, forward, turn-left, forward, forward]
+    bug: [2]
+    fix: turn-right
+  - id: tbug-g2
+    type: find-bug
+    text: ask-bug-tile-guided
+    map: ['S..', '...', '..F']
+    heading: right
+    program: [forward, forward, forward, forward, forward]
+    bug: [2]
+    fix: turn-right
+exercises:
+  - id: tbug-01
+    type: find-bug
+    text: ask-bug-tile
+    map: ['....', '...F', '....', 'S...']
+    heading: up
+    program: [forward, forward, turn-left, forward, forward, forward]
+    bug: [2]
+    fix: turn-right
+  - id: tbug-02
+    type: find-bug
+    text: ask-bug-tile
+    map: ['S...', '....', '....', '...F']
+    heading: down
+    program: [forward, forward, forward, turn-right, forward, forward, forward]
+    bug: [3]
+    fix: turn-left
+  - id: tbug-03
+    type: find-bug
+    text: ask-bug-tile
+    map: ['S..', '...', '..F']
+    heading: right
+    program: [forward, forward, turn-right, turn-left, forward]
+    bug: [3]
+    fix: forward
+  - id: tbug-04
+    type: find-bug
+    text: ask-bug-tile
+    easier: tbug-e1
+    map: ['S.#.', '..#.', '...F']
+    heading: right
+    program: [forward, turn-right, forward, forward, turn-right, forward, forward]
+    bug: [4]
+    fix: turn-left
+  - id: tbug-05
+    type: program
+    text: ask-fix-tile
+    map: ['..S', '...', 'F..']
+    heading: left
+    tray: [forward, turn-left, turn-right]
+    cap: 5
+    solution: [forward, forward, turn-left, forward, forward]
+    prefilled: [forward, forward, turn-right, forward, forward]
+    locked: [0, 1, 3, 4]
+  - id: tbug-06
+    type: program
+    text: ask-fix-tile
+    map: ['S..', '...', '...', '..F']
+    heading: down
+    tray: [forward, turn-left, turn-right]
+    cap: 6
+    solution: [forward, forward, forward, turn-left, forward, forward]
+    prefilled: [forward, forward, forward, turn-right, forward, forward]
+    locked: [0, 1, 2, 4, 5]
+variants:
+  - id: tbug-e1
+    type: find-bug
+    text: ask-bug-tile
+    map: ['S..', '...', 'F..']
+    heading: right
+    program: [turn-left, forward, forward]
+    bug: [0]
+    fix: turn-right

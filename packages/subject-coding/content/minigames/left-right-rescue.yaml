@@ -1,0 +1,55 @@
+# Left-Right Rescue: World 3's boss, a `series` of 4 programs with turns. Fox starts facing down, left, right, then up, and the
+# stars (friends to rescue) make each route longer: 5, 8, 9 and 10 tiles (the solver's shortest; `cap` = that + 2). Relative tiles
+# only (no repeat), so the cap leaves room for the child's own route. It also opens after the debugging lesson as a Today session
+# mini-game.
+id: left-right-rescue
+mode: series
+concept: turn-build
+unlockAfter: turn-debug
+errors3: 0
+errors2: 2
+rounds:
+  - id: rescue-r1
+    type: program
+    text: ask-star
+    map: ['S...', '....', '*.F.']
+    heading: down
+    tray: [forward, turn-left, turn-right]
+    cap: 7
+    solution: [forward, forward, turn-left, forward, forward]
+  - id: rescue-r2
+    type: program
+    text: ask-stars
+    map: ['..*.S', '.....', 'F.*..']
+    heading: left
+    tray: [forward, turn-left, turn-right]
+    cap: 10
+    solution: [forward, forward, turn-left, forward, forward, turn-right, forward, forward]
+  - id: rescue-r3
+    type: program
+    text: ask-stars
+    map: ['S.*..', '.....', '..*..', '....F']
+    heading: right
+    tray: [forward, turn-left, turn-right]
+    cap: 11
+    solution: [forward, forward, turn-right, forward, forward, forward, turn-left, forward, forward]
+  - id: rescue-r4
+    type: program
+    text: ask-stars
+    map: ['..*.F', '..*..', '.....', '...*S']
+    heading: up
+    tray: [forward, turn-left, turn-right]
+    cap: 12
+    solution:
+      [
+        turn-left,
+        forward,
+        forward,
+        turn-right,
+        forward,
+        forward,
+        forward,
+        turn-right,
+        forward,
+        forward,
+      ]

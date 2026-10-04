@@ -1,14 +1,18 @@
 // The authored content (World 1 "Meadow Steps", World 2 "Looping Hills", World 3 "Turning Woods"): it builds, every exercise plays
 // through its own kind, and the pieces fit together the way `docs/subjects/coding/curriculum.md` says (counts, kinds, caps, unique
 // answers, wording).
+import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
+import { parse } from 'yaml';
 import { compileAll } from '@learn/platform-content/compile-all';
 import { cellKey } from '@learn/platform-core/domain/grid';
+import type { Heading } from '@learn/platform-core/domain/grid';
 import { CODING_CHARACTERS, codingCore } from '../core/coding-core.ts';
+import { parseLevel } from '../core/level.ts';
 import type { Level } from '../core/level.ts';
-import { run } from '../core/simulator.ts';
+import { applyPrimitive, run, startState } from '../core/simulator.ts';
 import { shortestStraightLength, solvableWithoutRepeat } from '../core/solver.ts';
 import {
   isValidProgram,
@@ -188,6 +192,41 @@ describe('the lessons of every world', () => {
       guided: ['find-bug', 'find-bug'],
       exercises: ['find-bug', 'find-bug', 'find-bug', 'find-bug', 'program', 'program'],
     },
+    {
+      id: 'turn-facing',
+      world: 'turning-woods',
+      order: 1,
+      guided: ['choice', 'choice'],
+      exercises: ['choice', 'choice', 'choice', 'predict', 'predict'],
+    },
+    {
+      id: 'turn-build',
+      world: 'turning-woods',
+      order: 2,
+      guided: ['program', 'predict'],
+      exercises: ['program', 'program', 'program', 'program', 'predict', 'predict'],
+    },
+    {
+      id: 'turn-loop',
+      world: 'turning-woods',
+      order: 3,
+      guided: ['program', 'predict'],
+      exercises: ['program', 'program', 'program', 'program', 'predict', 'predict'],
+    },
+    {
+      id: 'turn-jump',
+      world: 'turning-woods',
+      order: 4,
+      guided: ['program', 'predict'],
+      exercises: ['program', 'program', 'program', 'program', 'predict', 'predict'],
+    },
+    {
+      id: 'turn-debug',
+      world: 'turning-woods',
+      order: 5,
+      guided: ['find-bug', 'find-bug'],
+      exercises: ['find-bug', 'find-bug', 'find-bug', 'find-bug', 'program', 'program'],
+    },
   ] as const;
 
   it('has every lesson, world by world in play order, taught by the Fox, with its guided tries and scored exercises', () => {
@@ -246,6 +285,11 @@ describe('the lessons of every world', () => {
       'loop-repeat': 'repeat-04',
       'loop-chunk': 'chunk-04',
       'loop-debug': 'loopbug-04',
+      'turn-facing': 'facing-03',
+      'turn-build': 'build-04',
+      'turn-loop': 'tloop-04',
+      'turn-jump': 'jump-04',
+      'turn-debug': 'tbug-04',
     };
     for (const lesson of lessons) {
       const variants = lesson.variants ?? [];
@@ -262,14 +306,16 @@ describe('the lessons of every world', () => {
     }
   });
 
-  it('has 79 exercises in all: 70 in the lessons (guided, scored, easier) and 9 boss rounds', () => {
-    // 40 in World 1 (35 in the lessons, 5 Bug Squash rounds) + 39 in World 2 (35 in the lessons, 4 Fence Builder rounds).
-    expect(everyExercise()).toHaveLength(79);
-    expect(allCodingExercises(content.lessons, content.minigames)).toHaveLength(79);
-    expect(lessons.flatMap(inLesson)).toHaveLength(70);
+  it('has 127 exercises in all: 114 in the lessons (guided, scored, easier) and 13 boss rounds', () => {
+    // 40 in World 1 (35 in the lessons, 5 Bug Squash rounds) + 39 in World 2 (35 + 4 Fence Builder rounds) + 48 in World 3 (44 + 4
+    // Left-Right Rescue rounds).
+    expect(everyExercise()).toHaveLength(127);
+    expect(allCodingExercises(content.lessons, content.minigames)).toHaveLength(127);
+    expect(lessons.flatMap(inLesson)).toHaveLength(114);
+    expect(games.flatMap((game) => game.rounds)).toHaveLength(13);
   });
 
-  it('keeps the worlds in order on the main track: every built world has its boss', () => {
+  it('keeps the worlds in order on the main track: every world has its boss', () => {
     const [main] = tracks.tracks;
     expect(tracks.tracks).toHaveLength(1);
     expect(main).toMatchObject({ id: 'basics', kind: 'main' });
@@ -281,22 +327,29 @@ describe('the lessons of every world', () => {
     expect(lessons.map((lesson) => lesson.world)).toEqual([
       ...Array<string>(4).fill('meadow-steps'),
       ...Array<string>(4).fill('looping-hills'),
+      ...Array<string>(5).fill('turning-woods'),
     ]);
-    // Bug Squash and Fence Builder are the bosses of their worlds (Journey nodes once every lesson of the world is mastered);
-    // Turning Woods is still "coming soon".
+    // Each world's boss is a Journey node once every lesson of the world is mastered; its mini-game opens after the world's
+    // debugging lesson.
     expect(main?.worlds.map((world) => world.boss)).toEqual([
       'bug-squash',
       'fence-builder',
-      undefined,
+      'left-right-rescue',
+    ]);
+    expect(games.map((game) => [game.id, game.unlockAfter])).toEqual([
+      ['bug-squash', 'seq-debug'],
+      ['fence-builder', 'loop-debug'],
+      ['left-right-rescue', 'turn-debug'],
     ]);
     expect(lessons.every((entry) => entry.boss === undefined)).toBe(true);
   });
 
-  it('has the starter, stepper and looper ranks and four badges built on generic conditions', () => {
+  it('has the starter, stepper, looper and turner ranks and five badges built on generic conditions', () => {
     expect(tracks.ranks).toEqual([
       { id: 'starter', after: 'start' },
       { id: 'stepper', after: 'world:meadow-steps' },
       { id: 'looper', after: 'world:looping-hills' },
+      { id: 'turner', after: 'world:turning-woods' },
     ]);
     expect(badges.map((badge) => [badge.id, badge.category, badge.condition])).toEqual([
       [
@@ -314,6 +367,11 @@ describe('the lessons of every world', () => {
         'hill-climber',
         'milestone',
         { type: 'mastered', scope: 'world:looping-hills', thresholds: [1] },
+      ],
+      [
+        'woods-ranger',
+        'milestone',
+        { type: 'mastered', scope: 'world:turning-woods', thresholds: [1] },
       ],
     ]);
   });
@@ -886,6 +944,487 @@ describe('World 2, Looping Hills: Repeat', () => {
   });
 });
 
+/** The exercises of a world's YAML files as written (`map` ones carry their `heading` or not), lessons and bosses. */
+function rawLevelExercises(
+  world: string,
+): readonly { readonly id: string; readonly heading?: string }[] {
+  interface Raw {
+    readonly id: string;
+    readonly map?: readonly string[];
+    readonly heading?: string;
+  }
+  interface RawFile {
+    readonly guided?: readonly Raw[];
+    readonly exercises?: readonly Raw[];
+    readonly variants?: readonly Raw[];
+    readonly rounds?: readonly Raw[];
+  }
+  const dir = join(root, 'lessons', world);
+  const files = readdirSync(dir).map((name) => join(dir, name));
+  const bosses =
+    world === 'turning-woods' ? [join(root, 'minigames', 'left-right-rescue.yaml')] : [];
+  return [...files, ...bosses].flatMap((file) => {
+    const raw = parse(readFileSync(file, 'utf8')) as RawFile;
+    return [
+      ...(raw.guided ?? []),
+      ...(raw.exercises ?? []),
+      ...(raw.variants ?? []),
+      ...(raw.rounds ?? []),
+    ].filter((exercise) => exercise.map !== undefined);
+  });
+}
+
+const TURNS = ['turn-left', 'turn-right'] as const;
+
+describe('World 3, Turning Woods: relative moves', () => {
+  const lessonsW3 = lessonsIn('turning-woods');
+  const rescue = bossById('left-right-rescue');
+  const RELATIVE: readonly PrimitiveKind[] = ['forward', 'turn-left', 'turn-right'];
+  const everyProgram = [
+    ...lessonsW3.flatMap((lesson) => programsOf(inLesson(lesson))),
+    ...programsOf(rescue.rounds),
+  ];
+  const everyLevel = [...lessonsW3.flatMap((lesson) => inLesson(lesson)), ...rescue.rounds].filter(
+    (exercise): exercise is ProgramDef | PredictDef | FindBugDef => 'level' in exercise,
+  );
+
+  it('every level of the world sets its heading in the YAML', () => {
+    const raw = rawLevelExercises('turning-woods');
+    expect(raw).toHaveLength(everyLevel.length);
+    for (const exercise of raw) {
+      expect(exercise.heading, exercise.id).toBeDefined();
+    }
+    // build 6 (guided, 4 scored, easier), loop 6, jump 6, debug 2 fix-its, Left-Right Rescue 4.
+    expect(everyProgram).toHaveLength(6 + 6 + 6 + 2 + 4);
+  });
+
+  it('every program: the tray is relative (forward, the turns, Jump in the jump lesson, Repeat in the loop lesson), no arrows', () => {
+    for (const exercise of everyProgram) {
+      const allowed = exercise.id.startsWith('tloop')
+        ? [...RELATIVE, 'repeat']
+        : exercise.id.startsWith('jump')
+          ? [...RELATIVE, 'jump']
+          : RELATIVE;
+      expect([...exercise.tray].sort(), exercise.id).toEqual([...allowed].sort());
+    }
+  });
+
+  it('a program that is not a loop exercise: the solution is a shortest one (the solver) and cap = shortest + 2, or its own length for a fix-it', () => {
+    for (const exercise of everyProgram) {
+      if (exercise.mustLoop === true) continue;
+      const shortest = shortestStraightLength(exercise.level, primitivesOf(exercise.tray), 14);
+      expect(exercise.solution.length, exercise.id).toBe(shortest);
+      expect(exercise.cap, exercise.id).toBe(
+        exercise.prefilled === undefined ? (shortest ?? 0) + 2 : exercise.solution.length,
+      );
+      expect(exercise.cap, exercise.id).toBeLessThanOrEqual(12);
+    }
+  });
+
+  it('a loop exercise is must-loop: cap = the loop tile count + 0 or 1, and no program without a repeat fits it', () => {
+    const loops = everyProgram.filter((exercise) => exercise.tray.includes('repeat'));
+    expect(loops.map((exercise) => exercise.id)).toEqual([
+      'tloop-g1',
+      'tloop-01',
+      'tloop-02',
+      'tloop-03',
+      'tloop-04',
+      'tloop-e1',
+    ]);
+    for (const exercise of loops) {
+      expect(exercise.mustLoop, exercise.id).toBe(true);
+      const tiles = tileCount(exercise.solution);
+      expect([tiles, tiles + 1], exercise.id).toContain(exercise.cap);
+      expect(
+        solvableWithoutRepeat(exercise.level, primitivesOf(exercise.tray), exercise.cap),
+        exercise.id,
+      ).toBe(false);
+    }
+    expect(everyProgram.filter((exercise) => exercise.mustLoop === true)).toHaveLength(
+      loops.length,
+    );
+  });
+
+  describe('turn-facing: which way does Fox face after the turns', () => {
+    const lesson = lessonById('turn-facing');
+    const choices = inLesson(lesson).filter((exercise) => exercise.type === 'choice');
+    const ARROW: Record<Heading, string> = { up: '↑', right: '→', down: '↓', left: '←' };
+    const TEXT =
+      /^Fox faces (up|right|down|left)\. ((?:Turn (?:left|right)(?:, turn (?:left|right))*))\. Which way now\?$/;
+
+    /** Where `heading` ends after the turns the instruction names, through the simulator's own rules. */
+    function facingAfter(text: string): {
+      readonly start: Heading;
+      readonly turns: number;
+      readonly end: Heading;
+    } {
+      const match = TEXT.exec(text);
+      const start = match?.[1] as Heading | undefined;
+      const words = match?.[2];
+      if (start === undefined || words === undefined)
+        throw new Error(`not a facing question: "${text}"`);
+      const level = parseLevel(['SF'], start);
+      let state = startState(level);
+      const turns = words
+        .split(', ')
+        .map((turn): PrimitiveKind =>
+          turn.toLowerCase() === 'turn left' ? 'turn-left' : 'turn-right',
+        );
+      for (const turn of turns) {
+        state = applyPrimitive(level, state, turn).state;
+      }
+      return { start, turns: turns.length, end: state.heading };
+    }
+
+    it('has 2 guided and 3 scored questions with a card (Fox and the way it faces now) and the four arrows as answers', () => {
+      expect(choices).toHaveLength(6);
+      for (const exercise of choices) {
+        expect(exercise.prompt?.emoji, exercise.id).toBe('🦊');
+        expect(exercise.prompt?.big, exercise.id).toBeDefined();
+        expect(exercise.options.map((option) => [option.id, option.big])).toEqual([
+          ['up', '↑'],
+          ['right', '→'],
+          ['down', '↓'],
+          ['left', '←'],
+        ]);
+      }
+    });
+
+    it('the right arrow is where the simulator turns Fox, from the start the card shows; 1-3 turns', () => {
+      for (const exercise of choices) {
+        const { start, turns, end } = facingAfter(instructionOf(exercise));
+        expect(exercise.prompt?.big, exercise.id).toBe(ARROW[start]);
+        expect(exercise.answer, exercise.id).toBe(end);
+        expect(turns, exercise.id).toBeGreaterThanOrEqual(1);
+        expect(turns, exercise.id).toBeLessThanOrEqual(3);
+      }
+      const scored = lesson.exercises.filter((exercise) => exercise.type === 'choice');
+      expect(scored.map((exercise) => facingAfter(instructionOf(exercise)).turns)).toEqual([
+        1, 3, 3,
+      ]);
+      expect(scored.map((exercise) => facingAfter(instructionOf(exercise)).start)).toEqual([
+        'right',
+        'down',
+        'left',
+      ]);
+    });
+
+    it('the easier question is the hardest one in one turn; every turn is a real turn (no question that ends where it began by chance only)', () => {
+      const [easier] = lesson.variants ?? [];
+      expect(easier && facingAfter(instructionOf(easier))).toEqual({
+        start: 'left',
+        turns: 1,
+        end: 'up',
+      });
+      for (const exercise of choices) {
+        const { start, end } = facingAfter(instructionOf(exercise));
+        expect(end, exercise.id).not.toBe(start);
+      }
+    });
+
+    it('the two predictions are forward and turns: each runs to its end without a bump, the first ends on the flag', () => {
+      const predicts = predictsOf(lesson.exercises);
+      expect(predicts).toHaveLength(2);
+      const onFlag = predicts.map((exercise) => {
+        expect(
+          exercise.program.filter((tile) => TURNS.includes(tile.kind as (typeof TURNS)[number]))
+            .length,
+          exercise.id,
+        ).toBe(1);
+        const result = run(exercise.level, exercise.program);
+        expect(result.outcome, exercise.id).not.toBe('bumped');
+        return cellKey(result.final.cell) === cellKey(exercise.level.goal ?? { x: -1, y: -1 });
+      });
+      expect(onFlag).toEqual([true, false]);
+    });
+
+    it('the story says whose left and right: "Left and right are Fox\'s own left and right — look where Fox is facing!"', () => {
+      const story = (lessonTexts?.['turn-facing'] as { story: string }).story;
+      expect(story).toContain(
+        "Left and right are Fox's own left and right — look where Fox is facing!",
+      );
+    });
+  });
+
+  describe("turn-build: forward and turn from Fox's view", () => {
+    const lesson = lessonById('turn-build');
+    const scored = programsOf(lesson.exercises);
+
+    it('the four scored programs start facing up, left, down and right; the guided one starts facing right', () => {
+      expect(scored.map((exercise) => exercise.level.heading)).toEqual([
+        'up',
+        'left',
+        'down',
+        'right',
+      ]);
+      expect(programsOf(lesson.guided).map((exercise) => exercise.level.heading)).toEqual([
+        'right',
+      ]);
+    });
+
+    it('every solution turns (an L, a corner, an S with rocks in the way for the hardest) and has no rock-free shortcut', () => {
+      for (const exercise of [...programsOf(lesson.guided), ...scored]) {
+        const turns = exercise.solution.filter((tile) =>
+          TURNS.includes(tile.kind as (typeof TURNS)[number]),
+        );
+        expect(turns.length, exercise.id).toBeGreaterThanOrEqual(1);
+        expect(exercise.level.stars, exercise.id).toHaveLength(0);
+        expect(exercise.level.goal, exercise.id).toBeDefined();
+      }
+      const [, , , hardest] = scored;
+      expect(hardest?.solution.filter((tile) => tile.kind !== 'forward')).toHaveLength(2);
+      expect(hardest?.level.rocks.length).toBeGreaterThanOrEqual(2);
+    });
+
+    it('facing down and left, the turn that goes the screen way needs the other turn: turn-left from down heads right', () => {
+      const [, left, down] = scored;
+      // From `left`, Fox's own left is the screen's down; from `down` it is the screen's right.
+      expect(left?.solution.map((tile) => tile.kind)).toContain('turn-left');
+      expect(down?.solution.map((tile) => tile.kind)).toContain('turn-left');
+      expect(left && run(left.level, left.solution).outcome).toBe('success');
+    });
+
+    it('the predictions follow forward and turns without a bump; one stops on the flag, the guided one one square short', () => {
+      const predicts = [...predictsOf(lesson.guided), ...predictsOf(lesson.exercises)];
+      expect(predicts).toHaveLength(3);
+      const onFlag = predicts.map((exercise) => {
+        const result = run(exercise.level, exercise.program);
+        expect(result.outcome, exercise.id).not.toBe('bumped');
+        return cellKey(result.final.cell) === cellKey(exercise.level.goal ?? { x: -1, y: -1 });
+      });
+      expect(onFlag).toEqual([false, true, false]);
+    });
+  });
+
+  describe('turn-loop: repeat [forward, turn] draws a square', () => {
+    const lesson = lessonById('turn-loop');
+    const programs = [
+      ...programsOf(lesson.guided),
+      ...programsOf(lesson.exercises),
+      ...programsOf(lesson.variants ?? []),
+    ];
+
+    it('every solution is one repeat whose body walks and turns (2-4 tiles); the stars sit at the corners and all get picked up', () => {
+      expect(programs).toHaveLength(6);
+      for (const exercise of programs) {
+        const loop = firstRepeat(exercise.solution);
+        expect(exercise.solution, exercise.id).toHaveLength(1);
+        expect(loop.body.length, exercise.id).toBeGreaterThanOrEqual(2);
+        expect(loop.body.length, exercise.id).toBeLessThanOrEqual(4);
+        expect(
+          loop.body.some((tile) => tile.kind === 'forward'),
+          exercise.id,
+        ).toBe(true);
+        expect(
+          loop.body.some((tile) => TURNS.includes(tile.kind as (typeof TURNS)[number])),
+          exercise.id,
+        ).toBe(true);
+        expect(exercise.level.stars.length, exercise.id).toBeGreaterThanOrEqual(2);
+        expect(run(exercise.level, exercise.solution).final.collected, exercise.id).toHaveLength(
+          exercise.level.stars.length,
+        );
+      }
+    });
+
+    it('the scored programs are squares (turn right twice over, then turn left the other way round) and a zigzag (both turns in the body)', () => {
+      const bodies = programsOf(lesson.exercises).map((exercise) =>
+        firstRepeat(exercise.solution)
+          .body.map((tile) => tile.kind)
+          .join(' '),
+      );
+      expect(bodies).toEqual([
+        'forward forward turn-right',
+        'forward turn-right forward turn-left',
+        'forward forward forward turn-right',
+        'forward forward forward turn-left',
+      ]);
+    });
+
+    it('the guided square and the easier one are the 3-tile loops with a one-tile side', () => {
+      for (const exercise of [...programsOf(lesson.guided), ...programsOf(lesson.variants ?? [])]) {
+        expect(exercise.cap, exercise.id).toBe(3);
+        expect(firstRepeat(exercise.solution).times, exercise.id).toBe(3);
+      }
+    });
+
+    it('the predictions have a repeat, run to their end without a bump; the guided one stops off the flag, one scored one on it', () => {
+      const predicts = [...predictsOf(lesson.guided), ...predictsOf(lesson.exercises)];
+      expect(predicts).toHaveLength(3);
+      const onFlag = predicts.map((exercise) => {
+        expect(
+          exercise.program.some((tile) => tile.kind === 'repeat'),
+          exercise.id,
+        ).toBe(true);
+        const result = run(exercise.level, exercise.program);
+        expect(result.outcome, exercise.id).not.toBe('bumped');
+        return cellKey(result.final.cell) === cellKey(exercise.level.goal ?? { x: -1, y: -1 });
+      });
+      expect(onFlag).toEqual([false, false, true]);
+    });
+  });
+
+  describe('turn-jump: a wall of rocks that only a jump crosses', () => {
+    const lesson = lessonById('turn-jump');
+    const programs = [
+      ...programsOf(lesson.guided),
+      ...programsOf(lesson.exercises),
+      ...programsOf(lesson.variants ?? []),
+    ];
+
+    it('without Jump no program reaches the flag, and every solution jumps', () => {
+      expect(programs).toHaveLength(6);
+      for (const exercise of programs) {
+        expect(exercise.tray, exercise.id).toContain('jump');
+        expect(
+          exercise.solution.some((tile) => tile.kind === 'jump'),
+          exercise.id,
+        ).toBe(true);
+        expect(shortestStraightLength(exercise.level, RELATIVE, 20), exercise.id).toBeNull();
+        expect(exercise.level.rocks.length, exercise.id).toBeGreaterThanOrEqual(2);
+        expect(exercise.level.stars, exercise.id).toHaveLength(0);
+      }
+    });
+
+    it('the scored programs get harder: 2, 4, 4 and 6 tiles, the hardest with two walls', () => {
+      expect(programsOf(lesson.exercises).map((exercise) => exercise.solution.length)).toEqual([
+        2, 4, 4, 6,
+      ]);
+      expect(programsOf(lesson.variants ?? []).map((exercise) => exercise.solution.length)).toEqual(
+        [4],
+      );
+    });
+
+    it('the predictions land after a jump without a bump; the second jumps over a star, which is not picked up', () => {
+      const predicts = [...predictsOf(lesson.guided), ...predictsOf(lesson.exercises)];
+      expect(predicts).toHaveLength(3);
+      for (const exercise of predicts) {
+        expect(
+          exercise.program.some((tile) => tile.kind === 'jump'),
+          exercise.id,
+        ).toBe(true);
+        expect(run(exercise.level, exercise.program).outcome, exercise.id).not.toBe('bumped');
+      }
+      const [, , jumpOverStar] = predicts;
+      expect(jumpOverStar?.level.stars).toHaveLength(1);
+      expect(
+        jumpOverStar && run(jumpOverStar.level, jumpOverStar.program).final.collected,
+      ).toHaveLength(0);
+    });
+  });
+
+  describe('turn-debug: swapped turns and the wrong kind of tile', () => {
+    const lesson = lessonById('turn-debug');
+    const hunts = bugsOf(inLesson(lesson));
+
+    it('every hunt has exactly one tile whose swap for forward or a turn fixes the program, and it is the bug; no stars', () => {
+      expect(hunts).toHaveLength(2 + 4 + 1);
+      for (const exercise of hunts) {
+        expect(fixablePaths(exercise, RELATIVE), exercise.id).toEqual([keyOfPath(exercise.bug)]);
+        expect(exercise.level.stars, exercise.id).toHaveLength(0);
+        expect(exercise.bug, exercise.id).toHaveLength(1);
+      }
+    });
+
+    it('the bugs are swaps of left and right, a turn where forward belongs, and forward where a turn belongs', () => {
+      const kind = (exercise: FindBugDef): string => {
+        const [top] = exercise.bug;
+        const buggy = exercise.program[top ?? 0]?.kind ?? 'none';
+        const bothTurns =
+          TURNS.includes(buggy as (typeof TURNS)[number]) &&
+          TURNS.includes(exercise.fix.kind as (typeof TURNS)[number]);
+        if (bothTurns) return 'swap';
+        return buggy === 'forward' ? 'forward-for-turn' : 'turn-for-forward';
+      };
+      // guided: a swap, then forward where a turn belongs; scored: swap, swap, a turn for forward, swap; easier: swap.
+      expect(hunts.map(kind)).toEqual([
+        'swap',
+        'forward-for-turn',
+        'swap',
+        'swap',
+        'turn-for-forward',
+        'swap',
+        'swap',
+      ]);
+    });
+
+    it('the hunts start facing up, right, up, down, right, right, right; the down one swaps the turn that heads right', () => {
+      expect(hunts.map((exercise) => exercise.level.heading)).toEqual([
+        'up',
+        'right',
+        'up',
+        'down',
+        'right',
+        'right',
+        'right',
+      ]);
+    });
+
+    it('the two fix-its start from the buggy program with every slot locked but the bug: a swapped turn', () => {
+      const fixes = programsOf(lesson.exercises);
+      expect(fixes).toHaveLength(2);
+      for (const exercise of fixes) {
+        const prefilled = exercise.prefilled ?? [];
+        expect(prefilled, exercise.id).toHaveLength(exercise.solution.length);
+        expect(exercise.cap, exercise.id).toBe(exercise.solution.length);
+        const open = prefilled
+          .map((tile, index) => [tile, index] as const)
+          .filter(([tile, index]) => tile?.kind !== exercise.solution[index]?.kind)
+          .map(([, index]) => index);
+        expect(open, exercise.id).toHaveLength(1);
+        const [at] = open;
+        expect(
+          [...(exercise.locked ?? [])].sort((a, b) => a - b),
+          exercise.id,
+        ).toEqual(exercise.solution.map((_tile, index) => index).filter((index) => index !== at));
+        expect(TURNS, exercise.id).toContain(prefilled[at ?? 0]?.kind);
+        expect(TURNS, exercise.id).toContain(exercise.solution[at ?? 0]?.kind);
+        const buggy = prefilled.filter((tile): tile is Tile => tile !== null);
+        expect(run(exercise.level, buggy).outcome, exercise.id).not.toBe('success');
+      }
+    });
+  });
+
+  describe('Left-Right Rescue: World 3 boss, 4 rounds starting down, left, right and up', () => {
+    const rounds = programsOf(rescue.rounds);
+
+    it('is a series of 4 program rounds, opened by the debugging lesson, whose concept is building with turns', () => {
+      expect(rescue).toMatchObject({
+        id: 'left-right-rescue',
+        mode: 'series',
+        concept: 'turn-build',
+        unlockAfter: 'turn-debug',
+        errors3: 0,
+        errors2: 2,
+      });
+      expect(typesOf(rescue.rounds)).toEqual(Array<string>(4).fill('program'));
+    });
+
+    it('Fox faces down, left, right, then up; the tray is forward and the turns', () => {
+      expect(rounds.map((round) => round.level.heading)).toEqual(['down', 'left', 'right', 'up']);
+      for (const round of rounds) {
+        expect([...round.tray].sort(), round.id).toEqual([...RELATIVE].sort());
+      }
+    });
+
+    it('the routes rise: the shortest program has 5, 8, 9 and 10 tiles for 1, 2, 2 and 3 stars', () => {
+      expect(rounds.map((round) => round.solution.length)).toEqual([5, 8, 9, 10]);
+      expect(rounds.map((round) => round.level.stars.length)).toEqual([1, 2, 2, 3]);
+      expect(rounds.map((round) => round.cap)).toEqual([7, 10, 11, 12]);
+    });
+
+    it('every round has a flag, and its text names what the board has: "the star" with one, "the stars" with more', () => {
+      for (const round of rounds) {
+        expect(round.level.goal, round.id).toBeDefined();
+        expect(instructionOf(round), round.id).toBe(
+          round.level.stars.length === 1
+            ? 'Collect the star, then go to the flag.'
+            : 'Collect the stars, then go to the flag.',
+        );
+      }
+    });
+  });
+});
+
 describe('the words the child reads and hears', () => {
   it('every instruction is at most 12 words', () => {
     for (const { where, exercise } of everyExercise()) {
@@ -906,12 +1445,21 @@ describe('the words the child reads and hears', () => {
         'Collect the star, then go to the flag. Use Repeat!',
         'Collect the stars, then go to the flag. Use Repeat!',
         'Use Repeat to collect the stars and reach the flag.',
+        'Help Fox reach the flag. Tap the tiles, then press Run.',
+        'Help Fox reach the flag. Jump over the rocks!',
+        'Swap the wrong tile for the right one, then Run.',
       ],
       order: ['Put the pictures in order.', 'Put the pictures in order. Tap the first step first.'],
       choice: [
         'Which step comes first?',
         'Which repeat makes the same walk?',
         'Which repeat makes the same walk? Tap it!',
+        'Fox faces up. Turn right. Which way now?',
+        'Fox faces up. Turn right, turn right. Which way now?',
+        'Fox faces right. Turn left. Which way now?',
+        'Fox faces down. Turn right, turn right, turn right. Which way now?',
+        'Fox faces left. Turn right, turn left, turn left. Which way now?',
+        'Fox faces left. Turn right. Which way now?',
       ],
       predict: ['Where will Fox stop? Tap the square.'],
       'find-bug': [
@@ -941,6 +1489,16 @@ describe('the words the child reads and hears', () => {
       'Help Fox reach the flag. Use Repeat!',
       'Where will Fox stop? Tap the square.',
       'Collect the star, then go to the flag. Use Repeat!',
+      'Where will Fox stop? Tap the square.',
+      'Press Watch. One tile is wrong. Tap it!',
+      'Press Watch. One tile is wrong. Tap it!',
+      'Fox faces up. Turn right. Which way now?',
+      'Fox faces up. Turn right, turn right. Which way now?',
+      'Help Fox reach the flag. Tap the tiles, then press Run.',
+      'Where will Fox stop? Tap the square.',
+      'Collect the stars, then go to the flag. Use Repeat!',
+      'Where will Fox stop? Tap the square.',
+      'Help Fox reach the flag. Jump over the rocks!',
       'Where will Fox stop? Tap the square.',
       'Press Watch. One tile is wrong. Tap it!',
       'Press Watch. One tile is wrong. Tap it!',
@@ -1023,6 +1581,7 @@ describe('texts and the core', () => {
       starter: 'Starter',
       stepper: 'Stepper',
       looper: 'Looper',
+      turner: 'Turner',
     });
     for (const character of Object.keys(CODING_CHARACTERS)) {
       expect(en?.characters?.[character], character).toBeDefined();

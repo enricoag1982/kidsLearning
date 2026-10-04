@@ -554,7 +554,8 @@
   "ranks": {
    "looper": "Looper",
    "starter": "Starter",
-   "stepper": "Stepper"
+   "stepper": "Stepper",
+   "turner": "Turner"
   },
   "tracks": {
    "basics": "Coding Basics"
@@ -599,9 +600,17 @@
   "ask-bug-guided": "Press Watch. One arrow is wrong. Tap it!",
   "ask-bug-tile": "One tile is wrong. Tap it!",
   "ask-bug-tile-guided": "Press Watch. One tile is wrong. Tap it!",
+  "ask-facing-01": "Fox faces right. Turn left. Which way now?",
+  "ask-facing-02": "Fox faces down. Turn right, turn right, turn right. Which way now?",
+  "ask-facing-03": "Fox faces left. Turn right, turn left, turn left. Which way now?",
+  "ask-facing-e1": "Fox faces left. Turn right. Which way now?",
+  "ask-facing-g1": "Fox faces up. Turn right. Which way now?",
+  "ask-facing-g2": "Fox faces up. Turn right, turn right. Which way now?",
   "ask-fence": "Use Repeat to collect the stars and reach the flag.",
   "ask-first": "Which step comes first?",
   "ask-fix": "Swap the wrong arrow for the right one, then Run.",
+  "ask-fix-tile": "Swap the wrong tile for the right one, then Run.",
+  "ask-jump-guided": "Help Fox reach the flag. Jump over the rocks!",
   "ask-order": "Put the pictures in order.",
   "ask-order-guided": "Put the pictures in order. Tap the first step first.",
   "ask-predict": "Where will Fox stop? Tap the square.",
@@ -615,6 +624,7 @@
   "ask-star-loop": "Collect the star, then go to the flag. Use Repeat!",
   "ask-stars": "Collect the stars, then go to the flag.",
   "ask-stars-loop": "Collect the stars, then go to the flag. Use Repeat!",
+  "ask-turn-guided": "Help Fox reach the flag. Tap the tiles, then press Run.",
   "bug-squash": {
    "goal": "Find the wrong arrow in every program. How few mistakes can you make?",
    "title": "Bug Squash"
@@ -645,6 +655,10 @@
   "fence-builder": {
    "goal": "Build every fence with a Repeat. Stars are the fence posts! How few mistakes can you make?",
    "title": "Fence Builder"
+  },
+  "left-right-rescue": {
+   "goal": "Fox's left and right! Collect every star, then reach the flag. How few mistakes can you make?",
+   "title": "Left-Right Rescue"
   },
   "loop-chunk": {
    "demo": "Right, up, right, up, right, up. That is Repeat three times, right and up!",
@@ -685,6 +699,31 @@
    "demo": "Look: first the socks, then the shoes. Shoes first would be silly!",
    "story": "Owl says: a program is a list of steps. The steps must be in the right order. Fox puts on socks first, then shoes!",
    "title": "Steps in order"
+  },
+  "turn-build": {
+   "demo": "Fox faces up. Forward, forward, turn right, forward. Up, up, then right!",
+   "story": "Owl says: now Fox walks like you do. Forward goes the way Fox faces. Turn left or turn right to face a new way!",
+   "title": "Forward and turn"
+  },
+  "turn-debug": {
+   "demo": "Turn left instead of turn right? Fox goes the wrong way. Swap the tile and Fox is fine!",
+   "story": "Owl says: left and right can get mixed up! Watch Fox, find the tile that sends Fox the wrong way and fix it. A turn where Fox should walk is a bug too.",
+   "title": "Mirror bugs"
+  },
+  "turn-facing": {
+   "demo": "Fox faces up. Turn right, and Fox faces right. Turn right again, and Fox faces down.",
+   "story": "Owl says: a turn spins Fox around on the spot. Fox keeps facing that way until the next turn. Left and right are Fox's own left and right — look where Fox is facing!",
+   "title": "Which way am I facing?"
+  },
+  "turn-jump": {
+   "demo": "Jump goes two squares. Fox flies over the rock and does not touch it!",
+   "story": "Owl says: a wall of rocks blocks the way! Jump goes two squares in one move, over one rock. Fox lands on the second square.",
+   "title": "Jump the gap"
+  },
+  "turn-loop": {
+   "demo": "Forward, turn right, again and again. Fox draws a square!",
+   "story": "Owl says: Repeat works with turns too! Repeat forward and turn right, and Fox walks round in a square. Count the sides, and that is the number!",
+   "title": "Turns in loops"
   }
  },
  "rewards": {
@@ -704,6 +743,10 @@
    "meadow-walker": {
     "condition": "Master Meadow Steps and beat Bug Squash",
     "name": "Meadow Walker"
+   },
+   "woods-ranger": {
+    "condition": "Master Turning Woods and beat Left-Right Rescue",
+    "name": "Woods Ranger"
    }
   }
  }
