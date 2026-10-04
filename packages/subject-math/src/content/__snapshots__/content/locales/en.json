@@ -548,7 +548,8 @@
   "ranks": {
    "builder": "Builder",
    "climber": "Climber",
-   "counter": "Counter"
+   "counter": "Counter",
+   "multiplier": "Multiplier"
   },
   "tracks": {
    "numbers": "Number Adventures"
@@ -584,18 +585,22 @@
   },
   "worlds": {
    "mental-mountain": "Mental Math Mountain",
-   "number-meadow": "Number Meadow"
+   "number-meadow": "Number Meadow",
+   "times-forest": "Times-Table Forest"
   }
  },
  "lessons": {
   "bugs": {
+   "add-factors": "Times means groups: 3 groups of 4.",
    "answer-next": "The equals sign means both sides are the same.",
    "append": "Each place holds one digit: 2 hundreds is 200, not 2000.",
+   "digit-swap": "Check the digits' order.",
    "digit-tens": "The tens make 90, then the ones make 10 more.",
    "drop-zero": "An empty place still needs a zero to hold its spot.",
    "five-down": "Right in the middle? It goes up to the bigger number.",
    "forgot-adjust": "You used the round number. Now fix the answer by 1.",
    "halve-tens-only": "Halve the tens and the ones.",
+   "neighbour": "So close, just one off! Count again.",
    "off-by-one": "So close! Count the last jump again.",
    "off-by-ten": "Check the tens.",
    "ones-first": "Compare the biggest place first.",
@@ -607,6 +612,33 @@
    "wrong-place": "Ten changes the tens digit. A hundred changes the hundreds digit."
   },
   "gen": {
+   "ar-big-1": {
+    "text": "Make 5 rows of 6 dots. Tap the bottom-right dot."
+   },
+   "ar-build-1": {
+    "text": "Make 4 rows of 5 dots. Tap the bottom-right dot."
+   },
+   "ar-commute-1": {
+    "text": "Is this true?"
+   },
+   "ar-commute-2": {
+    "text": "Is this true?"
+   },
+   "ar-easy-1": {
+    "text": "Make 3 rows of 4 dots. Tap the bottom-right dot."
+   },
+   "ar-fact-1": {
+    "text": "What is 4 times 6?"
+   },
+   "ar-free-1": {
+    "text": "Make an array for 4 times 3. Tap the bottom-right dot."
+   },
+   "ar-g-1": {
+    "text": "Make 3 rows of 2 dots. Tap the bottom-right dot."
+   },
+   "ar-g-2": {
+    "text": "Make 2 rows of 3 dots. Tap the bottom-right dot."
+   },
    "bonds-easy-1": {
     "text": "What number makes 100?"
    },
@@ -714,6 +746,33 @@
    },
    "dbl-more-1": {
     "text": "Double 21."
+   },
+   "gr-big-1": {
+    "text": "How many in all?"
+   },
+   "gr-easy-1": {
+    "text": "How many in all?"
+   },
+   "gr-g-1": {
+    "text": "How many in all?"
+   },
+   "gr-gc-1": {
+    "text": "Which sum shows 2 groups of 3?"
+   },
+   "gr-sum-1": {
+    "text": "Which sum shows 4 groups of 2?"
+   },
+   "gr-sum-2": {
+    "text": "Which sum shows 4 groups of 4?"
+   },
+   "gr-times-1": {
+    "text": "What is 2 times 7?"
+   },
+   "gr-total-1": {
+    "text": "How many in all?"
+   },
+   "gr-total-2": {
+    "text": "How many in all?"
    },
    "half-1": {
     "text": "What is half of 76?"
@@ -853,6 +912,114 @@
    "story-parts-1": {
     "text": "Rabbit picked 29 carrots and Cat picked 7 carrots. How many carrots did they pick together?"
    },
+   "t2-easy-1": {
+    "text": "What is 10 times 9?"
+   },
+   "t2-fact-1": {
+    "text": "What is 10 times 3?"
+   },
+   "t2-fact-2": {
+    "text": "What is 2 times 3?"
+   },
+   "t2-fact-3": {
+    "text": "What is 5 times 5?"
+   },
+   "t2-five-1": {
+    "text": "What is 5 times 8?"
+   },
+   "t2-g10-1": {
+    "text": "What is 10 times 7?"
+   },
+   "t2-g2-1": {
+    "text": "What is 2 times 6?"
+   },
+   "t2-missing-1": {
+    "text": "What number is missing?"
+   },
+   "t2-true-1": {
+    "text": "Is this true?"
+   },
+   "t3-easy-1": {
+    "text": "What is 3 times 4?"
+   },
+   "t3-fact-1": {
+    "text": "What is 9 times 3?"
+   },
+   "t3-fact-2": {
+    "text": "What is 3 times 3?"
+   },
+   "t3-fact-3": {
+    "text": "What is 6 times 5?"
+   },
+   "t3-g3-1": {
+    "text": "What is 3 times 7?"
+   },
+   "t3-g9-1": {
+    "text": "What is 9 times 7?"
+   },
+   "t3-hard-1": {
+    "text": "What is 9 times 9?"
+   },
+   "t3-missing-1": {
+    "text": "What number is missing?"
+   },
+   "t3-true-1": {
+    "text": "Is this true?"
+   },
+   "t4-choice-1": {
+    "text": "Which is the answer?"
+   },
+   "t4-easy-1": {
+    "text": "What is 4 times 4?"
+   },
+   "t4-fact-1": {
+    "text": "What is 8 times 6?"
+   },
+   "t4-fact-2": {
+    "text": "What is 4 times 7?"
+   },
+   "t4-fact-3": {
+    "text": "What is 8 times 2?"
+   },
+   "t4-g-1": {
+    "text": "What is 4 times 5?"
+   },
+   "t4-g-2": {
+    "text": "What is 4 times 2?"
+   },
+   "t4-hard-1": {
+    "text": "What is 8 times 8?"
+   },
+   "t4-missing-1": {
+    "text": "What number is missing?"
+   },
+   "t7-choice-1": {
+    "text": "Which is the answer?"
+   },
+   "t7-easy-1": {
+    "text": "What is 7 times 4?"
+   },
+   "t7-g01-1": {
+    "text": "What is 0 times 3?"
+   },
+   "t7-g7-1": {
+    "text": "What is 7 times 7?"
+   },
+   "t7-hard-1": {
+    "text": "What is 7 times 9?"
+   },
+   "t7-missing-1": {
+    "text": "What number is missing?"
+   },
+   "t7-mixed-1": {
+    "text": "What is 8 times 6?"
+   },
+   "t7-seven-1": {
+    "text": "What is 7 times 8?"
+   },
+   "t7-zero-1": {
+    "text": "What is 1 times 3?"
+   },
    "tens-g-1": {
     "text": "What is the answer?"
    },
@@ -937,6 +1104,36 @@
    "story": "Owl says: adding 10 changes only the tens digit, and adding 100 only the hundreds digit. Hedgie uses round numbers for the nearly ones, because 99 is 100 less 1. Add the round number, then fix the 1!",
    "title": "Tens, hundreds, nearly"
   },
+  "mt-2-5-10": {
+   "demo": "What is 5 times 6? Count by 5, six times: 5, 10, 15, 20, 25, 30. So 5 times 6 is 30!",
+   "story": "Owl says: some times tables are easy to skip count. Hedgie counts by 2s, by 5s and by 10s. Count along, and the answer appears!",
+   "title": "Twos, fives, tens"
+  },
+  "mt-3-6-9": {
+   "demo": "What is 9 times 4? 10 times 4 is 40, and one 4 less is 36. So 9 times 4 is 36!",
+   "story": "Owl says: 6 is double 3, and 9 is one less than 10. Hedgie counts by 3s, doubles them for the 6s, and takes one group away from the 10s for the 9s!",
+   "title": "Threes, sixes, nines"
+  },
+  "mt-4-8": {
+   "demo": "What is 4 times 3? Double 3 makes 6, and double 6 makes 12. So 4 times 3 is 12!",
+   "story": "Owl says: to times by 4, double the number, then double it again. Hedgie knows that 8 is double 4, so for eights double one more time!",
+   "title": "Fours and eights"
+  },
+  "mt-7-mixed": {
+   "demo": "What is 7 times 6? 5 times 7 is 35, and one more 7 makes 42. So 7 times 6 is 42!",
+   "story": "Owl says: the 7s are the trickiest, and you already know most of them! Hedgie has two tricks: anything times 0 is 0, and anything times 1 stays the same.",
+   "title": "Sevens and mixed"
+  },
+  "mt-arrays": {
+   "demo": "This array has 3 rows of 4 dots. 4 plus 4 plus 4 makes 12, so 3 times 4 is 12. Turn it round, and 4 times 3 is 12 too!",
+   "story": "Owl says: an array is dots in rows, with the same number of dots in every row. Hedgie counts the rows, then the dots in one row. Rows go across!",
+   "title": "Arrays"
+  },
+  "mt-groups": {
+   "demo": "Look: 3 groups of 4 berries. 4 plus 4 plus 4 makes 12. So 3 times 4 is 12!",
+   "story": "Owl says: times is a short way to talk about equal groups. Hedgie has 3 groups with 4 berries in each. Add 4 three times, and the berries are easy to count!",
+   "title": "Equal groups"
+  },
   "number-train": {
    "goal": "Put every carriage number where it belongs on the line!",
    "title": "Number Train"
@@ -996,6 +1193,9 @@
    "part-whole-4": "Panda has {{a}} bamboo sticks in one pile and {{b}} in another. How many sticks are in both piles?"
   },
   "templates": {
+   "array-build": "Make {{r}} rows of {{c}} dots. Tap the bottom-right dot.",
+   "array-build-free": "Make an array for {{r}} times {{c}}. Tap the bottom-right dot.",
+   "array-commute": "Is this true?",
    "bond-missing": "What number makes {{total}}?",
    "bond-pairs": "Which two numbers make {{total}}?",
    "bridge-add": "Make a ten first. What is the total?",
@@ -1007,6 +1207,12 @@
    "count-up": "Count up from the smaller number. How many?",
    "double": "Double {{n}}.",
    "equals-balance": "Both sides must be the same. What goes in the gap?",
+   "fact": "What is {{a}} times {{b}}?",
+   "fact-choice": "Which is the answer?",
+   "fact-missing": "What number is missing?",
+   "fact-tf": "Is this true?",
+   "groups": "How many in all?",
+   "groups-choice": "Which sum shows {{k}} groups of {{n}}?",
    "halve": "What is half of {{n}}?",
    "near-double": "Use a double to help. What is the total?",
    "nl-estimate": "About where is {{n}}? Put it on the line.",
@@ -1038,6 +1244,10 @@
     "condition_one": "Earn {{count}} star",
     "condition_other": "Earn {{count}} stars",
     "name": "Star Counter"
+   },
+   "times-ranger": {
+    "condition": "Master Times-Table Forest and beat Race to 20",
+    "name": "Times Ranger"
    }
   }
  }

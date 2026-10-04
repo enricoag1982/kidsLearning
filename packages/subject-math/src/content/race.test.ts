@@ -39,11 +39,11 @@ const duel = shipped.content.minigames.find(
 );
 
 describe('race-to-20.yaml', () => {
-  it('compiles to a bot-first level-1 duel of the race game, unlocked after pv-round (World 1’s last lesson), on its concept', () => {
+  it('compiles to a bot-first level-1 duel of the race game, unlocked after mt-7-mixed (World 3’s last lesson), on its concept', () => {
     expect(duel).toEqual({
       mode: 'duel',
       id: 'race-to-20',
-      concept: 'pv-round',
+      concept: 'mt-7-mixed',
       game: 'race',
       params: { target: 20, maxStep: 3 },
       level: 1,
@@ -51,7 +51,7 @@ describe('race-to-20.yaml', () => {
       hintKey: 'lessons:race.hint',
       titleKey: 'lessons:race-to-20.title',
       goalKey: 'lessons:race-to-20.goal',
-      unlockAfter: 'pv-round',
+      unlockAfter: 'mt-7-mixed',
     });
   });
 
@@ -65,17 +65,21 @@ describe('race-to-20.yaml', () => {
     }
   });
 
-  it('is an unlock of World 1’s last lesson, not a world boss (the worlds end with Number Train and Market Orders; m13.14 makes Race to 20 the World 3 boss)', () => {
-    expect(shipped.tracks.tracks[0]?.worlds.map((world) => world.boss)).toEqual([
-      'number-train',
-      'market-orders',
+  it('is the world boss of Times-Table Forest (World 3): opened by its last lesson, mt-7-mixed, which has no boss of its own', () => {
+    const worlds = shipped.tracks.tracks[0]?.worlds ?? [];
+    expect(worlds.map((world) => [world.id, world.order, world.boss])).toEqual([
+      ['number-meadow', 1, 'number-train'],
+      ['mental-mountain', 2, 'market-orders'],
+      ['times-forest', 3, 'race-to-20'],
     ]);
+    const forest = shipped.content.lessons.filter((lesson) => lesson.world === 'times-forest');
+    expect(duel?.unlockAfter).toBe([...forest].sort((x, y) => y.order - x.order)[0]?.id);
     expect(
-      shipped.content.lessons.find((lesson) => lesson.id === 'pv-round')?.boss,
+      shipped.content.lessons.find((lesson) => lesson.id === 'mt-7-mixed')?.boss,
     ).toBeUndefined();
   });
 
-  it('has the Hedgehog (the character of pv-round) as its bot', () => {
+  it('has the Hedgehog (the character of mt-7-mixed) as its bot', () => {
     const lesson = shipped.content.lessons.find((entry) => entry.id === duel?.unlockAfter);
     expect(lesson?.character).toBe('hedgehog');
     expect(shipped.locales.en?.characters).toMatchObject({ hedgehog: { name: 'Hedgie' } });
@@ -199,6 +203,9 @@ describe('the texts and the voice inventory', () => {
     roots.push(root);
     cpSync(realRoot, root, { recursive: true });
     rmSync(join(root, 'minigames', 'race-to-20.yaml'));
+    // The world boss it was: Times-Table Forest ends with its last lesson.
+    const tracks = join(root, 'tracks.yaml');
+    writeFileSync(tracks, readFileSync(tracks, 'utf8').replace('boss: race-to-20,', ''));
     const without = compileAll<MathContent>(mathContent, root).voiceTexts.entries;
     expect(without.filter((entry) => entry.source.startsWith('race'))).toEqual([]);
     expect(without.filter((entry) => entry.source.startsWith('duel'))).toEqual([]);

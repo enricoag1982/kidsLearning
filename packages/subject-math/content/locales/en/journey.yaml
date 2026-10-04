@@ -3,7 +3,9 @@ tracks:
 worlds:
   number-meadow: Number Meadow
   mental-mountain: Mental Math Mountain
+  times-forest: Times-Table Forest
 ranks:
   counter: Counter
   builder: Builder
   climber: Climber
+  multiplier: Multiplier

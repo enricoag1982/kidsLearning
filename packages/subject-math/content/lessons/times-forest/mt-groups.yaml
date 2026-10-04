@@ -1,0 +1,27 @@
+# W3 lesson 1: times means equal groups (3 groups of 4 is 4 + 4 + 4). Every exercise is generated from a template
+# (`src/content/templates/`) with a stored seed; never change a seed or a count once released (`docs/adding-a-subject.md` §6).
+# Scored order (CPA): the pictured groups first, then the sums and the fact as symbols only.
+id: mt-groups
+order: 1
+concept: mt-groups
+character: hedgehog
+demo:
+  prompt: { emoji: '🍓', big: '3 groups of 4' }
+guided:
+  - id: gr-g
+    generate: { template: groups, count: 1, seed: 1, params: { maxGroups: 3, maxSize: 3 } }
+  - id: gr-gc
+    generate: { template: groups-choice, count: 1, seed: 7, params: { maxGroups: 3, maxSize: 3 } }
+exercises:
+  - id: gr-total
+    generate: { template: groups, count: 2, seed: 32, params: { maxGroups: 4, maxSize: 4 } }
+  - id: gr-big
+    easier: gr-easy-1
+    generate: { template: groups, count: 1, seed: 5, params: { maxGroups: 5, maxSize: 5 } }
+  - id: gr-sum
+    generate: { template: groups-choice, count: 2, seed: 1, params: { maxGroups: 4, maxSize: 4 } }
+  - id: gr-times
+    generate: { template: fact, count: 1, seed: 6, params: { tables: [2], b: [3, 10] } }
+variants:
+  - id: gr-easy
+    generate: { template: groups, count: 1, seed: 7, params: { maxGroups: 3, maxSize: 3 } }

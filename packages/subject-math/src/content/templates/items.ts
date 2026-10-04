@@ -1,4 +1,4 @@
-// The YAML item shapes the W1 templates write (exactly what an author would put under `exercises:`), one per exercise kind they use.
+// The YAML item shapes the templates write (exactly what an author would put under `exercises:`), one per exercise kind they use.
 // Every field is the kind's own (`kinds/number-line`, `kinds/place-value`, the card kit's `choice` / `number-entry` / `order` /
 // `true-false`); the expander parses each item with the math exercise schema, so a shape slip is an issue at build time.
 import type { ExerciseYamlBase } from '@learn/platform-content/subject';
@@ -6,6 +6,11 @@ import type { ExerciseYamlBase } from '@learn/platform-content/subject';
 /** A big numeral / sum on the card. */
 export interface BigPrompt {
   readonly big: string;
+}
+
+/** A big text with a picture over it (`groups`: "3 groups of 4" and the thing counted). */
+export interface PicturePrompt extends BigPrompt {
+  readonly emoji: string;
 }
 
 /** A wrong value and the text ref of the reason spoken when it is answered. */
@@ -30,6 +35,11 @@ export interface NumberEntryItem extends ExerciseYamlBase {
   readonly answer: number;
   readonly maxDigits?: number;
   readonly reasons?: readonly ValueReason[];
+}
+
+/** A number-entry item whose card also shows a picture (`groups`). */
+export interface PictureNumberEntryItem extends NumberEntryItem {
+  readonly prompt: PicturePrompt;
 }
 
 /** A choice option made of a numeral or sign; `reason` is the text ref spoken when this wrong option is picked. */
@@ -80,4 +90,22 @@ export interface NumberLineItem extends ExerciseYamlBase {
   readonly target: number;
   readonly estimate?: boolean;
   readonly reasons?: readonly ValueReason[];
+}
+
+/** A wrong array shape and the text ref of the reason spoken when it is checked. */
+export interface ShapeReason {
+  readonly rows: number;
+  readonly cols: number;
+  readonly text: string;
+}
+
+export interface ArrayItem extends ExerciseYamlBase {
+  readonly type: 'array';
+  readonly text: string;
+  readonly prompt: BigPrompt;
+  readonly rows: number;
+  readonly cols: number;
+  /** Omitted when `true` (the kind's default): the text fixes which number is the rows. */
+  readonly 'fixed-rows'?: boolean;
+  readonly reasons?: readonly ShapeReason[];
 }

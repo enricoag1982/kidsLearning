@@ -20,6 +20,14 @@
      "habitat": "mountains",
      "titleKey": "journey:worlds.mental-mountain",
      "boss": "market-orders"
+    },
+    {
+     "id": "times-forest",
+     "track": "numbers",
+     "order": 3,
+     "habitat": "forest",
+     "titleKey": "journey:worlds.times-forest",
+     "boss": "race-to-20"
     }
    ]
   }
@@ -36,6 +44,10 @@
   {
    "id": "climber",
    "after": "world:mental-mountain"
+  },
+  {
+   "id": "multiplier",
+   "after": "world:times-forest"
   }
  ]
 }

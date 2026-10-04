@@ -8,12 +8,15 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { compileAll } from '@learn/platform-content/compile-all';
 import { cardStimulus } from '@learn/platform-content/kinds/cards/stimulus';
 import { makeCompileContext } from '@learn/platform-content/kinds/kind-content';
-import type { ExerciseDefBase } from '@learn/platform-core';
+import type { CompiledContent, ExerciseDefBase } from '@learn/platform-core';
+import { resolveText } from '@learn/platform-content/text-resolve';
+import { mathCore } from '../core/math-core.ts';
 import type { MathContent, MathExerciseDef } from '../core/types.ts';
 import type { ArrayDef } from '../kinds/array/def.ts';
 import { ARRAY_SAMPLES } from '../kinds/array/samples.ts';
 import { playSolution, playWrongThenSolve, starsFor } from '../testing/play.ts';
 import { array } from './array.ts';
+import { arrayVoiceTemplates } from './array-voice.ts';
 import { mathContent, mathExerciseSchema } from './math-content.ts';
 
 /** The spec's example, as the YAML parses to. */
@@ -350,6 +353,40 @@ variants:
     }
   });
 
+  it('voices every note an array exercise can speak: the wrong note, the hints, the turned-round note where it can happen, the reasons', () => {
+    const compiled = compileAll<MathContent>(mathContent, rootWith(LESSON, TEXTS));
+    const spoken = (source: string): string[] =>
+      compiled.voiceTexts.entries
+        .filter((entry) => entry.source === source)
+        .map((entry) => entry.text);
+    const plain = spoken('exercise-note');
+    for (const text of [
+      'Count the rows and the dots in each row.',
+      // ar-g1 / ar-01 / ar-easy: the rows are fixed and the array is not square.
+      'Same number, but count the rows again.',
+      'Rows go across, like lines in a book.',
+      // One per `cols` of the lesson (3 and 4); the answer for hint 3.
+      'Each row has 3.',
+      'Each row has 4.',
+      'Here is the answer.',
+      'Each row needs 4 dots. Count along one row.',
+      'Amazing!',
+      'Well done!',
+      'Good try!',
+    ]) {
+      expect(plain, text).toContain(text);
+    }
+    // The easier offer joins the default wrong note, and the notes of the exercise that has an easier variant (ar-01: its reason and
+    // its turned-round array).
+    expect(spoken('exercise-note-easier-offer')).toEqual(
+      expect.arrayContaining([
+        'Count the rows and the dots in each row. This one is tricky. Want an easier one?',
+        'Each row needs 4 dots. Count along one row. This one is tricky. Want an easier one?',
+        'Same number, but count the rows again. This one is tricky. Want an easier one?',
+      ]),
+    );
+  });
+
   it('fails the build on a verify issue, on a reason text that does not exist and on a bad shape', () => {
     const expectIssue = (lesson: string, texts: string, message: RegExp): void => {
       expect(() => compileAll<MathContent>(mathContent, rootWith(lesson, texts))).toThrow(message);
@@ -390,5 +427,79 @@ variants:
     const lesson = compiled.content.lessons.find((entry) => entry.id === 'array-up');
     const first: ExerciseDefBase | undefined = lesson?.guided[0];
     expect(first).toMatchObject({ id: 'ar-g1', concept: 'array-up', textKey: 'lessons:ar-g1' });
+  });
+});
+
+describe('array voice templates, over hand-made defs', () => {
+  const locales = compileAll<MathContent>(
+    mathContent,
+    join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'content'),
+  ).locales;
+  /** What `arrayVoiceTemplates` lists for a content that holds only `defs` (as the lessons' guided tries), keyed by source. */
+  function spokenFor(defs: readonly ArrayDef[]): Record<string, string[]> {
+    const lessons = [{ guided: defs, exercises: [], variants: [] }];
+    const spoken: Record<string, string[]> = {};
+    const resolve = (key: string, vars: Record<string, string | number> = {}): string => {
+      const at = key.indexOf(':');
+      const tree = locales.en?.[at < 0 ? 'common' : key.slice(0, at)];
+      const text =
+        tree === undefined ? undefined : resolveText(tree, at < 0 ? key : key.slice(at + 1), vars);
+      if (text === undefined) throw new Error(`no text for ${key}`);
+      return text;
+    };
+    arrayVoiceTemplates(mathCore.notes)(
+      (text, source) => {
+        (spoken[source] ??= []).push(text);
+      },
+      resolve,
+      { lessons, minigames: [] } as unknown as CompiledContent,
+    );
+    return spoken;
+  }
+
+  const reason = (rows: number, cols: number): ArrayDef['reasons'] => [
+    { rows, cols, reasonKey: 'lessons:bugs.neighbour' },
+  ];
+
+  it('speaks the wrong note, the 3 hints (the dots in a row per def), the turned-round note and the reasons of an exercise with an easier variant', () => {
+    const spoken = spokenFor([
+      { ...ARRAY_SAMPLES.fixed, reasons: reason(3, 3), easier: 'easy' },
+      ARRAY_SAMPLES.guided,
+    ]);
+    expect(spoken['exercise-note']).toEqual(
+      expect.arrayContaining([
+        'Count the rows and the dots in each row.',
+        'Rows go across, like lines in a book.',
+        'Each row has 4.',
+        'Each row has 3.',
+        'Here is the answer.',
+        'Same number, but count the rows again.',
+        'So close, just one off! Count again.',
+        'Amazing!',
+        'Well done!',
+        'Good try!',
+      ]),
+    );
+    expect(spoken['exercise-note']).not.toContain('Each row has 5.');
+    expect([...(spoken['exercise-note-easier-offer'] ?? [])].sort()).toEqual(
+      [
+        'Count the rows and the dots in each row. This one is tricky. Want an easier one?',
+        'Same number, but count the rows again. This one is tricky. Want an easier one?',
+        'So close, just one off! Count again. This one is tricky. Want an easier one?',
+      ].sort(),
+    );
+  });
+
+  it('speaks no turned-round note when no exercise can produce it: rows free, a square array, or a reason for the turned shape', () => {
+    const none = spokenFor([ARRAY_SAMPLES.free, { ...ARRAY_SAMPLES.guided, rows: 3, cols: 3 }]);
+    expect(none['exercise-note']).toContain('Count the rows and the dots in each row.');
+    expect(none['exercise-note']).not.toContain('Same number, but count the rows again.');
+    const reasoned = spokenFor([{ ...ARRAY_SAMPLES.fixed, reasons: reason(4, 3) }]);
+    expect(reasoned['exercise-note']).not.toContain('Same number, but count the rows again.');
+    expect(reasoned['exercise-note']).toContain('So close, just one off! Count again.');
+  });
+
+  it('speaks nothing when the content has no array exercise', () => {
+    expect(spokenFor([])).toEqual({});
   });
 });

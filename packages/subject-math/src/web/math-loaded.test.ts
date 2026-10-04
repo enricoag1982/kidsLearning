@@ -18,7 +18,7 @@ describe('mathEntry.load', () => {
     expect(common?.app?.title).toBe('Math');
   });
 
-  it('serves the compiled Worlds 1 and 2: the 10 lessons, Number Train, Market Orders and Race to 20, in the Number Adventures track', async () => {
+  it('serves the compiled Worlds 1, 2 and 3: the 16 lessons, Number Train, Market Orders and Race to 20, in the Number Adventures track', async () => {
     const { pack } = await mathEntry.load();
     const content = pack.createServices().content;
 
@@ -33,6 +33,12 @@ describe('mathEntry.load', () => {
       'pv-line',
       'pv-round',
       'pv-thousands',
+      'mt-2-5-10',
+      'mt-3-6-9',
+      'mt-4-8',
+      'mt-7-mixed',
+      'mt-arrays',
+      'mt-groups',
     ]);
     expect(content.minigame('number-train')?.id).toBe('number-train');
     expect(content.minigame('market-orders')?.id).toBe('market-orders');
@@ -42,10 +48,12 @@ describe('mathEntry.load', () => {
     expect(content.catalog?.().tracks[0]?.worlds.map((world) => world.id)).toEqual([
       'number-meadow',
       'mental-mountain',
+      'times-forest',
     ]);
     expect(content.badges?.().map((badge) => badge.id)).toEqual([
       'number-builder',
       'mountain-climber',
+      'times-ranger',
       'star-counter',
     ]);
   });

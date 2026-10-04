@@ -50,7 +50,7 @@ describe.each(allExercises())('$where ($exercise.type)', ({ exercise }) => {
 });
 
 describe('the authored world', () => {
-  it('is World 1 Number Meadow (Number Train) and World 2 Mental Math Mountain (Market Orders) in the main track Number Adventures', () => {
+  it('is World 1 Number Meadow (Number Train), World 2 Mental Math Mountain (Market Orders) and World 3 Times-Table Forest (Race to 20) in the main track Number Adventures', () => {
     const [main] = tracks.tracks;
     expect(tracks.tracks).toHaveLength(1);
     expect(main).toMatchObject({ id: 'numbers', kind: 'main' });
@@ -67,17 +67,24 @@ describe('the authored world', () => {
         habitat: 'mountains',
         boss: 'market-orders',
       }),
+      expect.objectContaining({
+        id: 'times-forest',
+        order: 3,
+        habitat: 'forest',
+        boss: 'race-to-20',
+      }),
     ]);
     expect(new Set(content.lessons.map((lesson) => lesson.world))).toEqual(
-      new Set(['number-meadow', 'mental-mountain']),
+      new Set(['number-meadow', 'mental-mountain', 'times-forest']),
     );
   });
 
-  it('has the counter, builder and climber ranks and the Number Builder, Mountain Climber and Star Counter badges', () => {
+  it('has the counter, builder, climber and multiplier ranks and the Number Builder, Mountain Climber, Times Ranger and Star Counter badges', () => {
     expect(tracks.ranks).toEqual([
       { id: 'counter', after: 'start' },
       { id: 'builder', after: 'world:number-meadow' },
       { id: 'climber', after: 'world:mental-mountain' },
+      { id: 'multiplier', after: 'world:times-forest' },
     ]);
     expect(badges).toEqual([
       expect.objectContaining({
@@ -89,6 +96,11 @@ describe('the authored world', () => {
         id: 'mountain-climber',
         category: 'milestone',
         condition: { type: 'mastered', scope: 'world:mental-mountain', thresholds: [1] },
+      }),
+      expect.objectContaining({
+        id: 'times-ranger',
+        category: 'milestone',
+        condition: { type: 'mastered', scope: 'world:times-forest', thresholds: [1] },
       }),
       expect.objectContaining({
         id: 'star-counter',
@@ -272,17 +284,17 @@ describe('the voice inventory covers every note', () => {
     );
   });
 
-  it('has the notes of the kinds World 1 uses beyond the card pad and cards (order, place-value, number-line) and none of the array kind', () => {
+  it('has the notes of the kinds the worlds use beyond the card pad and cards (order, place-value, number-line, array)', () => {
     const plain = notes('exercise-note');
     for (const text of [
       'Not that one. Try another!',
       'Count the blocks in each column again.',
       'Not there yet. Look at the numbers on the line.',
+      'Count the rows and the dots in each row.',
+      'Same number, but count the rows again.',
+      'Rows go across, like lines in a book.',
     ]) {
       expect(plain, text).toContain(text);
     }
-    expect(plain).not.toContain('Count the rows and the dots in each row.');
-    expect(plain).not.toContain('Same number, but count the rows again.');
-    expect(plain).not.toContain('Rows go across, like lines in a book.');
   });
 });

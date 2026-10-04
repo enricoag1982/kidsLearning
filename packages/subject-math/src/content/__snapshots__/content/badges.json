@@ -26,6 +26,19 @@
   }
  },
  {
+  "id": "times-ranger",
+  "category": "milestone",
+  "nameKey": "rewards:badges.times-ranger.name",
+  "conditionKey": "rewards:badges.times-ranger.condition",
+  "condition": {
+   "type": "mastered",
+   "thresholds": [
+    1
+   ],
+   "scope": "world:times-forest"
+  }
+ },
+ {
   "id": "star-counter",
   "category": "skill",
   "nameKey": "rewards:badges.star-counter.name",

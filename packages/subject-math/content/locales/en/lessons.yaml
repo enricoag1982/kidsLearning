@@ -83,6 +83,54 @@ mm-problems:
 market-orders:
   title: Market Orders
   goal: Help the market animals with their orders!
+mt-groups:
+  title: Equal groups
+  story: >-
+    Owl says: times is a short way to talk about equal groups. Hedgie has 3 groups with 4 berries
+    in each. Add 4 three times, and the berries are easy to count!
+  demo: >-
+    Look: 3 groups of 4 berries. 4 plus 4 plus 4 makes 12.
+    So 3 times 4 is 12!
+mt-arrays:
+  title: Arrays
+  story: >-
+    Owl says: an array is dots in rows, with the same number of dots in every row. Hedgie counts
+    the rows, then the dots in one row. Rows go across!
+  demo: >-
+    This array has 3 rows of 4 dots. 4 plus 4 plus 4 makes 12, so 3 times 4 is 12.
+    Turn it round, and 4 times 3 is 12 too!
+mt-2-5-10:
+  title: Twos, fives, tens
+  story: >-
+    Owl says: some times tables are easy to skip count. Hedgie counts by 2s, by 5s and by 10s.
+    Count along, and the answer appears!
+  demo: >-
+    What is 5 times 6? Count by 5, six times: 5, 10, 15, 20, 25, 30.
+    So 5 times 6 is 30!
+mt-4-8:
+  title: Fours and eights
+  story: >-
+    Owl says: to times by 4, double the number, then double it again. Hedgie knows that 8 is
+    double 4, so for eights double one more time!
+  demo: >-
+    What is 4 times 3? Double 3 makes 6, and double 6 makes 12.
+    So 4 times 3 is 12!
+mt-3-6-9:
+  title: Threes, sixes, nines
+  story: >-
+    Owl says: 6 is double 3, and 9 is one less than 10. Hedgie counts by 3s, doubles them for the 6s,
+    and takes one group away from the 10s for the 9s!
+  demo: >-
+    What is 9 times 4? 10 times 4 is 40, and one 4 less is 36.
+    So 9 times 4 is 36!
+mt-7-mixed:
+  title: Sevens and mixed
+  story: >-
+    Owl says: the 7s are the trickiest, and you already know most of them! Hedgie has two tricks:
+    anything times 0 is 0, and anything times 1 stays the same.
+  demo: >-
+    What is 7 times 6? 5 times 7 is 35, and one more 7 makes 42.
+    So 7 times 6 is 42!
 bugs:
   append: 'Each place holds one digit: 2 hundreds is 200, not 2000.'
   swap: 'Look at the order: hundreds, then tens, then ones.'
@@ -101,6 +149,10 @@ bugs:
   forgot-adjust: You used the round number. Now fix the answer by 1.
   answer-next: The equals sign means both sides are the same.
   wrong-op: 'Read it again: does the number get bigger or smaller?'
+  # W3 (m13.14)
+  add-factors: 'Times means groups: 3 groups of 4.'
+  neighbour: So close, just one off! Count again.
+  digit-swap: Check the digits' order.
 templates:
   pv-build: Build {{n}} with blocks.
   pv-read: '{{h}} hundreds, {{t}} tens and {{o}} ones. What number is it?'
@@ -129,6 +181,16 @@ templates:
   compensate-add: Add {{round}}, then take 1 away. What is it?
   compensate-take: Take away {{round}}, then add 1 back. What is it?
   equals-balance: Both sides must be the same. What goes in the gap?
+  # W3 (m13.14)
+  groups: How many in all?
+  groups-choice: Which sum shows {{k}} groups of {{n}}?
+  array-build: Make {{r}} rows of {{c}} dots. Tap the bottom-right dot.
+  array-build-free: Make an array for {{r}} times {{c}}. Tap the bottom-right dot.
+  array-commute: Is this true?
+  fact: What is {{a}} times {{b}}?
+  fact-missing: What number is missing?
+  fact-choice: Which is the answer?
+  fact-tf: Is this true?
 stories:
   part-whole-1: Fox has {{a}} red berries and {{b}} blue berries. How many berries in all?
   part-whole-2: Bear sold {{a}} loaves in the morning and {{b}} in the afternoon. How many loaves did Bear sell?

@@ -5,6 +5,9 @@ badges:
   mountain-climber:
     name: Mountain Climber
     condition: Master Mental Math Mountain and beat Market Orders
+  times-ranger:
+    name: Times Ranger
+    condition: Master Times-Table Forest and beat Race to 20
   star-counter:
     name: Star Counter
     condition_one: 'Earn {{count}} star'

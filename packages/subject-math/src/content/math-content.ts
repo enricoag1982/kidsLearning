@@ -1,6 +1,6 @@
 // Math's content behaviour: the card kit's YAML schemas (a `prompt` card, `choice` cards, a `number-entry` pad, the `series` boss)
 // under math's own registries, so math's own kinds (`number-line`, `place-value`, `array`: schema, compile, verify) and
-// the generated-exercise templates (`templates/`: W1 since m13.9) join them here.
+// the generated-exercise templates (`templates/`: W1 since m13.9, W3 since m13.14) join them here.
 import { CARD_KIND_CONTENT, createCardContent } from '@learn/platform-content/kinds/cards/content';
 import { cardVoiceTemplates } from '@learn/platform-content/kinds/cards/voice';
 import { cardStimulus } from '@learn/platform-content/kinds/cards/stimulus';
@@ -13,6 +13,7 @@ import type { z } from 'zod';
 import { MATH_CHARACTERS, mathCore } from '../core/math-core.ts';
 import type { DefOf, ExerciseType } from '../kinds/index.ts';
 import { array } from './array.ts';
+import { arrayVoiceTemplates } from './array-voice.ts';
 import { numberLine } from './number-line.ts';
 import { numberLineVoiceTemplates } from './number-line-voice.ts';
 import { placeValue } from './place-value.ts';
@@ -41,6 +42,7 @@ const mathVoiceTemplates: SubjectContent['voiceTemplates'] = (add, r, all) => {
   cardVoiceTemplates(mathCore.notes)(add, r, all);
   numberLineVoiceTemplates(mathCore.notes)(add, r, all);
   placeValueVoiceTemplates(mathCore.notes)(add, r, all);
+  arrayVoiceTemplates(mathCore.notes)(add, r, all);
   duelVoiceTemplates(MATH_CHARACTERS)(add, r, all);
   raceVoiceTemplates(MATH_CHARACTERS)(add, r, all);
 };

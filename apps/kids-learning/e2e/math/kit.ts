@@ -43,22 +43,45 @@ export const {
 // conversion, not a runtime check.
 const content = rawContent as unknown as MathContent;
 
-/** World id -> its order in the main track (World 1 Number Meadow, World 2 Mental Math Mountain). */
-const worldOrder = new Map(
-  (
-    rawTracks as unknown as {
-      tracks: readonly { worlds: readonly { id: string; order: number }[] }[];
-    }
-  ).tracks
-    .flatMap((track) => track.worlds)
-    .map((world) => [world.id, world.order] as const),
-);
+interface TrackWorld {
+  readonly id: string;
+  readonly order: number;
+  readonly boss?: string;
+}
+/** The worlds of the main track, in order, as the content defines them (a world added later shows up here with no spec change). */
+const WORLDS: readonly TrackWorld[] = (
+  rawTracks as unknown as {
+    readonly tracks: readonly { readonly kind: string; readonly worlds: readonly TrackWorld[] }[];
+  }
+).tracks
+  .filter((track) => track.kind === 'main')
+  .flatMap((track) => [...track.worlds])
+  .sort((a, b) => a.order - b.order);
+
+/** World id -> its order in the main track (World 1 Number Meadow, World 2 Mental Math Mountain, World 3 Times-Table Forest). */
+const worldOrder = new Map(WORLDS.map((world) => [world.id, world.order] as const));
 
 /** The lessons of one world in Journey order. */
 export function worldLessons(worldId: string): readonly MathLesson[] {
   return content.lessons
     .filter((lesson) => lesson.world === worldId)
     .sort((a, b) => a.order - b.order);
+}
+
+/**
+ * What a child who finished every world before `worldId` has behind them, found in the content: all their lessons and the ids of all
+ * their world bosses. A spec of a later world seeds these (not a fixed list of lessons), so it keeps working when a world is added
+ * before it.
+ */
+export function worldsBefore(worldId: string): {
+  readonly lessons: readonly MathLesson[];
+  readonly bosses: readonly string[];
+} {
+  const before = WORLDS.filter((world) => world.order < (worldOrder.get(worldId) ?? 0));
+  return {
+    lessons: before.flatMap((world) => worldLessons(world.id)),
+    bosses: before.flatMap((world) => (world.boss === undefined ? [] : [world.boss])),
+  };
 }
 
 export function findLesson(id: string): MathLesson {
@@ -127,7 +150,7 @@ export async function openJourneyWorld(page: Page, order: number, worldId: strin
 
 /** Accessible name of the world boss's Journey node for `status`. */
 export function worldBossNodeName(
-  game: MathSeriesGame,
+  game: Pick<MathSeriesGame | MathDuelGame, 'titleKey'>,
   status: 'available' | 'locked' | 'won',
 ): string {
   return interpolate(contentText('journey:ui.world-boss-name'), {

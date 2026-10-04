@@ -1,7 +1,7 @@
 # One main track, "Number Adventures": World 1 Number Meadow (place value) ending in the Number Train world boss, World 2 Mental Math
-# Mountain (mental strategies) ending in Market Orders (`boss`: a mini-game of the world, opened by its last lesson; the world counts
-# as mastered once its lessons are mastered and the boss is won). World 3 joins in m13.14. `title` and the world's name are texts in
-# locales/en/journey.yaml.
+# Mountain (mental strategies) ending in Market Orders, and World 3 Times-Table Forest (times tables) ending in the Race to 20 duel
+# (`boss`: a mini-game of the world, opened by its last lesson; the world counts as mastered once its lessons are mastered and the
+# boss is won). `title` and the world's name are texts in locales/en/journey.yaml.
 tracks:
   - id: numbers
     kind: main
@@ -21,8 +21,16 @@ tracks:
           title: worlds.mental-mountain,
           boss: market-orders,
         }
+      - {
+          id: times-forest,
+          order: 3,
+          habitat: forest,
+          title: worlds.times-forest,
+          boss: race-to-20,
+        }
 # A rank is earned `after` a world (`world:<id>`) or at the `start`; its name is in locales/en/journey.yaml.
 ranks:
   - { id: counter, after: start }
   - { id: builder, after: world:number-meadow }
   - { id: climber, after: world:mental-mountain }
+  - { id: multiplier, after: world:times-forest }

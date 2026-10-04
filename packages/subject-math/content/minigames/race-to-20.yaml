@@ -1,9 +1,9 @@
-# Race to 20: a duel against the Hedgehog (the unlock lesson's character). Until m13.14 makes it the World 3 boss it is the Today
-# session's mini-game after `pv-round`.
+# Race to 20: a duel against the Hedgehog (the unlock lesson's character), World 3's world boss (`tracks.yaml`): opened by the last
+# lesson of Times-Table Forest.
 id: race-to-20
 mode: duel
-concept: pv-round
-unlockAfter: pv-round
+concept: mt-7-mixed
+unlockAfter: mt-7-mixed
 game: race
 params: { target: 20, maxStep: 3 }
 level: 1

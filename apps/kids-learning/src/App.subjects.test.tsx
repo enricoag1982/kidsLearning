@@ -41,7 +41,10 @@ describe('Kids Learning app', () => {
     expect(screen.getByTestId('subject-tile-math').textContent).toContain('Math');
 
     fireEvent.click(screen.getByTestId('subject-tile-math'));
-    fireEvent.click(await screen.findByRole('button', { name: 'No, start at World 1' }));
+    // The Math pack loads on this tap (its content and kinds are transformed in-process: just over the default 1 s of `findBy`).
+    fireEvent.click(
+      await screen.findByRole('button', { name: 'No, start at World 1' }, { timeout: 10_000 }),
+    );
     await screen.findByRole('heading', { level: 1, name: 'Math' });
     fireEvent.click(await screen.findByRole('button', { name: /Start/ }));
     await screen.findByRole('button', { name: /Let me try/ });

@@ -1,10 +1,14 @@
 // The generated-exercise templates of math (`generate: { template: <id>, … }`, docs/adding-a-subject.md §6), by id: the W1 place
-// value, comparing, number line and rounding templates and the W2 mental-math ones of docs/subjects/math/curriculum.md §3.
+// value, comparing, number line and rounding templates, the W2 mental-math ones and the W3 groups, arrays and times-table facts of
+// docs/subjects/math/curriculum.md §3.
 import type { AnyExerciseTemplate } from '@learn/platform-content/generate/template';
+import { arrayBuild, arrayCommute } from './array.ts';
 import { bondMissing, bondPairs, equalsBalance } from './bonds.ts';
 import { bridgeAdd, countUp } from './bridge.ts';
 import { cmpOrder, cmpSign, cmpTf } from './compare.ts';
 import { double, halve, nearDouble } from './doubles.ts';
+import { fact, factChoice, factMissing, factTf } from './fact.ts';
+import { groups, groupsChoice } from './groups.ts';
 import { nlEstimate, nlHalf, nlPlace } from './number-line.ts';
 import { pvBuild, pvExpanded, pvRead, pvWhich } from './place-value.ts';
 import { roundHundred, roundTen, roundTf } from './rounding.ts';
@@ -37,4 +41,13 @@ export const MATH_TEMPLATES: Readonly<Record<string, AnyExerciseTemplate>> = {
   compensate,
   'equals-balance': equalsBalance,
   story,
+  // W3 (m13.14)
+  groups,
+  'groups-choice': groupsChoice,
+  'array-build': arrayBuild,
+  'array-commute': arrayCommute,
+  fact,
+  'fact-missing': factMissing,
+  'fact-choice': factChoice,
+  'fact-tf': factTf,
 };

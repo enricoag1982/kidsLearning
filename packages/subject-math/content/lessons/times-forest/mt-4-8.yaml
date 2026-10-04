@@ -1,0 +1,24 @@
+# W3 lesson 4: the 4 and 8 times tables (double, double again; double once more for 8). Generated; seeds are stored, never change
+# them. `t4-hard` is the hardest item (8 times a big number); its easier variant is a times-4 fact up to 5.
+id: mt-4-8
+order: 4
+concept: mt-4-8
+character: hedgehog
+demo:
+  prompt: { big: '4 × 3' }
+guided:
+  - id: t4-g
+    generate: { template: fact, count: 2, seed: 1, params: { tables: [4], b: [2, 6] } }
+exercises:
+  - id: t4-fact
+    generate: { template: fact, count: 3, seed: 2, params: { tables: [4, 8], b: [2, 10] } }
+  - id: t4-hard
+    easier: t4-easy-1
+    generate: { template: fact, count: 1, seed: 1, params: { tables: [8], b: [6, 9] } }
+  - id: t4-missing
+    generate: { template: fact-missing, count: 1, seed: 1, params: { tables: [4, 8], b: [2, 10] } }
+  - id: t4-choice
+    generate: { template: fact-choice, count: 1, seed: 3, params: { tables: [4, 8], b: [2, 10] } }
+variants:
+  - id: t4-easy
+    generate: { template: fact, count: 1, seed: 1, params: { tables: [4], b: [2, 5] } }

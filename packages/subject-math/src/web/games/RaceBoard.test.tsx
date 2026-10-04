@@ -34,7 +34,7 @@ if (found?.mode !== 'duel') throw new Error('the math content has no race-to-20 
 const GAME: MathDuelGame = found;
 // The lesson the duel unlocks after (its character is the bot's name: Hedgie).
 const unlock = content.lessons.find((entry) => entry.id === GAME.unlockAfter);
-if (unlock === undefined) throw new Error('the math content has no pv-round lesson');
+if (unlock === undefined) throw new Error('the math content has no lesson that unlocks Race to 20');
 const LESSON: MathLesson = unlock;
 const INVENTORY = new Set(voiceTexts.map((entry) => entry.text));
 
