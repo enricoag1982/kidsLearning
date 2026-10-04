@@ -9,7 +9,8 @@ small idea at a time through animal-themed lessons, mini-games and spoken instru
 |---|---|
 | Chess | Basics (5 worlds, 23 lessons), computer opponent (5 levels), play vs a friend; 3 paths planned |
 | Math | Demo (1 world, 3 lessons); full course planned (v1.2) |
-| Coding, Logic | Planned (v1.1, v1.3) — [`docs/new-subjects.md`](docs/new-subjects.md) |
+| Coding | W1–W3 (13 lessons): arrow steps, repeat loops, turns and jumps; 3 world bosses (Bug Squash, Fence Builder, Left-Right Rescue) |
+| Logic | Planned (v1.3) — [`docs/new-subjects.md`](docs/new-subjects.md) |
 
 One install for the whole family: each child picks a subject after choosing their profile; progress, stars and badges are
 kept per subject, while profiles, the parent code, daily time limits and backups are shared. New subjects start from a
@@ -61,9 +62,9 @@ After the Basics, three paths are planned: **Openings**, **Tactics**, and **Chec
 |---|---|
 | ![Journey map](docs/images/journey.png) | ![Lesson try step](docs/images/lesson.png) |
 
-| Parent area |
-|---|
-| ![Parent area: one line per subject](docs/images/parent-area.png) |
+| Parent area | Coding |
+|---|---|
+| ![Parent area: one line per subject](docs/images/parent-area.png) | ![Coding: a repeat loop running](docs/images/coding.png) |
 
 ## Run it yourself
 
