@@ -217,6 +217,14 @@ describe('createServices: rejected setups', () => {
     ).toThrow(/nested/);
   });
 
+  it('writes nothing to storage when the setup is rejected', () => {
+    const storage = createMemoryStorage();
+    expect(() =>
+      createServices([createTestPack('a'), createTestPack('b')], same, storage),
+    ).toThrow();
+    expect(storage.length).toBe(0);
+  });
+
   it('throws when two subjects get the same own prefix', () => {
     expect(() =>
       createServices(
@@ -225,6 +233,16 @@ describe('createServices: rejected setups', () => {
         createMemoryStorage(),
       ),
     ).toThrow(/share one store/);
+  });
+
+  it('throws when one subject prefix is nested inside another subject prefix', () => {
+    expect(() =>
+      createServices(
+        [createTestPack('a'), createTestPack('b')],
+        { ...APP, subjectStoragePrefix: (id) => (id === 'a' ? 'x:' : 'x:y:') },
+        createMemoryStorage(),
+      ),
+    ).toThrow(/nested with the prefix "x:" of another subject/);
   });
 
   it('throws on duplicate subject ids', () => {

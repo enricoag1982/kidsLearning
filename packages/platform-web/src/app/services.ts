@@ -73,19 +73,16 @@ export interface Services {
   testVoice(text: string): Promise<AudioNarratorOutcome>;
 }
 
-/** Opens each subject's own store (`subjectStoragePrefix`): the shared store itself when the prefix equals the shared one
- * (a single-subject app keeping one store), else a store of its own. Throws on prefixes that would alias: two subjects on one
- * store, or one prefix nested inside another (`openLocalStore` would read the other's keys as unversioned data). */
-function openSubjectStores(
-  storage: Storage,
+/** Each subject's own key prefix (`subjectStoragePrefix`), checked before any store is opened. The shared prefix is allowed for
+ * a single-subject app keeping one store. Throws on prefixes that would alias: two subjects on one store, or one prefix nested
+ * inside another (`openLocalStore` would read the other's keys as unversioned data). */
+function checkedSubjectPrefixes(
   appConfig: Omit<AppConfig, 'version'>,
   ids: readonly string[],
-  sharedStore: LocalStore,
-): Record<string, LocalStore> {
+): readonly string[] {
   const shared = appConfig.storagePrefix;
-  const stores: Record<string, LocalStore> = {};
-  const prefixes: string[] = [];
-  for (const id of ids) {
+  const own: string[] = [];
+  return ids.map((id) => {
     const prefix = subjectStoragePrefix(appConfig, id);
     if (prefix === shared) {
       if (ids.length > 1) {
@@ -93,15 +90,14 @@ function openSubjectStores(
           `subject "${id}": prefix "${prefix}" is the shared one, two subjects would share one store`,
         );
       }
-      stores[id] = sharedStore;
-      continue;
+      return prefix;
     }
     if (prefix.startsWith(shared) || shared.startsWith(prefix)) {
       throw new Error(
         `subject "${id}": prefix "${prefix}" is nested with the shared prefix "${shared}"`,
       );
     }
-    const clash = prefixes.find(
+    const clash = own.find(
       (other) => other === prefix || other.startsWith(prefix) || prefix.startsWith(other),
     );
     if (clash !== undefined) {
@@ -111,10 +107,9 @@ function openSubjectStores(
           : `subject "${id}": prefix "${prefix}" is nested with the prefix "${clash}" of another subject`,
       );
     }
-    prefixes.push(prefix);
-    stores[id] = openLocalStore(storage, { migrations: MIGRATIONS, keyPrefix: prefix });
-  }
-  return stores;
+    own.push(prefix);
+    return prefix;
+  });
 }
 
 /** Composition root: wires one scoped `AppDeps` per subject (`packs`) to the web adapters. Profiles, settings, parent code, the
@@ -127,12 +122,12 @@ export function createServices(
 ): Services {
   const ids = packs.map((pack) => pack.core.id);
   assertSubjectIds(ids);
+  const prefixes = checkedSubjectPrefixes(appConfig, ids);
+  const settingsSlot = composeSettingsSlots(packs.map((pack) => pack.core.settings));
   const sharedStore = openLocalStore(storage, {
     migrations: MIGRATIONS,
     keyPrefix: appConfig.storagePrefix,
   });
-  const subjectStores = openSubjectStores(storage, appConfig, ids, sharedStore);
-  const settingsSlot = composeSettingsSlots(packs.map((pack) => pack.core.settings));
 
   const shared = {
     profiles: new LocalStorageProfileRepository(sharedStore),
@@ -152,12 +147,16 @@ export function createServices(
   const subjectData: Record<string, SubjectDataRepositories> = {};
   const subjectDeps: Record<string, AppDeps> = {};
   const subjectServices: Record<string, SubjectServices> = {};
-  for (const pack of packs) {
+  for (const [index, pack] of packs.entries()) {
     const id = pack.core.id;
-    const subjectStore = subjectStores[id];
-    if (subjectStore === undefined) {
-      throw new Error(`no store opened for subject "${id}"`);
+    const prefix = prefixes[index];
+    if (prefix === undefined) {
+      throw new Error(`no storage prefix for subject "${id}"`);
     }
+    const subjectStore =
+      prefix === appConfig.storagePrefix
+        ? sharedStore
+        : openLocalStore(storage, { migrations: MIGRATIONS, keyPrefix: prefix });
     const { content, subject } = pack.createServices();
     const progress = new LocalStorageProgressRepository(subjectStore);
     const gameRecords = new LocalStorageGameRecordRepository(subjectStore);
