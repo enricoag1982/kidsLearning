@@ -177,7 +177,7 @@ describe('a card subject end to end', () => {
 
     const notes = [
       [CHOICE, 'Not quite! Try again.'],
-      [TRUE_FALSE, 'Not quite! Try again.'],
+      [TRUE_FALSE, 'Two and two make four, not five.'], // the statement's reason, not the default note
       [NUMBER_ENTRY, 'Not that number. Try again!'],
       [ORDER, 'Not that one. Try another!'],
     ] as const;
@@ -202,6 +202,72 @@ describe('a card subject end to end', () => {
     expect(progress?.bestStars).toEqual(
       Object.fromEntries(EXERCISES.map((def) => [def.id, GENERATED.includes(def) ? 3 : 2])),
     );
+  });
+
+  it('a wrong answer that matches a known misconception speaks its reason; any other wrong answer keeps the default note', async () => {
+    const { services } = await cardApp();
+    render(<App services={services} />);
+    await openLesson();
+    for (const def of GUIDED) {
+      await solve(def);
+      await next();
+    }
+
+    // choice: option "2" has no reason, option "Five" has one; the right answer only praises.
+    await screen.findByText(instruction(CHOICE));
+    click('2');
+    await expectNote('Not quite! Try again.');
+    click('Five');
+    await expectNote('A hand is five fingers. Count the apples!');
+    expect(screen.queryByText('Not quite! Try again.')).toBeNull();
+    click('3');
+    await expectNote('Good try!');
+    expect(screen.queryByText('A hand is five fingers. Count the apples!')).toBeNull();
+    await next();
+
+    // true-false: the statement's reason on its one wrong pick.
+    await screen.findByText(instruction(TRUE_FALSE));
+    click('True');
+    await expectNote('Two and two make four, not five.');
+    click('False');
+    await expectNote('Well done!');
+    await next();
+
+    // number-entry: 13 has no reason, 35 (seven times five) has one.
+    await screen.findByText(instruction(NUMBER_ENTRY));
+    click('1');
+    click('3');
+    click('Check');
+    await expectNote('Not that number. Try again!');
+    click('3');
+    click('5');
+    click('Check');
+    await expectNote('That is seven times five. This one is plus!');
+    expect(screen.queryByText('Not that number. Try again!')).toBeNull();
+    click('1');
+    click('2');
+    click('Check');
+    await expectNote('Good try!');
+    await next();
+
+    await screen.findByText(instruction(ORDER));
+    await solve(ORDER);
+    await next();
+
+    // generated: every item of the template carries its off-by-one reason (answer + 1).
+    const [first, ...rest] = GENERATED;
+    if (first === undefined) throw new Error('the card fixture has no generated exercise');
+    await screen.findByText(instruction(first));
+    const afterWrong = await play(first, actionsOf(first, 'wrong'));
+    await expectNote('So close! Count the last jump again.');
+    await play(first, actionsOf(first, 'solution'), afterWrong);
+    await next();
+    for (const def of rest) {
+      await screen.findByText(instruction(def));
+      await solve(def);
+      await next();
+    }
+    await screen.findByText('Lesson complete!');
   });
 
   it("speaks each kind's hints and shows what they do on the cards", async () => {

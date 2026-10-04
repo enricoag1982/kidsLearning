@@ -49,6 +49,7 @@
       {
        "id": "c",
        "textKey": "lessons:count-01-opt-c",
+       "reasonKey": "lessons:count-01-reason-c",
        "emoji": "🖐️"
       }
      ],
@@ -62,7 +63,8 @@
       "big": "2 + 2 = 5"
      },
      "type": "true-false",
-     "answer": false
+     "answer": false,
+     "reasonKey": "lessons:count-02-reason"
     },
     {
      "id": "count-03",
@@ -73,7 +75,13 @@
      },
      "type": "number-entry",
      "answer": 12,
-     "maxDigits": 2
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 35,
+       "reasonKey": "lessons:count-03-reason-times"
+      }
+     ]
     },
     {
      "id": "count-04",
@@ -113,7 +121,13 @@
      },
      "type": "number-entry",
      "answer": 2,
-     "maxDigits": 2
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 3,
+       "reasonKey": "lessons:bugs.off-by-one"
+      }
+     ]
     },
     {
      "id": "fx-add-2",
@@ -124,7 +138,13 @@
      },
      "type": "number-entry",
      "answer": 9,
-     "maxDigits": 2
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 10,
+       "reasonKey": "lessons:bugs.off-by-one"
+      }
+     ]
     },
     {
      "id": "fx-add-3",
@@ -135,7 +155,13 @@
      },
      "type": "number-entry",
      "answer": 8,
-     "maxDigits": 2
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 9,
+       "reasonKey": "lessons:bugs.off-by-one"
+      }
+     ]
     }
    ]
   }
@@ -201,7 +227,13 @@
      },
      "type": "number-entry",
      "answer": 13,
-     "maxDigits": 2
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 14,
+       "reasonKey": "lessons:bugs.off-by-one"
+      }
+     ]
     },
     {
      "id": "fx-round-2",
@@ -212,7 +244,13 @@
      },
      "type": "number-entry",
      "answer": 17,
-     "maxDigits": 2
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 18,
+       "reasonKey": "lessons:bugs.off-by-one"
+      }
+     ]
     }
    ],
    "errors3": 0,

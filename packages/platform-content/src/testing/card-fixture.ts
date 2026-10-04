@@ -20,6 +20,8 @@ export interface FixtureAddItem extends ExerciseYamlBase {
   readonly text: string;
   readonly prompt: { readonly big: string };
   readonly answer: number;
+  /** The off-by-one misconception (`a + b + 1`), when it fits the pad. */
+  readonly reasons?: readonly { readonly value: number; readonly text: string }[];
 }
 
 export interface FixtureAddParams {
@@ -29,7 +31,8 @@ export interface FixtureAddParams {
 
 const SUM_PROMPT = /^(\d+) \+ (\d+)$/;
 
-/** `a + b` with a, b in 1 … max − 1 and a + b ≤ max; the text is `templates.fixture-add` ("What is {{a}} plus {{b}}?"). */
+/** `a + b` with a, b in 1 … max − 1 and a + b ≤ max; the text is `templates.fixture-add` ("What is {{a}} plus {{b}}?").
+ * The wrong answer `a + b + 1` (one jump too many) speaks `bugs.off-by-one` (a reason, `docs/adding-a-subject.md` §6). */
 export const fixtureAdd: ExerciseTemplate<FixtureAddParams, FixtureAddItem> = {
   params: z.object({ max: z.number().int().min(2).max(20) }).strict(),
   generate({ max }, ctx) {
@@ -39,12 +42,16 @@ export const fixtureAdd: ExerciseTemplate<FixtureAddParams, FixtureAddItem> = {
       a = randomInt(ctx.random, 1, max - 1);
       b = randomInt(ctx.random, 1, max - 1);
     } while (a + b > max);
+    const sum = a + b;
+    // The pad's default width: the answer's own digits, at least 2.
+    const fits = String(sum + 1).length <= Math.max(2, String(sum).length);
     return {
       id: ctx.id,
       type: 'number-entry',
       text: ctx.text('text', 'templates.fixture-add', { a, b }),
       prompt: { big: `${String(a)} + ${String(b)}` },
-      answer: a + b,
+      answer: sum,
+      ...(fits ? { reasons: [{ value: sum + 1, text: 'bugs.off-by-one' }] } : {}),
     };
   },
   check(item, _params, at) {
