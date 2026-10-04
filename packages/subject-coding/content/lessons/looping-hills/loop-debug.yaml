@@ -1,0 +1,84 @@
+# W2 lesson 4: a loop has bugs too: the count is wrong (the repeat tile itself) or one tile inside it. `bug` = `[top]` for the repeat
+# tile or `[top, body]`; `fix` = the tile that goes in its place (a repeat with the right count for a count bug). Every hunt has
+# exactly one tile whose replacement by another tile makes the program reach the flag (checked in the content tests), and no stars.
+# The two fix-its keep the repeat and fix the arrow beside it: the strip starts as the buggy program, every slot locked but the bug's.
+# Texts: `ask-*` in locales/en/lessons.yaml.
+id: loop-debug
+order: 4
+concept: loop-debug
+character: fox
+demo:
+  prompt: { emoji: 🐞 }
+guided:
+  - id: loopbug-g1
+    type: find-bug
+    text: ask-bug-tile-guided
+    map: ['.....', 'S...F', '.....']
+    program: [{ repeat: 3, do: [right] }]
+    bug: [0]
+    fix: { repeat: 4, do: [right] }
+  - id: loopbug-g2
+    type: find-bug
+    text: ask-bug-tile-guided
+    map: ['S...', '....', '....', '...F']
+    program: [{ repeat: 3, do: [right, up] }]
+    bug: [0, 1]
+    fix: down
+exercises:
+  - id: loopbug-01
+    type: find-bug
+    text: ask-bug-tile
+    map: ['.....', 'S...F', '.....']
+    program: [{ repeat: 5, do: [right] }]
+    bug: [0]
+    fix: { repeat: 4, do: [right] }
+  - id: loopbug-02
+    type: find-bug
+    text: ask-bug-tile
+    map: ['...S', '....', '....', 'F...']
+    program: [{ repeat: 3, do: [right, down] }]
+    bug: [0, 0]
+    fix: left
+  - id: loopbug-03
+    type: find-bug
+    text: ask-bug-tile
+    map: ['S..', '...', '...', '...', '.F.']
+    program: [{ repeat: 3, do: [down] }, right]
+    bug: [0]
+    fix: { repeat: 4, do: [down] }
+  - id: loopbug-04
+    type: find-bug
+    text: ask-bug-tile
+    easier: loopbug-e1
+    map: ['S....', '.....', '....F']
+    program: [{ repeat: 2, do: [right, left, down] }]
+    bug: [0, 1]
+    fix: right
+  - id: loopbug-05
+    type: program
+    text: ask-fix
+    map: ['S....', '....F', '.....']
+    tray: [up, down, left, right, repeat]
+    cap: 3
+    must-loop: true
+    solution: [{ repeat: 4, do: [right] }, down]
+    prefilled: [{ repeat: 4, do: [right] }, up]
+    locked: [0]
+  - id: loopbug-06
+    type: program
+    text: ask-fix
+    map: ['S.', '..', '..', '..', '.F']
+    tray: [up, down, left, right, repeat]
+    cap: 3
+    must-loop: true
+    solution: [right, { repeat: 4, do: [down] }]
+    prefilled: [left, { repeat: 4, do: [down] }]
+    locked: [1]
+variants:
+  - id: loopbug-e1
+    type: find-bug
+    text: ask-bug-tile
+    map: ['S..', '...', '..F']
+    program: [{ repeat: 2, do: [right, up] }]
+    bug: [0, 1]
+    fix: down

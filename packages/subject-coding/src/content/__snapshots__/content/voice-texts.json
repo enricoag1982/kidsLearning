@@ -10,6 +10,16 @@
   "source": "exercise-note"
  },
  {
+  "key": "01be527aa1599e80",
+  "text": "Owl says: a Repeat can hold more than one tile. Fox does all of them, then does them all again. Look for the steps that come back again and again!",
+  "source": "lesson-story"
+ },
+ {
+  "key": "024d6df1ca4cee1a",
+  "text": "Oops, bumped into a rock at step 29! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "045b54b9e6a6e5b6",
   "text": "Oops, bumped into a rock at step 3!",
   "source": "exercise-note"
@@ -25,9 +35,24 @@
   "source": "exercise-note"
  },
  {
+  "key": "07496636156ff13c",
+  "text": "Oops, Fox hit the edge at step 33!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "0804709dcd4db07d",
+  "text": "Oops, Fox hit the edge at step 28! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "088e19a105dc2257",
   "text": "Owl says: rocks block Fox's way, so plan a path around them. Fox picks up a star by stepping on it. Collect every star, then reach the flag!",
   "source": "lesson-story"
+ },
+ {
+  "key": "09b82c0813da3982",
+  "text": "Oops, Fox hit the edge at step 11! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "09bbd3f4f849b669",
@@ -55,9 +80,24 @@
   "source": "exercise-note"
  },
  {
+  "key": "11e5b42b624740df",
+  "text": "Oops, bumped into a rock at step 19! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "13ee9f300c1a6824",
+  "text": "Oops, bumped into a rock at step 20! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "1401f9fb8a91d182",
   "text": "Oops, bumped into a rock at step 10!",
   "source": "exercise-note"
+ },
+ {
+  "key": "14459f88c1ec7ad2",
+  "text": "Oops, Fox hit the edge at step 35! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "14a9f5c2d3f56d3d",
@@ -80,9 +120,24 @@
   "source": "lesson-story"
  },
  {
+  "key": "1a101be0c045cffc",
+  "text": "Oops, bumped into a rock at step 33! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "1ac78aa3c7621553",
   "text": "Oops, bumped into a rock at step 8!",
   "source": "exercise-note"
+ },
+ {
+  "key": "1e4c922a1f0c3a8f",
+  "text": "Oops, bumped into a rock at step 28!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "1ee388d9151874fa",
+  "text": "Build every fence with a Repeat. Stars are the fence posts! How few mistakes can you make?",
+  "source": "minigame-goal"
  },
  {
   "key": "1f5a3a3f0b48462d",
@@ -90,9 +145,29 @@
   "source": "exercise-note-easier-offer"
  },
  {
+  "key": "2044583c4c6d3e01",
+  "text": "Oops, bumped into a rock at step 18!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "223108cbdb75ae68",
+  "text": "Oops, bumped into a rock at step 16!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "238f5d3d5148d8d8",
+  "text": "Oops, bumped into a rock at step 26! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "2416a7322ac657df",
   "text": "Every star starts with the first step.",
   "source": "placement"
+ },
+ {
+  "key": "2450964bee9b7e37",
+  "text": "Oops, Fox hit the edge at step 31!",
+  "source": "exercise-note"
  },
  {
   "key": "260e9c78006694cd",
@@ -105,8 +180,23 @@
   "source": "owl-line"
  },
  {
+  "key": "2741142cebe448b0",
+  "text": "Which repeat makes the same walk?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "27b90495f76debaa",
+  "text": "Hill Climber. Master Looping Hills and beat Fence Builder",
+  "source": "badge-locked"
+ },
+ {
   "key": "27dfb80057b25845",
   "text": "Here is the answer.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "28da4885b5471146",
+  "text": "Oops, Fox hit the edge at step 30!",
   "source": "exercise-note"
  },
  {
@@ -115,9 +205,19 @@
   "source": "home"
  },
  {
+  "key": "2ce6385b4392af8a",
+  "text": "Oops, Fox hit the edge at step 12!",
+  "source": "exercise-note"
+ },
+ {
   "key": "2d076874f564970b",
   "text": "Oops, bumped into a rock at step 8! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "2d7042953dafab5b",
+  "text": "You already know Looping Hills — 4 lessons are yours!",
+  "source": "assessment"
  },
  {
   "key": "2db25582f88cc9e1",
@@ -130,9 +230,29 @@
   "source": "lesson-demo"
  },
  {
+  "key": "2ee31c9d5b4ec0ec",
+  "text": "Owl says: a loop can have bugs too. The number can be wrong, or one tile inside the loop. Watch Fox, find the wrong tile and fix it!",
+  "source": "lesson-story"
+ },
+ {
+  "key": "31add6db4ff8aab9",
+  "text": "Oops, Fox hit the edge at step 21! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "32bede7309326c9e",
   "text": "Want to show me you already know World 3 · Turning Woods?",
   "source": "journey"
+ },
+ {
+  "key": "332d9efc4e8e2d93",
+  "text": "Oops, bumped into a rock at step 31! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "3337e61e9005e111",
+  "text": "Oops, bumped into a rock at step 32! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "336fd73cff486d59",
@@ -145,6 +265,21 @@
   "source": "owl-line"
  },
  {
+  "key": "34247c80b1d8ed89",
+  "text": "Oops, Fox hit the edge at step 27! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "34595b19d8beda7a",
+  "text": "Oops, bumped into a rock at step 24! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "349c873c4932454f",
+  "text": "Oops, Fox hit the edge at step 32!",
+  "source": "exercise-note"
+ },
+ {
   "key": "353e3940c7f89655",
   "text": "Oops, Fox hit the edge at step 9! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
@@ -155,9 +290,24 @@
   "source": "owl-line"
  },
  {
+  "key": "358eb9a4c2202c37",
+  "text": "World boss time: Fence Builder!",
+  "source": "home"
+ },
+ {
+  "key": "36006849d3981fe3",
+  "text": "Oops, Fox hit the edge at step 21!",
+  "source": "exercise-note"
+ },
+ {
   "key": "372bd02dfdc0fb9e",
   "text": "Oops, bumped into a rock at step 6!",
   "source": "exercise-note"
+ },
+ {
+  "key": "38542cb9bbbf29bc",
+  "text": "Oops, Fox hit the edge at step 31! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "38894bc373492440",
@@ -165,9 +315,19 @@
   "source": "lesson-guided"
  },
  {
+  "key": "39fb3677434f9f73",
+  "text": "Oops, Fox hit the edge at step 20! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "3a9fbe7a9244db61",
   "text": "That step is fine. Look again! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "3be5007e6e998045",
+  "text": "Oops, Fox hit the edge at step 22!",
+  "source": "exercise-note"
  },
  {
   "key": "3c291412a166b7f6",
@@ -180,9 +340,19 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "3c7bb81c6a81511f",
+  "text": "Help Fox reach the flag. Use Repeat!",
+  "source": "lesson-variant"
+ },
+ {
   "key": "3d19d8f84bd77fd5",
   "text": "Find the wrong arrow in every program. How few mistakes can you make?",
   "source": "minigame-goal"
+ },
+ {
+  "key": "3db5d3dfd7e18970",
+  "text": "Four arrows the same? One Repeat says it shorter. Repeat four times, right!",
+  "source": "lesson-demo"
  },
  {
   "key": "3edd48c01b9218b7",
@@ -190,9 +360,19 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "3f2433d8271df047",
+  "text": "Oops, bumped into a rock at step 34!",
+  "source": "exercise-note"
+ },
+ {
   "key": "44ee1e157e7f833d",
   "text": "What would you like to learn today?",
   "source": "owl-line"
+ },
+ {
+  "key": "4506a79e9aff0584",
+  "text": "Oops, bumped into a rock at step 37!",
+  "source": "exercise-note"
  },
  {
   "key": "454564f71d5a4af9",
@@ -205,8 +385,18 @@
   "source": "exercise-note"
  },
  {
+  "key": "46c42a28ff3b5da8",
+  "text": "Oops, Fox hit the edge at step 13!",
+  "source": "exercise-note"
+ },
+ {
   "key": "475ada5cb4860bc3",
   "text": "Oops, Fox hit the edge at step 3! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "47806acbf7219d1f",
+  "text": "Oops, Fox hit the edge at step 12! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
  },
  {
@@ -218,6 +408,31 @@
   "key": "4805eee9fb3cd71d",
   "text": "Look at all your friends!",
   "source": "owl-line"
+ },
+ {
+  "key": "4b520224370d0c74",
+  "text": "Oops, Fox hit the edge at step 13! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "4d2bf8b6f3a8a8cc",
+  "text": "Oops, Fox hit the edge at step 34! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "4d53f71d96007483",
+  "text": "Oops, Fox hit the edge at step 19! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "4e25164fc307e22f",
+  "text": "Oops, Fox hit the edge at step 36!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "509a32873c477317",
+  "text": "Oops, bumped into a rock at step 25! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "50f9bc1291ffea46",
@@ -233,6 +448,11 @@
   "key": "5483834c46b27cb8",
   "text": "First Program",
   "source": "badge-earned"
+ },
+ {
+  "key": "56ba737b129bd4be",
+  "text": "Oops, bumped into a rock at step 32!",
+  "source": "exercise-note"
  },
  {
   "key": "5975daf7cd7cef89",
@@ -260,9 +480,29 @@
   "source": "home"
  },
  {
+  "key": "5d0efa7fcb7a07d4",
+  "text": "Oops, bumped into a rock at step 28! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "5d68b918e5285b8d",
+  "text": "Oops, Fox hit the edge at step 11!",
+  "source": "exercise-note"
+ },
+ {
   "key": "5dd5e6286fbf6833",
   "text": "Let's try Coding together!",
   "source": "voice-check"
+ },
+ {
+  "key": "5e68dced2d42e3d8",
+  "text": "You earned the Hill Climber badge!",
+  "source": "celebration"
+ },
+ {
+  "key": "5f3f1eb6fa10ed87",
+  "text": "Oops, Fox hit the edge at step 25!",
+  "source": "exercise-note"
  },
  {
   "key": "5fb235388d8dc4d6",
@@ -275,6 +515,11 @@
   "source": "exercise-note-easier-offer"
  },
  {
+  "key": "61f1a896df6daa23",
+  "text": "Press Watch. One tile is wrong. Tap it!",
+  "source": "lesson-guided"
+ },
+ {
   "key": "6314e45ad1b43327",
   "text": "Want to show me you already know World 1 · Meadow Steps?",
   "source": "journey"
@@ -285,6 +530,21 @@
   "source": "exercise-note"
  },
  {
+  "key": "65bdce3754ebfee8",
+  "text": "Oops, Fox hit the edge at step 23! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "69144a8f398163b1",
+  "text": "Oops, Fox hit the edge at step 16!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "694e9961745183d5",
+  "text": "Count the steps Fox needs. If the number on the Repeat is wrong, that is the bug!",
+  "source": "lesson-demo"
+ },
+ {
   "key": "69823746c5108756",
   "text": "The faded tiles show the first steps.",
   "source": "exercise-note"
@@ -293,6 +553,11 @@
   "key": "6ad18618aa9fa38a",
   "text": "Look at the glowing square. Fox goes there first.",
   "source": "exercise-note"
+ },
+ {
+  "key": "6d9999a6d2bbfc9b",
+  "text": "One tile is wrong. Tap it!",
+  "source": "lesson-variant"
  },
  {
   "key": "6dbcb934f94c0004",
@@ -310,8 +575,23 @@
   "source": "assessment"
  },
  {
+  "key": "6ec5da7521972818",
+  "text": "Fox must cross five squares to the right. So the Repeat says five times, right!",
+  "source": "lesson-demo"
+ },
+ {
+  "key": "70e98b864b51ccd0",
+  "text": "Oops, Fox hit the edge at step 25! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "71a69f04a633a5e7",
   "text": "Not that square. Follow the arrows again!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "740848739cf3c789",
+  "text": "Oops, bumped into a rock at step 23!",
   "source": "exercise-note"
  },
  {
@@ -323,6 +603,11 @@
   "key": "75eba8d4d0fc8e3a",
   "text": "You already know Meadow Steps — 4 lessons are yours!",
   "source": "assessment"
+ },
+ {
+  "key": "769216ab795b174e",
+  "text": "Hill Climber",
+  "source": "badge-earned"
  },
  {
   "key": "76dff621dc3e22b5",
@@ -345,13 +630,68 @@
   "source": "exercise-note"
  },
  {
+  "key": "7af8c0a41d50f3fb",
+  "text": "Oops, bumped into a rock at step 18! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "7c6b3702c95b7924",
+  "text": "Oops, Fox hit the edge at step 17!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "7d6af52781fa44a1",
+  "text": "Oops, bumped into a rock at step 35!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "7da980de58570647",
+  "text": "Oops, bumped into a rock at step 16! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "7ec18b2ca2df890f",
+  "text": "Oops, Fox hit the edge at step 36! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "82c4e72ef1f31d16",
+  "text": "Oops, bumped into a rock at step 14!",
+  "source": "exercise-note"
+ },
+ {
   "key": "82dccc099d5a210e",
   "text": "Coding opens at 08:00. See you soon!",
   "source": "owl-line"
  },
  {
+  "key": "8508f0846aee9965",
+  "text": "Oops, bumped into a rock at step 20!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "854ef92c5d183948",
+  "text": "Oops, Fox hit the edge at step 17! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "8654c7acbbb33912",
   "text": "Oops, Fox hit the edge at step 8! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "86c9a762229ce4a2",
+  "text": "Oops, bumped into a rock at step 15! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "89791e892d32275d",
+  "text": "Owl says: look for a pattern, the same steps again and again. A Repeat block does them again for you. Put an arrow inside it, then tap the number to say how many times!",
+  "source": "lesson-story"
+ },
+ {
+  "key": "8a897e4128c1e735",
+  "text": "Oops, bumped into a rock at step 22! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
  },
  {
@@ -365,6 +705,16 @@
   "source": "exercise-note-easier-offer"
  },
  {
+  "key": "8e590de96269de96",
+  "text": "Oops, Fox hit the edge at step 34!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "8ef09202ce6168aa",
+  "text": "Oops, bumped into a rock at step 27!",
+  "source": "exercise-note"
+ },
+ {
   "key": "8f17975b1eec75ef",
   "text": "Oops, bumped into a rock at step 1! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
@@ -375,14 +725,49 @@
   "source": "lesson-story"
  },
  {
+  "key": "8ffc1a4160b3b12d",
+  "text": "Oops, Fox hit the edge at step 26! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "90e50a93c746313c",
+  "text": "Right, up, right, up, right, up. That is Repeat three times, right and up!",
+  "source": "lesson-demo"
+ },
+ {
   "key": "91084d4db0c5bedf",
   "text": "Help Fox reach the flag.",
   "source": "lesson-variant"
  },
  {
+  "key": "9250c58127aa7681",
+  "text": "Oops, Fox hit the edge at step 37!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "9389747ca0cf392b",
+  "text": "Oops, Fox hit the edge at step 15!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "94552eddec455303",
+  "text": "Oops, Fox hit the edge at step 18! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "953a2a1453aa070d",
+  "text": "Oops, bumped into a rock at step 21!",
+  "source": "exercise-note"
+ },
+ {
   "key": "957f278d66fde401",
   "text": "No worries — nothing is lost. Keep practising on your path!",
   "source": "assessment"
+ },
+ {
+  "key": "9676ee9946e5aaf4",
+  "text": "Oops, Fox hit the edge at step 18!",
+  "source": "exercise-note"
  },
  {
   "key": "97ded770cb83a20c",
@@ -395,14 +780,34 @@
   "source": "exercise-note"
  },
  {
+  "key": "984259059c49bc19",
+  "text": "Oops, Fox hit the edge at step 33! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "9a68cb524c36a1ad",
+  "text": "Oops, bumped into a rock at step 12!",
+  "source": "exercise-note"
+ },
+ {
   "key": "9abe45e485875505",
   "text": "Bug Squasher. Squash 5 bugs on the first try",
   "source": "badge-locked"
  },
  {
+  "key": "9b5b0fca6a805a15",
+  "text": "Oops, Fox hit the edge at step 14!",
+  "source": "exercise-note"
+ },
+ {
   "key": "9c183129b4790850",
   "text": "Oops, Fox hit the edge at step 5!",
   "source": "exercise-note"
+ },
+ {
+  "key": "9c1860c5231caa3a",
+  "text": "Oops, bumped into a rock at step 23! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "9f4ccc2770fe76bf",
@@ -413,6 +818,11 @@
   "key": "9fd4624030447a7a",
   "text": "You finished everything for now. Come back soon for more!",
   "source": "home"
+ },
+ {
+  "key": "a15a26f608ea3259",
+  "text": "Oops, Fox hit the edge at step 22! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "a36419dc6de54cc0",
@@ -430,6 +840,11 @@
   "source": "lesson-guided"
  },
  {
+  "key": "a3be5f8bc3dd1cea",
+  "text": "Oops, Fox hit the edge at step 37! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "a4ed6e51bac1aed6",
   "text": "Oops, Fox hit the edge at step 4! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
@@ -440,9 +855,29 @@
   "source": "exercise-note"
  },
  {
+  "key": "a68c8db41ee165b0",
+  "text": "Oops, bumped into a rock at step 21! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "a6d6b0cfa396cd12",
   "text": "First Program. Build your first program",
   "source": "badge-locked"
+ },
+ {
+  "key": "a7a89b3b6d64bf7d",
+  "text": "Oops, bumped into a rock at step 19!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "abbac546f52a110d",
+  "text": "Oops, bumped into a rock at step 31!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "acee4ffdc4e3aa94",
+  "text": "Oops, bumped into a rock at step 17!",
+  "source": "exercise-note"
  },
  {
   "key": "aee83bf53f708351",
@@ -455,9 +890,19 @@
   "source": "lesson-variant"
  },
  {
+  "key": "b422c3750ff42364",
+  "text": "Oops, bumped into a rock at step 22!",
+  "source": "exercise-note"
+ },
+ {
   "key": "b4d7bed4c73a7015",
   "text": "Want to show me you already know World 2 · Looping Hills?",
   "source": "journey"
+ },
+ {
+  "key": "b4f689af7043261c",
+  "text": "Collect the stars, then go to the flag. Use Repeat!",
+  "source": "lesson-exercise"
  },
  {
   "key": "b57430425213f563",
@@ -468,6 +913,11 @@
   "key": "b59eb1f7cae56298",
   "text": "One arrow is wrong. Tap it!",
   "source": "minigame-round"
+ },
+ {
+  "key": "b6787c8b645fd0e8",
+  "text": "Oops, Fox hit the edge at step 20!",
+  "source": "exercise-note"
  },
  {
   "key": "b9496e3f08d0b6e0",
@@ -482,6 +932,11 @@
  {
   "key": "ba73ea4758649cfd",
   "text": "Oops, Fox hit the edge at step 9!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "bb337d48908fc8fa",
+  "text": "Oops, bumped into a rock at step 29!",
   "source": "exercise-note"
  },
  {
@@ -500,9 +955,19 @@
   "source": "exercise-note"
  },
  {
+  "key": "c2bd3bcc2490df30",
+  "text": "Oops, bumped into a rock at step 26!",
+  "source": "exercise-note"
+ },
+ {
   "key": "c2f337c134304185",
   "text": "Not there yet — try again!",
   "source": "exercise-note"
+ },
+ {
+  "key": "c336a5b1096b6f16",
+  "text": "Oops, bumped into a rock at step 34! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "c352f2006451bd8a",
@@ -515,9 +980,19 @@
   "source": "owl-line"
  },
  {
+  "key": "c4d927248be651d5",
+  "text": "Oops, Fox hit the edge at step 19!",
+  "source": "exercise-note"
+ },
+ {
   "key": "c6c2a8120cf638ee",
   "text": "Want to show me you already know Fox?",
   "source": "journey"
+ },
+ {
+  "key": "c886e634cc043dab",
+  "text": "Oops, bumped into a rock at step 11! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "c9acf5e95c0d3a5c",
@@ -525,9 +1000,29 @@
   "source": "lesson-guided"
  },
  {
+  "key": "ca903e587132230f",
+  "text": "Oops, bumped into a rock at step 30! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "cb1f6dd68524c82f",
   "text": "Watch Fox. Where does it go wrong?",
   "source": "exercise-note"
+ },
+ {
+  "key": "cc3decf575dd3834",
+  "text": "Oops, bumped into a rock at step 12! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "cd4bb726b4081fb8",
+  "text": "Oops, bumped into a rock at step 13! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "cf27171d1538bef3",
+  "text": "Oops, bumped into a rock at step 35! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "cf8dd8796911d203",
@@ -535,9 +1030,24 @@
   "source": "badge-earned"
  },
  {
+  "key": "d06f2deca18fb1b7",
+  "text": "Which repeat makes the same walk? Tap it!",
+  "source": "lesson-guided"
+ },
+ {
   "key": "d18513e39b012798",
   "text": "You already know 2 worlds! Off you go!",
   "source": "placement"
+ },
+ {
+  "key": "d2722772dd002ea3",
+  "text": "Oops, Fox hit the edge at step 26!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "d346145c8ecd851a",
+  "text": "Use Repeat to collect the stars and reach the flag.",
+  "source": "minigame-round"
  },
  {
   "key": "d3c7caef6debf627",
@@ -545,14 +1055,34 @@
   "source": "celebration"
  },
  {
+  "key": "d425c5a610db60b6",
+  "text": "Oops, bumped into a rock at step 33!",
+  "source": "exercise-note"
+ },
+ {
   "key": "d577748a533186ff",
   "text": "The flashing step is the bug.",
   "source": "exercise-note"
  },
  {
+  "key": "d63d1aac234952b4",
+  "text": "Oops, bumped into a rock at step 36! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "d76ebfc55018fee6",
+  "text": "Oops, bumped into a rock at step 17! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "d9cc87ccf3ef3b00",
   "text": "Finish Fox first!",
   "source": "journey"
+ },
+ {
+  "key": "dad9a6af7c3f48b3",
+  "text": "Oops, bumped into a rock at step 13!",
+  "source": "exercise-note"
  },
  {
   "key": "dceda0b11a5b0bb3",
@@ -562,6 +1092,11 @@
  {
   "key": "dd0755400f8831c6",
   "text": "Oops, bumped into a rock at step 7! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "dd191ccdd9c43f63",
+  "text": "Oops, Fox hit the edge at step 24! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
  },
  {
@@ -575,14 +1110,39 @@
   "source": "exercise-note"
  },
  {
+  "key": "dfbf26d4fd0374d1",
+  "text": "Oops, Fox hit the edge at step 28!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "e0efc19b90ba298f",
+  "text": "Oops, Fox hit the edge at step 27!",
+  "source": "exercise-note"
+ },
+ {
   "key": "e1504022fd943a42",
   "text": "Owl says: Fox follows arrows, one arrow for each step. Read them from left to right. Up goes towards the top of the screen!",
   "source": "lesson-story"
  },
  {
+  "key": "e159a28ed5a838cf",
+  "text": "Oops, bumped into a rock at step 15!",
+  "source": "exercise-note"
+ },
+ {
   "key": "e241cdc894a86d9a",
   "text": "Collect the star, then go to the flag.",
   "source": "lesson-variant"
+ },
+ {
+  "key": "e4590f27fcc03ecf",
+  "text": "Oops, Fox hit the edge at step 29! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "e5ef8d4252311054",
+  "text": "Oops, bumped into a rock at step 24!",
+  "source": "exercise-note"
  },
  {
   "key": "e6a6dea01af741d3",
@@ -605,14 +1165,44 @@
   "source": "badge-locked"
  },
  {
+  "key": "e9045f9909e115bd",
+  "text": "Oops, bumped into a rock at step 25!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "eb5e86d5a68da9dc",
+  "text": "Oops, bumped into a rock at step 14! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "ecd4fe369e2640df",
   "text": "Not quite! Try again.",
   "source": "exercise-note"
  },
  {
+  "key": "ee1b94d27feefc69",
+  "text": "Oops, bumped into a rock at step 30!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "ef86282bf2bd0d49",
+  "text": "Oops, Fox hit the edge at step 14! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "f04de88ae98dc1d1",
   "text": "One choice is ruled out.",
   "source": "exercise-note"
+ },
+ {
+  "key": "f0bd9b8ae334e5fb",
+  "text": "Oops, Fox hit the edge at step 32! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "f12bb80b978af681",
+  "text": "Collect the star, then go to the flag. Use Repeat!",
+  "source": "lesson-variant"
  },
  {
   "key": "f1df3b3681873691",
@@ -625,13 +1215,78 @@
   "source": "celebration"
  },
  {
+  "key": "f40ec9ec257f37d3",
+  "text": "Oops, Fox hit the edge at step 29!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "f4c185743a7649e0",
+  "text": "Oops, bumped into a rock at step 37! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "f639a4d527f37d1a",
+  "text": "Oops, bumped into a rock at step 27! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "f7b89fc0ae380f68",
+  "text": "Oops, Fox hit the edge at step 23!",
+  "source": "exercise-note"
+ },
+ {
   "key": "f80c8fc3dcb61f21",
   "text": "Not that one. Try another!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "f919647fa9466dc9",
+  "text": "Oops, Fox hit the edge at step 24!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "faf2fc7e5d1fcbba",
+  "text": "Oops, Fox hit the edge at step 35!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "fc5fa7a0517ee3ff",
+  "text": "Oops, bumped into a rock at step 11!",
   "source": "exercise-note"
  },
  {
   "key": "fc88be65ce342108",
   "text": "Read the arrows from left to right: right, right, down. One arrow is one step.",
   "source": "lesson-demo"
+ },
+ {
+  "key": "fdc8bb28bd928064",
+  "text": "Reach the flag! Tap Repeat, an arrow, then the number.",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "fdcb552092bdeed9",
+  "text": "Oops, Fox hit the edge at step 16! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "fdf87bc59851175a",
+  "text": "Oops, Fox hit the edge at step 30! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "ff3d52f189dc2ac2",
+  "text": "Owl says: Repeat does the same step again and again. Pick the step, then tap the number. Count the squares Fox must cross to know the number!",
+  "source": "lesson-story"
+ },
+ {
+  "key": "ffc5b7f75c519707",
+  "text": "Oops, bumped into a rock at step 36!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "ffe3419cac03627b",
+  "text": "Oops, Fox hit the edge at step 15! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  }
 ]

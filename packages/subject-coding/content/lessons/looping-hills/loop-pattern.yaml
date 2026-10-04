@@ -1,0 +1,82 @@
+# W2 lesson 1: spot a pattern (the same arrow again and again); a Repeat says it shorter. Pattern cards are big text (`big`): a row of
+# arrows against Repeat cards ("🔁 4 × →"); each choice has exactly one card with the row's count and arrow (the other cards are off by
+# one count or turn the wrong way). The two programs are the first Repeat blocks the child builds: one-tile body, `must-loop` (no
+# program without a repeat fits `cap`; `cap` = the loop solution's tile count). Texts: `ask-*` in locales/en/lessons.yaml.
+id: loop-pattern
+order: 1
+concept: loop-pattern
+character: fox
+demo:
+  prompt: { big: '🔁 4 × →' }
+guided:
+  - id: pattern-g1
+    type: choice
+    text: ask-same-guided
+    prompt: { big: '→ → → →' }
+    options:
+      - { id: three-right, big: '🔁 3 × →' }
+      - { id: four-right, big: '🔁 4 × →' }
+    answer: four-right
+  - id: pattern-g2
+    type: choice
+    text: ask-same
+    prompt: { big: '↓ ↓ ↓' }
+    options:
+      - { id: three-right, big: '🔁 3 × →' }
+      - { id: three-down, big: '🔁 3 × ↓' }
+      - { id: two-down, big: '🔁 2 × ↓' }
+    answer: three-down
+exercises:
+  - id: pattern-01
+    type: choice
+    text: ask-same
+    prompt: { big: '→ → → → →' }
+    options:
+      - { id: four-right, big: '🔁 4 × →' }
+      - { id: five-right, big: '🔁 5 × →' }
+      - { id: five-left, big: '🔁 5 × ←' }
+    answer: five-right
+  - id: pattern-02
+    type: choice
+    text: ask-same
+    prompt: { big: '↑ ↑ ↑ ↑' }
+    options:
+      - { id: four-up, big: '🔁 4 × ↑' }
+      - { id: four-down, big: '🔁 4 × ↓' }
+      - { id: three-up, big: '🔁 3 × ↑' }
+    answer: four-up
+  - id: pattern-03
+    type: choice
+    text: ask-same
+    prompt: { big: '← ← ← ← ← ←' }
+    options:
+      - { id: six-right, big: '🔁 6 × →' }
+      - { id: five-left, big: '🔁 5 × ←' }
+      - { id: six-left, big: '🔁 6 × ←' }
+    answer: six-left
+  - id: pattern-04
+    type: program
+    text: ask-repeat-first
+    map: ['......', 'S....F', '......']
+    tray: [up, down, left, right, repeat]
+    cap: 2
+    must-loop: true
+    solution: [{ repeat: 5, do: [right] }]
+  - id: pattern-05
+    type: program
+    text: ask-reach-loop
+    easier: pattern-e1
+    map: ['S..', '...', '...', '...', '.F.']
+    tray: [up, down, left, right, repeat]
+    cap: 3
+    must-loop: true
+    solution: [{ repeat: 4, do: [down] }, right]
+variants:
+  - id: pattern-e1
+    type: program
+    text: ask-reach-loop
+    map: ['S..', '...', '...', 'F..']
+    tray: [up, down, left, right, repeat]
+    cap: 2
+    must-loop: true
+    solution: [{ repeat: 3, do: [down] }]

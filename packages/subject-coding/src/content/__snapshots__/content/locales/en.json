@@ -552,6 +552,7 @@
    "savannah": "Savannah"
   },
   "ranks": {
+   "looper": "Looper",
    "starter": "Starter",
    "stepper": "Stepper"
   },
@@ -596,6 +597,9 @@
  "lessons": {
   "ask-bug": "One arrow is wrong. Tap it!",
   "ask-bug-guided": "Press Watch. One arrow is wrong. Tap it!",
+  "ask-bug-tile": "One tile is wrong. Tap it!",
+  "ask-bug-tile-guided": "Press Watch. One tile is wrong. Tap it!",
+  "ask-fence": "Use Repeat to collect the stars and reach the flag.",
   "ask-first": "Which step comes first?",
   "ask-fix": "Swap the wrong arrow for the right one, then Run.",
   "ask-order": "Put the pictures in order.",
@@ -603,8 +607,14 @@
   "ask-predict": "Where will Fox stop? Tap the square.",
   "ask-reach": "Help Fox reach the flag.",
   "ask-reach-guided": "Help Fox reach the flag. Tap the arrows, then press Run.",
+  "ask-reach-loop": "Help Fox reach the flag. Use Repeat!",
+  "ask-repeat-first": "Reach the flag! Tap Repeat, an arrow, then the number.",
+  "ask-same": "Which repeat makes the same walk?",
+  "ask-same-guided": "Which repeat makes the same walk? Tap it!",
   "ask-star": "Collect the star, then go to the flag.",
+  "ask-star-loop": "Collect the star, then go to the flag. Use Repeat!",
   "ask-stars": "Collect the stars, then go to the flag.",
+  "ask-stars-loop": "Collect the stars, then go to the flag. Use Repeat!",
   "bug-squash": {
    "goal": "Find the wrong arrow in every program. How few mistakes can you make?",
    "title": "Bug Squash"
@@ -632,6 +642,30 @@
   "card-tray": "Shape cookies on a tray",
   "card-water": "Water it",
   "card-write": "Write the letter",
+  "fence-builder": {
+   "goal": "Build every fence with a Repeat. Stars are the fence posts! How few mistakes can you make?",
+   "title": "Fence Builder"
+  },
+  "loop-chunk": {
+   "demo": "Right, up, right, up, right, up. That is Repeat three times, right and up!",
+   "story": "Owl says: a Repeat can hold more than one tile. Fox does all of them, then does them all again. Look for the steps that come back again and again!",
+   "title": "Repeat a chunk"
+  },
+  "loop-debug": {
+   "demo": "Count the steps Fox needs. If the number on the Repeat is wrong, that is the bug!",
+   "story": "Owl says: a loop can have bugs too. The number can be wrong, or one tile inside the loop. Watch Fox, find the wrong tile and fix it!",
+   "title": "Loop bugs"
+  },
+  "loop-pattern": {
+   "demo": "Four arrows the same? One Repeat says it shorter. Repeat four times, right!",
+   "story": "Owl says: look for a pattern, the same steps again and again. A Repeat block does them again for you. Put an arrow inside it, then tap the number to say how many times!",
+   "title": "See the pattern"
+  },
+  "loop-repeat": {
+   "demo": "Fox must cross five squares to the right. So the Repeat says five times, right!",
+   "story": "Owl says: Repeat does the same step again and again. Pick the step, then tap the number. Count the squares Fox must cross to know the number!",
+   "title": "Repeat N"
+  },
   "seq-arrows": {
    "demo": "Read the arrows from left to right: right, right, down. One arrow is one step.",
    "story": "Owl says: Fox follows arrows, one arrow for each step. Read them from left to right. Up goes towards the top of the screen!",
@@ -662,6 +696,10 @@
    "first-program": {
     "condition": "Build your first program",
     "name": "First Program"
+   },
+   "hill-climber": {
+    "condition": "Master Looping Hills and beat Fence Builder",
+    "name": "Hill Climber"
    },
    "meadow-walker": {
     "condition": "Master Meadow Steps and beat Bug Squash",

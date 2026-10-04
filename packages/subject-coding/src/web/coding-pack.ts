@@ -22,7 +22,7 @@ export const codingWeb: SubjectWeb = {
     core: codingCore,
     content: createBundledContentSource({ content, tracks, badges }),
     art: {},
-    rankGlyphs: { starter: '1', stepper: '2' },
+    rankGlyphs: { starter: '1', stepper: '2', looper: '3' },
   }),
   kinds: CODING_KIND_UI,
   // Gated on the compile-time DEV flag so Rollup drops the dev-playground subtree: an ungated `dev` field keeps its `import()` as a

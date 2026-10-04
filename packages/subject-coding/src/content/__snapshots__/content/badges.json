@@ -37,5 +37,18 @@
    ],
    "scope": "world:meadow-steps"
   }
+ },
+ {
+  "id": "hill-climber",
+  "category": "milestone",
+  "nameKey": "rewards:badges.hill-climber.name",
+  "conditionKey": "rewards:badges.hill-climber.condition",
+  "condition": {
+   "type": "mastered",
+   "thresholds": [
+    1
+   ],
+   "scope": "world:looping-hills"
+  }
  }
 ]

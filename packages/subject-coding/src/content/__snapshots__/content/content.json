@@ -2,6 +2,1629 @@
  "version": 1,
  "lessons": [
   {
+   "id": "loop-chunk",
+   "world": "looping-hills",
+   "order": 3,
+   "concept": "loop-chunk",
+   "character": "fox",
+   "titleKey": "lessons:loop-chunk.title",
+   "storyKey": "lessons:loop-chunk.story",
+   "demo": {
+    "textKey": "lessons:loop-chunk.demo",
+    "prompt": {
+     "big": "🔁 3 × → ↑"
+    }
+   },
+   "guided": [
+    {
+     "id": "chunk-g1",
+     "concept": "loop-chunk",
+     "textKey": "lessons:ask-star-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 1,
+        "y": 1
+       }
+      ],
+      "goal": {
+       "x": 2,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 3,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 2,
+       "body": [
+        {
+         "kind": "right"
+        },
+        {
+         "kind": "down"
+        }
+       ]
+      }
+     ],
+     "mustLoop": true
+    },
+    {
+     "id": "chunk-g2",
+     "concept": "loop-chunk",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 3,
+       "y": 3
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "repeat",
+       "times": 2,
+       "body": [
+        {
+         "kind": "down"
+        },
+        {
+         "kind": "right"
+        }
+       ]
+      }
+     ],
+     "answer": {
+      "x": 2,
+      "y": 2
+     }
+    }
+   ],
+   "exercises": [
+    {
+     "id": "chunk-01",
+     "concept": "loop-chunk",
+     "textKey": "lessons:ask-stars-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 2,
+        "y": 1
+       },
+       {
+        "x": 1,
+        "y": 2
+       }
+      ],
+      "goal": {
+       "x": 3,
+       "y": 0
+      },
+      "start": {
+       "x": 0,
+       "y": 3
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 3,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 3,
+       "body": [
+        {
+         "kind": "right"
+        },
+        {
+         "kind": "up"
+        }
+       ]
+      }
+     ],
+     "mustLoop": true
+    },
+    {
+     "id": "chunk-02",
+     "concept": "loop-chunk",
+     "textKey": "lessons:ask-stars-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 2,
+        "y": 1
+       },
+       {
+        "x": 1,
+        "y": 2
+       }
+      ],
+      "goal": {
+       "x": 0,
+       "y": 3
+      },
+      "start": {
+       "x": 3,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 3,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 3,
+       "body": [
+        {
+         "kind": "down"
+        },
+        {
+         "kind": "left"
+        }
+       ]
+      }
+     ],
+     "mustLoop": true
+    },
+    {
+     "id": "chunk-03",
+     "concept": "loop-chunk",
+     "textKey": "lessons:ask-stars-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 2,
+        "y": 0
+       },
+       {
+        "x": 3,
+        "y": 1
+       }
+      ],
+      "goal": {
+       "x": 4,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 4,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 2,
+       "body": [
+        {
+         "kind": "right"
+        },
+        {
+         "kind": "right"
+        },
+        {
+         "kind": "down"
+        }
+       ]
+      }
+     ],
+     "mustLoop": true
+    },
+    {
+     "id": "chunk-04",
+     "concept": "loop-chunk",
+     "textKey": "lessons:ask-stars-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 0,
+        "y": 1
+       },
+       {
+        "x": 2,
+        "y": 1
+       }
+      ],
+      "goal": {
+       "x": 3,
+       "y": 0
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 4,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 3,
+       "body": [
+        {
+         "kind": "down"
+        },
+        {
+         "kind": "right"
+        },
+        {
+         "kind": "up"
+        }
+       ]
+      }
+     ],
+     "mustLoop": true,
+     "easier": "chunk-e1"
+    },
+    {
+     "id": "chunk-05",
+     "concept": "loop-chunk",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 1,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 3
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "repeat",
+       "times": 2,
+       "body": [
+        {
+         "kind": "right"
+        },
+        {
+         "kind": "up"
+        }
+       ]
+      }
+     ],
+     "answer": {
+      "x": 2,
+      "y": 1
+     }
+    },
+    {
+     "id": "chunk-06",
+     "concept": "loop-chunk",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 3,
+       "y": 0
+      },
+      "start": {
+       "x": 0,
+       "y": 3
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "repeat",
+       "times": 3,
+       "body": [
+        {
+         "kind": "right"
+        },
+        {
+         "kind": "up"
+        }
+       ]
+      }
+     ],
+     "answer": {
+      "x": 3,
+      "y": 0
+     }
+    }
+   ],
+   "variants": [
+    {
+     "id": "chunk-e1",
+     "concept": "loop-chunk",
+     "textKey": "lessons:ask-star-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 1,
+        "y": 2
+       }
+      ],
+      "goal": {
+       "x": 2,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 3,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 2,
+       "body": [
+        {
+         "kind": "down"
+        },
+        {
+         "kind": "right"
+        }
+       ]
+      }
+     ],
+     "mustLoop": true
+    }
+   ]
+  },
+  {
+   "id": "loop-debug",
+   "world": "looping-hills",
+   "order": 4,
+   "concept": "loop-debug",
+   "character": "fox",
+   "titleKey": "lessons:loop-debug.title",
+   "storyKey": "lessons:loop-debug.story",
+   "demo": {
+    "textKey": "lessons:loop-debug.demo",
+    "prompt": {
+     "emoji": "🐞"
+    }
+   },
+   "guided": [
+    {
+     "id": "loopbug-g1",
+     "concept": "loop-debug",
+     "textKey": "lessons:ask-bug-tile-guided",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 4,
+       "y": 1
+      },
+      "start": {
+       "x": 0,
+       "y": 1
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "repeat",
+       "times": 3,
+       "body": [
+        {
+         "kind": "right"
+        }
+       ]
+      }
+     ],
+     "bug": [
+      0
+     ],
+     "fix": {
+      "kind": "repeat",
+      "times": 4,
+      "body": [
+       {
+        "kind": "right"
+       }
+      ]
+     }
+    },
+    {
+     "id": "loopbug-g2",
+     "concept": "loop-debug",
+     "textKey": "lessons:ask-bug-tile-guided",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 3,
+       "y": 3
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "repeat",
+       "times": 3,
+       "body": [
+        {
+         "kind": "right"
+        },
+        {
+         "kind": "up"
+        }
+       ]
+      }
+     ],
+     "bug": [
+      0,
+      1
+     ],
+     "fix": {
+      "kind": "down"
+     }
+    }
+   ],
+   "exercises": [
+    {
+     "id": "loopbug-01",
+     "concept": "loop-debug",
+     "textKey": "lessons:ask-bug-tile",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 4,
+       "y": 1
+      },
+      "start": {
+       "x": 0,
+       "y": 1
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "repeat",
+       "times": 5,
+       "body": [
+        {
+         "kind": "right"
+        }
+       ]
+      }
+     ],
+     "bug": [
+      0
+     ],
+     "fix": {
+      "kind": "repeat",
+      "times": 4,
+      "body": [
+       {
+        "kind": "right"
+       }
+      ]
+     }
+    },
+    {
+     "id": "loopbug-02",
+     "concept": "loop-debug",
+     "textKey": "lessons:ask-bug-tile",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 0,
+       "y": 3
+      },
+      "start": {
+       "x": 3,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "repeat",
+       "times": 3,
+       "body": [
+        {
+         "kind": "right"
+        },
+        {
+         "kind": "down"
+        }
+       ]
+      }
+     ],
+     "bug": [
+      0,
+      0
+     ],
+     "fix": {
+      "kind": "left"
+     }
+    },
+    {
+     "id": "loopbug-03",
+     "concept": "loop-debug",
+     "textKey": "lessons:ask-bug-tile",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 5
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 1,
+       "y": 4
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "repeat",
+       "times": 3,
+       "body": [
+        {
+         "kind": "down"
+        }
+       ]
+      },
+      {
+       "kind": "right"
+      }
+     ],
+     "bug": [
+      0
+     ],
+     "fix": {
+      "kind": "repeat",
+      "times": 4,
+      "body": [
+       {
+        "kind": "down"
+       }
+      ]
+     }
+    },
+    {
+     "id": "loopbug-04",
+     "concept": "loop-debug",
+     "textKey": "lessons:ask-bug-tile",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 4,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "repeat",
+       "times": 2,
+       "body": [
+        {
+         "kind": "right"
+        },
+        {
+         "kind": "left"
+        },
+        {
+         "kind": "down"
+        }
+       ]
+      }
+     ],
+     "bug": [
+      0,
+      1
+     ],
+     "fix": {
+      "kind": "right"
+     },
+     "easier": "loopbug-e1"
+    },
+    {
+     "id": "loopbug-05",
+     "concept": "loop-debug",
+     "textKey": "lessons:ask-fix",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 4,
+       "y": 1
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 3,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 4,
+       "body": [
+        {
+         "kind": "right"
+        }
+       ]
+      },
+      {
+       "kind": "down"
+      }
+     ],
+     "prefilled": [
+      {
+       "kind": "repeat",
+       "times": 4,
+       "body": [
+        {
+         "kind": "right"
+        }
+       ]
+      },
+      {
+       "kind": "up"
+      }
+     ],
+     "locked": [
+      0
+     ],
+     "mustLoop": true
+    },
+    {
+     "id": "loopbug-06",
+     "concept": "loop-debug",
+     "textKey": "lessons:ask-fix",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 2,
+       "rows": 5
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 1,
+       "y": 4
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 3,
+     "solution": [
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "repeat",
+       "times": 4,
+       "body": [
+        {
+         "kind": "down"
+        }
+       ]
+      }
+     ],
+     "prefilled": [
+      {
+       "kind": "left"
+      },
+      {
+       "kind": "repeat",
+       "times": 4,
+       "body": [
+        {
+         "kind": "down"
+        }
+       ]
+      }
+     ],
+     "locked": [
+      1
+     ],
+     "mustLoop": true
+    }
+   ],
+   "variants": [
+    {
+     "id": "loopbug-e1",
+     "concept": "loop-debug",
+     "textKey": "lessons:ask-bug-tile",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 2,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "repeat",
+       "times": 2,
+       "body": [
+        {
+         "kind": "right"
+        },
+        {
+         "kind": "up"
+        }
+       ]
+      }
+     ],
+     "bug": [
+      0,
+      1
+     ],
+     "fix": {
+      "kind": "down"
+     }
+    }
+   ]
+  },
+  {
+   "id": "loop-pattern",
+   "world": "looping-hills",
+   "order": 1,
+   "concept": "loop-pattern",
+   "character": "fox",
+   "titleKey": "lessons:loop-pattern.title",
+   "storyKey": "lessons:loop-pattern.story",
+   "demo": {
+    "textKey": "lessons:loop-pattern.demo",
+    "prompt": {
+     "big": "🔁 4 × →"
+    }
+   },
+   "guided": [
+    {
+     "id": "pattern-g1",
+     "concept": "loop-pattern",
+     "textKey": "lessons:ask-same-guided",
+     "prompt": {
+      "big": "→ → → →"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "three-right",
+       "big": "🔁 3 × →"
+      },
+      {
+       "id": "four-right",
+       "big": "🔁 4 × →"
+      }
+     ],
+     "answer": "four-right"
+    },
+    {
+     "id": "pattern-g2",
+     "concept": "loop-pattern",
+     "textKey": "lessons:ask-same",
+     "prompt": {
+      "big": "↓ ↓ ↓"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "three-right",
+       "big": "🔁 3 × →"
+      },
+      {
+       "id": "three-down",
+       "big": "🔁 3 × ↓"
+      },
+      {
+       "id": "two-down",
+       "big": "🔁 2 × ↓"
+      }
+     ],
+     "answer": "three-down"
+    }
+   ],
+   "exercises": [
+    {
+     "id": "pattern-01",
+     "concept": "loop-pattern",
+     "textKey": "lessons:ask-same",
+     "prompt": {
+      "big": "→ → → → →"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "four-right",
+       "big": "🔁 4 × →"
+      },
+      {
+       "id": "five-right",
+       "big": "🔁 5 × →"
+      },
+      {
+       "id": "five-left",
+       "big": "🔁 5 × ←"
+      }
+     ],
+     "answer": "five-right"
+    },
+    {
+     "id": "pattern-02",
+     "concept": "loop-pattern",
+     "textKey": "lessons:ask-same",
+     "prompt": {
+      "big": "↑ ↑ ↑ ↑"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "four-up",
+       "big": "🔁 4 × ↑"
+      },
+      {
+       "id": "four-down",
+       "big": "🔁 4 × ↓"
+      },
+      {
+       "id": "three-up",
+       "big": "🔁 3 × ↑"
+      }
+     ],
+     "answer": "four-up"
+    },
+    {
+     "id": "pattern-03",
+     "concept": "loop-pattern",
+     "textKey": "lessons:ask-same",
+     "prompt": {
+      "big": "← ← ← ← ← ←"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "six-right",
+       "big": "🔁 6 × →"
+      },
+      {
+       "id": "five-left",
+       "big": "🔁 5 × ←"
+      },
+      {
+       "id": "six-left",
+       "big": "🔁 6 × ←"
+      }
+     ],
+     "answer": "six-left"
+    },
+    {
+     "id": "pattern-04",
+     "concept": "loop-pattern",
+     "textKey": "lessons:ask-repeat-first",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 6,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 5,
+       "y": 1
+      },
+      "start": {
+       "x": 0,
+       "y": 1
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 2,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 5,
+       "body": [
+        {
+         "kind": "right"
+        }
+       ]
+      }
+     ],
+     "mustLoop": true
+    },
+    {
+     "id": "pattern-05",
+     "concept": "loop-pattern",
+     "textKey": "lessons:ask-reach-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 5
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 1,
+       "y": 4
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 3,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 4,
+       "body": [
+        {
+         "kind": "down"
+        }
+       ]
+      },
+      {
+       "kind": "right"
+      }
+     ],
+     "mustLoop": true,
+     "easier": "pattern-e1"
+    }
+   ],
+   "variants": [
+    {
+     "id": "pattern-e1",
+     "concept": "loop-pattern",
+     "textKey": "lessons:ask-reach-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 0,
+       "y": 3
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 2,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 3,
+       "body": [
+        {
+         "kind": "down"
+        }
+       ]
+      }
+     ],
+     "mustLoop": true
+    }
+   ]
+  },
+  {
+   "id": "loop-repeat",
+   "world": "looping-hills",
+   "order": 2,
+   "concept": "loop-repeat",
+   "character": "fox",
+   "titleKey": "lessons:loop-repeat.title",
+   "storyKey": "lessons:loop-repeat.story",
+   "demo": {
+    "textKey": "lessons:loop-repeat.demo",
+    "prompt": {
+     "big": "🔁 5 × →"
+    }
+   },
+   "guided": [
+    {
+     "id": "repeat-g1",
+     "concept": "loop-repeat",
+     "textKey": "lessons:ask-reach-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 4,
+       "y": 1
+      },
+      "start": {
+       "x": 0,
+       "y": 1
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 2,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 4,
+       "body": [
+        {
+         "kind": "right"
+        }
+       ]
+      }
+     ],
+     "mustLoop": true
+    },
+    {
+     "id": "repeat-g2",
+     "concept": "loop-repeat",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 3,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "repeat",
+       "times": 3,
+       "body": [
+        {
+         "kind": "right"
+        }
+       ]
+      }
+     ],
+     "answer": {
+      "x": 3,
+      "y": 0
+     }
+    }
+   ],
+   "exercises": [
+    {
+     "id": "repeat-01",
+     "concept": "loop-repeat",
+     "textKey": "lessons:ask-reach-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 5
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 1,
+       "y": 4
+      },
+      "start": {
+       "x": 1,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 2,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 4,
+       "body": [
+        {
+         "kind": "down"
+        }
+       ]
+      }
+     ],
+     "mustLoop": true
+    },
+    {
+     "id": "repeat-02",
+     "concept": "loop-repeat",
+     "textKey": "lessons:ask-reach-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 4,
+       "y": 1
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 3,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 4,
+       "body": [
+        {
+         "kind": "right"
+        }
+       ]
+      },
+      {
+       "kind": "down"
+      }
+     ],
+     "mustLoop": true
+    },
+    {
+     "id": "repeat-03",
+     "concept": "loop-repeat",
+     "textKey": "lessons:ask-reach-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 6
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 2,
+       "y": 5
+      },
+      "start": {
+       "x": 3,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 3,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 5,
+       "body": [
+        {
+         "kind": "down"
+        }
+       ]
+      },
+      {
+       "kind": "left"
+      }
+     ],
+     "mustLoop": true
+    },
+    {
+     "id": "repeat-04",
+     "concept": "loop-repeat",
+     "textKey": "lessons:ask-reach-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 6,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 5,
+       "y": 1
+      },
+      "start": {
+       "x": 0,
+       "y": 2
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 4,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 5,
+       "body": [
+        {
+         "kind": "right"
+        }
+       ]
+      },
+      {
+       "kind": "up"
+      }
+     ],
+     "mustLoop": true,
+     "easier": "repeat-e1"
+    },
+    {
+     "id": "repeat-05",
+     "concept": "loop-repeat",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 3,
+       "y": 3
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "repeat",
+       "times": 3,
+       "body": [
+        {
+         "kind": "down"
+        }
+       ]
+      },
+      {
+       "kind": "right"
+      }
+     ],
+     "answer": {
+      "x": 1,
+      "y": 3
+     }
+    },
+    {
+     "id": "repeat-06",
+     "concept": "loop-repeat",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 6,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 5,
+       "y": 1
+      },
+      "start": {
+       "x": 0,
+       "y": 2
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "repeat",
+       "times": 5,
+       "body": [
+        {
+         "kind": "right"
+        }
+       ]
+      },
+      {
+       "kind": "up"
+      }
+     ],
+     "answer": {
+      "x": 5,
+      "y": 1
+     }
+    }
+   ],
+   "variants": [
+    {
+     "id": "repeat-e1",
+     "concept": "loop-repeat",
+     "textKey": "lessons:ask-reach-loop",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 3,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 3
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 3,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 3,
+       "body": [
+        {
+         "kind": "right"
+        }
+       ]
+      },
+      {
+       "kind": "up"
+      }
+     ],
+     "mustLoop": true
+    }
+   ]
+  },
+  {
    "id": "seq-arrows",
    "world": "meadow-steps",
    "order": 2,
@@ -2188,6 +3811,263 @@
    "titleKey": "lessons:bug-squash.title",
    "goalKey": "lessons:bug-squash.goal",
    "unlockAfter": "seq-debug"
+  },
+  {
+   "mode": "series",
+   "id": "fence-builder",
+   "concept": "loop-chunk",
+   "rounds": [
+    {
+     "id": "fence-builder-r1",
+     "concept": "loop-chunk",
+     "textKey": "lessons:ask-fence",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 4,
+        "y": 0
+       },
+       {
+        "x": 4,
+        "y": 3
+       }
+      ],
+      "goal": {
+       "x": 2,
+       "y": 3
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 6,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 4,
+       "body": [
+        {
+         "kind": "right"
+        }
+       ]
+      },
+      {
+       "kind": "repeat",
+       "times": 3,
+       "body": [
+        {
+         "kind": "down"
+        }
+       ]
+      },
+      {
+       "kind": "repeat",
+       "times": 2,
+       "body": [
+        {
+         "kind": "left"
+        }
+       ]
+      }
+     ],
+     "mustLoop": true
+    },
+    {
+     "id": "fence-builder-r2",
+     "concept": "loop-chunk",
+     "textKey": "lessons:ask-fence",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 6,
+       "rows": 5
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 5,
+        "y": 1
+       },
+       {
+        "x": 5,
+        "y": 4
+       }
+      ],
+      "goal": {
+       "x": 5,
+       "y": 0
+      },
+      "start": {
+       "x": 0,
+       "y": 4
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 4,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 5,
+       "body": [
+        {
+         "kind": "right"
+        }
+       ]
+      },
+      {
+       "kind": "repeat",
+       "times": 4,
+       "body": [
+        {
+         "kind": "up"
+        }
+       ]
+      }
+     ],
+     "mustLoop": true
+    },
+    {
+     "id": "fence-builder-r3",
+     "concept": "loop-chunk",
+     "textKey": "lessons:ask-fence",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 6,
+       "rows": 2
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 2,
+        "y": 0
+       },
+       {
+        "x": 4,
+        "y": 0
+       }
+      ],
+      "goal": {
+       "x": 5,
+       "y": 1
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 3,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 5,
+       "body": [
+        {
+         "kind": "right"
+        }
+       ]
+      },
+      {
+       "kind": "down"
+      }
+     ],
+     "mustLoop": true
+    },
+    {
+     "id": "fence-builder-r4",
+     "concept": "loop-chunk",
+     "textKey": "lessons:ask-fence",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 5
+      },
+      "rocks": [],
+      "stars": [
+       {
+        "x": 3,
+        "y": 1
+       },
+       {
+        "x": 2,
+        "y": 2
+       },
+       {
+        "x": 1,
+        "y": 3
+       }
+      ],
+      "goal": {
+       "x": 4,
+       "y": 0
+      },
+      "start": {
+       "x": 0,
+       "y": 4
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right",
+      "repeat"
+     ],
+     "cap": 3,
+     "solution": [
+      {
+       "kind": "repeat",
+       "times": 4,
+       "body": [
+        {
+         "kind": "right"
+        },
+        {
+         "kind": "up"
+        }
+       ]
+      }
+     ],
+     "mustLoop": true
+    }
+   ],
+   "errors3": 0,
+   "errors2": 2,
+   "titleKey": "lessons:fence-builder.title",
+   "goalKey": "lessons:fence-builder.goal",
+   "unlockAfter": "loop-debug"
   }
  ]
 }

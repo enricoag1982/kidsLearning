@@ -18,7 +18,8 @@
      "track": "basics",
      "order": 2,
      "habitat": "river",
-     "titleKey": "journey:worlds.looping-hills"
+     "titleKey": "journey:worlds.looping-hills",
+     "boss": "fence-builder"
     },
     {
      "id": "turning-woods",
@@ -38,6 +39,10 @@
   {
    "id": "stepper",
    "after": "world:meadow-steps"
+  },
+  {
+   "id": "looper",
+   "after": "world:looping-hills"
   }
  ]
 }

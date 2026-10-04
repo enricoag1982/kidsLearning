@@ -1,5 +1,6 @@
-// The authored content (World 1, "Meadow Steps"): it builds, every exercise plays through its own kind, and the pieces fit together
-// the way `docs/subjects/coding/curriculum.md` says (counts, kinds, caps, unique answers, wording).
+// The authored content (World 1 "Meadow Steps", World 2 "Looping Hills", World 3 "Turning Woods"): it builds, every exercise plays
+// through its own kind, and the pieces fit together the way `docs/subjects/coding/curriculum.md` says (counts, kinds, caps, unique
+// answers, wording).
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
@@ -8,8 +9,15 @@ import { cellKey } from '@learn/platform-core/domain/grid';
 import { CODING_CHARACTERS, codingCore } from '../core/coding-core.ts';
 import type { Level } from '../core/level.ts';
 import { run } from '../core/simulator.ts';
-import { shortestStraightLength } from '../core/solver.ts';
-import { tileCount } from '../core/tiles.ts';
+import { shortestStraightLength, solvableWithoutRepeat } from '../core/solver.ts';
+import {
+  isValidProgram,
+  replaceTile,
+  sameTile,
+  tileAt,
+  tileCount,
+  tilePaths,
+} from '../core/tiles.ts';
 import type { PrimitiveKind, Tile } from '../core/tiles.ts';
 import type { CodingExerciseDef, FindBugDef, PredictDef, ProgramDef } from '../core/types.ts';
 import { playSolution, playWrongThenSolve, starsFor } from '../testing/index.ts';
@@ -21,10 +29,25 @@ import { maxSteps } from './voice-templates.ts';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'content');
 const compiled = compileAll(codingContent, root);
 const { content, tracks, badges, locales } = compiled;
-const lessons = [...codingLessons(content.lessons)].sort((a, b) => a.order - b.order);
-const [boss] = codingSeries(content.minigames);
+const WORLDS = ['meadow-steps', 'looping-hills', 'turning-woods'] as const;
+const worldIndex = (world: string): number => WORLDS.indexOf(world as (typeof WORLDS)[number]);
+/** Every lesson, world by world, in play order. */
+const lessons = [...codingLessons(content.lessons)].sort(
+  (a, b) => worldIndex(a.world) - worldIndex(b.world) || a.order - b.order,
+);
+const lessonsIn = (world: string): readonly CodingLesson[] =>
+  lessons.filter((lesson) => lesson.world === world);
+const games = codingSeries(content.minigames);
+const bossById = (id: string): (typeof games)[number] => {
+  const game = games.find((entry) => entry.id === id);
+  if (game === undefined) throw new Error(`no mini-game "${id}"`);
+  return game;
+};
+const boss = bossById('bug-squash');
 
 const ARROWS: readonly PrimitiveKind[] = ['up', 'down', 'left', 'right'];
+const primitivesOf = (tray: readonly string[]): PrimitiveKind[] =>
+  tray.filter((kind): kind is PrimitiveKind => kind !== 'repeat');
 
 const lessonById = (id: string): CodingLesson => {
   const lesson = lessons.find((entry) => entry.id === id);
@@ -107,35 +130,67 @@ describe.each(everyExercise())('$where ($exercise.type)', ({ exercise }) => {
   });
 });
 
-describe('World 1, Meadow Steps: the four lessons', () => {
+describe('the lessons of every world', () => {
   const SHAPE = [
     {
       id: 'seq-order',
+      world: 'meadow-steps',
       order: 1,
       guided: ['order', 'order'],
       exercises: ['order', 'order', 'order', 'order', 'choice'],
     },
     {
       id: 'seq-arrows',
+      world: 'meadow-steps',
       order: 2,
       guided: ['program', 'predict'],
       exercises: ['program', 'program', 'program', 'program', 'predict', 'predict'],
     },
     {
       id: 'seq-collect',
+      world: 'meadow-steps',
       order: 3,
       guided: ['program', 'predict'],
       exercises: ['program', 'program', 'program', 'program', 'predict', 'predict'],
     },
     {
       id: 'seq-debug',
+      world: 'meadow-steps',
+      order: 4,
+      guided: ['find-bug', 'find-bug'],
+      exercises: ['find-bug', 'find-bug', 'find-bug', 'find-bug', 'program', 'program'],
+    },
+    {
+      id: 'loop-pattern',
+      world: 'looping-hills',
+      order: 1,
+      guided: ['choice', 'choice'],
+      exercises: ['choice', 'choice', 'choice', 'program', 'program'],
+    },
+    {
+      id: 'loop-repeat',
+      world: 'looping-hills',
+      order: 2,
+      guided: ['program', 'predict'],
+      exercises: ['program', 'program', 'program', 'program', 'predict', 'predict'],
+    },
+    {
+      id: 'loop-chunk',
+      world: 'looping-hills',
+      order: 3,
+      guided: ['program', 'predict'],
+      exercises: ['program', 'program', 'program', 'program', 'predict', 'predict'],
+    },
+    {
+      id: 'loop-debug',
+      world: 'looping-hills',
       order: 4,
       guided: ['find-bug', 'find-bug'],
       exercises: ['find-bug', 'find-bug', 'find-bug', 'find-bug', 'program', 'program'],
     },
   ] as const;
 
-  it('has seq-order, seq-arrows, seq-collect and seq-debug, in this order, taught by the Fox', () => {
+  it('has every lesson, world by world in play order, taught by the Fox, with its guided tries and scored exercises', () => {
     expect(
       lessons.map((lesson) => [
         lesson.id,
@@ -149,7 +204,7 @@ describe('World 1, Meadow Steps: the four lessons', () => {
     ).toEqual(
       SHAPE.map((lesson) => [
         lesson.id,
-        'meadow-steps',
+        lesson.world,
         lesson.order,
         'fox',
         lesson.id,
@@ -169,12 +224,28 @@ describe('World 1, Meadow Steps: the four lessons', () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
+  it('every lesson has a story of 2-3 sentences and one demo text, told by the Owl', () => {
+    for (const lesson of lessons) {
+      const texts = lessonTexts?.[lesson.id] as { story: string; demo: string; title: string };
+      const sentences = texts.story.split(/[.!?](?:\s|$)/).filter((part) => part.trim() !== '');
+      expect(sentences.length, lesson.id).toBeGreaterThanOrEqual(2);
+      expect(sentences.length, lesson.id).toBeLessThanOrEqual(3);
+      expect(texts.story.startsWith('Owl says:'), lesson.id).toBe(true);
+      expect(texts.demo.length, lesson.id).toBeGreaterThan(0);
+      expect(texts.title.length, lesson.id).toBeGreaterThan(0);
+    }
+  });
+
   it('gives each lesson an easier variant for its hardest scored exercise: the same kind', () => {
     const hardest: Record<string, string> = {
       'seq-order': 'order-04',
       'seq-arrows': 'arrows-04',
       'seq-collect': 'collect-04',
       'seq-debug': 'debug-04',
+      'loop-pattern': 'pattern-05',
+      'loop-repeat': 'repeat-04',
+      'loop-chunk': 'chunk-04',
+      'loop-debug': 'loopbug-04',
     };
     for (const lesson of lessons) {
       const variants = lesson.variants ?? [];
@@ -191,12 +262,14 @@ describe('World 1, Meadow Steps: the four lessons', () => {
     }
   });
 
-  it('has 40 exercises in all: 35 in the lessons (guided, scored, easier) and 5 boss rounds', () => {
-    expect(everyExercise()).toHaveLength(40);
-    expect(allCodingExercises(content.lessons, content.minigames)).toHaveLength(40);
+  it('has 79 exercises in all: 70 in the lessons (guided, scored, easier) and 9 boss rounds', () => {
+    // 40 in World 1 (35 in the lessons, 5 Bug Squash rounds) + 39 in World 2 (35 in the lessons, 4 Fence Builder rounds).
+    expect(everyExercise()).toHaveLength(79);
+    expect(allCodingExercises(content.lessons, content.minigames)).toHaveLength(79);
+    expect(lessons.flatMap(inLesson)).toHaveLength(70);
   });
 
-  it('keeps the worlds in order: Meadow Steps has the lessons, Looping Hills and Turning Woods are coming soon', () => {
+  it('keeps the worlds in order on the main track: every built world has its boss', () => {
     const [main] = tracks.tracks;
     expect(tracks.tracks).toHaveLength(1);
     expect(main).toMatchObject({ id: 'basics', kind: 'main' });
@@ -205,15 +278,25 @@ describe('World 1, Meadow Steps: the four lessons', () => {
       ['looping-hills', 2, 'river'],
       ['turning-woods', 3, 'forest'],
     ]);
-    expect(lessons.every((lesson) => lesson.world === 'meadow-steps')).toBe(true);
-    // Bug Squash is World 1's boss (a Journey node once every lesson is mastered); the later worlds get theirs in m12.6.
-    expect(main?.worlds.map((world) => world.boss)).toEqual(['bug-squash', undefined, undefined]);
+    expect(lessons.map((lesson) => lesson.world)).toEqual([
+      ...Array<string>(4).fill('meadow-steps'),
+      ...Array<string>(4).fill('looping-hills'),
+    ]);
+    // Bug Squash and Fence Builder are the bosses of their worlds (Journey nodes once every lesson of the world is mastered);
+    // Turning Woods is still "coming soon".
+    expect(main?.worlds.map((world) => world.boss)).toEqual([
+      'bug-squash',
+      'fence-builder',
+      undefined,
+    ]);
+    expect(lessons.every((entry) => entry.boss === undefined)).toBe(true);
   });
 
-  it('has the starter and stepper ranks and three badges built on generic conditions', () => {
+  it('has the starter, stepper and looper ranks and four badges built on generic conditions', () => {
     expect(tracks.ranks).toEqual([
       { id: 'starter', after: 'start' },
       { id: 'stepper', after: 'world:meadow-steps' },
+      { id: 'looper', after: 'world:looping-hills' },
     ]);
     expect(badges.map((badge) => [badge.id, badge.category, badge.condition])).toEqual([
       [
@@ -226,6 +309,11 @@ describe('World 1, Meadow Steps: the four lessons', () => {
         'meadow-walker',
         'milestone',
         { type: 'mastered', scope: 'world:meadow-steps', thresholds: [1] },
+      ],
+      [
+        'hill-climber',
+        'milestone',
+        { type: 'mastered', scope: 'world:looping-hills', thresholds: [1] },
       ],
     ]);
   });
@@ -379,7 +467,7 @@ describe('seq-collect: rocks to plan around, stars to step on', () => {
 
 describe('seq-debug: one wrong step, found and fixed', () => {
   const lesson = lessonById('seq-debug');
-  const everyBug = [...bugsOf(inLesson(lesson)), ...bugsOf(boss?.rounds ?? [])];
+  const everyBug = [...bugsOf(inLesson(lesson)), ...bugsOf(boss.rounds)];
 
   it('every bug hunt has exactly one program of its length that reaches the flag, so one arrow is the bug; no stars', () => {
     expect(everyBug).toHaveLength(2 + 4 + 1 + 5);
@@ -426,7 +514,7 @@ describe('seq-debug: one wrong step, found and fixed', () => {
     }
   });
 
-  it('Bug Squash: 5 bug hunts of rising length, opened by the debugging lesson, no world or lesson boss', () => {
+  it('Bug Squash: 5 bug hunts of rising length, opened by the debugging lesson, the World 1 boss', () => {
     expect(boss).toMatchObject({
       id: 'bug-squash',
       mode: 'series',
@@ -435,11 +523,366 @@ describe('seq-debug: one wrong step, found and fixed', () => {
       errors3: 0,
       errors2: 2,
     });
-    expect(typesOf(boss?.rounds ?? [])).toEqual(Array<string>(5).fill('find-bug'));
-    const lengths = bugsOf(boss?.rounds ?? []).map((round) => round.program.length);
+    expect(typesOf(boss.rounds)).toEqual(Array<string>(5).fill('find-bug'));
+    const lengths = bugsOf(boss.rounds).map((round) => round.program.length);
     expect(lengths).toEqual([3, 4, 5, 6, 6]);
     expect(lessons.every((entry) => entry.boss === undefined)).toBe(true);
-    expect(content.minigames).toHaveLength(1);
+  });
+});
+
+/** Every tile of `def.program` whose swap for another tile (one of `candidates`, or, for a repeat, the same repeat with another
+ * count) makes the program reach the goal, as `[top]` / `[top, body]` keys: the hunt has one bug only when this is the bug's own. */
+function fixablePaths(def: FindBugDef, candidates: readonly PrimitiveKind[]): readonly string[] {
+  const found = new Set<string>();
+  for (const path of tilePaths(def.program)) {
+    const current = tileAt(def.program, path);
+    if (current === undefined) continue;
+    const options: Tile[] = candidates.map((kind) => ({ kind }));
+    if (current.kind === 'repeat') {
+      for (let times = 2; times <= 9; times += 1) options.push({ ...current, times });
+    }
+    for (const option of options) {
+      if (sameTile(option, current)) continue;
+      if (current.kind === 'repeat' && path.length === 1 && option.kind !== 'repeat') continue;
+      const changed = replaceTile(def.program, path, option);
+      if (isValidProgram(changed) && run(def.level, changed).outcome === 'success') {
+        found.add(`[${path.join(', ')}]`);
+      }
+    }
+  }
+  return [...found];
+}
+
+const keyOfPath = (path: readonly number[]): string => `[${path.join(', ')}]`;
+
+/** The repeat of a solution's first tile (the loop the lesson is about). */
+function firstRepeat(solution: readonly Tile[]): Extract<Tile, { readonly kind: 'repeat' }> {
+  const [first] = solution;
+  if (first?.kind !== 'repeat') throw new Error('the solution does not start with a repeat');
+  return first;
+}
+
+describe('World 2, Looping Hills: Repeat', () => {
+  const lessonsW2 = lessonsIn('looping-hills');
+  const fence = bossById('fence-builder');
+  const everyProgram = [
+    ...lessonsW2.flatMap((lesson) => programsOf(inLesson(lesson))),
+    ...programsOf(fence.rounds),
+  ];
+
+  it('the tray is the four arrows and Repeat; the solution has a repeat; no program without a repeat fits the cap', () => {
+    // pattern 3 (2 scored + the easier one), repeat 6, chunk 6, debug 2 fix-its, Fence Builder 4.
+    expect(everyProgram).toHaveLength(3 + 6 + 6 + 2 + 4);
+    for (const exercise of everyProgram) {
+      expect(exercise.tray.every((kind) => kind === 'repeat' || ARROWS.includes(kind))).toBe(true);
+      expect(exercise.tray, exercise.id).toContain('repeat');
+      expect(exercise.mustLoop, exercise.id).toBe(true);
+      expect(
+        exercise.solution.some((tile) => tile.kind === 'repeat'),
+        exercise.id,
+      ).toBe(true);
+      expect(
+        solvableWithoutRepeat(exercise.level, primitivesOf(exercise.tray), exercise.cap),
+        exercise.id,
+      ).toBe(false);
+      expect(exercise.level.heading, exercise.id).toBe('right');
+    }
+  });
+
+  it('cap = the loop solution tile count (a repeat counts 1 + its body) + 0 or 1, and the solution runs clean on it', () => {
+    for (const exercise of everyProgram) {
+      const tiles = tileCount(exercise.solution);
+      expect([tiles, tiles + 1], exercise.id).toContain(exercise.cap);
+      expect(exercise.cap, exercise.id).toBeLessThanOrEqual(6);
+      expect(run(exercise.level, exercise.solution).outcome, exercise.id).toBe('success');
+    }
+  });
+
+  it('every grid is at most 6 x 6, and the loop never bumps (rocks are not used in this world)', () => {
+    for (const { where, exercise } of everyExercise()) {
+      if (!where.startsWith('loop') && !where.startsWith('fence') && !where.startsWith('pattern'))
+        continue;
+      if ('level' in exercise) {
+        expect(exercise.level.size.cols, where).toBeLessThanOrEqual(6);
+        expect(exercise.level.size.rows, where).toBeLessThanOrEqual(6);
+        expect(exercise.level.rocks, where).toHaveLength(0);
+      }
+    }
+  });
+
+  describe('loop-pattern: spot the pattern, then say it shorter', () => {
+    const lesson = lessonById('loop-pattern');
+    const choices = inLesson(lesson).filter((exercise) => exercise.type === 'choice');
+    const REPEAT_CARD = /^🔁 (\d) × (.)$/u;
+
+    /** `{ count, arrow }` of a pattern row ("→ → →") or a repeat card ("🔁 3 × →"). */
+    function patternOf(text: string): { readonly count: number; readonly arrow: string } {
+      const card = REPEAT_CARD.exec(text);
+      if (card?.[1] !== undefined && card[2] !== undefined) {
+        return { count: Number(card[1]), arrow: card[2] };
+      }
+      const arrows = text.split(' ');
+      return { count: arrows.length, arrow: arrows[0] ?? '' };
+    }
+
+    it('has 2 guided and 3 scored pattern choices: a row of arrows against 2-3 repeat cards, big text only', () => {
+      expect(choices).toHaveLength(5);
+      expect(
+        lesson.guided.map((exercise) => (exercise.type === 'choice' ? exercise.options.length : 0)),
+      ).toEqual([2, 3]);
+      for (const exercise of choices) {
+        expect(exercise.prompt?.big, exercise.id).toBeDefined();
+        expect(exercise.prompt?.emoji, exercise.id).toBeUndefined();
+        for (const option of exercise.options) {
+          expect(option.big, `${exercise.id}/${option.id}`).toMatch(REPEAT_CARD);
+          expect(option.textKey, `${exercise.id}/${option.id}`).toBeUndefined();
+        }
+      }
+    });
+
+    it('exactly one card has the row count and arrow; every other card is one step off (count - 1 / + 1, or the other way)', () => {
+      for (const exercise of choices) {
+        const row = patternOf(exercise.prompt?.big ?? '');
+        expect(new Set((exercise.prompt?.big ?? '').split(' ')).size, exercise.id).toBe(1);
+        const same = exercise.options.filter((option) => {
+          const card = patternOf(option.big ?? '');
+          return card.count === row.count && card.arrow === row.arrow;
+        });
+        expect(
+          same.map((option) => option.id),
+          exercise.id,
+        ).toEqual([exercise.answer]);
+        for (const option of exercise.options) {
+          if (option.id === exercise.answer) continue;
+          const card = patternOf(option.big ?? '');
+          const off =
+            (card.arrow === row.arrow && Math.abs(card.count - row.count) === 1) ||
+            (card.arrow !== row.arrow && card.count === row.count);
+          expect(off, `${exercise.id}/${option.id}`).toBe(true);
+        }
+      }
+    });
+
+    it('the right card is not always in the same place, and the row is 3-6 arrows long', () => {
+      const places = choices.map((exercise) =>
+        exercise.options.findIndex((option) => option.id === exercise.answer),
+      );
+      expect(new Set(places).size).toBeGreaterThanOrEqual(3);
+      for (const exercise of choices) {
+        const length = patternOf(exercise.prompt?.big ?? '').count;
+        expect(length, exercise.id).toBeGreaterThanOrEqual(3);
+        expect(length, exercise.id).toBeLessThanOrEqual(6);
+      }
+    });
+
+    it('the two programs are the first Repeat blocks: a one-tile body, cap 2 then 3, and the easier one is a plain run (cap 2)', () => {
+      const scored = programsOf(lesson.exercises);
+      expect(scored.map((exercise) => exercise.cap)).toEqual([2, 3]);
+      for (const exercise of [...scored, ...programsOf(lesson.variants ?? [])]) {
+        expect(firstRepeat(exercise.solution).body, exercise.id).toHaveLength(1);
+      }
+      const [easier] = programsOf(lesson.variants ?? []);
+      expect(easier?.cap).toBe(2);
+      expect(easier?.solution).toHaveLength(1);
+    });
+  });
+
+  describe('loop-repeat: one tile, N times in all', () => {
+    const lesson = lessonById('loop-repeat');
+    const programs = [
+      ...programsOf(lesson.guided),
+      ...programsOf(lesson.exercises),
+      ...programsOf(lesson.variants ?? []),
+    ];
+
+    it('every solution is one repeat of one tile, 3-5 times (4-5 in the scored ones), then at most one corner tile', () => {
+      for (const exercise of programs) {
+        const loop = firstRepeat(exercise.solution);
+        expect(loop.body, exercise.id).toHaveLength(1);
+        expect(exercise.solution.length, exercise.id).toBeLessThanOrEqual(2);
+        expect(loop.times, exercise.id).toBeGreaterThanOrEqual(3);
+        expect(loop.times, exercise.id).toBeLessThanOrEqual(5);
+        if (exercise.solution[1] !== undefined) {
+          expect(exercise.solution[1].kind, exercise.id).not.toBe('repeat');
+        }
+      }
+      for (const exercise of programsOf(lesson.exercises)) {
+        expect(firstRepeat(exercise.solution).times, exercise.id).toBeGreaterThanOrEqual(4);
+      }
+    });
+
+    it('the scored programs are 2 straight runs (cap 2) and 2 with a corner (cap 3, then 4); the flag is the end, no stars', () => {
+      expect(programsOf(lesson.exercises).map((exercise) => exercise.cap)).toEqual([2, 3, 3, 4]);
+      expect(programsOf(lesson.exercises).map((exercise) => exercise.solution.length)).toEqual([
+        1, 2, 2, 2,
+      ]);
+      for (const exercise of programs) {
+        expect(exercise.level.goal, exercise.id).toBeDefined();
+        expect(exercise.level.stars, exercise.id).toHaveLength(0);
+      }
+    });
+
+    it('the predictions have a repeat, run to their end without a bump; the guided one stops off the flag, the scored ones one off, one on', () => {
+      const predicts = [...predictsOf(lesson.guided), ...predictsOf(lesson.exercises)];
+      expect(predicts).toHaveLength(3);
+      const onFlag = predicts.map((exercise) => {
+        expect(
+          exercise.program.some((tile) => tile.kind === 'repeat'),
+          exercise.id,
+        ).toBe(true);
+        const result = run(exercise.level, exercise.program);
+        expect(result.outcome, exercise.id).not.toBe('bumped');
+        return cellKey(result.final.cell) === cellKey(exercise.level.goal ?? { x: -1, y: -1 });
+      });
+      expect(onFlag).toEqual([false, false, true]);
+    });
+  });
+
+  describe('loop-chunk: a repeat of 2-3 tiles', () => {
+    const lesson = lessonById('loop-chunk');
+    const programs = [
+      ...programsOf(lesson.guided),
+      ...programsOf(lesson.exercises),
+      ...programsOf(lesson.variants ?? []),
+    ];
+
+    it('every body has 2 or 3 tiles; the stars sit on the steps (every star is picked up by the loop, 1-2 of them)', () => {
+      expect(programs).toHaveLength(6);
+      for (const exercise of programs) {
+        const loop = firstRepeat(exercise.solution);
+        expect(loop.body.length, exercise.id).toBeGreaterThanOrEqual(2);
+        expect(loop.body.length, exercise.id).toBeLessThanOrEqual(3);
+        expect(exercise.solution, exercise.id).toHaveLength(1);
+        expect(exercise.level.stars.length, exercise.id).toBeGreaterThanOrEqual(1);
+        expect(exercise.level.stars.length, exercise.id).toBeLessThanOrEqual(2);
+        expect(run(exercise.level, exercise.solution).final.collected, exercise.id).toHaveLength(
+          exercise.level.stars.length,
+        );
+      }
+    });
+
+    it('the caps are the loop sizes: 3 for a 2-tile body, 4 for a 3-tile body', () => {
+      for (const exercise of programs) {
+        const { body } = firstRepeat(exercise.solution);
+        expect(exercise.cap, exercise.id).toBe(1 + body.length);
+      }
+    });
+
+    it('the guided and scored predictions have a repeat of 2 tiles and run to their end without a bump', () => {
+      const predicts = [...predictsOf(lesson.guided), ...predictsOf(lesson.exercises)];
+      expect(predicts).toHaveLength(3);
+      for (const exercise of predicts) {
+        const loop = exercise.program[0];
+        expect(loop?.kind, exercise.id).toBe('repeat');
+        expect(run(exercise.level, exercise.program).outcome, exercise.id).not.toBe('bumped');
+      }
+    });
+  });
+
+  describe('loop-debug: a wrong count or a wrong tile inside the loop', () => {
+    const lesson = lessonById('loop-debug');
+    const hunts = bugsOf(inLesson(lesson));
+
+    it('every hunt has exactly one tile whose swap for another tile fixes the program, and it is the bug; no stars', () => {
+      expect(hunts).toHaveLength(2 + 4 + 1);
+      for (const exercise of hunts) {
+        expect(fixablePaths(exercise, ARROWS), exercise.id).toEqual([keyOfPath(exercise.bug)]);
+        expect(exercise.level.stars, exercise.id).toHaveLength(0);
+        expect(
+          exercise.program.some((tile) => tile.kind === 'repeat'),
+          exercise.id,
+        ).toBe(true);
+      }
+    });
+
+    it('a count bug is the repeat tile (the fix: the same repeat with the right count), a body bug is one tile inside it (the fix: an arrow)', () => {
+      const kinds = hunts.map((exercise) => (exercise.bug.length === 1 ? 'count' : 'body'));
+      // guided: count, body; scored: count (too many), body, count (before a corner), body (3 tiles); easier: body.
+      expect(kinds).toEqual(['count', 'body', 'count', 'body', 'count', 'body', 'body']);
+      for (const exercise of hunts) {
+        const fix = exercise.fix;
+        if (exercise.bug.length === 1) {
+          const [top] = exercise.bug;
+          const buggy = exercise.program[top ?? 0];
+          expect(buggy?.kind, exercise.id).toBe('repeat');
+          expect(fix.kind, exercise.id).toBe('repeat');
+          if (buggy?.kind === 'repeat' && fix.kind === 'repeat') {
+            expect(fix.times, exercise.id).not.toBe(buggy.times);
+            expect(fix.body, exercise.id).toEqual(buggy.body);
+          }
+        } else {
+          expect(fix.kind, exercise.id).not.toBe('repeat');
+        }
+      }
+    });
+
+    it('the programs are short loops: 1-2 top-level tiles and a body of 1-3 tiles, the bug never in a loop-free tile', () => {
+      for (const exercise of hunts) {
+        expect(exercise.program.length, exercise.id).toBeLessThanOrEqual(2);
+        const loop = firstRepeat(exercise.program);
+        expect(loop.body.length, exercise.id).toBeLessThanOrEqual(3);
+        expect(exercise.bug[0], exercise.id).toBe(0);
+      }
+    });
+
+    it('the two fix-its keep the repeat and swap the arrow beside it: every slot locked but the bug, the buggy strip fails', () => {
+      const fixes = programsOf(lesson.exercises);
+      expect(fixes).toHaveLength(2);
+      for (const exercise of fixes) {
+        const prefilled = exercise.prefilled ?? [];
+        expect(prefilled, exercise.id).toHaveLength(exercise.solution.length);
+        expect(exercise.cap, exercise.id).toBe(tileCount(exercise.solution));
+        const open = prefilled
+          .map((tile, index) => [tile, index] as const)
+          .filter(([tile, index]) => {
+            const wanted = exercise.solution[index];
+            return tile === null || wanted === undefined || !sameTile(tile, wanted);
+          })
+          .map(([, index]) => index);
+        expect(open, exercise.id).toHaveLength(1);
+        expect([...(exercise.locked ?? [])], exercise.id).toEqual(
+          exercise.solution.map((_tile, index) => index).filter((index) => index !== open[0]),
+        );
+        expect(prefilled[open[0] ?? 0]?.kind, exercise.id).not.toBe('repeat');
+        const buggy = prefilled.filter((tile): tile is Tile => tile !== null);
+        expect(run(exercise.level, buggy).outcome, exercise.id).not.toBe('success');
+      }
+    });
+  });
+
+  describe('Fence Builder: World 2 boss, 4 rounds with fewer slots each', () => {
+    it('is a series of 4 program rounds with the caps 6, 4, 3, 3, opened by the loop-debugging lesson', () => {
+      expect(fence).toMatchObject({
+        id: 'fence-builder',
+        mode: 'series',
+        concept: 'loop-chunk',
+        unlockAfter: 'loop-debug',
+        errors3: 0,
+        errors2: 2,
+      });
+      expect(typesOf(fence.rounds)).toEqual(Array<string>(4).fill('program'));
+      expect(programsOf(fence.rounds).map((round) => round.cap)).toEqual([6, 4, 3, 3]);
+    });
+
+    it('each board is longer than the cap for any program without a repeat (the stars are the fence posts: 2-3 of them)', () => {
+      for (const round of programsOf(fence.rounds)) {
+        expect(round.level.stars.length, round.id).toBeGreaterThanOrEqual(2);
+        expect(round.level.stars.length, round.id).toBeLessThanOrEqual(3);
+        const shortest = shortestStraightLength(round.level, primitivesOf(round.tray), 20);
+        expect(shortest, round.id).toBeGreaterThan(round.cap);
+      }
+    });
+
+    it('the compression rises: the slots shrink, and a program without a repeat needs at least 1.5 times the cap (round 1 the least)', () => {
+      const ratios = programsOf(fence.rounds).map((round) => {
+        const shortest = shortestStraightLength(round.level, primitivesOf(round.tray), 20) ?? 0;
+        return shortest / round.cap;
+      });
+      for (const ratio of ratios) {
+        expect(ratio).toBeGreaterThanOrEqual(1.5);
+      }
+      expect(Math.min(...ratios)).toBe(ratios[0]);
+    });
   });
 });
 
@@ -458,11 +901,25 @@ describe('the words the child reads and hears', () => {
         'Collect the star, then go to the flag.',
         'Collect the stars, then go to the flag.',
         'Swap the wrong arrow for the right one, then Run.',
+        'Reach the flag! Tap Repeat, an arrow, then the number.',
+        'Help Fox reach the flag. Use Repeat!',
+        'Collect the star, then go to the flag. Use Repeat!',
+        'Collect the stars, then go to the flag. Use Repeat!',
+        'Use Repeat to collect the stars and reach the flag.',
       ],
       order: ['Put the pictures in order.', 'Put the pictures in order. Tap the first step first.'],
-      choice: ['Which step comes first?'],
+      choice: [
+        'Which step comes first?',
+        'Which repeat makes the same walk?',
+        'Which repeat makes the same walk? Tap it!',
+      ],
       predict: ['Where will Fox stop? Tap the square.'],
-      'find-bug': ['One arrow is wrong. Tap it!', 'Press Watch. One arrow is wrong. Tap it!'],
+      'find-bug': [
+        'One arrow is wrong. Tap it!',
+        'Press Watch. One arrow is wrong. Tap it!',
+        'One tile is wrong. Tap it!',
+        'Press Watch. One tile is wrong. Tap it!',
+      ],
     };
     for (const { where, exercise } of everyExercise()) {
       expect(wording[exercise.type], where).toContain(instructionOf(exercise));
@@ -479,6 +936,14 @@ describe('the words the child reads and hears', () => {
       'Where will Fox stop? Tap the square.',
       'Press Watch. One arrow is wrong. Tap it!',
       'Press Watch. One arrow is wrong. Tap it!',
+      'Which repeat makes the same walk? Tap it!',
+      'Which repeat makes the same walk?',
+      'Help Fox reach the flag. Use Repeat!',
+      'Where will Fox stop? Tap the square.',
+      'Collect the star, then go to the flag. Use Repeat!',
+      'Where will Fox stop? Tap the square.',
+      'Press Watch. One tile is wrong. Tap it!',
+      'Press Watch. One tile is wrong. Tap it!',
     ]);
   });
 });
@@ -503,7 +968,8 @@ describe('the voice inventory covers every note', () => {
   it('has the bump note for every step count a program of the content can reach, rock and edge', () => {
     const programs = programsOf(allCodingExercises(content.lessons, content.minigames));
     const steps = Math.max(...programs.map(maxSteps));
-    expect(steps).toBe(10);
+    // The most steps a strip of 6 tiles with a repeat can run (Fence Builder round 1 and the 6-slot loops): see `maxSteps`.
+    expect(steps).toBe(37);
     for (let step = 1; step <= steps; step += 1) {
       const n = String(step);
       expect(spoken.has(`Oops, bumped into a rock at step ${n}!`), `rock ${n}`).toBe(true);
@@ -553,7 +1019,11 @@ describe('texts and the core', () => {
       'looping-hills': 'Looping Hills',
       'turning-woods': 'Turning Woods',
     });
-    expect(en?.journey?.ranks).toEqual({ starter: 'Starter', stepper: 'Stepper' });
+    expect(en?.journey?.ranks).toEqual({
+      starter: 'Starter',
+      stepper: 'Stepper',
+      looper: 'Looper',
+    });
     for (const character of Object.keys(CODING_CHARACTERS)) {
       expect(en?.characters?.[character], character).toBeDefined();
     }
