@@ -15,43 +15,63 @@ Target: age 8–9 beginners (Piaget concrete-operational: classification, seriat
 
 ## 2. Curriculum
 
-Full map: 7 worlds, 35 lessons (patterns, sorting, spatial, mazes, grid puzzles, deduction, planning). v1.3 = three worlds:
+Full map: 7 worlds, 35 lessons (patterns, sorting, spatial, mazes, grid puzzles, deduction, planning). v1.3 = three worlds (14 lessons; lesson-level list in [curriculum.md](curriculum.md)):
 
 | World | Lessons (concept id) | Kinds | Boss |
 |---|---|---|---|
-| W1 Pattern Pond | `pat-repeat` repeating unit (AB, AAB, ABC) · `pat-steps` number steps · `pat-grow` growing figures · `pat-far` "the 10th one" | choice (shape / emoji cards), number-entry | Pattern Train (series) |
+| W1 Pattern Pond | `pat-repeat` repeating unit (AB, AAB, ABC) · `pat-steps` number rules (constant step, ×2, alternating, growing step) · `pat-grow` growing figures · `pat-far` "the 10th one" | choice (shape cards), number-entry | Pattern Train (series) |
 | W2 Sort Shore | `cls-odd` odd one out · `cls-rule` find the rule · `cls-boxes` two boxes (Carroll 2 × 2) · `cls-circles` Venn · `cls-line-up` order by size (A > B, B > C ⇒ A > C) | choice, group, order | Sorting Sprint (series) |
 | W3 Grid Puzzles | `grd-last` last empty cell (4 × 4 sudoku) · `grd-only-place` · `grd-only-number` · `grd-six` 6 × 6 · `grd-pixels` picture cross 5 × 5 | grid-fill | Sudoku Sprint (series) |
 
-Next versions: Mirror Meadow (spatial), Maze Mountain, Clue Cove (true / false, logic grid, owls & foxes), Plan Ahead (Hanoi, river crossing, Nim, tic-tac-toe vs bot).
+Next versions: Mirror Meadow (spatial), Maze Mountain, Clue Cove (true / false, logic grid, owls & foxes), Plan Ahead (Hanoi, river crossing, Nim with two equal piles, tic-tac-toe vs bot).
 
 ## 3. Exercise kinds
 
 | Kind | Owner | Interaction | Check | Hints 1 / 2 / 3 |
 |---|---|---|---|---|
-| `choice`, `order`, `number-entry`, `true-false` | platform card kit | Cards; shape tokens (shape × colour × size × count) | exact; content checks: every rule that fits the shown terms gives the same answer (pattern ambiguity), one odd item per attribute | card kit |
-| `group` | platform (new, generic) | Tap a card, tap a box (2–4 boxes: Carroll / Venn zones) | each item fits exactly one zone predicate | show the box rules / remove sorted items / place one |
-| `grid-fill` | logic | Tap a cell, tap a number (sudoku) or fill / cross (picture cross); pencil marks | solver: exactly one solution; human-style solver: technique per step ≤ lesson level | highlight the unit with progress / name the technique + candidates / fill the cell |
+| `choice`, `order`, `number-entry`, `true-false` | platform card kit | Cards with drawn shape tokens (kind × colour × size × count) | exact; content checks: every rule that fits the shown terms gives the same answer (pattern ambiguity), one odd item per attribute | card kit |
+| `group` | platform (opt-in, like `duel`) | Tap a card, tap a box (row of 2–4 boxes, Carroll 2 × 2, Venn) | each item fits exactly one zone (rules over shape facts + tags) | box rules / rule out a wrong box / place one |
+| `grid-fill` | logic | Tap a cell, tap a number (sudoku) or fill / cross (picture cross); pencil marks | exactly one solution; a human-style solver finishes with techniques ≤ the lesson's, and the lesson's technique occurs | per step: highlight the unit / name the technique + candidates / fill the cell |
 
-## 4. Generated puzzles
+## 4. Decisions (lead 2026-10-04, from a code read of the platform after M13)
 
-Sudoku 4 × 4 / 6 × 6: random full grid, remove clues while the solution stays unique; rate by the hardest technique needed (last cell → hidden single → naked single); the lesson's technique must occur. Picture cross 5 × 5: animal pictures, line-solvable (no guessing). Patterns / odd-one-out: rule + attribute-table generator with ambiguity checks. Authored: stories, art, wording.
+| # | Decision | Why |
+|---|---|---|
+| L1 | Patterns, odd-one-out, sorting and sudoku are `generate:` templates (M13 G1–G4); sudoku solve checks live in the `grid-fill` kind's `verify` (authored puzzles get them too); template `check` covers template rules (empty cells, the target technique occurs); never reseed a released stem | one pipeline; snapshot + voice unchanged |
+| L2 | Picture cross from an authored library (~12 animal pictures as `#.` rows); clues computed at compile; `verify` proves line-solvable | random 5 × 5 pictures look like noise |
+| L3 | Shape tokens in the card kit (`CardItem.shape`, `CardPrompt.shapes` with one `gap`); colour-blind rule (red–green, green–orange, blue–purple never the only difference) | emoji have no sizes and differ per platform |
+| L4 | `group` is a platform kind, opt-in (not in `CARD_KINDS`) | math can reuse it (odd / even); other subjects' snapshots unchanged |
+| L5 | `grid-fill` is one logic kind with a rules registry (`sudoku`, `picture-cross`); a wrong entry is rejected with a reason (conflicting row / column / box); the hint ladder restarts at each step (`stepHint`), stars from the highest level used | multi-cell puzzles need step hints |
+| L6 | Voice budget ≤ 230 clips (≈ 3 MB; 17.5 of 25 MB used after M13): one fixed sentence per template variant, grid notes worded by technique only (no digits / coordinates), transitive "taller than" items authored | audio budget |
+| L7 | Nim / tic-tac-toe move to v1.4 (Plan Ahead); tic-tac-toe needs a draw-aware `duel` (game value win / draw / loss); one-pile Nim = Race to 20, so logic Nim uses two equal piles | scope |
+| L8 | `subject-logic` stays out of the app until W1 plays (`m14.9` registers it) | master deploys on every push |
+
+Authored: stories, art, wording, transitive line-up items, the picture library.
 
 ## 5. Platform needs
 
 | Need | Where | Reused by |
 |---|---|---|
-| Shape tokens in card items (`shape: { kind, colour, size, count }`, drawn as SVG) | platform card kit | Math (patterns, data) |
-| `group` kind | platform (core, content, web) | Math (sort: odd / even, shapes) |
-| Grid board (from M12) + cell input | platform-web `ui/grid` | — |
-| Generated exercises (from M13) | platform-content | — |
+| Shape tokens (L3) | platform card kit (core, content, web) | Math (patterns, `groups` picture) |
+| `group` kind (L4) | platform card kit, opt-in | Math (sort: odd / even, shapes) |
+| `GridBoard` puzzle props: thick box borders, pencil marks, given vs entry style, clue lanes on the edges | platform-web `ui/grid` | — |
+| Generated exercises, reasons, card voice (M13) | platform | — |
 
 ## 6. Iterations (M14)
 
+Re-cut 2026-10-04 (one concern per iteration, ≤ 4 commits):
+
 | Tag | Scope |
 |---|---|
-| `m14.1` | This plan + `docs/subjects/logic/curriculum.md`; subject skeleton (scaffold) |
-| `m14.2` | Platform: shape tokens + `group` kind |
-| `m14.3` | Logic `grid-fill` kind + sudoku / picture-cross generators and solvers |
-| `m14.4` | W1 + W2 content + bosses |
-| `m14.5` | W3 content + boss; release `v1.3.0` |
+| `m14.1` | This plan + `curriculum.md` |
+| `m14.2` | Card-kit shape tokens |
+| `m14.3` | Platform `group` kind (opt-in) |
+| `m14.4` | `GridBoard` puzzle props |
+| `m14.5` | `subject-logic` skeleton (math layout, not registered) |
+| `m14.6` | Pure solvers: sudoku model / counter / generator, human-style solver, picture-cross line solver |
+| `m14.7` | `grid-fill` core + content |
+| `m14.8` | `grid-fill` web |
+| `m14.9` | W1 Pattern Pond + Pattern Train; Logic registered in the app |
+| `m14.10` | W2 Sort Shore + Sorting Sprint |
+| `m14.11` | W3 Grid Puzzles + Sudoku Sprint |
+| `m14.12` | Release `v1.3.0` |
