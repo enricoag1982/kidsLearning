@@ -1,7 +1,7 @@
-// The coding subject end to end: the real pack and the fixture content, opened in the real App and played through the real UI. Each
+// The coding subject end to end: the real pack over the fixture world (`testing/fixtures.ts`), opened in the real App and played through the real UI. Each
 // exercise is solved by its kind's own e2e driver from the kind's own `solution()` (the way a Playwright spec would), in jsdom with
 // reduced motion so every run jumps to its end.
-import { fireEvent, render, screen } from '@testing-library/react';
+import { act, configure, fireEvent, render, screen } from '@testing-library/react';
 import i18next from 'i18next';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import {
@@ -19,13 +19,16 @@ import { jsdomPage } from '@learn/platform-web/testing/jsdom-page.ts';
 import { createMemoryStorage } from '@learn/platform-web/testing/memory-storage.ts';
 import { stubMatchMedia } from '@learn/platform-web/testing/mock-media-query.ts';
 import type { CodingExerciseDef } from '../core/types.ts';
-import { codingEntry } from '../entry.ts';
 import { kindOf } from '../kinds/index.ts';
 import type { CodingAction, CodingState } from '../kinds/index.ts';
 import { solutionOf } from '../kinds/solutions.ts';
 import { codingKindE2EOf } from './kinds/e2e-registry.ts';
 import type { CodingKindE2E } from './kinds/e2e-registry.ts';
-import { fixtureLesson } from './testing/fixtures.ts';
+import { fixtureEntry, fixtureLesson } from './testing/fixtures.ts';
+
+// The whole lesson runs through the real session and its autosave: a busy machine (the full suite runs 18 jsdom workers at once)
+// needs longer than the default 1 s to show a success panel.
+configure({ asyncUtilTimeout: 5000 });
 
 const APP: Omit<AppConfig, 'version'> = {
   title: 'Coding app',
@@ -36,8 +39,8 @@ const APP: Omit<AppConfig, 'version'> = {
 };
 
 const lesson = fixtureLesson;
-const GUIDED = lesson?.guided ?? [];
-const EXERCISES = lesson?.exercises ?? [];
+const GUIDED = lesson.guided;
+const EXERCISES = lesson.exercises;
 function exerciseOf(id: string): CodingExerciseDef {
   const def = EXERCISES.find((entry) => entry.id === id);
   if (def === undefined) throw new Error(`the coding fixture has no exercise "${id}"`);
@@ -59,7 +62,7 @@ afterEach(() => {
 
 /** The one-subject app on a fresh storage with a parent code and the profile `Mia`. */
 async function codingApp() {
-  const app = createAppServices([codingEntry], APP, createMemoryStorage());
+  const app = createAppServices([fixtureEntry], APP, createMemoryStorage());
   const services = await app.activate('coding');
   const testServices = {
     ...services,
@@ -90,6 +93,13 @@ async function play(
   const kind = kindOf(def);
   const driver = codingKindE2EOf(def.type);
   let state = from;
+  if (def.type === 'predict') {
+    // A guided predict starts with a hint's replay, and a replay ignores taps while it plays (a tick under reduced motion, longer on
+    // a busy machine): let it end before the first tap.
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 150));
+    });
+  }
   for (const action of actions) {
     const before = state;
     const { state: next, outcome } = kind.act(before, action, null);
@@ -126,7 +136,7 @@ async function expectNote(note: string): Promise<void> {
 
 describe('the coding subject end to end', () => {
   it('has the fixture lesson: 2 guided tries and 5 scored exercises of the three coding kinds', () => {
-    expect(lesson?.id).toBe('seq-arrows');
+    expect(lesson.id).toBe('seq-arrows');
     expect(GUIDED.map((def) => def.type)).toEqual(['program', 'predict']);
     expect(EXERCISES.map((def) => def.type)).toEqual([
       'program',
@@ -158,7 +168,7 @@ describe('the coding subject end to end', () => {
     expect(screen.getByText('+15 stars')).toBeTruthy();
     expect(screen.getByTestId('stars-row').querySelectorAll('.reward-star-pop')).toHaveLength(3);
     const saved = await loadProgress(services.deps, profileId);
-    const progress = saved.find((entry) => entry.lessonId === lesson?.id);
+    const progress = saved.find((entry) => entry.lessonId === lesson.id);
     expect(progress?.bestStars).toEqual(Object.fromEntries(EXERCISES.map((def) => [def.id, 3])));
     // The subject's data lives in the subject's own store.
     expect(await app.subjectData['coding']?.progress.listLessons(profileId)).toHaveLength(1);
@@ -174,11 +184,11 @@ describe('the coding subject end to end', () => {
     }
 
     const notes = [
-      ['arrows-01', 'Not there yet — try again!'],
-      ['arrows-02', 'Not there yet — try again!'],
-      ['arrows-03', 'Oops, Fox hit the edge at step 2!'],
-      ['arrows-04', 'Not that square. Follow the arrows again!'],
-      ['arrows-05', 'That step is fine. Look again!'],
+      ['fx-01', 'Not there yet — try again!'],
+      ['fx-02', 'Not there yet — try again!'],
+      ['fx-03', 'Oops, Fox hit the edge at step 2!'],
+      ['fx-04', 'Not that square. Follow the arrows again!'],
+      ['fx-05', 'That step is fine. Look again!'],
     ] as const;
     for (const [id, note] of notes) {
       const def = exerciseOf(id);
@@ -194,7 +204,7 @@ describe('the coding subject end to end', () => {
     await screen.findByText('Lesson complete!');
     expect(screen.getByText('+10 stars')).toBeTruthy();
     const progress = (await loadProgress(services.deps, profileId)).find(
-      (entry) => entry.lessonId === lesson?.id,
+      (entry) => entry.lessonId === lesson.id,
     );
     expect(progress?.bestStars).toEqual(Object.fromEntries(EXERCISES.map((def) => [def.id, 2])));
   });
@@ -218,7 +228,7 @@ describe('the coding subject end to end', () => {
     await next();
 
     // Scored program: Hint gives words and a lit cell; the run then solves for 2 stars at most.
-    const def = exerciseOf('arrows-01');
+    const def = exerciseOf('fx-01');
     await screen.findByText(instruction(def));
     fireEvent.click(screen.getByRole('button', { name: 'Hint' }));
     await expectNote('Look at the glowing square. Fox goes there first.');

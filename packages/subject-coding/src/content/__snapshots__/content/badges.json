@@ -1,28 +1,41 @@
 [
  {
-  "id": "first-lesson",
+  "id": "first-program",
   "category": "milestone",
-  "nameKey": "rewards:badges.first-lesson.name",
-  "conditionKey": "rewards:badges.first-lesson.condition",
+  "nameKey": "rewards:badges.first-program.name",
+  "conditionKey": "rewards:badges.first-program.condition",
+  "condition": {
+   "type": "concept-correct",
+   "thresholds": [
+    1
+   ],
+   "concept": "seq-arrows"
+  }
+ },
+ {
+  "id": "bug-squasher",
+  "category": "skill",
+  "nameKey": "rewards:badges.bug-squasher.name",
+  "conditionKey": "rewards:badges.bug-squasher.condition",
+  "condition": {
+   "type": "concept-correct",
+   "thresholds": [
+    5
+   ],
+   "concept": "seq-debug"
+  }
+ },
+ {
+  "id": "meadow-walker",
+  "category": "milestone",
+  "nameKey": "rewards:badges.meadow-walker.name",
+  "conditionKey": "rewards:badges.meadow-walker.condition",
   "condition": {
    "type": "mastered",
    "thresholds": [
     1
    ],
    "scope": "world:meadow-steps"
-  }
- },
- {
-  "id": "star-collector",
-  "category": "skill",
-  "nameKey": "rewards:badges.star-collector.name",
-  "conditionKey": "rewards:badges.star-collector.condition",
-  "condition": {
-   "type": "stars-total",
-   "thresholds": [
-    10,
-    30
-   ]
   }
  }
 ]

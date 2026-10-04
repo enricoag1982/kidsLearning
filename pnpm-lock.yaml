@@ -59,6 +59,9 @@ importers:
       '@learn/subject-chess':
         specifier: workspace:*
         version: link:../../packages/subject-chess
+      '@learn/subject-coding':
+        specifier: workspace:*
+        version: link:../../packages/subject-coding
       '@learn/subject-math':
         specifier: workspace:*
         version: link:../../packages/subject-math

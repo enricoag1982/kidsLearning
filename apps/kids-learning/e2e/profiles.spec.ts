@@ -40,6 +40,7 @@ test.describe('Profiles, first run and parent area', () => {
     ).toBeVisible();
     await expect(page.getByTestId('subject-tile-chess')).toBeVisible();
     await expect(page.getByTestId('subject-tile-math')).toBeVisible();
+    await expect(page.getByTestId('subject-tile-coding')).toBeVisible();
     await page.getByTestId('subject-tile-chess').click();
 
     // Offered on the first entry into a fresh subject; declines it here (Home shows Mia).

@@ -9,9 +9,12 @@ import type { InvalidReason } from '../../core/notes.ts';
 import type { ProgramDef } from '../../core/types.ts';
 import { kindsUsed } from './kind.ts';
 
-/** Why the engine refused `program` (`programProblem`), in the child's terms: more tiles than the cap, a tile that is not in the
- * tray, else the strip is unfinished (an empty repeat, or a gap in front of a locked tile). */
+/** Why the engine refused `program` (`programProblem`), in the child's terms: no tile at all, more tiles than the cap, a tile that
+ * is not in the tray, else the strip is unfinished (an empty repeat, or a gap in front of a locked tile). */
 export function invalidReason(def: ProgramDef, program: readonly Tile[]): InvalidReason {
+  if (program.length === 0) {
+    return 'empty';
+  }
   if (tileCount(program) > def.cap) {
     return 'too-many';
   }

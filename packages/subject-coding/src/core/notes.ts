@@ -5,9 +5,9 @@ import { cardHintText } from '@learn/platform-core/domain/exercise/kinds/cards/n
 import type { NoteEntry, Resolve } from '@learn/platform-core/domain/notes';
 import type { FindBugHint, PredictHint, ProgramHint } from './types.ts';
 
-/** Why a Run could not start (`program-invalid`): over the cap, a tile outside the tray, or an unfinished strip (an empty repeat, or
- * a gap before a locked tile). */
-export type InvalidReason = 'too-many' | 'tray' | 'incomplete';
+/** Why a Run could not start (`program-invalid`): no tile in the strip, over the cap, a tile outside the tray, or an unfinished strip
+ * (an empty repeat, or a gap before a locked tile). */
+export type InvalidReason = 'empty' | 'too-many' | 'tray' | 'incomplete';
 
 export type CodingFeedback =
   | { readonly kind: 'instruction' }
@@ -31,6 +31,7 @@ type OwnNoteKind =
 type NoteFeedback<K extends OwnNoteKind | 'hint'> = Extract<CodingFeedback, { readonly kind: K }>;
 
 const INVALID_TEXT: Readonly<Record<InvalidReason, string>> = {
+  empty: 'coding.notes.empty',
   'too-many': 'coding.notes.too-many',
   tray: 'coding.notes.not-in-tray',
   incomplete: 'coding.notes.incomplete',

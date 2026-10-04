@@ -4,7 +4,7 @@
   {
    "id": "seq-arrows",
    "world": "meadow-steps",
-   "order": 1,
+   "order": 2,
    "concept": "seq-arrows",
    "character": "fox",
    "titleKey": "lessons:seq-arrows.title",
@@ -12,105 +12,24 @@
    "demo": {
     "textKey": "lessons:seq-arrows.demo",
     "prompt": {
-     "emoji": "🦊🚩"
+     "big": "→ → ↓"
     }
    },
    "guided": [
     {
      "id": "arrows-g1",
      "concept": "seq-arrows",
-     "textKey": "lessons:arrows-g1",
+     "textKey": "lessons:ask-reach-guided",
      "type": "program",
-     "level": {
-      "size": {
-       "cols": 3,
-       "rows": 1
-      },
-      "rocks": [],
-      "stars": [],
-      "goal": {
-       "x": 2,
-       "y": 0
-      },
-      "start": {
-       "x": 0,
-       "y": 0
-      },
-      "heading": "right"
-     },
-     "tray": [
-      "left",
-      "right"
-     ],
-     "cap": 2,
-     "solution": [
-      {
-       "kind": "right"
-      },
-      {
-       "kind": "right"
-      }
-     ]
-    },
-    {
-     "id": "arrows-g2",
-     "concept": "seq-arrows",
-     "textKey": "lessons:arrows-g2",
-     "type": "predict",
      "level": {
       "size": {
        "cols": 3,
        "rows": 3
       },
-      "rocks": [
-       {
-        "x": 1,
-        "y": 1
-       }
-      ],
-      "stars": [],
-      "goal": {
-       "x": 2,
-       "y": 2
-      },
-      "start": {
-       "x": 0,
-       "y": 0
-      },
-      "heading": "right"
-     },
-     "program": [
-      {
-       "kind": "right"
-      },
-      {
-       "kind": "right"
-      },
-      {
-       "kind": "down"
-      }
-     ],
-     "answer": {
-      "x": 2,
-      "y": 1
-     }
-    }
-   ],
-   "exercises": [
-    {
-     "id": "arrows-01",
-     "concept": "seq-arrows",
-     "textKey": "lessons:arrows-01",
-     "type": "program",
-     "level": {
-      "size": {
-       "cols": 3,
-       "rows": 2
-      },
       "rocks": [],
       "stars": [],
       "goal": {
-       "x": 2,
+       "x": 1,
        "y": 1
       },
       "start": {
@@ -123,11 +42,8 @@
       "right",
       "down"
      ],
-     "cap": 3,
+     "cap": 4,
      "solution": [
-      {
-       "kind": "right"
-      },
       {
        "kind": "right"
       },
@@ -137,13 +53,369 @@
      ]
     },
     {
+     "id": "arrows-g2",
+     "concept": "seq-arrows",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 2,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 1
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "down"
+      }
+     ],
+     "answer": {
+      "x": 1,
+      "y": 2
+     }
+    }
+   ],
+   "exercises": [
+    {
+     "id": "arrows-01",
+     "concept": "seq-arrows",
+     "textKey": "lessons:ask-reach",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 1,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right"
+     ],
+     "cap": 5,
+     "solution": [
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "right"
+      }
+     ]
+    },
+    {
      "id": "arrows-02",
      "concept": "seq-arrows",
-     "textKey": "lessons:arrows-02",
+     "textKey": "lessons:ask-reach",
      "type": "program",
      "level": {
       "size": {
        "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 1,
+       "y": 1
+      },
+      "start": {
+       "x": 3,
+       "y": 3
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right"
+     ],
+     "cap": 6,
+     "solution": [
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "left"
+      },
+      {
+       "kind": "left"
+      }
+     ]
+    },
+    {
+     "id": "arrows-03",
+     "concept": "seq-arrows",
+     "textKey": "lessons:ask-reach",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 2,
+       "y": 0
+      },
+      "start": {
+       "x": 0,
+       "y": 3
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right"
+     ],
+     "cap": 7,
+     "solution": [
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "right"
+      }
+     ]
+    },
+    {
+     "id": "arrows-04",
+     "concept": "seq-arrows",
+     "textKey": "lessons:ask-reach",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 5
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 2,
+       "y": 3
+      },
+      "start": {
+       "x": 4,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right"
+     ],
+     "cap": 7,
+     "solution": [
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "left"
+      },
+      {
+       "kind": "left"
+      }
+     ],
+     "easier": "arrows-e1"
+    },
+    {
+     "id": "arrows-05",
+     "concept": "seq-arrows",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 3,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "right"
+      }
+     ],
+     "answer": {
+      "x": 2,
+      "y": 1
+     }
+    },
+    {
+     "id": "arrows-06",
+     "concept": "seq-arrows",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 3,
+       "y": 3
+      },
+      "start": {
+       "x": 1,
+       "y": 1
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "right"
+      }
+     ],
+     "answer": {
+      "x": 3,
+      "y": 3
+     }
+    }
+   ],
+   "variants": [
+    {
+     "id": "arrows-e1",
+     "concept": "seq-arrows",
+     "textKey": "lessons:ask-reach",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [],
+      "stars": [],
+      "goal": {
+       "x": 1,
+       "y": 2
+      },
+      "start": {
+       "x": 2,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right"
+     ],
+     "cap": 5,
+     "solution": [
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "left"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "seq-collect",
+   "world": "meadow-steps",
+   "order": 3,
+   "concept": "seq-collect",
+   "character": "fox",
+   "titleKey": "lessons:seq-collect.title",
+   "storyKey": "lessons:seq-collect.story",
+   "demo": {
+    "textKey": "lessons:seq-collect.demo",
+    "prompt": {
+     "emoji": "🦊⭐🚩"
+    }
+   },
+   "guided": [
+    {
+     "id": "collect-g1",
+     "concept": "seq-collect",
+     "textKey": "lessons:ask-star",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 3,
        "rows": 3
       },
       "rocks": [
@@ -154,12 +426,12 @@
       ],
       "stars": [
        {
-        "x": 3,
+        "x": 2,
         "y": 0
        }
       ],
       "goal": {
-       "x": 3,
+       "x": 2,
        "y": 2
       },
       "start": {
@@ -183,9 +455,6 @@
        "kind": "right"
       },
       {
-       "kind": "right"
-      },
-      {
        "kind": "down"
       },
       {
@@ -194,9 +463,59 @@
      ]
     },
     {
-     "id": "arrows-03",
-     "concept": "seq-arrows",
-     "textKey": "lessons:arrows-03",
+     "id": "collect-g2",
+     "concept": "seq-collect",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [
+       {
+        "x": 1,
+        "y": 0
+       }
+      ],
+      "stars": [
+       {
+        "x": 1,
+        "y": 1
+       }
+      ],
+      "goal": {
+       "x": 2,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "right"
+      }
+     ],
+     "answer": {
+      "x": 2,
+      "y": 1
+     }
+    }
+   ],
+   "exercises": [
+    {
+     "id": "collect-01",
+     "concept": "seq-collect",
+     "textKey": "lessons:ask-star",
      "type": "program",
      "level": {
       "size": {
@@ -205,15 +524,16 @@
       },
       "rocks": [
        {
-        "x": 0,
-        "y": 1
-       },
+        "x": 2,
+        "y": 0
+       }
+      ],
+      "stars": [
        {
         "x": 1,
         "y": 1
        }
       ],
-      "stars": [],
       "goal": {
        "x": 2,
        "y": 2
@@ -230,7 +550,141 @@
       "left",
       "right"
      ],
-     "cap": 4,
+     "cap": 6,
+     "solution": [
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "down"
+      }
+     ]
+    },
+    {
+     "id": "collect-02",
+     "concept": "seq-collect",
+     "textKey": "lessons:ask-stars",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [
+       {
+        "x": 2,
+        "y": 0
+       },
+       {
+        "x": 2,
+        "y": 1
+       }
+      ],
+      "stars": [
+       {
+        "x": 1,
+        "y": 1
+       },
+       {
+        "x": 2,
+        "y": 3
+       }
+      ],
+      "goal": {
+       "x": 3,
+       "y": 3
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right"
+     ],
+     "cap": 8,
+     "solution": [
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "right"
+      }
+     ]
+    },
+    {
+     "id": "collect-03",
+     "concept": "seq-collect",
+     "textKey": "lessons:ask-stars",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [
+       {
+        "x": 3,
+        "y": 0
+       },
+       {
+        "x": 1,
+        "y": 1
+       },
+       {
+        "x": 2,
+        "y": 2
+       }
+      ],
+      "stars": [
+       {
+        "x": 2,
+        "y": 1
+       },
+       {
+        "x": 3,
+        "y": 2
+       }
+      ],
+      "goal": {
+       "x": 3,
+       "y": 3
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right"
+     ],
+     "cap": 8,
      "solution": [
       {
        "kind": "right"
@@ -242,29 +696,220 @@
        "kind": "down"
       },
       {
-       "kind": "down"
-      }
-     ],
-     "prefilled": [
-      {
        "kind": "right"
       },
-      null,
-      null,
+      {
+       "kind": "down"
+      },
       {
        "kind": "down"
       }
-     ],
-     "locked": [
-      0,
-      3
      ]
     },
     {
-     "id": "arrows-04",
-     "concept": "seq-arrows",
-     "textKey": "lessons:arrows-04",
+     "id": "collect-04",
+     "concept": "seq-collect",
+     "textKey": "lessons:ask-stars",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 5
+      },
+      "rocks": [
+       {
+        "x": 3,
+        "y": 0
+       },
+       {
+        "x": 2,
+        "y": 1
+       },
+       {
+        "x": 3,
+        "y": 2
+       },
+       {
+        "x": 0,
+        "y": 3
+       }
+      ],
+      "stars": [
+       {
+        "x": 1,
+        "y": 1
+       },
+       {
+        "x": 2,
+        "y": 2
+       },
+       {
+        "x": 3,
+        "y": 3
+       }
+      ],
+      "goal": {
+       "x": 4,
+       "y": 4
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right"
+     ],
+     "cap": 10,
+     "solution": [
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "right"
+      }
+     ],
+     "easier": "collect-e1"
+    },
+    {
+     "id": "collect-05",
+     "concept": "seq-collect",
+     "textKey": "lessons:ask-predict",
      "type": "predict",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [
+       {
+        "x": 2,
+        "y": 1
+       }
+      ],
+      "stars": [
+       {
+        "x": 1,
+        "y": 1
+       }
+      ],
+      "goal": {
+       "x": 3,
+       "y": 3
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "right"
+      }
+     ],
+     "answer": {
+      "x": 2,
+      "y": 2
+     }
+    },
+    {
+     "id": "collect-06",
+     "concept": "seq-collect",
+     "textKey": "lessons:ask-predict",
+     "type": "predict",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [
+       {
+        "x": 1,
+        "y": 1
+       },
+       {
+        "x": 3,
+        "y": 2
+       }
+      ],
+      "stars": [
+       {
+        "x": 2,
+        "y": 0
+       },
+       {
+        "x": 2,
+        "y": 2
+       }
+      ],
+      "goal": {
+       "x": 3,
+       "y": 3
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "down"
+      }
+     ],
+     "answer": {
+      "x": 2,
+      "y": 2
+     }
+    }
+   ],
+   "variants": [
+    {
+     "id": "collect-e1",
+     "concept": "seq-collect",
+     "textKey": "lessons:ask-star",
+     "type": "program",
      "level": {
       "size": {
        "cols": 4,
@@ -292,32 +937,160 @@
       },
       "heading": "right"
      },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right"
+     ],
+     "cap": 7,
+     "solution": [
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "down"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "seq-debug",
+   "world": "meadow-steps",
+   "order": 4,
+   "concept": "seq-debug",
+   "character": "fox",
+   "titleKey": "lessons:seq-debug.title",
+   "storyKey": "lessons:seq-debug.story",
+   "demo": {
+    "textKey": "lessons:seq-debug.demo",
+    "prompt": {
+     "emoji": "🐞"
+    }
+   },
+   "guided": [
+    {
+     "id": "debug-g1",
+     "concept": "seq-debug",
+     "textKey": "lessons:ask-bug-guided",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [
+       {
+        "x": 1,
+        "y": 1
+       },
+       {
+        "x": 2,
+        "y": 1
+       },
+       {
+        "x": 2,
+        "y": 2
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 1,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
      "program": [
       {
-       "kind": "down"
+       "kind": "up"
       },
       {
        "kind": "down"
       },
       {
        "kind": "right"
+      }
+     ],
+     "bug": [
+      0
+     ],
+     "fix": {
+      "kind": "down"
+     }
+    },
+    {
+     "id": "debug-g2",
+     "concept": "seq-debug",
+     "textKey": "lessons:ask-bug-guided",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [
+       {
+        "x": 0,
+        "y": 0
+       },
+       {
+        "x": 0,
+        "y": 1
+       },
+       {
+        "x": 2,
+        "y": 1
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 1,
+       "y": 2
+      },
+      "start": {
+       "x": 2,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "left"
       },
       {
-       "kind": "right"
+       "kind": "down"
       },
       {
        "kind": "up"
       }
      ],
-     "answer": {
-      "x": 2,
-      "y": 1
+     "bug": [
+      2
+     ],
+     "fix": {
+      "kind": "down"
      }
-    },
+    }
+   ],
+   "exercises": [
     {
-     "id": "arrows-05",
-     "concept": "seq-arrows",
-     "textKey": "lessons:arrows-05",
+     "id": "debug-01",
+     "concept": "seq-debug",
+     "textKey": "lessons:ask-bug",
      "type": "find-bug",
      "level": {
       "size": {
@@ -327,18 +1100,25 @@
       "rocks": [
        {
         "x": 1,
-        "y": 1
-       }
-      ],
-      "stars": [
+        "y": 0
+       },
+       {
+        "x": 2,
+        "y": 0
+       },
+       {
+        "x": 1,
+        "y": 2
+       },
        {
         "x": 3,
-        "y": 0
+        "y": 2
        }
       ],
+      "stars": [],
       "goal": {
        "x": 3,
-       "y": 2
+       "y": 1
       },
       "start": {
        "x": 0,
@@ -348,16 +1128,13 @@
      },
      "program": [
       {
-       "kind": "right"
+       "kind": "down"
       },
       {
        "kind": "right"
       },
       {
        "kind": "right"
-      },
-      {
-       "kind": "up"
       },
       {
        "kind": "down"
@@ -367,22 +1144,13 @@
       3
      ],
      "fix": {
-      "kind": "down"
+      "kind": "right"
      }
-    }
-   ]
-  }
- ],
- "minigames": [
-  {
-   "mode": "series",
-   "id": "fixture-boss",
-   "concept": "seq-arrows",
-   "rounds": [
+    },
     {
-     "id": "fixture-r1",
-     "concept": "seq-arrows",
-     "textKey": "lessons:fixture-r1",
+     "id": "debug-02",
+     "concept": "seq-debug",
+     "textKey": "lessons:ask-bug",
      "type": "find-bug",
      "level": {
       "size": {
@@ -393,17 +1161,24 @@
        {
         "x": 1,
         "y": 1
-       }
-      ],
-      "stars": [
+       },
+       {
+        "x": 2,
+        "y": 1
+       },
+       {
+        "x": 0,
+        "y": 2
+       },
        {
         "x": 3,
-        "y": 0
+        "y": 2
        }
       ],
+      "stars": [],
       "goal": {
        "x": 3,
-       "y": 2
+       "y": 1
       },
       "start": {
        "x": 0,
@@ -413,8 +1188,140 @@
      },
      "program": [
       {
+       "kind": "left"
+      },
+      {
        "kind": "right"
       },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "down"
+      }
+     ],
+     "bug": [
+      0
+     ],
+     "fix": {
+      "kind": "right"
+     }
+    },
+    {
+     "id": "debug-03",
+     "concept": "seq-debug",
+     "textKey": "lessons:ask-bug",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [
+       {
+        "x": 2,
+        "y": 0
+       },
+       {
+        "x": 3,
+        "y": 0
+       },
+       {
+        "x": 1,
+        "y": 2
+       },
+       {
+        "x": 3,
+        "y": 2
+       },
+       {
+        "x": 1,
+        "y": 3
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 3,
+       "y": 3
+      },
+      "start": {
+       "x": 1,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "right"
+      }
+     ],
+     "bug": [
+      2
+     ],
+     "fix": {
+      "kind": "down"
+     }
+    },
+    {
+     "id": "debug-04",
+     "concept": "seq-debug",
+     "textKey": "lessons:ask-bug",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [
+       {
+        "x": 3,
+        "y": 0
+       },
+       {
+        "x": 0,
+        "y": 1
+       },
+       {
+        "x": 1,
+        "y": 1
+       },
+       {
+        "x": 3,
+        "y": 2
+       },
+       {
+        "x": 0,
+        "y": 3
+       },
+       {
+        "x": 1,
+        "y": 3
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 0,
+       "y": 2
+      },
+      "start": {
+       "x": 0,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
       {
        "kind": "right"
       },
@@ -426,61 +1333,861 @@
       },
       {
        "kind": "left"
+      },
+      {
+       "kind": "left"
+      },
+      {
+       "kind": "left"
       }
      ],
      "bug": [
+      3
+     ],
+     "fix": {
+      "kind": "down"
+     },
+     "easier": "debug-e1"
+    },
+    {
+     "id": "debug-05",
+     "concept": "seq-debug",
+     "textKey": "lessons:ask-fix",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 3
+      },
+      "rocks": [
+       {
+        "x": 2,
+        "y": 0
+       },
+       {
+        "x": 1,
+        "y": 1
+       },
+       {
+        "x": 3,
+        "y": 1
+       },
+       {
+        "x": 3,
+        "y": 2
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 0,
+       "y": 0
+      },
+      "start": {
+       "x": 2,
+       "y": 2
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right"
+     ],
+     "cap": 4,
+     "solution": [
+      {
+       "kind": "left"
+      },
+      {
+       "kind": "left"
+      },
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "up"
+      }
+     ],
+     "prefilled": [
+      {
+       "kind": "left"
+      },
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "up"
+      }
+     ],
+     "locked": [
+      0,
+      2,
+      3
+     ]
+    },
+    {
+     "id": "debug-06",
+     "concept": "seq-debug",
+     "textKey": "lessons:ask-fix",
+     "type": "program",
+     "level": {
+      "size": {
+       "cols": 5,
+       "rows": 4
+      },
+      "rocks": [
+       {
+        "x": 3,
+        "y": 1
+       },
+       {
+        "x": 0,
+        "y": 2
+       },
+       {
+        "x": 2,
+        "y": 2
+       },
+       {
+        "x": 3,
+        "y": 2
+       },
+       {
+        "x": 0,
+        "y": 3
+       },
+       {
+        "x": 1,
+        "y": 3
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 4,
+       "y": 0
+      },
+      "start": {
+       "x": 2,
+       "y": 3
+      },
+      "heading": "right"
+     },
+     "tray": [
+      "up",
+      "down",
+      "left",
+      "right"
+     ],
+     "cap": 5,
+     "solution": [
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "up"
+      }
+     ],
+     "prefilled": [
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "up"
+      }
+     ],
+     "locked": [
+      0,
+      1,
+      2,
       4
+     ]
+    }
+   ],
+   "variants": [
+    {
+     "id": "debug-e1",
+     "concept": "seq-debug",
+     "textKey": "lessons:ask-bug",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 3,
+       "rows": 3
+      },
+      "rocks": [
+       {
+        "x": 0,
+        "y": 0
+       },
+       {
+        "x": 0,
+        "y": 1
+       },
+       {
+        "x": 2,
+        "y": 2
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 0,
+       "y": 2
+      },
+      "start": {
+       "x": 1,
+       "y": 0
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "down"
+      },
+      {
+       "kind": "left"
+      },
+      {
+       "kind": "left"
+      }
+     ],
+     "bug": [
+      1
+     ],
+     "fix": {
+      "kind": "down"
+     }
+    }
+   ]
+  },
+  {
+   "id": "seq-order",
+   "world": "meadow-steps",
+   "order": 1,
+   "concept": "seq-order",
+   "character": "fox",
+   "titleKey": "lessons:seq-order.title",
+   "storyKey": "lessons:seq-order.story",
+   "demo": {
+    "textKey": "lessons:seq-order.demo",
+    "prompt": {
+     "emoji": "🧦👟"
+    }
+   },
+   "guided": [
+    {
+     "id": "order-g1",
+     "concept": "seq-order",
+     "textKey": "lessons:ask-order-guided",
+     "type": "order",
+     "items": [
+      {
+       "id": "water",
+       "textKey": "lessons:card-water",
+       "emoji": "💧"
+      },
+      {
+       "id": "seed",
+       "textKey": "lessons:card-seed",
+       "emoji": "🌰"
+      },
+      {
+       "id": "hole",
+       "textKey": "lessons:card-hole",
+       "emoji": "🕳️"
+      }
+     ],
+     "answer": [
+      "hole",
+      "seed",
+      "water"
+     ]
+    },
+    {
+     "id": "order-g2",
+     "concept": "seq-order",
+     "textKey": "lessons:ask-order",
+     "type": "order",
+     "items": [
+      {
+       "id": "post",
+       "textKey": "lessons:card-post",
+       "emoji": "📮"
+      },
+      {
+       "id": "write",
+       "textKey": "lessons:card-write",
+       "emoji": "✍️"
+      },
+      {
+       "id": "envelope",
+       "textKey": "lessons:card-envelope",
+       "emoji": "✉️"
+      }
+     ],
+     "answer": [
+      "write",
+      "envelope",
+      "post"
+     ]
+    }
+   ],
+   "exercises": [
+    {
+     "id": "order-01",
+     "concept": "seq-order",
+     "textKey": "lessons:ask-order",
+     "type": "order",
+     "items": [
+      {
+       "id": "eat",
+       "textKey": "lessons:card-eat-sandwich",
+       "emoji": "😋"
+      },
+      {
+       "id": "bread",
+       "textKey": "lessons:card-bread",
+       "emoji": "🍞"
+      },
+      {
+       "id": "cheese",
+       "textKey": "lessons:card-cheese",
+       "emoji": "🧀"
+      }
+     ],
+     "answer": [
+      "bread",
+      "cheese",
+      "eat"
+     ]
+    },
+    {
+     "id": "order-02",
+     "concept": "seq-order",
+     "textKey": "lessons:ask-order",
+     "type": "order",
+     "items": [
+      {
+       "id": "laces",
+       "textKey": "lessons:card-laces",
+       "emoji": "🎀"
+      },
+      {
+       "id": "run",
+       "textKey": "lessons:card-run",
+       "emoji": "🏃"
+      },
+      {
+       "id": "socks",
+       "textKey": "lessons:card-socks",
+       "emoji": "🧦"
+      },
+      {
+       "id": "shoes",
+       "textKey": "lessons:card-shoes",
+       "emoji": "👟"
+      }
+     ],
+     "answer": [
+      "socks",
+      "shoes",
+      "laces",
+      "run"
+     ]
+    },
+    {
+     "id": "order-03",
+     "concept": "seq-order",
+     "textKey": "lessons:ask-order",
+     "type": "order",
+     "items": [
+      {
+       "id": "rinse",
+       "textKey": "lessons:card-rinse",
+       "emoji": "🚰"
+      },
+      {
+       "id": "paste",
+       "textKey": "lessons:card-paste",
+       "emoji": "🧴"
+      },
+      {
+       "id": "brush",
+       "textKey": "lessons:card-brush",
+       "emoji": "🦷"
+      }
+     ],
+     "answer": [
+      "paste",
+      "brush",
+      "rinse"
+     ]
+    },
+    {
+     "id": "order-04",
+     "concept": "seq-order",
+     "textKey": "lessons:ask-order",
+     "type": "order",
+     "items": [
+      {
+       "id": "eat",
+       "textKey": "lessons:card-eat-cookie",
+       "emoji": "😋"
+      },
+      {
+       "id": "tray",
+       "textKey": "lessons:card-tray",
+       "emoji": "🍪"
+      },
+      {
+       "id": "mix",
+       "textKey": "lessons:card-mix",
+       "emoji": "🥣"
+      },
+      {
+       "id": "bake",
+       "textKey": "lessons:card-bake",
+       "emoji": "🔥"
+      }
+     ],
+     "answer": [
+      "mix",
+      "tray",
+      "bake",
+      "eat"
+     ],
+     "easier": "order-e1"
+    },
+    {
+     "id": "order-05",
+     "concept": "seq-order",
+     "textKey": "lessons:ask-first",
+     "prompt": {
+      "emoji": "⛄",
+      "big": "Build a snowman"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "nose",
+       "textKey": "lessons:card-nose",
+       "emoji": "🥕"
+      },
+      {
+       "id": "hat",
+       "textKey": "lessons:card-hat",
+       "emoji": "🎩"
+      },
+      {
+       "id": "ball",
+       "textKey": "lessons:card-ball",
+       "emoji": "⚪"
+      }
+     ],
+     "answer": "ball"
+    }
+   ],
+   "variants": [
+    {
+     "id": "order-e1",
+     "concept": "seq-order",
+     "textKey": "lessons:ask-order",
+     "type": "order",
+     "items": [
+      {
+       "id": "eat",
+       "textKey": "lessons:card-eat-cookie",
+       "emoji": "😋"
+      },
+      {
+       "id": "bake",
+       "textKey": "lessons:card-bake",
+       "emoji": "🔥"
+      },
+      {
+       "id": "mix",
+       "textKey": "lessons:card-mix",
+       "emoji": "🥣"
+      }
+     ],
+     "answer": [
+      "mix",
+      "bake",
+      "eat"
+     ]
+    }
+   ]
+  }
+ ],
+ "minigames": [
+  {
+   "mode": "series",
+   "id": "bug-squash",
+   "concept": "seq-debug",
+   "rounds": [
+    {
+     "id": "bug-squash-r1",
+     "concept": "seq-debug",
+     "textKey": "lessons:ask-bug",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 3
+      },
+      "rocks": [
+       {
+        "x": 1,
+        "y": 0
+       },
+       {
+        "x": 3,
+        "y": 0
+       },
+       {
+        "x": 0,
+        "y": 1
+       },
+       {
+        "x": 2,
+        "y": 2
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 2,
+       "y": 0
+      },
+      "start": {
+       "x": 1,
+       "y": 2
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "up"
+      }
+     ],
+     "bug": [
+      1
+     ],
+     "fix": {
+      "kind": "right"
+     }
+    },
+    {
+     "id": "bug-squash-r2",
+     "concept": "seq-debug",
+     "textKey": "lessons:ask-bug",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [
+       {
+        "x": 3,
+        "y": 0
+       },
+       {
+        "x": 1,
+        "y": 1
+       },
+       {
+        "x": 0,
+        "y": 2
+       },
+       {
+        "x": 2,
+        "y": 2
+       },
+       {
+        "x": 0,
+        "y": 3
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 2,
+       "y": 0
+      },
+      "start": {
+       "x": 3,
+       "y": 3
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "up"
+      }
+     ],
+     "bug": [
+      2
+     ],
+     "fix": {
+      "kind": "left"
+     }
+    },
+    {
+     "id": "bug-squash-r3",
+     "concept": "seq-debug",
+     "textKey": "lessons:ask-bug",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [
+       {
+        "x": 0,
+        "y": 0
+       },
+       {
+        "x": 2,
+        "y": 1
+       },
+       {
+        "x": 1,
+        "y": 2
+       },
+       {
+        "x": 2,
+        "y": 2
+       },
+       {
+        "x": 2,
+        "y": 3
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 3,
+       "y": 2
+      },
+      "start": {
+       "x": 1,
+       "y": 1
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "down"
+      }
+     ],
+     "bug": [
+      3
      ],
      "fix": {
       "kind": "down"
      }
     },
     {
-     "id": "fixture-r2",
-     "concept": "seq-arrows",
-     "textKey": "lessons:fixture-r2",
-     "type": "program",
+     "id": "bug-squash-r4",
+     "concept": "seq-debug",
+     "textKey": "lessons:ask-bug",
+     "type": "find-bug",
      "level": {
       "size": {
-       "cols": 6,
-       "rows": 1
+       "cols": 4,
+       "rows": 4
       },
-      "rocks": [],
+      "rocks": [
+       {
+        "x": 1,
+        "y": 1
+       },
+       {
+        "x": 2,
+        "y": 2
+       },
+       {
+        "x": 3,
+        "y": 2
+       },
+       {
+        "x": 1,
+        "y": 3
+       },
+       {
+        "x": 2,
+        "y": 3
+       },
+       {
+        "x": 3,
+        "y": 3
+       }
+      ],
       "stars": [],
       "goal": {
-       "x": 5,
+       "x": 3,
        "y": 0
       },
       "start": {
        "x": 0,
-       "y": 0
+       "y": 3
       },
       "heading": "right"
      },
-     "tray": [
-      "right",
-      "repeat"
-     ],
-     "cap": 3,
-     "solution": [
+     "program": [
       {
-       "kind": "repeat",
-       "times": 5,
-       "body": [
-        {
-         "kind": "right"
-        }
-       ]
+       "kind": "up"
+      },
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "right"
+      },
+      {
+       "kind": "left"
+      },
+      {
+       "kind": "right"
       }
      ],
-     "mustLoop": true
+     "bug": [
+      4
+     ],
+     "fix": {
+      "kind": "right"
+     }
+    },
+    {
+     "id": "bug-squash-r5",
+     "concept": "seq-debug",
+     "textKey": "lessons:ask-bug",
+     "type": "find-bug",
+     "level": {
+      "size": {
+       "cols": 4,
+       "rows": 4
+      },
+      "rocks": [
+       {
+        "x": 3,
+        "y": 0
+       },
+       {
+        "x": 1,
+        "y": 1
+       },
+       {
+        "x": 2,
+        "y": 1
+       },
+       {
+        "x": 3,
+        "y": 1
+       },
+       {
+        "x": 1,
+        "y": 3
+       },
+       {
+        "x": 3,
+        "y": 3
+       }
+      ],
+      "stars": [],
+      "goal": {
+       "x": 1,
+       "y": 0
+      },
+      "start": {
+       "x": 3,
+       "y": 2
+      },
+      "heading": "right"
+     },
+     "program": [
+      {
+       "kind": "left"
+      },
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "left"
+      },
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "up"
+      },
+      {
+       "kind": "right"
+      }
+     ],
+     "bug": [
+      1
+     ],
+     "fix": {
+      "kind": "left"
+     }
     }
    ],
    "errors3": 0,
    "errors2": 2,
-   "titleKey": "lessons:fixture-boss.title",
-   "goalKey": "lessons:fixture-boss.goal",
-   "unlockAfter": "seq-arrows"
+   "titleKey": "lessons:bug-squash.title",
+   "goalKey": "lessons:bug-squash.goal",
+   "unlockAfter": "seq-debug"
   }
  ]
 }

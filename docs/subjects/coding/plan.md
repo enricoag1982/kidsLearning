@@ -57,7 +57,7 @@ Tiles: W1 `up` `down` `left` `right` `pick` · W2 `repeat(n){…}` · W3 `forwar
 | Boss | Skill | Rounds |
 |---|---|---|
 | Bug Squash | debugging | 5 find-bug rounds, rising length |
-| Fence Builder | loop compression | 4 program rounds, cap 12 → 8 → 6 → 5 |
+| Fence Builder | loop compression | 4 program rounds, must-loop, cap 6 → 4 → 3 → 3 (lead 2026-10-04: a cap must rule out every loop-free program on a ≤ 6 × 6 grid) |
 | Left-Right Rescue | relative turns | 4 program rounds, the animal faces down / left / right first |
 
 ## 5. Platform needs
@@ -77,7 +77,7 @@ Tiles: W1 `up` `down` `left` `right` `pick` · W2 `repeat(n){…}` · W3 `forwar
 | `m12.2` | Platform grid board (`ui/grid`) + core grid types; chess untouched. Done: `GridBoard` + `domain/grid.ts` + dev `#grid` playground (dev builds only) |
 | `m12.3` | `packages/subject-coding` (scaffold, not yet registered in the app); core: tiles, simulator, solver; kinds `program`, `predict`, `find-bug` (engine, solution, content, verify). Done: stars are collected by entering their cell (no pick tile); success judged at the end of the program; content rules incl. `must-loop` (no loop-free program fits the cap), find-bug = first departure; fixture world + series boss; solver worst case ≈ 20 ms |
 | `m12.4` | Web: program editor + run animation, kind UIs, pack; e2e drivers. Done: tap-first strip / tray (repeat = C-block with count badge), run animation (0.7 s per step, none with reduced motion) before the engine scores, notes (bumped / edge / not there yet / fill the gaps), hints (first cell, ghost tiles, reveal), dev `#coding` playground, App-flow test |
-| `m12.5` | W1 content (4 lessons) + Bug Squash; registered in the app (hub tile); voice; e2e lesson spec; `curriculum.md` (lesson / exercise list) |
+| `m12.5` | W1 content (4 lessons) + Bug Squash; registered in the app (hub tile); voice; e2e lesson spec; `curriculum.md` (lesson / exercise list). Done: Bug Squash = World 1 boss (Journey node; an optional mini-game was unreachable after W1); badges on generic conditions (First Program = first correct `seq-arrows`, Bug Squasher = 5 clean bug hunts, Meadow Walker = world mastered); every world boss = the world's series (W2 Fence Builder, W3 Left-Right Rescue) |
 | `m12.6` | W2–W3 content (9 lessons) + 2 bosses; release `v1.1.0` (owner checks) |
 
 ## 7. Risks

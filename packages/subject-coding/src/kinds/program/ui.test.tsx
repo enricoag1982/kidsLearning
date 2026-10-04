@@ -9,13 +9,13 @@ import { run } from '../../core/simulator.ts';
 import { parseLevel } from '../../core/level.ts';
 import type { ProgramDef } from '../../core/types.ts';
 
-/** `arrows-01`: S . . / . . F, tray right + down, cap 3. */
-const reach = fixtureExercise('arrows-01', 'program');
-/** `arrows-03`: slots 1 and 4 are locked (right, down); the rock row blocks the middle. */
-const gap = fixtureExercise('arrows-03', 'program');
-/** `fixture-r2`: S . . . . F with a repeat, cap 3. */
-const loop = fixtureExercise('fixture-r2', 'program');
-const guided = fixtureExercise('arrows-g1', 'program');
+/** `fx-01`: S . . / . . F, tray right + down, cap 3. */
+const reach = fixtureExercise('fx-01', 'program');
+/** `fx-03`: slots 1 and 4 are locked (right, down); the rock row blocks the middle. */
+const gap = fixtureExercise('fx-03', 'program');
+/** `fx-r2`: S . . . . F with a repeat, cap 3. */
+const loop = fixtureExercise('fx-r2', 'program');
+const guided = fixtureExercise('fx-g1', 'program');
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -79,7 +79,7 @@ describe('program UI', () => {
   });
 
   it('names the map cells: position, then rock / star / flag / the animal', () => {
-    mount(fixtureExercise('arrows-02', 'program'));
+    mount(fixtureExercise('fx-02', 'program'));
     expect(screen.getByTestId('grid-cell-0-0').getAttribute('aria-label')).toBe(
       'Row 1, column 1, Fox',
     );
@@ -163,7 +163,7 @@ describe('program UI', () => {
   });
 
   it('a run that bumps into a rock says so after it played, counts an error and keeps the strip', async () => {
-    mount(fixtureExercise('arrows-02', 'program'));
+    mount(fixtureExercise('fx-02', 'program'));
     // down, right: the second step walks into the rock.
     tray('Step down', 'Step right');
     tap('Run');
@@ -232,6 +232,19 @@ describe('program UI', () => {
     await play(10_000);
     expect(screen.getByTestId('done').dataset['stars']).toBe('2');
     expect(note()).toBe('Well done!');
+  });
+
+  it('an empty strip: Run stays on, nothing runs, no error counts and the note asks for tiles', async () => {
+    mount(reach);
+    expect(screen.getByRole('button', { name: 'Run' })).toHaveProperty('disabled', false);
+    tap('Run');
+    expect(note()).toBe('Add some tiles first');
+    expect(session().dataset['errors']).toBe('0');
+    expect(actorCell()).toBe('0,0');
+    expect(document.querySelector('.card-shake')).not.toBeNull();
+    await play(5000);
+    expect(actorCell()).toBe('0,0');
+    expect(screen.getByRole('button', { name: 'Run' })).toHaveProperty('disabled', false);
   });
 
   it('too many tiles: nothing runs, no error counts, the strip shakes and the note says so', async () => {
@@ -482,7 +495,7 @@ describe('program UI', () => {
     const relative: ProgramDef = {
       id: 'rel-1',
       concept: 'turns',
-      textKey: 'lessons:arrows-01',
+      textKey: 'lessons:ask-reach',
       type: 'program',
       level: parseLevel(['S..', '..F']),
       tray: ['forward', 'turn-left', 'turn-right', 'jump'],
@@ -548,7 +561,8 @@ describe('feedback helpers', () => {
     expect(bumpFeedback(level, forward)).toEqual({ step: 2, edge: true });
   });
 
-  it('names why a program was refused: too many, not in the tray, else unfinished', () => {
+  it('names why a program was refused: no tile, too many, not in the tray, else unfinished', () => {
+    expect(invalidReason(reach, [])).toBe('empty');
     expect(
       invalidReason(reach, [
         { kind: 'right' },

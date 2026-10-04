@@ -5,9 +5,9 @@ import { KindHarness } from '../../web/testing/KindHarness.tsx';
 import { renderCodingUi } from '../../web/testing/render-coding-ui.tsx';
 import { predictUi } from './ui.ts';
 
-/** `arrows-04`: down, down, right, right, up on S . . * / . # . . / . . . F: the animal ends at column 3, row 2. */
-const def = fixtureExercise('arrows-04', 'predict');
-const guided = fixtureExercise('arrows-g2', 'predict');
+/** `fx-04`: down, down, right, right, up on S . . * / . # . . / . . . F: the animal ends at column 3, row 2. */
+const def = fixtureExercise('fx-04', 'predict');
+const guided = fixtureExercise('fx-g2', 'predict');
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -38,7 +38,7 @@ describe('predict UI', () => {
   it('shows the instruction, the program as a read-only strip, the tappable map and Hint — and no Watch or Run', () => {
     mount();
     expect(screen.getByTestId('instruction').textContent).toBe(
-      'Read the arrows. Where does Fox stop? Tap the square.',
+      'Where will Fox stop? Tap the square.',
     );
     expect(
       screen

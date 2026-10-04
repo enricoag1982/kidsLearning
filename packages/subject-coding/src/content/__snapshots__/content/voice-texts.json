@@ -1,33 +1,93 @@
 [
  {
+  "key": "0187e8c13473d306",
+  "text": "Too many tiles",
+  "source": "exercise-note"
+ },
+ {
+  "key": "0190a34ebd1f6301",
+  "text": "Oops, bumped into a rock at step 5!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "045b54b9e6a6e5b6",
+  "text": "Oops, bumped into a rock at step 3!",
+  "source": "exercise-note"
+ },
+ {
   "key": "04a83fcf89fa37d0",
   "text": "See you tomorrow!",
   "source": "owl-line"
  },
  {
-  "key": "06d629e3a048bb75",
-  "text": "You earned the First Lesson badge!",
+  "key": "06133879966bea36",
+  "text": "Oops, bumped into a rock at step 7!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "088e19a105dc2257",
+  "text": "Owl says: rocks block Fox's way, so plan a path around them. Fox picks up a star by stepping on it. Collect every star, then reach the flag!",
+  "source": "lesson-story"
+ },
+ {
+  "key": "09bbd3f4f849b669",
+  "text": "Use the tiles in the box",
+  "source": "exercise-note"
+ },
+ {
+  "key": "0a2ba2d1bd8cb77c",
+  "text": "Not that one. Try another! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "0a49480515af8597",
+  "text": "A bug is one wrong step. Find it, fix it, and the program works!",
+  "source": "lesson-demo"
+ },
+ {
+  "key": "0d9116a7e93d40cc",
+  "text": "Which one comes next?",
+  "source": "exercise-note"
+ },
+ {
+  "key": "0efaa065b942337d",
+  "text": "Oops, Fox hit the edge at step 1!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "1401f9fb8a91d182",
+  "text": "Oops, bumped into a rock at step 10!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "14a9f5c2d3f56d3d",
+  "text": "You earned the Meadow Walker badge!",
   "source": "celebration"
  },
  {
-  "key": "089f030dce660968",
-  "text": "Star Collector, Silver",
-  "source": "badge-earned"
+  "key": "15cb245201fdca70",
+  "text": "You already know 1 world! Off you go!",
+  "source": "placement"
  },
  {
-  "key": "1ca0f8469d85aaa7",
-  "text": "Star Collector. Earn 30 stars",
-  "source": "badge-locked"
+  "key": "161fdcce3e2e7cdb",
+  "text": "Amazing!",
+  "source": "exercise-note"
  },
  {
-  "key": "22b2cb12e581ff94",
-  "text": "Fill the empty steps. Help Fox reach the flag.",
-  "source": "lesson-exercise"
+  "key": "1891003940d0e104",
+  "text": "Owl says: a bug is one wrong step in a program. Watch Fox, find the wrong step and fix it. Even Fox makes bugs, and that is okay!",
+  "source": "lesson-story"
  },
  {
-  "key": "230ec747393278b9",
-  "text": "Read the arrows. Where does Fox stop? Tap the square.",
-  "source": "lesson-exercise"
+  "key": "1ac78aa3c7621553",
+  "text": "Oops, bumped into a rock at step 8!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "1f5a3a3f0b48462d",
+  "text": "Oops, Fox hit the edge at step 5! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "2416a7322ac657df",
@@ -35,14 +95,49 @@
   "source": "placement"
  },
  {
+  "key": "260e9c78006694cd",
+  "text": "Oops, bumped into a rock at step 2!",
+  "source": "exercise-note"
+ },
+ {
   "key": "267c64cb8fc6186d",
   "text": "Coding opens at 07:00. See you soon!",
   "source": "owl-line"
  },
  {
-  "key": "2b28c30a7e77e3fb",
-  "text": "Fix the bug, then help Fox reach the flag with a repeat. Get every round right!",
-  "source": "minigame-goal"
+  "key": "27dfb80057b25845",
+  "text": "Here is the answer.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "291d286d1957ffb5",
+  "text": "Today Fox needs your help!",
+  "source": "home"
+ },
+ {
+  "key": "2d076874f564970b",
+  "text": "Oops, bumped into a rock at step 8! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "2db25582f88cc9e1",
+  "text": "Oops, Fox hit the edge at step 1! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "2e65175f1fbbca9f",
+  "text": "Fox steps on the star to pick it up. Then Fox goes to the flag.",
+  "source": "lesson-demo"
+ },
+ {
+  "key": "32bede7309326c9e",
+  "text": "Want to show me you already know World 3 · Turning Woods?",
+  "source": "journey"
+ },
+ {
+  "key": "336fd73cff486d59",
+  "text": "Oops, bumped into a rock at step 1!",
+  "source": "exercise-note"
  },
  {
   "key": "33cacbfd0bfeadc3",
@@ -50,9 +145,49 @@
   "source": "owl-line"
  },
  {
+  "key": "353e3940c7f89655",
+  "text": "Oops, Fox hit the edge at step 9! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "356635f1532dfbd8",
   "text": "Coding opens at 09:00. See you soon!",
   "source": "owl-line"
+ },
+ {
+  "key": "372bd02dfdc0fb9e",
+  "text": "Oops, bumped into a rock at step 6!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "38894bc373492440",
+  "text": "Put the pictures in order. Tap the first step first.",
+  "source": "lesson-guided"
+ },
+ {
+  "key": "3a9fbe7a9244db61",
+  "text": "That step is fine. Look again! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "3c291412a166b7f6",
+  "text": "Oops, bumped into a rock at step 9! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "3c451763f895bf07",
+  "text": "Swap the wrong arrow for the right one, then Run.",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "3d19d8f84bd77fd5",
+  "text": "Find the wrong arrow in every program. How few mistakes can you make?",
+  "source": "minigame-goal"
+ },
+ {
+  "key": "3edd48c01b9218b7",
+  "text": "Collect the stars, then go to the flag.",
+  "source": "lesson-exercise"
  },
  {
   "key": "44ee1e157e7f833d",
@@ -60,14 +195,44 @@
   "source": "owl-line"
  },
  {
+  "key": "454564f71d5a4af9",
+  "text": "Watch the first steps again.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "462164a0645e1ed2",
+  "text": "Well done!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "475ada5cb4860bc3",
+  "text": "Oops, Fox hit the edge at step 3! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "47ea4fb843f1678e",
+  "text": "Oops, bumped into a rock at step 4!",
+  "source": "exercise-note"
+ },
+ {
   "key": "4805eee9fb3cd71d",
   "text": "Look at all your friends!",
   "source": "owl-line"
  },
  {
-  "key": "4a719e9a9e27aa2c",
-  "text": "You already know Meadow Steps!",
-  "source": "assessment"
+  "key": "50f9bc1291ffea46",
+  "text": "Oops, Fox hit the edge at step 6!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "53da3f0dc853dd43",
+  "text": "Oops, Fox hit the edge at step 6! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "5483834c46b27cb8",
+  "text": "First Program",
+  "source": "badge-earned"
  },
  {
   "key": "5975daf7cd7cef89",
@@ -75,13 +240,23 @@
   "source": "owl-line"
  },
  {
+  "key": "5a451f18309ae679",
+  "text": "Oops, Fox hit the edge at step 7! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "5b1f538e8108589f",
   "text": "You've used up all your play time for today. Come back tomorrow!",
   "source": "owl-line"
  },
  {
-  "key": "5d7bf1a6ff24f870",
-  "text": "World boss time: Fixture boss!",
+  "key": "5c0a805ac96610d1",
+  "text": "Not that square. Follow the arrows again! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "5c9d6467e421ab93",
+  "text": "World boss time: Bug Squash!",
   "source": "home"
  },
  {
@@ -90,9 +265,14 @@
   "source": "voice-check"
  },
  {
-  "key": "62f897c4502712bc",
-  "text": "Star Collector, Bronze",
-  "source": "badge-earned"
+  "key": "5fb235388d8dc4d6",
+  "text": "Oops, bumped into a rock at step 6! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "6114396ceeb07b13",
+  "text": "Oops, bumped into a rock at step 4! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "6314e45ad1b43327",
@@ -100,14 +280,54 @@
   "source": "journey"
  },
  {
+  "key": "65969cd210b3562e",
+  "text": "Oops, Fox hit the edge at step 10!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "69823746c5108756",
+  "text": "The faded tiles show the first steps.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "6ad18618aa9fa38a",
+  "text": "Look at the glowing square. Fox goes there first.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "6dbcb934f94c0004",
+  "text": "Not there yet — try again! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "6dc30933a9620397",
+  "text": "Oops, Fox hit the edge at step 4!",
+  "source": "exercise-note"
+ },
+ {
   "key": "6ddfd7aa9f2d693f",
   "text": "You already know Fox!",
   "source": "assessment"
  },
  {
-  "key": "704fdbfbeeed08c4",
-  "text": "Today you meet Fox!",
-  "source": "home"
+  "key": "71a69f04a633a5e7",
+  "text": "Not that square. Follow the arrows again!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "74698121229f15b0",
+  "text": "Oops, Fox hit the edge at step 2! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "75eba8d4d0fc8e3a",
+  "text": "You already know Meadow Steps — 4 lessons are yours!",
+  "source": "assessment"
+ },
+ {
+  "key": "76dff621dc3e22b5",
+  "text": "Fox stops on the glowing square.",
+  "source": "exercise-note"
  },
  {
   "key": "77ae1eddf4305d9a",
@@ -115,9 +335,14 @@
   "source": "home"
  },
  {
-  "key": "7a0c19dd64d28c8e",
-  "text": "Help Fox reach the flag. Pick up the star on the way!",
-  "source": "lesson-exercise"
+  "key": "7857c7a4611f15b7",
+  "text": "Oops, bumped into a rock at step 9!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "7a23d603e22b6794",
+  "text": "Oops, Fox hit the edge at step 8!",
+  "source": "exercise-note"
  },
  {
   "key": "82dccc099d5a210e",
@@ -125,14 +350,34 @@
   "source": "owl-line"
  },
  {
+  "key": "8654c7acbbb33912",
+  "text": "Oops, Fox hit the edge at step 8! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "8b89769909ec6247",
   "text": "You're ready to explore every path.",
   "source": "placement"
  },
  {
+  "key": "8de06aaee0042b40",
+  "text": "Oops, bumped into a rock at step 5! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "8f17975b1eec75ef",
+  "text": "Oops, bumped into a rock at step 1! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "8f45dbd76f221a0e",
+  "text": "Owl says: a program is a list of steps. The steps must be in the right order. Fox puts on socks first, then shoes!",
+  "source": "lesson-story"
+ },
+ {
   "key": "91084d4db0c5bedf",
   "text": "Help Fox reach the flag.",
-  "source": "lesson-exercise"
+  "source": "lesson-variant"
  },
  {
   "key": "957f278d66fde401",
@@ -140,9 +385,29 @@
   "source": "assessment"
  },
  {
-  "key": "95a8585fbd546cdf",
-  "text": "First Lesson",
-  "source": "badge-earned"
+  "key": "97ded770cb83a20c",
+  "text": "Oops, Fox hit the edge at step 10! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "97e780e804ba87dd",
+  "text": "Oops, Fox hit the edge at step 7!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "9abe45e485875505",
+  "text": "Bug Squasher. Squash 5 bugs on the first try",
+  "source": "badge-locked"
+ },
+ {
+  "key": "9c183129b4790850",
+  "text": "Oops, Fox hit the edge at step 5!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "9f4ccc2770fe76bf",
+  "text": "Oops, bumped into a rock at step 2! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "9fd4624030447a7a",
@@ -150,9 +415,14 @@
   "source": "home"
  },
  {
-  "key": "a2fc675265b9b0fa",
-  "text": "First Lesson. Master your first lesson",
-  "source": "badge-locked"
+  "key": "a36419dc6de54cc0",
+  "text": "Add some tiles first",
+  "source": "exercise-note"
+ },
+ {
+  "key": "a36647b8799d70a5",
+  "text": "Oops, bumped into a rock at step 10! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "a3a6f74f1da3842f",
@@ -160,29 +430,84 @@
   "source": "lesson-guided"
  },
  {
-  "key": "b044d3c8d00945af",
-  "text": "Watch Fox follow the arrows. One arrow is one step. Now you try!",
-  "source": "lesson-demo"
+  "key": "a4ed6e51bac1aed6",
+  "text": "Oops, Fox hit the edge at step 4! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
-  "key": "b88e4a42330b4d1e",
-  "text": "Where does Fox stop? Tap the square.",
-  "source": "lesson-guided"
+  "key": "a56ac3da18267800",
+  "text": "Fill the empty steps first",
+  "source": "exercise-note"
  },
  {
-  "key": "bab6ca3e1c3310f6",
-  "text": "Fox does not reach the flag. Tap the step that is wrong.",
+  "key": "a6d6b0cfa396cd12",
+  "text": "First Program. Build your first program",
+  "source": "badge-locked"
+ },
+ {
+  "key": "aee83bf53f708351",
+  "text": "Here are all the steps. Tap Run!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "b3232dd7b82409c6",
+  "text": "Put the pictures in order.",
+  "source": "lesson-variant"
+ },
+ {
+  "key": "b4d7bed4c73a7015",
+  "text": "Want to show me you already know World 2 · Looping Hills?",
+  "source": "journey"
+ },
+ {
+  "key": "b57430425213f563",
+  "text": "The bug is one of the bright steps.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "b59eb1f7cae56298",
+  "text": "One arrow is wrong. Tap it!",
   "source": "minigame-round"
  },
  {
-  "key": "bac073bb21b21de1",
-  "text": "Star Collector. Earn 10 stars",
-  "source": "badge-locked"
+  "key": "b9496e3f08d0b6e0",
+  "text": "Oops, bumped into a rock at step 3! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "b95ef6e6dbddbf22",
+  "text": "Not quite! Try again. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "ba73ea4758649cfd",
+  "text": "Oops, Fox hit the edge at step 9!",
+  "source": "exercise-note"
  },
  {
   "key": "bd09bbb7e9ebb05f",
   "text": "Already know some of this? Let's find out where to start you!",
   "source": "placement"
+ },
+ {
+  "key": "be96f81d5e60d899",
+  "text": "Good try!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "bfcfe9bc562f0760",
+  "text": "Oops, Fox hit the edge at step 2!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "c2f337c134304185",
+  "text": "Not there yet — try again!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "c352f2006451bd8a",
+  "text": "Where will Fox stop? Tap the square.",
+  "source": "lesson-exercise"
  },
  {
   "key": "c3a5fe94f9fd2264",
@@ -195,9 +520,74 @@
   "source": "journey"
  },
  {
+  "key": "c9acf5e95c0d3a5c",
+  "text": "Press Watch. One arrow is wrong. Tap it!",
+  "source": "lesson-guided"
+ },
+ {
+  "key": "cb1f6dd68524c82f",
+  "text": "Watch Fox. Where does it go wrong?",
+  "source": "exercise-note"
+ },
+ {
+  "key": "cf8dd8796911d203",
+  "text": "Meadow Walker",
+  "source": "badge-earned"
+ },
+ {
+  "key": "d18513e39b012798",
+  "text": "You already know 2 worlds! Off you go!",
+  "source": "placement"
+ },
+ {
+  "key": "d3c7caef6debf627",
+  "text": "You earned the First Program badge!",
+  "source": "celebration"
+ },
+ {
+  "key": "d577748a533186ff",
+  "text": "The flashing step is the bug.",
+  "source": "exercise-note"
+ },
+ {
   "key": "d9cc87ccf3ef3b00",
   "text": "Finish Fox first!",
   "source": "journey"
+ },
+ {
+  "key": "dceda0b11a5b0bb3",
+  "text": "Bug Squasher",
+  "source": "badge-earned"
+ },
+ {
+  "key": "dd0755400f8831c6",
+  "text": "Oops, bumped into a rock at step 7! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "de13f1bc130f9cb8",
+  "text": "Look: first the socks, then the shoes. Shoes first would be silly!",
+  "source": "lesson-demo"
+ },
+ {
+  "key": "df301c824a9f0a81",
+  "text": "Oops, Fox hit the edge at step 3!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "e1504022fd943a42",
+  "text": "Owl says: Fox follows arrows, one arrow for each step. Read them from left to right. Up goes towards the top of the screen!",
+  "source": "lesson-story"
+ },
+ {
+  "key": "e241cdc894a86d9a",
+  "text": "Collect the star, then go to the flag.",
+  "source": "lesson-variant"
+ },
+ {
+  "key": "e6a6dea01af741d3",
+  "text": "That step is fine. Look again!",
+  "source": "exercise-note"
  },
  {
   "key": "e6dd3db7d2a21a07",
@@ -205,23 +595,43 @@
   "source": "home"
  },
  {
-  "key": "e701903b1628d271",
-  "text": "Fox wants to reach the flag. Give Fox the steps, one arrow at a time!",
-  "source": "lesson-story"
- },
- {
   "key": "e7c0878a15db2d00",
   "text": "5 minutes left — pick something short!",
   "source": "owl-line"
  },
  {
-  "key": "f192f577987925a7",
-  "text": "You earned the Star Collector badge!",
+  "key": "e8bd82891ce5c4c0",
+  "text": "Meadow Walker. Master Meadow Steps and beat Bug Squash",
+  "source": "badge-locked"
+ },
+ {
+  "key": "ecd4fe369e2640df",
+  "text": "Not quite! Try again.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "f04de88ae98dc1d1",
+  "text": "One choice is ruled out.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "f1df3b3681873691",
+  "text": "Which step comes first?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "f3ef908c07db968b",
+  "text": "You earned the Bug Squasher badge!",
   "source": "celebration"
  },
  {
-  "key": "f242dd24fb659f8d",
-  "text": "Help Fox reach the flag with just three tiles. Use a repeat!",
-  "source": "minigame-round"
+  "key": "f80c8fc3dcb61f21",
+  "text": "Not that one. Try another!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "fc88be65ce342108",
+  "text": "Read the arrows from left to right: right, right, down. One arrow is one step.",
+  "source": "lesson-demo"
  }
 ]

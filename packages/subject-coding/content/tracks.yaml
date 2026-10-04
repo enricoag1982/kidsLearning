@@ -1,5 +1,5 @@
-# One main track with one world: a fixture proving the content pipeline. Real worlds (W1-W3) come with m12.5 / m12.6.
-# `title` / habitat names are texts in locales/en/journey.yaml.
+# One main track, "Coding Basics". Worlds without a lesson show as "Coming soon" on the Journey: Looping Hills and Turning Woods
+# get their lessons in m12.6. `title` / habitat names are texts in locales/en/journey.yaml.
 tracks:
   - id: basics
     kind: main
@@ -10,9 +10,11 @@ tracks:
           order: 1,
           habitat: meadow,
           title: worlds.meadow-steps,
-          boss: fixture-boss,
+          boss: bug-squash,
         }
+      - { id: looping-hills, order: 2, habitat: river, title: worlds.looping-hills }
+      - { id: turning-woods, order: 3, habitat: forest, title: worlds.turning-woods }
 # A rank is earned `after` a world (`world:<id>`) or at the `start`; its name is in locales/en/journey.yaml.
 ranks:
   - { id: starter, after: start }
-  - { id: explorer, after: world:meadow-steps }
+  - { id: stepper, after: world:meadow-steps }

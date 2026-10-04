@@ -10,6 +10,8 @@ import type { CodingExerciseDef } from '../../core/types.ts';
 import { kindOf } from '../../kinds/index.ts';
 import type { CodingState } from '../../kinds/index.ts';
 import { solutionOf } from '../../kinds/solutions.ts';
+import { allCodingExercises } from '../../content/all-exercises.ts';
+import { codingWeb } from '../coding-pack.ts';
 import { fixtureExercises } from '../testing/fixtures.ts';
 import { KindHarness } from '../testing/KindHarness.tsx';
 import { renderCodingUi } from '../testing/render-coding-ui.tsx';
@@ -25,6 +27,10 @@ const text = (key: string): string =>
 const CODING = fixtureExercises.filter(
   (def) => def.type === 'program' || def.type === 'predict' || def.type === 'find-bug',
 );
+
+/** Every exercise the app ships: all lessons' guided tries, scored exercises and easier variants, and the rounds of every boss. */
+const shipped = codingWeb.createServices().content;
+const SHIPPED = allCodingExercises(shipped.lessons(), shipped.minigames());
 
 let restore: () => void;
 beforeEach(() => {
@@ -54,40 +60,61 @@ async function perform(
   return state;
 }
 
+/** Solves `def` through its driver with no error (3 stars), and again after one wrong action (2 stars). */
+function itSolves(def: CodingExerciseDef): void {
+  it('is solved by its solution(): 3 stars, no error', async () => {
+    renderCodingUi(<KindHarness def={def} />);
+    const state = await perform(def, solutionOf(def).solution(def, null));
+    expect(state).toMatchObject({ solved: true, errors: 0 });
+    expect((await screen.findByTestId('done')).dataset['stars']).toBe('3');
+    expect(screen.getByTestId('session').dataset['errors']).toBe('0');
+  });
+
+  it('takes a wrong action first: exactly one error, still solvable (2 stars)', async () => {
+    renderCodingUi(<KindHarness def={def} />);
+    const wrong = solutionOf(def).wrongAction?.(def, null) ?? [];
+    const afterWrong = await perform(def, wrong);
+    expect(afterWrong).toMatchObject({ solved: false, errors: 1 });
+    await screen.findByTestId('note');
+    expect(screen.getByTestId('session').dataset['errors']).toBe('1');
+
+    await perform(def, solutionOf(def).solution(def, null), afterWrong);
+    expect((await screen.findByTestId('done')).dataset['stars']).toBe('2');
+  });
+}
+
 describe('the coding e2e drivers', () => {
   it('cover every exercise of the fixture: 2 guided tries, 5 exercises and the boss rounds', () => {
     expect(CODING.map((def) => def.id)).toEqual([
-      'arrows-g1',
-      'arrows-g2',
-      'arrows-01',
-      'arrows-02',
-      'arrows-03',
-      'arrows-04',
-      'arrows-05',
-      'fixture-r1',
-      'fixture-r2',
+      'fx-g1',
+      'fx-g2',
+      'fx-01',
+      'fx-02',
+      'fx-03',
+      'fx-04',
+      'fx-05',
+      'fx-r1',
+      'fx-r2',
+    ]);
+  });
+  describe.each(CODING.map((def) => [def.id, def] as const))('%s', (_id, def) => {
+    itSolves(def);
+  });
+});
+
+describe('the coding e2e drivers on the shipped content', () => {
+  it('cover every exercise: 4 lessons and Bug Squash, of all five kinds the content uses', () => {
+    expect(SHIPPED).toHaveLength(40);
+    expect([...new Set(SHIPPED.map((def) => def.type))].sort()).toEqual([
+      'choice',
+      'find-bug',
+      'order',
+      'predict',
+      'program',
     ]);
   });
 
-  describe.each(CODING.map((def) => [def.id, def] as const))('%s', (_id, def) => {
-    it('is solved by its solution(): 3 stars, no error', async () => {
-      renderCodingUi(<KindHarness def={def} />);
-      const state = await perform(def, solutionOf(def).solution(def, null));
-      expect(state).toMatchObject({ solved: true, errors: 0 });
-      expect((await screen.findByTestId('done')).dataset['stars']).toBe('3');
-      expect(screen.getByTestId('session').dataset['errors']).toBe('0');
-    });
-
-    it('takes a wrong action first: exactly one error, still solvable (2 stars)', async () => {
-      renderCodingUi(<KindHarness def={def} />);
-      const wrong = solutionOf(def).wrongAction?.(def, null) ?? [];
-      const afterWrong = await perform(def, wrong);
-      expect(afterWrong).toMatchObject({ solved: false, errors: 1 });
-      await screen.findByTestId('note');
-      expect(screen.getByTestId('session').dataset['errors']).toBe('1');
-
-      await perform(def, solutionOf(def).solution(def, null), afterWrong);
-      expect((await screen.findByTestId('done')).dataset['stars']).toBe('2');
-    });
+  describe.each(SHIPPED.map((def) => [def.id, def] as const))('%s', (_id, def) => {
+    itSolves(def);
   });
 });

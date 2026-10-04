@@ -1,51 +1,69 @@
-# Fixture lesson (m12.3): one lesson of each kind of coding exercise, enough to prove the pipeline. The real W1 lessons come with m12.5.
-# Maps: S start, F flag, * star, # rock, . empty. Tiles: a primitive name, or { repeat: 3, do: [right, down] }.
-# Texts for every exercise live in locales/en/lessons.yaml under the exercise `id`.
+# W1 lesson 2: one arrow = one step, read left to right. Maps: S start, F flag, * star, # rock, . empty. No rocks or stars yet.
+# `cap` = the solution's length + 2 (every solution here is a shortest one). Texts: `ask-*` in locales/en/lessons.yaml.
 id: seq-arrows
-order: 1
+order: 2
 concept: seq-arrows
 character: fox
 demo:
-  prompt: { emoji: 🦊🚩 }
+  prompt: { big: '→ → ↓' }
 guided:
   - id: arrows-g1
     type: program
-    map: ['S.F']
-    tray: [left, right]
-    cap: 2
-    solution: [right, right]
+    text: ask-reach-guided
+    map: ['S..', '.F.', '...']
+    tray: [right, down]
+    cap: 4
+    solution: [right, down]
   - id: arrows-g2
     type: predict
-    map: ['S..', '.#.', '..F']
-    program: [right, right, down]
+    text: ask-predict
+    map: ['...', 'S..', '..F']
+    program: [right, down]
 exercises:
   - id: arrows-01
     type: program
-    map: ['S..', '..F']
-    tray: [right, down]
-    cap: 3
-    solution: [right, right, down]
+    text: ask-reach
+    map: ['S..', '...', '.F.']
+    tray: [up, down, left, right]
+    cap: 5
+    solution: [down, down, right]
   - id: arrows-02
     type: program
-    map: ['S..*', '.#..', '...F']
+    text: ask-reach
+    map: ['....', '.F..', '....', '...S']
     tray: [up, down, left, right]
     cap: 6
-    solution: [right, right, right, down, down]
+    solution: [up, up, left, left]
   - id: arrows-03
     type: program
-    map: ['S..', '##.', '..F']
+    text: ask-reach
+    map: ['..F.', '....', '....', 'S...']
     tray: [up, down, left, right]
-    cap: 4
-    solution: [right, right, down, down]
-    prefilled: [right, null, null, down]
-    locked: [0, 3]
+    cap: 7
+    solution: [up, up, up, right, right]
   - id: arrows-04
-    type: predict
-    map: ['S..*', '.#..', '...F']
-    program: [down, down, right, right, up]
+    type: program
+    text: ask-reach
+    easier: arrows-e1
+    map: ['....S', '.....', '.....', '..F..', '.....']
+    tray: [up, down, left, right]
+    cap: 7
+    solution: [down, down, down, left, left]
   - id: arrows-05
-    type: find-bug
-    map: ['S..*', '.#..', '...F']
-    program: [right, right, right, up, down]
-    bug: [3]
-    fix: down
+    type: predict
+    text: ask-predict
+    map: ['S...', '....', '...F']
+    program: [down, right, right]
+  - id: arrows-06
+    type: predict
+    text: ask-predict
+    map: ['....', '.S..', '....', '...F']
+    program: [right, down, down, right]
+variants:
+  - id: arrows-e1
+    type: program
+    text: ask-reach
+    map: ['..S', '...', '.F.']
+    tray: [up, down, left, right]
+    cap: 5
+    solution: [down, down, left]

@@ -1,0 +1,44 @@
+# Bug Squash: World 1's boss, a `series` of 5 bugs to find, longer each round. It also opens after the debugging lesson as a
+# Today session mini-game.
+id: bug-squash
+mode: series
+concept: seq-debug
+unlockAfter: seq-debug
+errors3: 0
+errors2: 2
+rounds:
+  - id: bug-squash-r1
+    type: find-bug
+    text: ask-bug
+    map: ['.#F#', '#...', '.S#.']
+    program: [up, up, up]
+    bug: [1]
+    fix: right
+  - id: bug-squash-r2
+    type: find-bug
+    text: ask-bug
+    map: ['..F#', '.#..', '#.#.', '#..S']
+    program: [up, up, up, up]
+    bug: [2]
+    fix: left
+  - id: bug-squash-r3
+    type: find-bug
+    text: ask-bug
+    map: ['#...', '.S#.', '.##F', '..#.']
+    program: [up, right, right, up, down]
+    bug: [3]
+    fix: down
+  - id: bug-squash-r4
+    type: find-bug
+    text: ask-bug
+    map: ['...F', '.#..', '..##', 'S###']
+    program: [up, up, up, right, left, right]
+    bug: [4]
+    fix: right
+  - id: bug-squash-r5
+    type: find-bug
+    text: ask-bug
+    map: ['.F.#', '.###', '...S', '.#.#']
+    program: [left, up, left, up, up, right]
+    bug: [1]
+    fix: left

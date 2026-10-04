@@ -1,8 +1,10 @@
 badges:
-  first-lesson:
-    name: First Lesson
-    condition: Master your first lesson
-  star-collector:
-    name: Star Collector
-    condition_one: 'Earn {{count}} star'
-    condition_other: 'Earn {{count}} stars'
+  first-program:
+    name: First Program
+    condition: Build your first program
+  bug-squasher:
+    name: Bug Squasher
+    condition: Squash 5 bugs on the first try
+  meadow-walker:
+    name: Meadow Walker
+    condition: Master Meadow Steps and beat Bug Squash

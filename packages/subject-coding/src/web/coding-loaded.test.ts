@@ -13,13 +13,22 @@ describe('codingEntry.load', () => {
     expect(common?.app?.title).toBe('Coding');
   });
 
-  it('serves the compiled lessons, the boss, the catalog and the badges', async () => {
+  it('serves the compiled lessons, Bug Squash, the catalog and the badges', async () => {
     const { pack } = await codingEntry.load();
     const content = pack.createServices().content;
 
-    expect(content.lessons().map((lesson) => lesson.id)).toEqual(['seq-arrows']);
-    expect(content.minigame('fixture-boss')?.id).toBe('fixture-boss');
+    expect(
+      content
+        .lessons()
+        .map((lesson) => lesson.id)
+        .sort(),
+    ).toEqual(['seq-arrows', 'seq-collect', 'seq-debug', 'seq-order']);
+    expect(content.minigame('bug-squash')?.id).toBe('bug-squash');
     expect(content.catalog?.().tracks.map((track) => track.id)).toEqual(['basics']);
-    expect(content.badges?.().map((badge) => badge.id)).toEqual(['first-lesson', 'star-collector']);
+    expect(content.badges?.().map((badge) => badge.id)).toEqual([
+      'first-program',
+      'bug-squasher',
+      'meadow-walker',
+    ]);
   });
 });

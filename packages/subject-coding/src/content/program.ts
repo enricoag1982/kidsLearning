@@ -8,6 +8,7 @@ import { PRIMITIVE_KINDS, isValidProgram, sameTile, tileCount } from '../core/ti
 import type { PrimitiveKind, Tile } from '../core/tiles.ts';
 import type { ProgramDef } from '../core/types.ts';
 import { kindsUsed } from '../kinds/program/kind.ts';
+import { failingProgram } from '../kinds/program/solution.ts';
 import { checkLevelSize, compileLevel, levelFields, refineLevel } from './level-yaml.ts';
 import { MAX_CAP, tileSchema, traySchema } from './tile-yaml.ts';
 
@@ -73,7 +74,8 @@ function checkMustLoop(def: ProgramDef, where: string, issues: string[]): void {
 }
 
 /** Build the program from the tray: `solution` is a reference that reaches the goal within `cap`, with the tray's tiles only;
- * `prefilled` / `locked` set up a "fill the gap" or "fix it" start; `must-loop` proves the lesson needs a repeat. */
+ * `prefilled` / `locked` set up a "fill the gap" or "fix it" start; `must-loop` proves the lesson needs a repeat. A runnable,
+ * non-empty program that fails has to exist (the tests' wrong try). */
 export const program: ExerciseKindContent<ProgramDef, typeof programSchema> = {
   type: 'program',
   schema: programSchema,
@@ -114,6 +116,11 @@ export const program: ExerciseKindContent<ProgramDef, typeof programSchema> = {
       issues.push(`${where}: solution does not reach the goal (${outcome})`);
     }
     checkPrefilled(def, where, issues);
+    if (failingProgram(def) === null) {
+      issues.push(
+        `${where}: no runnable program fails (a wrong try cannot be made: add a tile to the tray, or unlock a slot)`,
+      );
+    }
     if (def.mustLoop === true) {
       try {
         checkMustLoop(def, where, issues);
