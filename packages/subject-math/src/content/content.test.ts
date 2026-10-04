@@ -265,6 +265,13 @@ describe('texts', () => {
     ).toBeUndefined();
   });
 
+  it('the array texts are the spec ones', () => {
+    expect(resolve('math.notes.array-wrong')).toBe('Count the rows and the dots in each row.');
+    expect(resolve('math.notes.array-swapped')).toBe('Same number, but count the rows again.');
+    expect(resolve('math.hints.array-rows')).toBe('Rows go across, like lines in a book.');
+    expect(resolve('math.hints.array-row-total', { cols: 4 })).toBe('Each row has 4.');
+  });
+
   it('the number line texts are the spec ones', () => {
     expect(resolve('math.notes.line-wrong')).toBe(
       'Not there yet. Look at the numbers on the line.',
@@ -288,6 +295,11 @@ describe('texts', () => {
       { kind: 'hint', hint: { kind: 'number-line', level: 1, benchmark: 500 } },
       { kind: 'hint', hint: { kind: 'number-line', level: 2 } },
       { kind: 'hint', hint: { kind: 'number-line', level: 3, reveal: 300 } },
+      { kind: 'array-wrong' },
+      { kind: 'array-wrong', swapped: true },
+      { kind: 'hint', hint: { kind: 'array', level: 1 } },
+      { kind: 'hint', hint: { kind: 'array', level: 2, cols: 4 } },
+      { kind: 'hint', hint: { kind: 'array', level: 3, fillRows: 3 } },
     ];
     for (const stars of [1, 2, 3] as const) {
       for (const entry of feedback) {

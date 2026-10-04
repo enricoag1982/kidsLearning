@@ -1,5 +1,5 @@
 // The exercise-kind registry: the only place exercise-type dispatch happens. The card kit's four kinds and math's own, one plain
-// object (`number-line` since m13.6, `place-value` since m13.7; `array` joins in m13.8).
+// object (`number-line` since m13.6, `place-value` since m13.7, `array` since m13.8).
 import type {
   CardAction,
   CardHint,
@@ -9,6 +9,8 @@ import type {
 import { CARD_KINDS } from '@learn/platform-core/domain/exercise/kinds/cards/kinds';
 import type { ExerciseKind } from '@learn/platform-core/domain/exercise/kind';
 import type { MathExerciseDef } from '../core/types.ts';
+import { arrayKind } from './array/kind.ts';
+import type { ArrayAction, ArrayHint, ArrayOutcome, ArrayState } from './array/def.ts';
 import { numberLineKind } from './number-line/kind.ts';
 import type {
   NumberLineHint,
@@ -27,10 +29,10 @@ import { placeValueKind } from './place-value/kind.ts';
 export type ExerciseType = MathExerciseDef['type'];
 export type DefOf<T extends ExerciseType> = Extract<MathExerciseDef, { readonly type: T }>;
 
-export type MathAction = CardAction | PlaceAction | BuildAction;
-export type MathOutcome = CardOutcome | NumberLineOutcome | PlaceValueOutcome;
-export type MathHint = CardHint | NumberLineHint | PlaceValueHint;
-export type MathState = CardState | NumberLineState | PlaceValueState;
+export type MathAction = CardAction | PlaceAction | BuildAction | ArrayAction;
+export type MathOutcome = CardOutcome | NumberLineOutcome | PlaceValueOutcome | ArrayOutcome;
+export type MathHint = CardHint | NumberLineHint | PlaceValueHint | ArrayHint;
+export type MathState = CardState | NumberLineState | PlaceValueState | ArrayState;
 
 export type AnyMathKind = ExerciseKind<
   MathExerciseDef,
@@ -45,6 +47,7 @@ export const MATH_KINDS = {
   ...CARD_KINDS,
   'number-line': numberLineKind,
   'place-value': placeValueKind,
+  array: arrayKind,
 } as const satisfies { readonly [T in ExerciseType]: AnyMathKind & { readonly type: T } };
 
 export function kindOf(def: { readonly type: ExerciseType }): AnyMathKind {

@@ -1,5 +1,5 @@
 // CI guard: type / mode dispatch stays inside the pack's 3 registries. Scans `src/web`: the card kit's own registries do the
-// dispatch for its four kinds; the registries here take math's own kinds (`number-line`; m13.7-m13.8: `place-value`, `array`).
+// dispatch for its four kinds; the registries here take math's own kinds (`number-line`, `place-value`, `array`).
 import path from 'node:path';
 import { dispatchGuard, listSourceFiles } from '@learn/platform-web/testing/dispatch-guard.ts';
 
@@ -16,6 +16,7 @@ dispatchGuard({
     'order',
     'number-line',
     'place-value',
+    'array',
     'series',
   ],
   allowed: ['kinds/ui-registry.ts', 'kinds/e2e-registry.ts', 'modes/e2e-registry.ts'],

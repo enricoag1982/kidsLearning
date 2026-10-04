@@ -5,6 +5,7 @@ import { CARD_SAMPLES } from '@learn/platform-core/testing';
 import { MATH_CHARACTERS, mathCore } from '../core/math-core.ts';
 import { MATH_NOTES } from '../core/notes.ts';
 import {
+  ARRAY_SAMPLES,
   MATH_SOLUTIONS,
   NUMBER_LINE_SAMPLES,
   PLACE_VALUE_SAMPLES,
@@ -15,12 +16,21 @@ import {
 } from '../testing/index.ts';
 import { MATH_KINDS, kindOf, startExercise } from './index.ts';
 
-const TYPES = ['choice', 'number-entry', 'number-line', 'order', 'place-value', 'true-false'];
+const TYPES = [
+  'array',
+  'choice',
+  'number-entry',
+  'number-line',
+  'order',
+  'place-value',
+  'true-false',
+];
 
 const SAMPLES = [
   ...Object.values(CARD_SAMPLES),
   ...Object.values(NUMBER_LINE_SAMPLES),
   ...Object.values(PLACE_VALUE_SAMPLES),
+  ...Object.values(ARRAY_SAMPLES),
 ];
 
 describe('the math registry', () => {
@@ -45,6 +55,7 @@ describe('the math registry', () => {
 
   it("the core notes are the card kit notes plus math's own (the line note, and a hint note that words the line hints)", () => {
     expect(mathCore.notes['line-wrong']).toBe(MATH_NOTES['line-wrong']);
+    expect(mathCore.notes['array-wrong']).toBe(MATH_NOTES['array-wrong']);
     expect(mathCore.notes['hint']).toBe(MATH_NOTES.hint);
     for (const kind of ['wrong-answer', 'number-wrong', 'order-wrong', 'solved']) {
       expect(mathCore.notes[kind], kind).toBeDefined();

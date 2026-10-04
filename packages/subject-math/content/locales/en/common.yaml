@@ -30,9 +30,13 @@ math:
   notes:
     line-wrong: Not there yet. Look at the numbers on the line.
     pv-wrong: Count the blocks in each column again.
+    array-wrong: Count the rows and the dots in each row.
+    array-swapped: Same number, but count the rows again.
   hints:
     line-benchmark: 'Find the middle: {{benchmark}}.'
     line-labels: Read the numbers on every mark.
+    array-rows: Rows go across, like lines in a book.
+    array-row-total: 'Each row has {{cols}}.'
     pv-columns: 'Hundreds, tens and ones: count each column.'
     pv-numeral: The number beside the blocks shows what you built.
     pv-fill: 'Here are the {{place}}. Now finish!'
