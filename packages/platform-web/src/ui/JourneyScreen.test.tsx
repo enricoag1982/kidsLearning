@@ -1,5 +1,6 @@
 // The Journey over a subject that is not chess (the card kit's fixture subject, platform texts merged): nothing on the map says
-// "Basics" or a piece unless the subject's own texts do.
+// "Basics" or a piece unless the subject's own texts do, and a subject without branch tracks shows no "Paths after" heading
+// (chess, with its 3 paths, still shows "Paths after Basics").
 import { beforeAll, describe, expect, it } from 'vitest';
 import { screen } from '@testing-library/react';
 import { createProfile, selectProfile } from '@learn/platform-core';
@@ -24,7 +25,7 @@ beforeAll(() => {
 });
 
 describe('JourneyScreen over the card fixture subject', () => {
-  it('names the paths section after the subject’s own main track', async () => {
+  it('shows its own world and no paths heading or chess wording when it has no branch tracks', async () => {
     const app = createAppServices([createCardTestEntry()], APP, createMemoryStorage());
     const services = await app.activate('cards');
     const profile = await createProfile(services.deps, 'Mia', 'fox');
@@ -32,7 +33,8 @@ describe('JourneyScreen over the card fixture subject', () => {
 
     await renderWithStore(<JourneyScreen />, services);
 
-    expect(await screen.findByText('Paths after Numbers')).toBeTruthy();
+    await screen.findAllByRole('button');
+    expect(screen.queryByText(/Paths after/)).toBeNull();
     expect(screen.queryByText(/Basics/)).toBeNull();
   });
 });

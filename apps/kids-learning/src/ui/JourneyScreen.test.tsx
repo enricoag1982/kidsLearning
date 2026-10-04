@@ -76,9 +76,16 @@ describe('JourneyScreen', () => {
 describe('JourneyScreen paths heading', () => {
   it('names the main track: "Paths after Basics" for chess', async () => {
     const [l1, l2] = twoLessons();
+    // A branch track is needed: a subject without one shows no "Paths after" heading at all.
+    const branch: Track = {
+      id: 'openings',
+      kind: 'branch',
+      titleKey: 'journey:tracks.openings',
+      worlds: [{ ...WORLD, id: 'forest', track: 'openings', order: 1 }],
+    };
     const basics: TracksCatalog = {
       ...CATALOG,
-      tracks: [{ ...TRACK, titleKey: 'journey:tracks.basics' }],
+      tracks: [{ ...TRACK, titleKey: 'journey:tracks.basics' }, branch],
     };
     const services = createTestServices(makeContentSource({ lessons: [l1, l2], catalog: basics }));
     await renderWithStore(<JourneyScreen />, services);

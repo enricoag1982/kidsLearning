@@ -43,10 +43,19 @@ TOOLS_DIR = Path(__file__).resolve().parent
 REPO_ROOT = TOOLS_DIR.parent.parent
 DEFAULT_MODEL_DIR = TOOLS_DIR / ".cache"
 # One inventory per subject, written by each package's `build` (`pnpm voice:generate` runs it first).
-DEFAULT_INVENTORIES = [
-    REPO_ROOT / "packages" / "subject-chess" / "dist" / "voice-texts.json",
-    REPO_ROOT / "packages" / "subject-math" / "dist" / "voice-texts.json",
-]
+APP_PACKAGE_JSON = REPO_ROOT / "apps" / "kids-learning" / "package.json"
+
+
+def default_inventories() -> list[Path]:
+    """One inventory per subject the app ships: its `@learn/subject-*` dependencies (same list as the app's
+    `scripts/app-subjects.ts`)."""
+    deps = json.loads(APP_PACKAGE_JSON.read_text(encoding="utf-8")).get("dependencies", {})
+    prefix = "@learn/subject-"
+    return [
+        REPO_ROOT / "packages" / f"subject-{name[len(prefix):]}" / "dist" / "voice-texts.json"
+        for name in deps
+        if name.startswith(prefix)
+    ]
 DEFAULT_OUT_DIR = REPO_ROOT / "apps" / "kids-learning" / "public" / "audio" / "en"
 CONFIG_PATH = TOOLS_DIR / "config.json"
 
@@ -184,7 +193,7 @@ def main() -> None:
 
     config = load_config()
 
-    texts_by_key = load_texts_by_key(args.inventory or DEFAULT_INVENTORIES)
+    texts_by_key = load_texts_by_key(args.inventory or default_inventories())
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
     manifest = load_manifest(args.out_dir)

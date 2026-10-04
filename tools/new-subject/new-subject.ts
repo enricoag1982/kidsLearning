@@ -99,7 +99,7 @@ export function nextSteps(id: string): string {
     `  2. pnpm --filter @learn/subject-${id} build`,
     `  3. edit packages/subject-${id}/content/ (YAML: docs/adding-a-subject.md §3)`,
     '  4. pnpm dev',
-    '  5. pnpm voice:generate (first add the subject to the lists in docs/adding-a-subject.md §5)',
+    '  5. pnpm voice:generate (generates audio for its new texts; voice:check then covers it)',
   ].join('\n');
 }
 

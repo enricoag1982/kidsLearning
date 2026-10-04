@@ -2,6 +2,7 @@ import { gzipSync } from 'node:zlib';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { appSubjectIds } from './app-subjects.ts';
 
 /**
  * Offline size budget (non-functional.md §4): *initial* JS ≤ 300 KB gzipped — the app shell before
@@ -22,7 +23,7 @@ const BUDGET_BYTES = 300 * 1024;
 const ENTRY_CEILING_KB = 135;
 const PACK_CEILING_KB = 70;
 /** The subjects `src/main.tsx` registers: each one's pack must stay its own chunk, `<id>-loaded-<hash>.js`. */
-const SUBJECT_PACKS = ['chess', 'math'] as const;
+const SUBJECT_PACKS = appSubjectIds();
 
 const distDir = join(dirname(fileURLToPath(import.meta.url)), '../dist');
 const assetsDir = join(distDir, 'assets');

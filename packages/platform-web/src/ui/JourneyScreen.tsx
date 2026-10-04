@@ -264,11 +264,13 @@ export function JourneyScreen(): JSX.Element {
       <div className="flex min-h-0 flex-1 flex-col gap-4 lg:flex-row lg:gap-6">
         <div className="flex gap-2 overflow-x-auto pb-1 lg:w-64 lg:flex-none lg:flex-col lg:overflow-visible lg:pb-0">
           {mainWorlds.map((entry) => worldRow(entry))}
-          <div className="mt-1 flex items-center px-2 text-xs font-extrabold tracking-wide text-muted lg:mt-2 lg:text-[13px] lg:uppercase">
-            {tContent(t, 'journey:ui.paths-after-basics', {
-              main: mainTrack === undefined ? '' : tContent(t, mainTrack.titleKey),
-            })}
-          </div>
+          {branchWorlds.length > 0 && (
+            <div className="mt-1 flex items-center px-2 text-xs font-extrabold tracking-wide text-muted lg:mt-2 lg:text-[13px] lg:uppercase">
+              {tContent(t, 'journey:ui.paths-after-basics', {
+                main: mainTrack === undefined ? '' : tContent(t, mainTrack.titleKey),
+              })}
+            </div>
+          )}
           {branchWorlds.map((entry) => worldRow(entry, true))}
         </div>
 
