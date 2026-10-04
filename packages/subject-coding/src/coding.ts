@@ -1,6 +1,7 @@
 // `@learn/subject-coding`: the coding core (tiles, levels, simulator, solver, defs, kinds, `SubjectCore`). Content and testing
 // live behind `/content` and `/testing`.
 export type * from './core/types.ts';
+export type { CodingLesson, CodingSeries } from './content/all-exercises.ts';
 export { CODING_CHARACTERS, codingCore } from './core/coding-core.ts';
 export type { Level } from './core/level.ts';
 export { parseLevel } from './core/level.ts';

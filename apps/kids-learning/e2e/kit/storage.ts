@@ -51,15 +51,16 @@ async function loadStorage(page: Page, entries: Readonly<Record<string, string>>
 /**
  * Runs `fn` against the page's own storage through the real repository classes (same ones the app
  * itself uses), instead of the app's own webpage/React tree: reads `page`'s `localStorage` into a
- * fresh in-memory `Storage`, opens the shared store (`kids:`) and the chess subject's own
- * (`kids-chess:`) the same way `createAppServices` does (`openLocalStore` + `MIGRATIONS`), lets `fn`
+ * fresh in-memory `Storage`, opens the shared store (`kids:`) and the subject's own (`kids-<subjectId>:`,
+ * chess by default) the same way `createAppServices` does (`openLocalStore` + `MIGRATIONS`), lets `fn`
  * read/write through `AppStorageRepos` (profiles and settings shared, progress / game records /
- * badges chess's), then writes the result back to `page`. Every seed/read helper below is one call
+ * badges the subject's), then writes the result back to `page`. Every seed/read helper below is one call
  * to this.
  */
 export async function withAppStorage<T>(
   page: Page,
   fn: (repos: AppStorageRepos) => T | Promise<T>,
+  subjectId = 'chess',
 ): Promise<T> {
   const before = await dumpStorage(page);
   const storage = createMemoryStorage();
@@ -70,16 +71,16 @@ export async function withAppStorage<T>(
     migrations: MIGRATIONS,
     keyPrefix: KIDS_APP_CONFIG.storagePrefix,
   });
-  const chessStore = openLocalStore(storage, {
+  const subjectStore = openLocalStore(storage, {
     version: SCHEMA_VERSION,
     migrations: MIGRATIONS,
-    keyPrefix: CHESS_STORE_PREFIX,
+    keyPrefix: subjectStoragePrefix(KIDS_APP_CONFIG, subjectId),
   });
   const repos: AppStorageRepos = {
     profiles: new LocalStorageProfileRepository(sharedStore),
-    progress: new LocalStorageProgressRepository(chessStore),
-    gameRecords: new LocalStorageGameRecordRepository(chessStore),
-    rewards: new LocalStorageRewardsRepository(chessStore, sharedStore),
+    progress: new LocalStorageProgressRepository(subjectStore),
+    gameRecords: new LocalStorageGameRecordRepository(subjectStore),
+    rewards: new LocalStorageRewardsRepository(subjectStore, sharedStore),
     settings: new LocalStorageSettingsRepository(sharedStore),
   };
   const result = await fn(repos);

@@ -23,21 +23,23 @@ async function reloadToHub(page: Page): Promise<void> {
   await expect(page.getByRole('heading', { level: 1, name: 'What shall we learn?' })).toBeVisible();
 }
 
-test.describe('Subjects: one profile, Chess and Math', () => {
-  test('hub with both subjects; progress is per subject; the hub marks the last subject after a reload', async ({
+test.describe('Subjects: one profile, Chess, Math and Coding', () => {
+  test('hub with all three subjects; progress is per subject; the hub marks the last subject after a reload', async ({
     page,
   }) => {
     test.setTimeout(60_000);
 
     await completeFirstRun(page, 'Mia'); // first run -> hub -> Chess -> Home
 
-    // The hub shows both subjects; Chess, just opened, is the active one.
+    // The hub shows all three subjects; Chess, just opened, is the active one.
     await page.getByRole('button', { name: 'Subjects', exact: true }).click();
     await expect(
       page.getByRole('heading', { level: 1, name: 'What shall we learn?' }),
     ).toBeVisible();
+    await expect(page.locator('[data-testid^="subject-tile-"]')).toHaveCount(3);
     await expect(page.getByTestId('subject-tile-chess')).toContainText('Chess');
     await expect(page.getByTestId('subject-tile-math')).toContainText('Math');
+    await expect(page.getByTestId('subject-tile-coding')).toContainText('Coding');
     await expect(page.getByTestId('subject-tile-chess')).toHaveAttribute('aria-current', 'true');
     await expect(page.getByTestId('subject-tile-math')).not.toHaveAttribute('aria-current');
 
