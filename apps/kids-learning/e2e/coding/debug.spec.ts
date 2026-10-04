@@ -11,6 +11,7 @@ import {
   seedLessonsMasteredAndReopen,
   solveExercise,
   startToday,
+  worldBossNodeName,
 } from './kit.ts';
 
 test.describe('World 1, lesson 4: Bug hunt', () => {
@@ -70,5 +71,26 @@ test.describe('Bug Squash', () => {
     await playRounds(page, boss, 1);
     await expect(page.getByText('Round 2 of 5')).toBeVisible();
     await expect(page.getByText(contentText('lessons:ask-bug'))).toBeVisible();
+  });
+});
+
+test.describe('World 1 boss', () => {
+  test('Bug Squash is the Journey boss node once all four lessons are mastered; winning it marks the node won', async ({
+    page,
+  }) => {
+    test.setTimeout(180_000);
+    const boss = findMiniGame('bug-squash');
+
+    await completeFirstRun(page, 'Mia');
+    await seedLessonsMasteredAndReopen(
+      page,
+      'Mia',
+      ['seq-order', 'seq-arrows', 'seq-collect', 'seq-debug'].map(findLesson),
+    );
+    await page.getByRole('button', { name: /Journey/ }).click();
+    await page.getByRole('button', { name: worldBossNodeName(boss, 'available') }).click();
+    await playRounds(page, boss, boss.rounds.length);
+    await page.getByRole('button', { name: contentText('play.back-to-journey') }).click();
+    await expect(page.getByRole('button', { name: worldBossNodeName(boss, 'won') })).toBeVisible();
   });
 });

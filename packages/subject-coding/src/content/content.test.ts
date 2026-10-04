@@ -206,8 +206,8 @@ describe('World 1, Meadow Steps: the four lessons', () => {
       ['turning-woods', 3, 'forest'],
     ]);
     expect(lessons.every((lesson) => lesson.world === 'meadow-steps')).toBe(true);
-    // No world boss: Bug Squash is an optional mini-game that opens after the debugging lesson.
-    expect(main?.worlds.every((world) => world.boss === undefined)).toBe(true);
+    // Bug Squash is World 1's boss (a Journey node once every lesson is mastered); the later worlds get theirs in m12.6.
+    expect(main?.worlds.map((world) => world.boss)).toEqual(['bug-squash', undefined, undefined]);
   });
 
   it('has the starter and stepper ranks and three badges built on generic conditions', () => {

@@ -53,6 +53,17 @@ export function findMiniGame(id: string): CodingSeries {
   return game;
 }
 
+/** Accessible name of the world boss's Journey node for `status`. */
+export function worldBossNodeName(
+  game: CodingSeries,
+  status: 'available' | 'locked' | 'won',
+): string {
+  return interpolate(contentText('journey:ui.world-boss-name'), {
+    title: contentText(game.titleKey),
+    status: contentText(`journey:ui.boss-status-${status}`),
+  });
+}
+
 /**
  * Folds `actions` over `def`'s own kind: computes each step purely (`kind.act`, the same call the app's reducer makes) and drives
  * the UI to reproduce it through the kind's e2e driver.

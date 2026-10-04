@@ -5,7 +5,13 @@ tracks:
     kind: main
     title: tracks.basics
     worlds:
-      - { id: meadow-steps, order: 1, habitat: meadow, title: worlds.meadow-steps }
+      - {
+          id: meadow-steps,
+          order: 1,
+          habitat: meadow,
+          title: worlds.meadow-steps,
+          boss: bug-squash,
+        }
       - { id: looping-hills, order: 2, habitat: river, title: worlds.looping-hills }
       - { id: turning-woods, order: 3, habitat: forest, title: worlds.turning-woods }
 # A rank is earned `after` a world (`world:<id>`) or at the `start`; its name is in locales/en/journey.yaml.

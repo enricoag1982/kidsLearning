@@ -235,11 +235,6 @@
   "source": "badge-earned"
  },
  {
-  "key": "57d7a3ef13354ddb",
-  "text": "Meadow Walker. Master all four Meadow Steps lessons",
-  "source": "badge-locked"
- },
- {
   "key": "5975daf7cd7cef89",
   "text": "Pick a topic, or start your warm-up!",
   "source": "owl-line"
@@ -258,6 +253,11 @@
   "key": "5c0a805ac96610d1",
   "text": "Not that square. Follow the arrows again! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "5c9d6467e421ab93",
+  "text": "World boss time: Bug Squash!",
+  "source": "home"
  },
  {
   "key": "5dd5e6286fbf6833",
@@ -598,6 +598,11 @@
   "key": "e7c0878a15db2d00",
   "text": "5 minutes left — pick something short!",
   "source": "owl-line"
+ },
+ {
+  "key": "e8bd82891ce5c4c0",
+  "text": "Meadow Walker. Master Meadow Steps and beat Bug Squash",
+  "source": "badge-locked"
  },
  {
   "key": "ecd4fe369e2640df",

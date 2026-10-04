@@ -11,11 +11,11 @@ Main track `basics` ("Coding Basics"), world `meadow-steps` (habitat `meadow`); 
 | `seq-order` | Steps in order | steps in the right order | order, choice | 2 order | 4 order + 1 choice | 1 (for `order-04`) | — |
 | `seq-arrows` | Walk the path | one arrow = one step | program, predict | 1 program + 1 predict | 4 program + 2 predict | 1 (for `arrows-04`) | — |
 | `seq-collect` | Collect the stars | plan around rocks, stars on the way | program, predict | 1 program + 1 predict | 4 program + 2 predict | 1 (for `collect-04`) | — |
-| `seq-debug` | Bug hunt | a bug = one wrong step: watch, find, fix | find-bug, program (fix-it) | 2 find-bug | 4 find-bug + 2 program | 1 (for `debug-04`) | Bug Squash (optional) |
+| `seq-debug` | Bug hunt | a bug = one wrong step: watch, find, fix | find-bug, program (fix-it) | 2 find-bug | 4 find-bug + 2 program | 1 (for `debug-04`) | Bug Squash (world boss) |
 
 Totals: 4 lessons, 8 guided tries, 23 scored exercises, 4 easier variants, 5 boss rounds (40 exercises).
 
-Bug Squash (`bug-squash`, `series`, concept `seq-debug`, `unlockAfter: seq-debug`, `errors3: 0`, `errors2: 2`) is an optional mini-game: no world boss (`tracks.yaml`), no lesson boss. The child meets it as the mini-game of a Today session once `seq-debug` is done (`pickSessionMiniGame`); card-kit subjects have no Play screen.
+Bug Squash (`bug-squash`, `series`, concept `seq-debug`, `unlockAfter: seq-debug`, `errors3: 0`, `errors2: 2`) is the World 1 boss (`tracks.yaml` `boss`; lead 2026-10-04: as an optional mini-game it was unreachable once W1 was done and no warm-up was due). The Journey shows it as the world boss node once all four lessons are mastered; it also opens as a Today session mini-game after `seq-debug`.
 
 Badges (generic conditions only):
 
@@ -23,7 +23,7 @@ Badges (generic conditions only):
 |---|---|---|
 | First Program | `concept-correct` `seq-arrows` ×1 | the first clean program of the first program lesson |
 | Bug Squasher | `concept-correct` `seq-debug` ×5 | a mini-game win has no generic condition (and a standalone mini-game is unscored): five clean bug hunts instead |
-| Meadow Walker | `mastered` `world:meadow-steps` | all four lessons mastered (no world boss) |
+| Meadow Walker | `mastered` `world:meadow-steps` | all four lessons mastered and Bug Squash won (world mastery includes the world boss) |
 
 ## 2. Rules the build and the tests hold
 
