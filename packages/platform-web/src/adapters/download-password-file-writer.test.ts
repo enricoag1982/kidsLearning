@@ -18,33 +18,33 @@ afterEach(() => {
 });
 
 describe('createDownloadPasswordFileWriter', () => {
-  it('triggers a download named chess-for-kids-parent-code.txt and reports its location', async () => {
+  it('triggers a download named kids-learning-parent-code.txt and reports its location', async () => {
     const clickSpy = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {
       // jsdom does not implement navigation; only the trigger matters here.
     });
-    const writer = createDownloadPasswordFileWriter('chess-for-kids-parent-code');
+    const writer = createDownloadPasswordFileWriter('kids-learning-parent-code', 'Kids Learning');
 
     const result = await writer.write('1234');
 
-    expect(result).toEqual({ location: 'Downloads/chess-for-kids-parent-code.txt' });
+    expect(result).toEqual({ location: 'Downloads/kids-learning-parent-code.txt' });
     expect(clickSpy).toHaveBeenCalledTimes(1);
     const anchor = clickSpy.mock.instances[0] as HTMLAnchorElement;
-    expect(anchor.download).toBe('chess-for-kids-parent-code.txt');
+    expect(anchor.download).toBe('kids-learning-parent-code.txt');
     expect(createObjectURL).toHaveBeenCalledTimes(1);
     expect(revokeObjectURL).toHaveBeenCalledWith('blob:fake-url');
 
     clickSpy.mockRestore();
   });
 
-  it('includes the password in the file text passed to the Blob', async () => {
+  it('names the app and includes the password in the file text passed to the Blob', async () => {
     const blobSpy = vi.spyOn(globalThis, 'Blob');
     vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => undefined);
-    const writer = createDownloadPasswordFileWriter('chess-for-kids-parent-code');
+    const writer = createDownloadPasswordFileWriter('kids-learning-parent-code', 'Kids Learning');
 
     await writer.write('secret1');
 
     const [parts] = blobSpy.mock.calls[0] as [string[]];
-    expect(parts.join('')).toContain('secret1');
+    expect(parts.join('')).toContain('Kids Learning — parent code: secret1');
     blobSpy.mockRestore();
     vi.restoreAllMocks();
   });
