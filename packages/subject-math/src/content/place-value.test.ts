@@ -277,8 +277,6 @@ pvx-g1: Build 243.
 pvx-01: Build 305.
 pvx-02: Build 4072.
 pvx-easy: Build 40.
-bugs:
-  swap: 'Look at the order: hundreds, then tens, then ones.'
 `;
 
   /** A copy of the math content with the lesson above in a world of its own (`pv-fx`), `edit` applied to the lesson text first. */

@@ -63,48 +63,48 @@ Totals: 16 lessons, 32 guided, 96 scored, ≥ 16 variants, 10 series rounds + 1 
 
 Kinds: card kit `choice` / `true-false` / `number-entry` / `order`; math `number-line` / `place-value` / `array` (plan §3).
 
-| Template | Kind | Params (difficulty levers) | Answer | Bugs |
-|---|---|---|---|---|
-| `pv-build` | place-value | digits 3 / 4, zero in none / tens / ones | n | — |
-| `pv-read` | number-entry | "2 hundreds, 0 tens, 5 ones" | n | `append`, `swap` |
-| `pv-which` | choice (3 numerals) | same text | n | `append`, `swap` |
-| `pv-expanded` | number-entry | "3000 + 400 + 5" | n | `drop-zero` |
-| `cmp-sign` | choice `<` `=` `>` | a, b share 1–2 leading digits; digits 3 / 4 | sign | `ones-first` |
-| `cmp-order` | order (4 numerals, smallest first) | shared leading digits | order | `ones-first` |
-| `cmp-tf` | true-false | "406 > 460" | bool | `ones-first` |
-| `nl-place` | number-line | from, to, step 1 / 10 / 50 / 100, target on a tick | position | `ticks-not-gaps` |
-| `nl-estimate` | number-line | target between ticks, ± ½ interval | position | — |
-| `nl-half` | number-entry | "halfway between 300 and 400" | 350 | `ticks-not-gaps` |
-| `round-ten` | choice (the 2 tens) + line picture | n, ones = 5 lever | ten | `truncate`, `five-down` |
-| `round-hundred` | number-entry | n | hundred | `truncate` |
-| `round-tf` | true-false | "47 rounds to 50" | bool | `truncate` |
-| `bond-missing` | number-entry | total 10 / 20 / 100; a + □ = total | total − a | `digit-tens` |
-| `bond-pairs` | choice (3 pairs) | total | pair | `digit-tens` |
-| `double` / `near-double` / `halve` | number-entry | n ≤ 50 / n + (n + 1) / even ≤ 100 | — | `tens-only` |
-| `bridge-add` | number-entry (+ line picture in guided) | ones sum 11–18 | a + b | `off-by-one`, `off-by-ten` |
-| `count-up` | number-entry | b − a across a ten, difference ≤ 12 | b − a | `off-by-ten` |
-| `tens-hundreds` | number-entry | n ± 10 / 100 | — | `wrong-place` |
-| `compensate` | number-entry | n ± 9 / 99 | — | `forgot-adjust` |
-| `equals-balance` | number-entry | 7 + 5 = 6 + □ | 6 | `answer-next` |
-| `story` | number-entry | authored frame (part-whole / change / comparison) × numbers | — | `wrong-op` |
-| `groups` | number-entry + emoji groups | k ≤ 5 groups of n ≤ 5 | k × n | `add-factors` |
-| `groups-choice` | choice | "3 groups of 4" → 4 + 4 + 4 / 3 + 4 / 3 + 3 + 3 + 3 | 4 + 4 + 4 | `add-factors` |
-| `array-build` | array | rows × cols ≤ 6 × 6 (rows fixed by the text) | rows, cols | — |
-| `array-commute` | true-false | "3 × 4 = 4 × 3" / "3 × 4 = 3 + 4" | bool | `add-factors` |
-| `fact` / `fact-missing` | number-entry | table ∈ set, b 1–10; weighted to the lesson's tables | a × b / b | `neighbour`, `add-factors`, `digit-swap` |
-| `fact-choice` / `fact-tf` | choice / true-false | same | — | same |
+| Template | Kind | Params (difficulty levers) | Answer | Bugs | Status |
+|---|---|---|---|---|---|
+| `pv-build` | place-value | `digits` 3 / 4, `zeroIn` none / tens / ones, `values` (fixed targets in order, a guided try) | n | `swap` | built (m13.9) |
+| `pv-read` | number-entry | `digits`, `zeroIn`; "2 hundreds, 0 tens and 5 ones" + card "2H 0T 5O"; pad = digits + 1 | n | `swap`, `append` | built (m13.9) |
+| `pv-which` | choice (3 numerals) | `digits`, `zeroIn`; same text + card "2H 0T 5O" | n | `swap`, `append` | built (m13.9) |
+| `pv-expanded` | number-entry | `digits`; "3000 + 400 + 5" (one zero place, never the leading one) | n | `drop-zero` | built (m13.9) |
+| `cmp-sign` | choice `<` `=` `>` | `digits` 3 / 4, `shared` 0 / 1 / 2 leading digits equal | sign | `ones-first` | built (m13.9) |
+| `cmp-order` | order (4 numerals, smallest first) | `digits`, `shared` | order | — | built (m13.9) |
+| `cmp-tf` | true-false | `digits`, `shared`; "406 > 460" | bool | `ones-first` | built (m13.9) |
+| `nl-place` | number-line | `from`, `to`, `step` 1 / 10 / 50 / 100, `labels`, `values`; target = any inner tick | position | `ticks-not-gaps` | built (m13.9) |
+| `nl-estimate` | number-line | same line params; target between ticks, ≥ ¼ step from each, tolerance ½ step (kind) | position | — | built (m13.9) |
+| `nl-half` | number-entry | `unit` 10 / 100 / 1000; "halfway between 300 and 400" | 350 | — | built (m13.9) |
+| `round-ten` | choice (the 2 tens) | `max` 100 / 1000, `five` | ten | `truncate`, `five-down` | built (m13.9) |
+| `round-hundred` | number-entry | `max` 1 000 / 10 000, `five` | hundred | `truncate`, `five-down` | built (m13.9) |
+| `round-tf` | true-false | `to` 10 / 100, `max`; "47 → 50" | bool | `truncate`, `five-down` | built (m13.9) |
+| `bond-missing` | number-entry | total 10 / 20 / 100; a + □ = total | total − a | `digit-tens` | planned (m13.11) |
+| `bond-pairs` | choice (3 pairs) | total | pair | `digit-tens` | planned (m13.11) |
+| `double` / `near-double` / `halve` | number-entry | n ≤ 50 / n + (n + 1) / even ≤ 100 | — | `tens-only` | planned (m13.11) |
+| `bridge-add` | number-entry (+ line picture in guided) | ones sum 11–18 | a + b | `off-by-one`, `off-by-ten` | planned (m13.11) |
+| `count-up` | number-entry | b − a across a ten, difference ≤ 12 | b − a | `off-by-ten` | planned (m13.11) |
+| `tens-hundreds` | number-entry | n ± 10 / 100 | — | `wrong-place` | planned (m13.11) |
+| `compensate` | number-entry | n ± 9 / 99 | — | `forgot-adjust` | planned (m13.11) |
+| `equals-balance` | number-entry | 7 + 5 = 6 + □ | 6 | `answer-next` | planned (m13.11) |
+| `story` | number-entry | authored frame (part-whole / change / comparison) × numbers | — | `wrong-op` | planned (m13.11) |
+| `groups` | number-entry + emoji groups | k ≤ 5 groups of n ≤ 5 | k × n | `add-factors` | planned (m13.14) |
+| `groups-choice` | choice | "3 groups of 4" → 4 + 4 + 4 / 3 + 4 / 3 + 3 + 3 + 3 | 4 + 4 + 4 | `add-factors` | planned (m13.14) |
+| `array-build` | array | rows × cols ≤ 6 × 6 (rows fixed by the text) | rows, cols | — | planned (m13.14) |
+| `array-commute` | true-false | "3 × 4 = 4 × 3" / "3 × 4 = 3 + 4" | bool | `add-factors` | planned (m13.14) |
+| `fact` / `fact-missing` | number-entry | table ∈ set, b 1–10; weighted to the lesson's tables | a × b / b | `neighbour`, `add-factors`, `digit-swap` | planned (m13.14) |
+| `fact-choice` / `fact-tf` | choice / true-false | same | — | same | planned (m13.14) |
 
 Bugs (one authored reason sentence each, spoken when the wrong answer matches):
 
-| Bug | Wrong answer | Reason (draft) |
+| Bug | Wrong answer | Reason (W1 bugs: the text shipped in `lessons.yaml` `bugs:` by m13.9; the rest are drafts) |
 |---|---|---|
 | `append` | 2005 for 2 H 0 T 5 O | "Each place holds one digit: 2 hundreds is 200, not 2000." |
 | `swap` | 250 for 205 | "Look at the order: hundreds, then tens, then ones." |
-| `drop-zero` | 345 for 3000 + 400 + 5 | "No tens? Put a zero in the tens place." |
+| `drop-zero` | 345 for 3000 + 400 + 5 | "An empty place still needs a zero to hold its spot." |
 | `ones-first` | compares the last digits | "Compare the biggest place first." |
 | `ticks-not-gaps` | counts tick marks | "Count the jumps between the marks, not the marks." |
-| `truncate` | rounds down always | "Which ten is nearer? Look at the ones." |
-| `five-down` | 5 rounds down | "A five goes up to the next ten." |
+| `truncate` | rounds down always | "Rounding down every time? Check which number is nearer." |
+| `five-down` | 5 rounds down | "Right in the middle? It goes up to the bigger number." |
 | `digit-tens` | each digit to 10 (64 → 46) | "The tens make 90, then the ones make 10 more." |
 | `tens-only` | doubles the tens only | "Double the tens and the ones." |
 | `off-by-one` / `off-by-ten` | ± 1 / ± 10 | "So close! Count the last jump again." / "Check the tens." |
@@ -115,6 +115,26 @@ Bugs (one authored reason sentence each, spoken when the wrong answer matches):
 | `add-factors` | 3 + 4 for 3 × 4 | "Times means groups: 3 groups of 4." |
 | `neighbour` | a × (b ± 1) | "That's the next fact. Count one group less." |
 | `digit-swap` | 42 for 24 | "Check the digits' order." |
+
+### W1 templates as built (`m13.9`)
+
+Code: `packages/subject-math/src/content/templates/` (`numeral`, `bugs`, `place-value`, `compare`, `number-line`, `rounding`, `index` = `MATH_TEMPLATES`); texts: `lessons.yaml` `templates.<id>` (`pv-read-4` / `pv-which-4` for 4 digits) and `bugs.<id>`; tests run every combination of §2 over 1 000 seeds and break every `check` by hand. No lesson uses a template yet (W1 content: `m13.10`); `templates.*` / `bugs.*` are not in the voice inventory until one does.
+
+| Item | As built | Why |
+|---|---|---|
+| Reason texts `drop-zero`, `truncate`, `five-down` | reworded (table above) | a template zero can sit in the tens or ones; rounding also covers hundreds |
+| `pv-which` | also shows the card "2H 0T 5O" | the build-time `check` reads the question from the item; the sentence is not available to it |
+| `append` | 3-digit numbers with a zero place; `pv-read` needs it to fit the pad (digits + 1: zero tens only), `pv-which` up to 5 digits; otherwise `pv-which` offers the hundreds / tens swap | place values written one after another are 8 digits for 4 digits: no numeral for a card |
+| `cmp-sign` / `cmp-order` / `cmp-tf` `shared` | 0 / 1 / 2 (0 added) | the `pv-compare` variant "different hundreds" |
+| `cmp-order` bug | none | the `order` kind has no reasons |
+| `nl-half` bug | none | no wrong answer to name |
+| `round-ten` line picture | not built | the choice card has no picture slot; `m13.10` decides |
+| `round-hundred`, `round-tf` | `five-down` added | a number ending in 50 is half-way |
+| `five: false` | no half-way number (ones 5 / ends in 50); `five: true` always | one lever per item |
+| Ranges | `round-ten` 11 … max − 1; `round-hundred` 101 … max − 1; `round-tf` the lower neighbour ≥ `to` | no rounding to 0 |
+| `nl-place` target | any inner tick, labelled or not (never an end) | an `all` / listed `labels` line is the easier variant |
+| `nl-estimate` | target ≥ ¼ step from every tick as specified, but the kind's ± ½ step zone still covers the nearest tick | the zone is fixed by the kind (`tolerance` = step / 2) |
+| `pv-read` / `pv-which` text | "1 hundreds", "1 ones" | one `{{h}}` per place, no plural per digit; reword in `m13.10` if the owner minds |
 
 ## 4. Rules for the build
 
