@@ -371,6 +371,12 @@ importers:
         specifier: ^5.0.15
         version: 5.0.15(@types/react@19.3.0)(react@19.3.0)(use-sync-external-store@1.7.0(react@19.3.0))
 
+  tools/new-subject:
+    dependencies:
+      '@learn/platform-core':
+        specifier: workspace:*
+        version: link:../../packages/platform-core
+
 packages:
 
   '@apideck/better-ajv-errors@0.3.7':

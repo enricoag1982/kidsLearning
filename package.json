@@ -20,7 +20,8 @@
     "size": "pnpm --filter @learn/kids-learning size",
     "compat": "pnpm --filter @learn/kids-learning compat",
     "voice:check": "pnpm --filter @learn/kids-learning voice-check",
-    "voice:generate": "pnpm --filter \"@learn/subject-*\" build && python3 tools/voice/generate.py"
+    "voice:generate": "pnpm --filter \"@learn/subject-*\" build && python3 tools/voice/generate.py",
+    "new-subject": "node tools/new-subject/new-subject.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
