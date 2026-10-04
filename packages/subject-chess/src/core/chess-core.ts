@@ -72,6 +72,8 @@ export const DEFAULT_PROFILE_SETTINGS: ProfileSettings = composeDefaultSettings(
  * platform-web shell (`__APP_VERSION__`). */
 export const CHESS_APP_CONFIG: Omit<AppConfig, 'version'> = {
   storagePrefix: 'chess-kids:',
+  // Interim (m11.2–m11.5): one store, keys unchanged; m11.6 moves to `kids:` + `kids-<id>:`.
+  subjectStoragePrefix: () => 'chess-kids:',
   backupAppId: 'chess-kids',
   backupFilePrefix: 'chess-for-kids',
   parentCodeFilePrefix: 'chess-for-kids-parent-code',

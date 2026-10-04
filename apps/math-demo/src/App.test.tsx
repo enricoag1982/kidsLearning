@@ -11,7 +11,7 @@ import { mathWeb } from '@learn/subject-math/web/math-pack.ts';
 
 /** The real services over `storage`, except the parent-code file (a browser download, none in jsdom). */
 function testServices(storage: Storage): Services {
-  const services = createServices(mathWeb, MATH_APP_CONFIG, storage);
+  const services = createServices([mathWeb], MATH_APP_CONFIG, storage);
   return { ...services, deps: { ...services.deps, passwordFile: createFakePasswordFileWriter() } };
 }
 

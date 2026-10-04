@@ -30,6 +30,8 @@ export const mathCore: SubjectCore<null> = {
  * platform-web shell. */
 export const MATH_APP_CONFIG: Omit<AppConfig, 'version'> = {
   storagePrefix: 'math-demo:',
+  // Interim (m11.2–m11.5): one store, keys unchanged; m11.6 moves to `kids:` + `kids-<id>:`.
+  subjectStoragePrefix: () => 'math-demo:',
   backupAppId: 'math-demo',
   backupFilePrefix: 'math-demo',
   parentCodeFilePrefix: 'math-demo-parent-code',

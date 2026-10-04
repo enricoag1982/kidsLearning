@@ -63,11 +63,14 @@ export function createTestServices(
   };
 
   const narrator = createFakeNarrator();
+  const subject = { botPlayer: createWorkerBotPlayer(), content: createBundledContentSource() };
 
   return {
     deps,
     narrator,
-    subject: { botPlayer: createWorkerBotPlayer(), content: createBundledContentSource() },
+    subject,
+    subjectDeps: { [chessCore.id]: deps },
+    subjectServices: { [chessCore.id]: subject },
     setVoiceEnabled: (enabled) => {
       narrator.setEnabled(enabled);
     },

@@ -97,7 +97,7 @@ export default function App({
   pack,
   app,
 }: AppProps): JSX.Element {
-  const [store] = useState(() => createAppStore(services ?? createServices(pack, app), pack));
+  const [store] = useState(() => createAppStore(services ?? createServices([pack], app), pack));
   const [initError, setInitError] = useState<Error | null>(null);
 
   useEffect(() => {

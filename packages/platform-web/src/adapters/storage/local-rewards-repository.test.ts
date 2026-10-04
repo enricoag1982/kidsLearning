@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import type { EarnedBadge, SessionLog, Streak } from '@learn/platform-core';
-import { StorageError } from './local-store.ts';
+import { openLocalStore, StorageError } from './local-store.ts';
 import { openTestStore } from '../../testing/open-test-store.ts';
 import { LocalStorageRewardsRepository } from './local-rewards-repository.ts';
 
@@ -128,5 +128,94 @@ describe('LocalStorageRewardsRepository', () => {
     const repo = new LocalStorageRewardsRepository(store);
 
     await expect(repo.listEarnedBadges('profile-1')).rejects.toThrow(StorageError);
+  });
+
+  it('deleteBadges removes only badges, keeping the streak and session logs', async () => {
+    const repo = makeRepo();
+    await repo.addEarnedBadge(makeBadge({ id: 'eb1', profileId: 'profile-1' }));
+    await repo.addEarnedBadge(makeBadge({ id: 'eb2', profileId: 'profile-2' }));
+    await repo.saveStreak(makeStreak());
+    await repo.saveSessionLog(makeSessionLog());
+
+    await repo.deleteBadges('profile-1');
+
+    expect(await repo.listEarnedBadges('profile-1')).toEqual([]);
+    expect(await repo.listEarnedBadges('profile-2')).toHaveLength(1);
+    expect(await repo.getStreak('profile-1')).toBeDefined();
+    expect(await repo.getSessionLog('profile-1', '2026-01-05')).toBeDefined();
+  });
+
+  describe('with a separate shared store', () => {
+    function makeSplitRepo(): LocalStorageRewardsRepository {
+      const subjectStore = openLocalStore(localStorage, { keyPrefix: 'app-a:' });
+      const sharedStore = openLocalStore(localStorage, { keyPrefix: 'app:' });
+      return new LocalStorageRewardsRepository(subjectStore, sharedStore);
+    }
+
+    it('writes badges under the subject prefix, streaks and session logs under the shared one', async () => {
+      const repo = makeSplitRepo();
+      await repo.addEarnedBadge(makeBadge());
+      await repo.saveStreak(makeStreak());
+      await repo.saveSessionLog(makeSessionLog());
+
+      expect(localStorage.getItem('app-a:earned-badges')).not.toBeNull();
+      expect(localStorage.getItem('app-a:streaks')).toBeNull();
+      expect(localStorage.getItem('app-a:session-logs')).toBeNull();
+      expect(localStorage.getItem('app:streaks')).not.toBeNull();
+      expect(localStorage.getItem('app:session-logs')).not.toBeNull();
+      expect(localStorage.getItem('app:earned-badges')).toBeNull();
+    });
+
+    it('updates a badge in place in the subject store (saveEarnedBadge)', async () => {
+      const repo = makeSplitRepo();
+      await repo.addEarnedBadge(makeBadge({ seen: false }));
+      await repo.saveEarnedBadge(makeBadge({ seen: true }));
+
+      expect((await repo.listEarnedBadges('profile-1')).map((badge) => badge.seen)).toEqual([true]);
+      expect(localStorage.getItem('app:earned-badges')).toBeNull();
+    });
+
+    it('a second repository over the same stores sees the shared rows but not the other subject badges', async () => {
+      const shared = openLocalStore(localStorage, { keyPrefix: 'app:' });
+      const a = new LocalStorageRewardsRepository(
+        openLocalStore(localStorage, { keyPrefix: 'app-a:' }),
+        shared,
+      );
+      const b = new LocalStorageRewardsRepository(
+        openLocalStore(localStorage, { keyPrefix: 'app-b:' }),
+        shared,
+      );
+      await a.addEarnedBadge(makeBadge());
+      await a.saveStreak(makeStreak());
+      await a.saveSessionLog(makeSessionLog());
+
+      expect(await b.getStreak('profile-1')).toEqual(makeStreak());
+      expect(await b.getSessionLog('profile-1', '2026-01-05')).toEqual(makeSessionLog());
+      expect(await b.listEarnedBadges('profile-1')).toEqual([]);
+    });
+
+    it('deleteProfileData clears badges (subject store) and streak + logs (shared store)', async () => {
+      const repo = makeSplitRepo();
+      await repo.addEarnedBadge(makeBadge());
+      await repo.saveStreak(makeStreak());
+      await repo.saveSessionLog(makeSessionLog());
+
+      await repo.deleteProfileData('profile-1');
+
+      expect(await repo.listEarnedBadges('profile-1')).toEqual([]);
+      expect(await repo.getStreak('profile-1')).toBeUndefined();
+      expect(await repo.getSessionLog('profile-1', '2026-01-05')).toBeUndefined();
+    });
+
+    it('deleteBadges leaves the shared rows alone', async () => {
+      const repo = makeSplitRepo();
+      await repo.addEarnedBadge(makeBadge());
+      await repo.saveStreak(makeStreak());
+
+      await repo.deleteBadges('profile-1');
+
+      expect(await repo.listEarnedBadges('profile-1')).toEqual([]);
+      expect(await repo.getStreak('profile-1')).toBeDefined();
+    });
   });
 });
