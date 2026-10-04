@@ -1,6 +1,15 @@
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
-import { completeFirstRun, openParentArea, pickProfileFromPicker } from './kit.ts';
+import {
+  completeFirstRun,
+  contentText,
+  findLesson,
+  findMiniGame,
+  journeyNodeName,
+  openParentArea,
+  pickProfileFromPicker,
+  worldBossNodeName,
+} from './kit.ts';
 
 /** The parsed contents of a saved backup file. */
 function readBackup(path: string): Record<string, unknown> {
@@ -19,7 +28,8 @@ interface V6ProfileData {
 
 /**
  * The file the math demo app (`app: 'math-demo'`, schema 5) would have exported for the same child: flat records beside
- * the shared part, one `add-within-5` lesson with stars (the demo's whole learning data lives in the file).
+ * the shared part, one `add-within-5` lesson with stars (the demo's whole learning data lives in the file). That lesson belongs to
+ * the demo world `adding`, retired in m13.10: its stars still import and count (G8, "nothing is lost"), it has no Journey node.
  */
 function mathDemoFile(v6: Record<string, unknown>): Record<string, unknown> {
   const profiles = v6.profiles as readonly { readonly id: string }[];
@@ -107,10 +117,18 @@ test.describe('Backup', () => {
     await page.getByRole('button', { name: 'Back' }).click(); // backup -> overview
     await page.getByRole('button', { name: 'Done' }).click(); // -> picker
     await pickProfileFromPicker(page, 'Mia');
-    await expect(page.locator('[aria-label$=" stars"]')).toHaveAttribute(
-      'aria-label',
-      /^(?!0 stars$).+/,
-    );
+    // The retired lesson's two exercises (3 stars each) count in the total, though the content no longer has the lesson.
+    await expect(page.locator('[aria-label$=" stars"]')).toHaveAttribute('aria-label', '6 stars');
+    // ... and the Journey has no node for it: World 1's first lesson is still the one to do, the boss waits.
+    await page.getByRole('button', { name: /Journey/ }).click();
+    await expect(
+      page.getByRole('button', { name: journeyNodeName(findLesson('pv-hto'), 'current') }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: worldBossNodeName(findMiniGame('number-train'), 'locked') }),
+    ).toBeVisible();
+    await expect(page.getByRole('button', { name: /Adding|add-within/i })).toHaveCount(0);
+    await page.getByRole('button', { name: contentText('journey:ui.back') }).click(); // Journey -> Home
 
     // A file of any other app is rejected.
     await page.getByRole('button', { name: 'Switch player' }).click();

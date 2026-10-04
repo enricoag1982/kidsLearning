@@ -1,7 +1,11 @@
+// World 1, Number Meadow, on the Journey: the first lesson current and the Number Train boss locked on a fresh install; the second
+// lesson from the Journey (sign cards, ordering, true / false); and, with the five lessons seeded as mastered, the Number Train
+// reached as the world boss and played round by round on the number line.
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import type { MathLesson } from '@learn/subject-math';
 import {
+  completeFirstRun,
   contentText,
   dismissCelebrationIfShown,
   findLesson,
@@ -9,9 +13,13 @@ import {
   journeyNodeName,
   playLesson,
   playSeries,
-  startLessonToFirstGuided,
+  readMiniGameProgress,
+  seedMasteredAndReopen,
   worldBossNodeName,
 } from './kit.ts';
+
+const LESSONS = ['pv-hto', 'pv-compare', 'pv-line', 'pv-thousands', 'pv-round'].map(findLesson);
+const boss = findMiniGame('number-train');
 
 /** From the Journey: opens `lesson`'s current node, plays it, and returns to the Journey. */
 async function playLessonFromJourney(page: Page, lesson: MathLesson): Promise<void> {
@@ -24,30 +32,65 @@ async function playLessonFromJourney(page: Page, lesson: MathLesson): Promise<vo
   await page.getByRole('button', { name: /Continue/ }).click();
 }
 
-test.describe('World 1: Adding', () => {
-  test('lessons 2 and 3 from the Journey, then the Number Parade boss', async ({ page }) => {
-    const first = findLesson('add-within-5');
-    const second = findLesson('add-within-10');
-    const third = findLesson('take-away');
-    const boss = findMiniGame('number-parade');
+test.describe('World 1: Number Meadow', () => {
+  test('a fresh Journey: Hundreds, tens, ones is current, the other four lessons and the Number Train are locked', async ({
+    page,
+  }) => {
+    await completeFirstRun(page, 'Kid');
+    await page.getByRole('button', { name: /Journey/ }).click();
 
-    // Lesson 1 through Today's session, which is what unlocks the Journey's second node.
-    await startLessonToFirstGuided(page);
-    await playLesson(page, first);
-    await dismissCelebrationIfShown(page);
-    await page.getByRole('button', { name: /Continue/ }).click();
-    await page.getByRole('button', { name: 'Done' }).click();
+    const [first, ...others] = LESSONS;
+    if (first === undefined) throw new Error('no lesson');
+    await expect(
+      page.getByRole('button', { name: journeyNodeName(first, 'current') }),
+    ).toBeVisible();
+    for (const lesson of others) {
+      await expect(
+        page.getByRole('button', { name: journeyNodeName(lesson, 'locked') }),
+      ).toBeVisible();
+    }
+    await expect(
+      page.getByRole('button', { name: worldBossNodeName(boss, 'locked') }),
+    ).toBeVisible();
+  });
+
+  test('lesson 2 from the Journey (sign cards, ordering, true / false) once lesson 1 is mastered', async ({
+    page,
+  }) => {
+    const [first, second, third] = LESSONS;
+    if (first === undefined || second === undefined || third === undefined) {
+      throw new Error('fewer than 3 lessons');
+    }
+    await completeFirstRun(page, 'Kid');
+    await seedMasteredAndReopen(page, 'Kid', [first], []);
 
     await page.getByRole('button', { name: /Journey/ }).click();
     await expect(
       page.getByRole('button', { name: worldBossNodeName(boss, 'locked') }),
     ).toBeVisible();
     await playLessonFromJourney(page, second);
-    await playLessonFromJourney(page, third);
 
+    // The next node is open, the boss still waits for the whole world.
+    await expect(
+      page.getByRole('button', { name: journeyNodeName(third, 'current') }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole('button', { name: worldBossNodeName(boss, 'locked') }),
+    ).toBeVisible();
+  });
+
+  test('with the five lessons mastered the Number Train is the world boss: five rounds on the number line, then won', async ({
+    page,
+  }) => {
+    await completeFirstRun(page, 'Kid');
+    await seedMasteredAndReopen(page, 'Kid', LESSONS, []);
+
+    await page.getByRole('button', { name: /Journey/ }).click();
     await page.getByRole('button', { name: worldBossNodeName(boss, 'available') }).click();
     await playSeries(page, boss);
     await page.getByRole('button', { name: contentText('play.back-to-journey') }).click();
     await expect(page.getByRole('button', { name: worldBossNodeName(boss, 'won') })).toBeVisible();
+
+    expect(await readMiniGameProgress(page, 'number-train')).toMatchObject({ plays: 1, wins: 1 });
   });
 });

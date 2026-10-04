@@ -3,6 +3,7 @@
 // (math's registry: the card kit's drivers, and math's own kinds as they join; one path for every kind).
 import { expect } from '@playwright/test';
 import type { Page } from '@playwright/test';
+import type { Digit } from '@learn/platform-core/domain/exercise/kinds/number-entry/def';
 import { createE2ETexts } from '@learn/platform-web/e2e/i18n.ts';
 import { createPages } from '@learn/platform-web/e2e/pages.ts';
 import type {
@@ -12,6 +13,7 @@ import type {
   MathExerciseDef,
   MathLesson,
   MathSeriesGame,
+  MathState,
 } from '@learn/subject-math';
 import { MATH_CHARACTERS, kindOf } from '@learn/subject-math';
 import { solutionOf } from '@learn/subject-math/testing';
@@ -23,7 +25,7 @@ import rawContent from '@learn/subject-math/dist/content.json' with { type: 'jso
 import en from '@learn/subject-math/dist/locales/en.json' with { type: 'json' };
 import { getSoleProfileId, withAppStorage } from '../kit/storage.ts';
 
-/** The math locale's texts, resolved as the app renders them (`lessons:add-within-5.title`, `cards.erase`). */
+/** The math locale's texts, resolved as the app renders them (`lessons:pv-hto.title`, `cards.erase`). */
 export const { contentText, interpolate } = createE2ETexts({ en });
 
 /** The shared page flows bound to the math subject's Home title and locale. */
@@ -67,15 +69,18 @@ function escapeRegExp(text: string): string {
 }
 
 /**
- * Accessible name of a lesson's Journey node for `status`: the lesson's title, or for a character
- * lesson its name plus a wildcarded topic word (only app UI code maps character to topic).
+ * Accessible name of a lesson's Journey node for `status`: the lesson's title, or for the first lesson of a character the character's
+ * name plus a wildcarded topic word (only app UI code maps character to topic; a later lesson of the same character shows its own
+ * title, so no two nodes share a label).
  */
 export function journeyNodeName(lesson: MathLesson, status: 'current' | 'locked'): RegExp {
-  const character = MATH_CHARACTERS[lesson.character];
+  const firstOfCharacter = [...content.lessons]
+    .filter((entry) => entry.character === lesson.character)
+    .sort((a, b) => a.order - b.order)[0];
   const name =
-    character === undefined
-      ? escapeRegExp(contentText(lesson.titleKey))
-      : `${escapeRegExp(contentText(`characters:${lesson.character}.name`))} the .+`;
+    MATH_CHARACTERS[lesson.character] !== undefined && firstOfCharacter?.id === lesson.id
+      ? `${escapeRegExp(contentText(`characters:${lesson.character}.name`))} the .+`
+      : escapeRegExp(contentText(lesson.titleKey));
   const pattern = interpolate(contentText('journey:ui.node-name'), {
     name,
     status: escapeRegExp(contentText(`journey:ui.status-${status}`)),
@@ -95,17 +100,19 @@ export function worldBossNodeName(
 }
 
 /**
- * Folds `actions` over `def`'s own kind: computes each step purely (`kind.act`, the same call the
- * app's reducer makes) and drives the UI to reproduce it through the kind's e2e driver.
+ * Folds `actions` over `def`'s own kind, from `from` (a fresh state by default): computes each step purely (`kind.act`, the same call
+ * the app's reducer makes) and drives the UI to reproduce it through the kind's e2e driver. Returns the state it ends in, so a
+ * later call can go on from it (blocks left after a wrong Check, a hint's typed digit).
  */
 async function runActions(
   page: Page,
   def: MathExerciseDef,
   actions: readonly MathAction[],
-): Promise<void> {
+  from: MathState = kindOf(def).init(def),
+): Promise<MathState> {
   const kind = kindOf(def);
   const driver = mathKindE2EOf(def.type);
-  let state = kind.init(def);
+  let state = from;
   for (const action of actions) {
     const before = state;
     const { state: next, outcome } = kind.act(before, action, null);
@@ -117,11 +124,44 @@ async function runActions(
       await expect(page.getByRole('status', { name: label, exact: true })).toBeVisible();
     }
   }
+  return state;
+}
+
+/** Performs `actions` of `def`'s own kind through the UI, from `from` (default: a fresh exercise), and returns the state: the
+ * exercise stays on the page, whatever the outcome (a wrong try, a typed bug value, a build). */
+export function performActions(
+  page: Page,
+  def: MathExerciseDef,
+  actions: readonly MathAction[],
+  from?: MathState,
+): Promise<MathState> {
+  return runActions(page, def, actions, from);
+}
+
+/** The kind's own wrong try (`wrongAction`: a build with the tens and ones swapped, the next number, another card, a tick left of the
+ * target) and its own solution, as pure actions. */
+export function wrongActionsOf(def: MathExerciseDef): readonly MathAction[] {
+  return solutionOf(def).wrongAction?.(def, null) ?? [];
+}
+
+export function solutionActionsOf(def: MathExerciseDef): readonly MathAction[] {
+  return solutionOf(def).solution(def, null);
+}
+
+/** The pad actions that type `value` and press Check (a number-entry exercise). */
+export function typedNumber(value: number): readonly MathAction[] {
+  return [
+    ...Array.from(String(value), (char): MathAction => ({
+      type: 'enter-digit',
+      digit: Number(char) as Digit,
+    })),
+    { type: 'submit-number' },
+  ];
 }
 
 /** Solves any exercise definition through the UI, leaving it on its success panel. */
 export async function solveExercise(page: Page, def: MathExerciseDef): Promise<void> {
-  await runActions(page, def, solutionOf(def).solution(def, null));
+  await runActions(page, def, solutionActionsOf(def));
 }
 
 /** Solves one guided try or scored exercise, then advances past its success panel. */

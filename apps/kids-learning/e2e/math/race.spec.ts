@@ -1,6 +1,6 @@
-// Race to 20 in the deployed math app: the duel mini-game the Today session offers once Take away is done (it becomes the W3 world boss
-// in m13.14), played through the real UI with the platform duel driver (a best move every kid turn). Chromium only, like the other
-// math specs.
+// Race to 20 in the deployed math app: the duel mini-game the Today session offers once Rounding (pv-round, World 1's last lesson) is done
+// (it becomes the W3 world boss in m13.14), played through the real UI with the platform duel driver (a best move every kid turn). The
+// bot is the Hedgehog, the character of pv-round. Chromium only, like the other math specs.
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import { race } from '@learn/subject-math';
@@ -22,36 +22,36 @@ import {
 
 const NICKNAME = 'Kid';
 const duel = findDuel('race-to-20');
-const takeAway = findLesson('take-away');
+const rounding = findLesson('pv-round');
 
 /**
- * Fresh install, then the way the app reaches the game today: the first two lessons seeded as mastered, Take away played through
- * "Start today" (that session was planned before Take away was done, so it holds the lesson only), and the next "Start today" plans
- * the world boss (Number Parade) and then Race to 20 as the session's mini-game. The Number Parade is played through, so the
- * session lands on the duel.
+ * Fresh install, then the way the app reaches the game today: the first four lessons seeded as mastered, Rounding played through
+ * "Start today" (that session was planned before Rounding was done, so it holds the lesson only), and the next "Start today" plans
+ * a warm-up, the world boss (Number Train) and then Race to 20 as the session's mini-game. The Number Train is played through, so
+ * the session lands on the duel.
  */
 async function openRaceFromToday(page: Page): Promise<void> {
   await completeFirstRun(page, NICKNAME);
   await seedMasteredAndReopen(
     page,
     NICKNAME,
-    [findLesson('add-within-5'), findLesson('add-within-10')],
+    ['pv-hto', 'pv-compare', 'pv-line', 'pv-thousands'].map(findLesson),
     [],
   );
 
   await page.getByRole('button', { name: /Start/ }).click();
   await page.getByRole('button', { name: /Let me try/ }).click(); // Story -> Demo
   await page.getByRole('button', { name: /^Next/ }).click(); // Demo -> first guided try
-  await playLesson(page, takeAway);
+  await playLesson(page, rounding);
   await expect(page.getByRole('heading', { name: 'Lesson complete!' })).toBeVisible();
   await dismissCelebrationIfShown(page);
   await page.getByRole('button', { name: /Continue/ }).click();
   await page.getByRole('button', { name: 'Done' }).click();
 
   await page.getByRole('button', { name: /Start/ }).click();
-  // Take away's concept is due at once: the session opens with one warm-up task from it.
-  await playWarmUp(page, takeAway.exercises, /^Round 1 of/);
-  await playSeries(page, findMiniGame('number-parade'));
+  // Rounding's concept is due at once: the session opens with one warm-up task from it.
+  await playWarmUp(page, rounding.exercises, /^Round 1 of/);
+  await playSeries(page, findMiniGame('number-train'));
   await page.getByRole('button', { name: /Continue/ }).click();
   await dismissCelebrationIfShown(page);
   await expect(
@@ -65,15 +65,15 @@ function earnedStars(page: Page) {
 }
 
 test.describe('Race to 20', () => {
-  test('the session offers it after Take away: the bot opens, the kid lands on 4, 8, 12, 16 and wins with 3 stars', async ({
+  test('the session offers it after Rounding and the Number Train: Hedgie opens, the kid lands on 4, 8, 12, 16 and wins with 3 stars', async ({
     page,
   }) => {
     await openRaceFromToday(page);
 
     // The bot moves first, from 0 (where the mover loses); the kid's step buttons open on its turn.
-    await expect(page.getByTestId('duel-turn')).toHaveText("Owl's turn");
+    await expect(page.getByTestId('duel-turn')).toHaveText("Hedgie's turn");
     await expect(page.locator('[data-duel-turn="kid"]')).toBeVisible();
-    await expect(page.getByTestId('race-line')).toContainText('Owl adds');
+    await expect(page.getByTestId('race-line')).toContainText('Hedgie adds');
     for (const step of [1, 2, 3]) {
       await expect(page.getByRole('button', { name: `+${String(step)}` })).toBeEnabled();
     }
