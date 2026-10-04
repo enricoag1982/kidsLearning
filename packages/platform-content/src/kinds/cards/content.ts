@@ -1,6 +1,7 @@
 // The card kit's `SubjectContent`: a subject made only of YAML + art gets its whole content behaviour from this one call.
 import type { CardDefOf, CardType } from '@learn/platform-core/domain/exercise/kinds/cards/def';
 import type { z } from 'zod';
+import type { AnyExerciseTemplate } from '../../generate/template.ts';
 import { createExerciseSchema } from '../../lesson-schema.ts';
 import { createSeriesContent } from '../../modes/series.ts';
 import type { BadgesContent, SubjectContent } from '../../subject.ts';
@@ -29,14 +30,17 @@ const cardBadges: BadgesContent = { fields: {}, validate: () => undefined };
 export interface CardContentOptions {
   /** Lesson characters that double as an "animal friend" once their lesson is done (one source with `createCardCore`). */
   readonly characters: Readonly<Record<string, { readonly topicKey: string }>>;
+  /** Generated-exercise templates by id (`generate: { template: <id>, … }` in a lesson or series entry); default none. */
+  readonly templates?: Readonly<Record<string, AnyExerciseTemplate>>;
 }
 
 /** The four card kinds, the `series` boss over them, the `prompt` stimulus and demo; no default mini-game mode, no extra
  * badge fields, no voice templates beyond the generic ones. */
-export function createCardContent({ characters }: CardContentOptions): SubjectContent {
+export function createCardContent({ characters, templates }: CardContentOptions): SubjectContent {
   return {
     kinds: CARD_KIND_CONTENT,
     modes: { series: createSeriesContent(cardExerciseSchema) },
+    ...(templates === undefined ? {} : { templates }),
     stimulus: cardStimulus,
     demo: cardDemo,
     badges: cardBadges,

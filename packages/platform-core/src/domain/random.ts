@@ -30,3 +30,23 @@ export function shuffle<T>(items: readonly T[], random: Random): T[] {
   }
   return shuffled;
 }
+
+/** Integer in [min, max] (both inclusive); throws when min > max or either is not an integer. */
+export function randomInt(random: Random, min: number, max: number): number {
+  if (!Number.isInteger(min) || !Number.isInteger(max)) {
+    throw new Error(`randomInt: min and max must be integers (got ${String(min)}, ${String(max)})`);
+  }
+  if (min > max) {
+    throw new Error(`randomInt: min ${String(min)} is greater than max ${String(max)}`);
+  }
+  return min + Math.floor(random.next() * (max - min + 1));
+}
+
+/** One item; throws on an empty list. */
+export function pick<T>(random: Random, items: readonly T[]): T {
+  if (items.length === 0) {
+    throw new Error('pick: the list is empty');
+  }
+  // In range by construction; `T` itself may include `undefined`, so the index access is cast, not checked.
+  return items[randomInt(random, 0, items.length - 1)] as T;
+}

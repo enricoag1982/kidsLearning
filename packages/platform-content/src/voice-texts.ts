@@ -9,8 +9,8 @@ import type {
 } from '@learn/platform-core';
 import { PLAY_FROM_OPTIONS, voiceKey } from '@learn/platform-core';
 import type { Locales } from './load.ts';
-import type { LocaleTree } from './schema.ts';
 import type { SubjectContent } from './subject.ts';
+import { resolveText } from './text-resolve.ts';
 
 /** One inventoried narrated text. `source` is a short human label for the report, not machine-read. */
 export interface InventoryEntry {
@@ -27,27 +27,6 @@ export interface SkippedTemplate {
 export interface VoiceInventory {
   readonly entries: readonly InventoryEntry[];
   readonly skipped: readonly SkippedTemplate[];
-}
-
-// Minimal i18next-alike resolver: namespace + dot path, `_one`/`_other` pluralisation on a `count`
-// var, `{{var}}` interpolation. Covers exactly what this app's locale content uses.
-
-function resolveTree(tree: LocaleTree, dotPath: string): string | LocaleTree | undefined {
-  let node: LocaleTree | string = tree;
-  for (const segment of dotPath.split('.')) {
-    if (typeof node === 'string') return undefined;
-    const child: LocaleTree | string | undefined = node[segment];
-    if (child === undefined) return undefined;
-    node = child;
-  }
-  return node;
-}
-
-function interpolate(template: string, vars: Readonly<Record<string, string | number>>): string {
-  return template.replace(/\{\{(\w+)\}\}/g, (whole, name: string) => {
-    const value = vars[name];
-    return value === undefined ? whole : String(value);
-  });
 }
 
 /** Grown-up-only strings are never narrated to the kid; enforced here so a new source added without this rule fails loudly. */
@@ -72,15 +51,11 @@ function resolve(
     throw new Error(`voice-texts: unknown namespace "${namespace}" (key "${fullKey}")`);
   }
 
-  const count = vars.count;
-  const pluralSuffix = typeof count === 'number' ? (count === 1 ? '_one' : '_other') : undefined;
-  const node =
-    (pluralSuffix !== undefined ? resolveTree(tree, dotPath + pluralSuffix) : undefined) ??
-    resolveTree(tree, dotPath);
-  if (typeof node !== 'string') {
+  const text = resolveText(tree, dotPath, vars);
+  if (text === undefined) {
     throw new Error(`voice-texts: key "${fullKey}" does not resolve to text`);
   }
-  return interpolate(node, vars);
+  return text;
 }
 
 // Domains derived from content, never guessed.

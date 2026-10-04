@@ -2,6 +2,7 @@
 // Pure TS; zod type-only — a subject supplies its own concrete schema/compile logic on top.
 import type { CompiledContent } from '@learn/platform-core';
 import type { z } from 'zod';
+import type { AnyExerciseTemplate } from './generate/template.ts';
 import type { AnyExerciseKindContent } from './kinds/kind-content.ts';
 import type { AnyMiniGameModeContent } from './modes/mode-content.ts';
 
@@ -63,6 +64,8 @@ export interface BadgesContent {
 export interface SubjectContent {
   readonly kinds: Readonly<Record<string, AnyExerciseKindContent>>;
   readonly modes: Readonly<Record<string, AnyMiniGameModeContent>>;
+  /** Generated-exercise templates by id (`generate: { template: <id>, … }` in a lesson or series entry); absent = none. */
+  readonly templates?: Readonly<Record<string, AnyExerciseTemplate>>;
   readonly stimulus: StimulusContent;
   readonly demo: DemoContent;
   readonly badges: BadgesContent;
