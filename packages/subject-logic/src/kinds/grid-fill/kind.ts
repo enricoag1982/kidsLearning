@@ -160,7 +160,6 @@ export const gridFillKind: ExerciseKind<
       technique: step.technique,
       units: step.units,
       ...(stepHint >= 2 && rules.pointsAtCell ? { cell: step.cell } : {}),
-      ...(stepHint >= 2 && step.candidates !== undefined ? { candidates: step.candidates } : {}),
       ...(stepHint === 3 ? { value: step.value } : {}),
     };
     if (stepHint === 3) {

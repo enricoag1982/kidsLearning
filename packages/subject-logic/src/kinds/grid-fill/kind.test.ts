@@ -371,7 +371,7 @@ describe('grid-fill: the hint ladder', () => {
     expect(gridFillKind.stars(state)).toBe(1);
   });
 
-  it('a naked single names the cell, its unit row / column / box and the numbers that still fit', () => {
+  it('a naked single names the cell and its row / column / box, never the numbers that fit (they are the answer)', () => {
     const one = gridFillKind.hint(start(nakedSingle), 1, null);
     expect(one.hint.technique).toBe('naked-single');
     expect(one.hint.units).toHaveLength(3);
@@ -380,9 +380,9 @@ describe('grid-fill: the hint ladder', () => {
     expect(one.hint).not.toHaveProperty('candidates');
     const two = gridFillKind.hint(one.state, 2, null);
     expect(two.hint.cell).toBeDefined();
-    expect(two.hint.candidates).toHaveLength(1);
+    expect(two.hint).not.toHaveProperty('candidates');
     const three = gridFillKind.hint(two.state, 3, null);
-    expect(three.hint.value).toBe(two.hint.candidates?.[0]);
+    expect(three.hint.value).toBeDefined();
     expect(three.state.cells[two.hint.cell ?? -1]).toBe(three.hint.value);
   });
 

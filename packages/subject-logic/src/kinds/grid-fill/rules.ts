@@ -3,7 +3,6 @@
 // the solvers in `core/puzzles/`.
 import {
   LESSON_TECHNIQUES,
-  candidates,
   conflictUnit,
   nextCrossStep,
   nextSudokuStep,
@@ -31,8 +30,6 @@ export interface GridStep {
   readonly units: readonly GridUnit[];
   readonly cell: number;
   readonly value: CellValue;
-  /** Sudoku naked single: the numbers that still fit the cell. */
-  readonly candidates?: readonly number[];
 }
 
 /** One puzzle type's rules. Method syntax is deliberate: bivariant parameters let a precise `GridRules<SudokuPuzzle>` widen to
@@ -98,9 +95,6 @@ const sudokuRules: GridRules<SudokuPuzzle> = {
       units: step.units,
       cell: step.cell,
       value: step.value,
-      ...(step.technique === 'naked-single'
-        ? { candidates: candidates(p.size, grid, step.cell) }
-        : {}),
     };
   },
 };

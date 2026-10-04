@@ -90,8 +90,8 @@ export type GridFillOutcome =
       readonly conflict?: GridUnit;
     };
 
-/** One level per hint press of a step: 1 highlights `units`; 2 adds the `cell` (sudoku) and the `candidates` (naked single), the
- * `technique` is named in the note; 3: the engine fills `value` (a picture's `cell` stays open: the line is the unit). */
+/** One level per hint press of a step: 1 highlights `units`; 2 adds the `cell` (sudoku), the `technique` is named in the note (no
+ * candidates: for a naked single they would be the answer itself); 3: the engine fills `value` (a picture's `cell` stays open: the line is the unit). */
 export interface GridFillHint extends HintBase {
   readonly kind: 'grid-fill';
   readonly level: 1 | 2 | 3;
@@ -100,8 +100,6 @@ export interface GridFillHint extends HintBase {
   readonly units: readonly GridUnit[];
   /** Level 2 on, sudoku only. */
   readonly cell?: number;
-  /** Level 2 on, sudoku naked single only: the numbers that still fit the cell. */
-  readonly candidates?: readonly number[];
   /** Level 3 only: the entry the engine made. */
   readonly value?: CellValue;
 }
