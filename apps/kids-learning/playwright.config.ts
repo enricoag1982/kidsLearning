@@ -4,7 +4,7 @@ import { defineE2EConfig } from '@learn/platform-web/build/e2e-config.ts';
 export default defineE2EConfig({
   port: 4173,
   projects: [
-    // Every spec but the layout checks; `e2e/math/` and `e2e/coding/` (those subjects' specs) run here only.
+    // Every spec but the layout checks; `e2e/math/`, `e2e/coding/` and `e2e/logic/` (those subjects' specs) run here only.
     { name: 'chromium', use: { ...devices['Desktop Chrome'] }, testIgnore: /fit\.spec\.ts/ },
     {
       name: 'tablet',
@@ -13,7 +13,7 @@ export default defineE2EConfig({
         viewport: { width: 1024, height: 768 },
         hasTouch: true,
       },
-      testIgnore: [/fit\.spec\.ts/, /[\\/]math[\\/]/, /[\\/]coding[\\/]/],
+      testIgnore: [/fit\.spec\.ts/, /[\\/]math[\\/]/, /[\\/]coding[\\/]/, /[\\/]logic[\\/]/],
     },
     // Layout checks (accessibility + kid touch-target sizes) on the stacked layouts.
     {

@@ -1,4 +1,4 @@
-// The geometry of the card kit's shape tokens (`ShapeToken.tsx`): paths, size scale, cluster layout.
+// The geometry of the card kit's shape tokens (`ShapeToken.tsx`): paths, size scale, cluster layout, the side of a row's token boxes.
 import type { ShapeKind, ShapeSize } from '@learn/platform-core/domain/exercise/kinds/cards/prompt';
 
 /** One path per kind in a 100 × 100 box (a little inside it, so the outline is never clipped). */
@@ -25,4 +25,15 @@ export const SHAPE_SIZE_SCALE: Readonly<Record<ShapeSize, number>> = {
 export function clusterColumns(count: number): number {
   if (count <= 1) return 1;
   return count <= 4 ? 2 : 3;
+}
+
+/** The largest side of a token box (a row shows at most 8 tokens: 4 rem wide at most, 2.25 rem compact) and the gap between boxes. */
+const BOX_MAX = { normal: '4rem', compact: '2.25rem' } as const;
+const BOX_GAP = { normal: '0.5rem', compact: '0.25rem' } as const;
+
+/** The side of every token box of a row of `count`: `min(max, (row width − the gaps) / count)`, so the row never wraps (8 tokens fit one
+ * line at 390 px) and the boxes stay square and alike. Plain `calc` / `min` (no container units: iOS 15 has none). */
+export function shapeBoxSide(count: number, compact: boolean): string {
+  const size = compact ? 'compact' : 'normal';
+  return `min(${BOX_MAX[size]}, calc((100% - ${BOX_GAP[size]} * ${String(count - 1)}) / ${String(count)}))`;
 }

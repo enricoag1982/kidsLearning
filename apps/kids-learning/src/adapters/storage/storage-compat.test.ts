@@ -37,7 +37,7 @@ function kidsDeps(): AppDeps {
   return createServices([chessWeb, mathWeb], KIDS_APP_CONFIG, localStorage).deps;
 }
 
-/** The same with coding registered too (the shipped app's three subjects): a backup file carries one section per subject. */
+/** The same with coding registered too (the three subjects of the recorded files: logic joined later, so no recorded file has a logic section): a backup file carries one section per subject. */
 function allSubjectsDeps(): AppDeps {
   return createServices([chessWeb, mathWeb, codingWeb], KIDS_APP_CONFIG, localStorage).deps;
 }

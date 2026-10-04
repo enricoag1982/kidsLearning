@@ -4,8 +4,9 @@ import {
   SHAPE_COLOURS,
   SHAPE_KINDS,
   SHAPE_SIZES,
+  type CardShape,
 } from '@learn/platform-core/domain/exercise/kinds/cards/prompt';
-import { clusterColumns, SHAPE_PATHS, SHAPE_SIZE_SCALE } from './shape-geometry.ts';
+import { clusterColumns, SHAPE_PATHS, SHAPE_SIZE_SCALE, shapeBoxSide } from './shape-geometry.ts';
 import { ShapeCluster, ShapeRow, ShapeToken } from './ShapeToken.tsx';
 
 describe('ShapeToken', () => {
@@ -145,12 +146,89 @@ describe('ShapeRow', () => {
     const { container } = render(<ShapeRow shapes={row} />);
     expect(container.firstElementChild?.getAttribute('aria-hidden')).toBe('true');
     expect(screen.queryByRole('img')).toBeNull();
-    const big = container.querySelector('[data-gap]')?.className ?? '';
-    const compact = render(<ShapeRow shapes={row} compact />).container.querySelector(
-      '[data-gap]',
-    )?.className;
-    expect(big).toContain('h-12');
-    expect(compact).toContain('h-9');
-    expect(compact).not.toContain('h-12');
+    const big = (container.querySelector('[data-gap]') as HTMLElement).style.getPropertyValue(
+      '--box-side',
+    );
+    const compact = (
+      render(<ShapeRow shapes={row} compact />).container.querySelector('[data-gap]') as HTMLElement
+    ).style.getPropertyValue('--box-side');
+    expect(big).toContain('min(4rem');
+    expect(compact).toContain('min(2.25rem');
+    expect(compact).not.toContain('4rem');
+  });
+});
+
+describe('ShapeRow at 390 px', () => {
+  const token = (index: number): CardShape => ({
+    kind: SHAPE_KINDS[index % SHAPE_KINDS.length] ?? 'circle',
+    colour: SHAPE_COLOURS[index % SHAPE_COLOURS.length] ?? 'red',
+  });
+  const eight = [...Array.from({ length: 7 }, (_unused, index) => token(index)), 'gap' as const];
+
+  /** Evaluates a box side `min(Mrem, calc((100% - Grem * K) / N))` for a row `width` px wide (1 rem = 16 px), or NaN. */
+  function sidePx(style: string, width: number): number {
+    const match =
+      /^min\(([\d.]+)rem, calc\(\(100% - ([\d.]+)rem \* (\d+)\) \/ (\d+)\)\)$/.exec(style) ?? [];
+    const [max, gap, gaps, count] = match.slice(1).map(Number);
+    if (max === undefined || gap === undefined || gaps === undefined || count === undefined) {
+      return Number.NaN;
+    }
+    return Math.min(max * 16, (width - gap * 16 * gaps) / count);
+  }
+
+  it('never wraps: one nowrap line as wide as its host, however many tokens (1, 5, 8)', () => {
+    for (const count of [1, 5, 8]) {
+      const shapes = Array.from({ length: count }, (_unused, index) => token(index));
+      const { container } = render(<ShapeRow shapes={shapes} />);
+      const classes = container.firstElementChild?.className ?? '';
+      expect(classes, String(count)).toContain('flex-nowrap');
+      expect(classes, String(count)).not.toContain('flex-wrap');
+      expect(classes, String(count)).toContain('w-full');
+    }
+  });
+
+  it('gives every box of an 8-token row the side min(4rem, (row width − 7 gaps) / 8), gap box included', () => {
+    const { container } = render(<ShapeRow shapes={eight} />);
+    const boxes = [...(container.firstElementChild?.children ?? [])] as HTMLElement[];
+    expect(boxes).toHaveLength(8);
+    for (const box of boxes) {
+      expect(box.style.getPropertyValue('--box-side')).toBe(
+        'min(4rem, calc((100% - 0.5rem * 7) / 8))',
+      );
+      expect(box.className).toContain('w-(--box-side)');
+      expect(box.className).toContain('aspect-square');
+    }
+    expect(shapeBoxSide(8, false)).toBe('min(4rem, calc((100% - 0.5rem * 7) / 8))');
+    expect(shapeBoxSide(8, true)).toBe('min(2.25rem, calc((100% - 0.25rem * 7) / 8))');
+  });
+
+  it('fits the row on a 390 px phone (358 px between the 16 px gutters): 8 boxes and 7 gaps add up to at most the row, and boxes reach 4 rem when there is room', () => {
+    const width = 390 - 2 * 16;
+    const eightSide = sidePx(shapeBoxSide(8, false), width);
+    expect(eightSide).toBeCloseTo(37.75, 2);
+    expect(8 * eightSide + 7 * 8).toBeLessThanOrEqual(width);
+    expect(sidePx(shapeBoxSide(5, false), width)).toBe(64); // (358 - 32) / 5 = 65.2: the 4 rem cap
+    for (let count = 1; count <= 8; count += 1) {
+      const side = sidePx(shapeBoxSide(count, false), width);
+      expect(side, String(count)).toBeLessThanOrEqual(64);
+      expect(count * side + (count - 1) * 8, String(count)).toBeLessThanOrEqual(width + 0.001);
+      const compact = sidePx(shapeBoxSide(count, true), width);
+      expect(compact, String(count)).toBeLessThanOrEqual(36);
+      expect(count * compact + (count - 1) * 4, String(count)).toBeLessThanOrEqual(width + 0.001);
+    }
+  });
+
+  it('shrinks the "?" of the gap with a crowded row', () => {
+    const textOf = (count: number): string => {
+      const shapes = [
+        ...Array.from({ length: count - 1 }, (_unused, index) => token(index)),
+        'gap' as const,
+      ];
+      const { container } = render(<ShapeRow shapes={shapes} />);
+      return container.querySelector('[data-gap]')?.className ?? '';
+    };
+    expect(textOf(3)).toContain('text-3xl');
+    expect(textOf(6)).toContain('text-2xl');
+    expect(textOf(8)).toContain('text-lg');
   });
 });

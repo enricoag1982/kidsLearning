@@ -7,6 +7,7 @@ import './index.css';
 import { chessEntry } from '@learn/subject-chess/entry';
 import { mathEntry } from '@learn/subject-math/entry';
 import { codingEntry } from '@learn/subject-coding/entry';
+import { logicEntry } from '@learn/subject-logic/entry';
 // new-subject:import
 import { KIDS_APP_CONFIG } from './app-config.ts';
 
@@ -15,6 +16,7 @@ void mountApp({
     chessEntry,
     mathEntry,
     codingEntry,
+    logicEntry,
     // new-subject:entry
   ],
   app: KIDS_APP_CONFIG,
