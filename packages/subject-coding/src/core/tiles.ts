@@ -58,3 +58,61 @@ export function isValidProgram(program: readonly Tile[]): boolean {
     );
   });
 }
+
+/** Same tile, deeply: same kind and, for a repeat, same count and same body. */
+export function sameTile(a: Tile, b: Tile): boolean {
+  if (a.kind !== 'repeat' || b.kind !== 'repeat') {
+    return a.kind === b.kind;
+  }
+  return (
+    a.times === b.times &&
+    a.body.length === b.body.length &&
+    a.body.every((tile, index) => {
+      const other = b.body[index];
+      return other !== undefined && sameTile(tile, other);
+    })
+  );
+}
+
+export function samePath(a: readonly number[], b: readonly number[]): boolean {
+  return a.length === b.length && a.every((index, at) => index === b[at]);
+}
+
+/** Every tile a child can tap, in display order: `[top]` for each top-level tile (a repeat's own tile included) and
+ * `[top, body]` for each tile inside a repeat. */
+export function tilePaths(program: readonly Tile[]): readonly (readonly number[])[] {
+  return program.flatMap((tile, top) => [
+    [top],
+    ...(tile.kind === 'repeat' ? tile.body.map((_, index) => [top, index]) : []),
+  ]);
+}
+
+/** The tile at `path` (`[top]` or `[top, body]`), or `undefined` when there is none. */
+export function tileAt(program: readonly Tile[], path: readonly number[]): Tile | undefined {
+  const [top, inner, ...rest] = path;
+  if (top === undefined || rest.length > 0) {
+    return undefined;
+  }
+  const tile = program[top];
+  if (inner === undefined) {
+    return tile;
+  }
+  return tile?.kind === 'repeat' ? tile.body[inner] : undefined;
+}
+
+/** The program with the tile at `path` replaced; throws when there is no tile there. */
+export function replaceTile(program: readonly Tile[], path: readonly number[], tile: Tile): Tile[] {
+  if (tileAt(program, path) === undefined) {
+    throw new Error(`No tile at path [${path.join(', ')}]`);
+  }
+  const [top, inner] = path;
+  return program.map((existing, index) => {
+    if (index !== top) {
+      return existing;
+    }
+    if (inner === undefined || existing.kind !== 'repeat') {
+      return tile;
+    }
+    return { ...existing, body: existing.body.map((t, at) => (at === inner ? tile : t)) };
+  });
+}

@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/core.ts",
+    ".": "./src/coding.ts",
     "./entry": "./src/entry.ts",
     "./testing": "./src/testing/index.ts",
     "./content": "./src/content.ts",

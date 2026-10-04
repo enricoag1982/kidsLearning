@@ -9,7 +9,7 @@ import type {
   CardExerciseDef,
 } from '@learn/platform-core/domain/exercise/kinds/cards/def';
 import { codingContent } from './content.ts';
-import { CODING_CHARACTERS, codingCore } from './core.ts';
+import { CODING_CHARACTERS, codingCore } from './core/coding-core.ts';
 import { cardStars, playCardSolution, playCardWrongThenSolve } from './testing/index.ts';
 
 interface CardContent extends CompiledContent {
@@ -120,8 +120,11 @@ describe('texts and the core', () => {
     expect(codingCore.characters).toBe(CODING_CHARACTERS);
     expect(Object.keys(codingCore.kinds).sort()).toEqual([
       'choice',
+      'find-bug',
       'number-entry',
       'order',
+      'predict',
+      'program',
       'true-false',
     ]);
   });

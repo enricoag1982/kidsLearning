@@ -5,7 +5,12 @@ import {
   MIN_REPEAT,
   PRIMITIVE_KINDS,
   isValidProgram,
+  replaceTile,
+  sameTile,
+  samePath,
+  tileAt,
   tileCount,
+  tilePaths,
 } from './tiles.ts';
 import type { Tile } from './tiles.ts';
 
@@ -65,5 +70,59 @@ describe('isValidProgram', () => {
 
   it('rejects an unknown primitive', () => {
     expect(isValidProgram([{ kind: 'sideways' } as unknown as Tile])).toBe(false);
+  });
+});
+
+describe('sameTile / samePath', () => {
+  it('compares kinds, and repeats by count and body', () => {
+    expect(sameTile(up, { kind: 'up' })).toBe(true);
+    expect(sameTile(up, right)).toBe(false);
+    expect(sameTile(repeat(3, [up, right]), repeat(3, [up, right]))).toBe(true);
+    expect(sameTile(repeat(3, [up, right]), repeat(4, [up, right]))).toBe(false);
+    expect(sameTile(repeat(3, [up, right]), repeat(3, [right, up]))).toBe(false);
+    expect(sameTile(repeat(3, [up]), repeat(3, [up, up]))).toBe(false);
+    expect(sameTile(repeat(3, [up]), up)).toBe(false);
+    expect(sameTile(up, repeat(3, [up]))).toBe(false);
+  });
+
+  it('compares paths element by element', () => {
+    expect(samePath([1], [1])).toBe(true);
+    expect(samePath([1, 0], [1, 0])).toBe(true);
+    expect(samePath([1], [1, 0])).toBe(false);
+    expect(samePath([1, 0], [1])).toBe(false);
+    expect(samePath([0, 1], [1, 0])).toBe(false);
+  });
+});
+
+describe('tilePaths / tileAt / replaceTile', () => {
+  const program: Tile[] = [up, repeat(3, [right, up]), right];
+
+  it('lists a repeat tile and each tile in its body, in display order', () => {
+    expect(tilePaths(program)).toEqual([[0], [1], [1, 0], [1, 1], [2]]);
+    expect(tilePaths([])).toEqual([]);
+  });
+
+  it('finds the tile at a path, or nothing', () => {
+    expect(tileAt(program, [0])).toBe(up);
+    expect(tileAt(program, [1, 1])).toEqual(up);
+    expect(tileAt(program, [1])).toEqual(repeat(3, [right, up]));
+    expect(tileAt(program, [3])).toBeUndefined();
+    expect(tileAt(program, [0, 0])).toBeUndefined();
+    expect(tileAt(program, [1, 2])).toBeUndefined();
+    expect(tileAt(program, [])).toBeUndefined();
+    expect(tileAt(program, [1, 0, 0])).toBeUndefined();
+  });
+
+  it('replaces a top-level tile, a repeat as a whole and a tile inside a repeat, leaving the input alone', () => {
+    const down: Tile = { kind: 'down' };
+    expect(replaceTile(program, [0], down)).toEqual([down, repeat(3, [right, up]), right]);
+    expect(replaceTile(program, [1], down)).toEqual([up, down, right]);
+    expect(replaceTile(program, [1, 1], down)).toEqual([up, repeat(3, [right, down]), right]);
+    expect(program).toEqual([up, repeat(3, [right, up]), right]);
+  });
+
+  it('throws when there is no tile at the path', () => {
+    expect(() => replaceTile(program, [5], up)).toThrow('No tile at path [5]');
+    expect(() => replaceTile(program, [0, 0], up)).toThrow('No tile at path [0, 0]');
   });
 });

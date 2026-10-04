@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { codingCore } from './core.ts';
+import { codingCore } from './core/coding-core.ts';
 import { codingEntry } from './entry.ts';
 
 /** The module specifiers `file` (relative to `src/`) imports or re-exports statically; a `import()` call is not one. */

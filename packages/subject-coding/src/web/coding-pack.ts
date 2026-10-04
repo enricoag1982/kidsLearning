@@ -3,7 +3,7 @@
 import type { BadgeDef, CompiledContent, TracksCatalog } from '@learn/platform-core';
 import { createBundledContentSource } from '@learn/platform-web/adapters/content/bundled-content-source.ts';
 import { createCardWeb } from '@learn/platform-web/kinds/cards/web.ts';
-import { codingCore } from '../core.ts';
+import { codingCore } from '../core/coding-core.ts';
 import bundled from '../../dist/content.json';
 import bundledTracks from '../../dist/tracks.json';
 import bundledBadges from '../../dist/badges.json';
