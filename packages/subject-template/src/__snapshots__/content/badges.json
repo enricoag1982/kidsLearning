@@ -1,0 +1,28 @@
+[
+ {
+  "id": "first-lesson",
+  "category": "milestone",
+  "nameKey": "rewards:badges.first-lesson.name",
+  "conditionKey": "rewards:badges.first-lesson.condition",
+  "condition": {
+   "type": "mastered",
+   "thresholds": [
+    1
+   ],
+   "scope": "world:first-steps"
+  }
+ },
+ {
+  "id": "star-collector",
+  "category": "skill",
+  "nameKey": "rewards:badges.star-collector.name",
+  "conditionKey": "rewards:badges.star-collector.condition",
+  "condition": {
+   "type": "stars-total",
+   "thresholds": [
+    10,
+    30
+   ]
+  }
+ }
+]

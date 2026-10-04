@@ -1,0 +1,32 @@
+# The world boss: a `series` of rounds (any card kind). 3 stars up to `errors3` mistakes, 2 up to `errors2`.
+# It opens after the lesson `unlockAfter`, which must be the last lesson of the world that names it as `boss`.
+id: sample-boss
+mode: series
+concept: sample-two
+unlockAfter: sample-lesson-2
+errors3: 0
+errors2: 2
+rounds:
+  - id: boss-r1
+    type: number-entry
+    prompt: { big: 5 + 4 }
+    answer: 9
+  - id: boss-r2
+    type: choice
+    prompt: { emoji: 🍎🍎🍎 }
+    options:
+      - { id: a, big: 2 }
+      - { id: b, big: 3 }
+      - { id: c, big: 4 }
+    answer: b
+  - id: boss-r3
+    type: order
+    items:
+      - { id: five, big: 5 }
+      - { id: two, big: 2 }
+      - { id: four, big: 4 }
+    answer: [two, four, five]
+  - id: boss-r4
+    type: true-false
+    prompt: { big: 6 - 2 = 4 }
+    answer: true

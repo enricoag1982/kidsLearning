@@ -106,11 +106,55 @@ describe('SubjectsScreen', () => {
     expect(tile.style.color).toBe('rgb(31, 90, 65)');
   });
 
-  it('marks only the active subject as current', async () => {
+  it('marks no subject as current for a profile that has not opened one', async () => {
     await renderHub();
 
-    expect(screen.getByTestId('subject-tile-a').getAttribute('aria-current')).toBe('true');
+    for (const id of ['a', 'b']) {
+      const tile = screen.getByTestId(`subject-tile-${id}`);
+      expect(tile.getAttribute('aria-current'), id).toBeNull();
+      expect(tile.style.outline, id).toBe('');
+      expect(tile.querySelector('svg'), id).toBeNull();
+    }
+  });
+
+  it('marks the chosen subject as current after the first selection, with its ring and check', async () => {
+    const { store } = await renderHub();
+
+    fireEvent.click(screen.getByTestId('subject-tile-b'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('subject-tile-b').getAttribute('aria-current')).toBe('true');
+    });
+    expect(store.getState().lastSubjectId).toBe('b');
+    expect(screen.getByTestId('subject-tile-b').style.outline).not.toBe('');
+    expect(screen.getByTestId('subject-tile-b').querySelector('svg')).not.toBeNull();
+    const other = screen.getByTestId('subject-tile-a');
+    expect(other.getAttribute('aria-current')).toBeNull();
+    expect(other.style.outline).toBe('');
+    expect(other.querySelector('svg')).toBeNull();
+  });
+
+  it("marks the profile's last subject on a later visit, and none for another profile", async () => {
+    const { store, services } = await renderHub();
+    fireEvent.click(screen.getByTestId('subject-tile-b'));
+    await waitFor(() => {
+      expect(store.getState().lastSubjectId).toBe('b');
+    });
+    const other = await createProfile(services.deps, 'Zoe', 'bear');
+
+    await store.getState().selectProfileAndHome(other.id);
+    await waitFor(() => {
+      expect(store.getState().lastSubjectId).toBeNull();
+    });
+    expect(screen.getByTestId('subject-tile-a').getAttribute('aria-current')).toBeNull();
     expect(screen.getByTestId('subject-tile-b').getAttribute('aria-current')).toBeNull();
+
+    const mia = (await services.deps.profiles.list()).find((entry) => entry.nickname === 'Mia');
+    await store.getState().selectProfileAndHome(mia?.id ?? '');
+    await waitFor(() => {
+      expect(screen.getByTestId('subject-tile-b').getAttribute('aria-current')).toBe('true');
+    });
+    expect(screen.getByTestId('subject-tile-a').getAttribute('aria-current')).toBeNull();
   });
 
   it('names a tile in the current language when the manifest has it, else in English', async () => {

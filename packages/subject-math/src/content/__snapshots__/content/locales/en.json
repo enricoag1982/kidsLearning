@@ -505,7 +505,7 @@
    "locked-world-message": "Finish the earlier worlds first to unlock this one.",
    "node-name": "{{name}}, {{status}}",
    "node-name-stars": "{{name}}, {{status}}, {{count}} stars",
-   "paths-after-basics": "Paths after Basics",
+   "paths-after-basics": "Paths after {{main}}",
    "rank-pill": "{{rank}} rank",
    "show-you-know-it": "Show you know it",
    "status-complete": "complete",

@@ -15,22 +15,30 @@ import { fileURLToPath } from 'node:url';
 import { exitOnContentError } from '@learn/platform-content/build';
 import { compileAll } from '@learn/platform-content/compile-all';
 import type { SubjectContent } from '@learn/platform-content/subject';
-import { chessContent } from '@learn/subject-chess/content';
-import { mathContent } from '@learn/subject-math/content';
+import { appSubjectIds, camelCase } from './app-subjects.ts';
 
 const appDir = fileURLToPath(new URL('..', import.meta.url));
 const packagesDir = join(appDir, '..', '..', 'packages');
 const manifestPath = join(appDir, 'public', 'audio', 'en', 'manifest.json');
 
-/** The subjects `src/main.tsx` registers, with the source root of each one's content. */
+/** The subjects the app depends on (`app-subjects.ts`), each with its `@learn/subject-<id>/content` export `<camelId>Content`
+ * and the source root of its content. */
 const SUBJECTS: readonly {
   readonly id: string;
   readonly content: SubjectContent;
   readonly root: string;
-}[] = [
-  { id: 'chess', content: chessContent, root: join(packagesDir, 'subject-chess', 'content') },
-  { id: 'math', content: mathContent, root: join(packagesDir, 'subject-math', 'content') },
-];
+}[] = await Promise.all(
+  appSubjectIds().map(async (id) => {
+    const module = (await import(`@learn/subject-${id}/content`)) as Readonly<
+      Record<string, SubjectContent | undefined>
+    >;
+    const content = module[`${camelCase(id)}Content`];
+    if (content === undefined) {
+      throw new Error(`@learn/subject-${id}/content has no export ${camelCase(id)}Content`);
+    }
+    return { id, content, root: join(packagesDir, `subject-${id}`, 'content') };
+  }),
+);
 
 interface InventoryText {
   readonly subject: string;

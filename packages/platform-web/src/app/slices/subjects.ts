@@ -4,6 +4,9 @@ import type { AppGet, AppSet, AppState } from '../store.ts';
 import { loadProfileData } from './profile.ts';
 
 export interface SubjectsSlice {
+  /** The subject the selected profile last opened from the hub (`AppSettings.lastSubjectByProfile`), `null` until it has opened
+   * one: the hub marks it as current. Not the active subject: a profile that never chose one has none. */
+  readonly lastSubjectId: string | null;
   /** Subjects hub tile (`SubjectsScreen`): makes `id` the active subject (loading its pack on first use), remembers it as the
    * profile's last (`AppSettings.lastSubjectByProfile`), reloads the profile's data from that subject's stores and lands on
    * Home, with the hub below it; the placement offer on top on the first entry into a fresh subject (D10, once per app session). */
@@ -91,6 +94,8 @@ export function createSubjectsSlice(
   }
 
   return {
+    lastSubjectId: null,
+
     activateSubject,
 
     async selectSubject(id) {
@@ -104,7 +109,7 @@ export function createSubjectsSlice(
             lastSubjectByProfile: { ...settings.lastSubjectByProfile, [profile.id]: id },
           });
         }
-        set(await loadProfileData(get, profile.id));
+        set({ lastSubjectId: id, ...(await loadProfileData(get, profile.id)) });
         if (
           services.app.subjects.length > 1 &&
           (await shouldOfferPlacement(get, profile.id, offered))

@@ -16,7 +16,11 @@ import { lessonStars, worldLessons, worldOrderById } from '@learn/platform-core'
 import { useAppStore, useServices } from '../app/store.ts';
 import { usePack } from '../app/subject.ts';
 import { characterName, tContent } from '../content-text.ts';
-import { firstLessonsByCharacter, journeyNodeLabel } from './lesson-character-labels.ts';
+import {
+  characterWithTopic,
+  firstLessonsByCharacter,
+  journeyNodeLabel,
+} from './lesson-character-labels.ts';
 import { CharacterIcon, OwlIcon } from './art/characters.tsx';
 import { StarsRow } from './StarsRow.tsx';
 import { TestOutSheet } from './TestOutSheet.tsx';
@@ -260,9 +264,13 @@ export function JourneyScreen(): JSX.Element {
       <div className="flex min-h-0 flex-1 flex-col gap-4 lg:flex-row lg:gap-6">
         <div className="flex gap-2 overflow-x-auto pb-1 lg:w-64 lg:flex-none lg:flex-col lg:overflow-visible lg:pb-0">
           {mainWorlds.map((entry) => worldRow(entry))}
-          <div className="mt-1 flex items-center px-2 text-xs font-extrabold tracking-wide text-muted lg:mt-2 lg:text-[13px] lg:uppercase">
-            {tContent(t, 'journey:ui.paths-after-basics')}
-          </div>
+          {branchWorlds.length > 0 && (
+            <div className="mt-1 flex items-center px-2 text-xs font-extrabold tracking-wide text-muted lg:mt-2 lg:text-[13px] lg:uppercase">
+              {tContent(t, 'journey:ui.paths-after-basics', {
+                main: mainTrack === undefined ? '' : tContent(t, mainTrack.titleKey),
+              })}
+            </div>
+          )}
           {branchWorlds.map((entry) => worldRow(entry, true))}
         </div>
 
@@ -544,12 +552,10 @@ function LessonNode({
   const characterEntry = characters[lesson.character];
   const isFirstOfCharacter = firstLessonOfCharacter.get(lesson.character) === lesson.id;
   const characterLabel = journeyNodeLabel(t, characters, lesson, firstLessonOfCharacter);
-  const pieceLabel = characterEntry === undefined ? '' : tContent(t, characterEntry.topicKey);
-  // "Rhino the Rook" for a character named apart from its topic; a character that is its topic ("Rook") is not said twice.
-  const nameLabel =
-    characterEntry !== undefined && isFirstOfCharacter && pieceLabel !== characterLabel
-      ? tContent(t, 'journey:ui.character-piece', { character: characterLabel, piece: pieceLabel })
-      : characterLabel;
+  // "Rhino the Rook" for a character named apart from its topic; the plain name where there is no topic to add.
+  const nameLabel = isFirstOfCharacter
+    ? characterWithTopic(t, characterEntry, characterLabel)
+    : characterLabel;
   const statusWord = tContent(t, `journey:ui.status-${status}`);
   const accessibleName =
     status === 'complete'

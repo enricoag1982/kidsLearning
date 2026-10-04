@@ -10,8 +10,8 @@ import { BlankScreen, RoundIconButton, Screen } from './ds/Screen.tsx';
 import { CheckIcon, SwitchPlayerIcon } from './ds/icons.tsx';
 import { tapClass } from './ds/tap.ts';
 
-/** One subject's tile: its picture in a white circle over a coloured name, like a Home tile (docs/screens.md §1); the active
- * subject has a ring and a check mark, and `aria-current`. The accessible name is the subject's name. */
+/** One subject's tile: its picture in a white circle over a coloured name, like a Home tile (docs/screens.md §1); the profile's
+ * current (last opened) subject has a ring and a check mark, and `aria-current`. The accessible name is the subject's name. */
 function SubjectTile({
   manifest,
   name,
@@ -59,12 +59,13 @@ function SubjectTile({
 }
 
 /** The subjects hub (multi-subject.md D9): after the profile select with several subjects, and from Home's "Subjects" button.
- * One big tile per registered subject; a tap makes it the active subject and opens its Home. */
+ * One big tile per registered subject, the profile's last opened one marked (none for a profile that has not opened any); a tap
+ * makes it the active subject and opens its Home. */
 export function SubjectsScreen(): JSX.Element {
   const { t, i18n } = useTranslation();
   const services = useServices();
   const profile = useAppStore((state) => state.profile);
-  const subjectId = useAppStore((state) => state.subjectId);
+  const lastSubjectId = useAppStore((state) => state.lastSubjectId);
   const selectSubject = useAppStore((state) => state.selectSubject);
   const goToPicker = useAppStore((state) => state.goToPicker);
   const selecting = useRef(false);
@@ -119,7 +120,7 @@ export function SubjectsScreen(): JSX.Element {
             key={manifest.id}
             manifest={manifest}
             name={manifest.names[i18n.language] ?? manifest.names.en ?? manifest.id}
-            active={manifest.id === subjectId}
+            active={manifest.id === lastSubjectId}
             onSelect={() => {
               select(manifest.id);
             }}

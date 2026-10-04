@@ -103,19 +103,20 @@ export async function reloadProfiles(set: AppSet, get: AppGet): Promise<readonly
   return profiles;
 }
 
-/** Several subjects: the profile's last one becomes the active subject (the hub highlights it, a later Home shows it) when it
- * differs from the active one; a profile without one keeps the active subject. */
-async function activateLastSubject(get: AppGet, profileId: string): Promise<void> {
+/** Several subjects: the profile's last one becomes the active subject (a later Home shows it) when it differs from the active one;
+ * a profile without one keeps the active subject. Returns the profile's last subject, `null` when it has none (or one no longer
+ * registered): what the hub marks as current. */
+async function activateLastSubject(get: AppGet, profileId: string): Promise<string | null> {
   const { services, subjectId } = get();
   const { lastSubjectByProfile } = await services.deps.settings.get();
   const last = lastSubjectByProfile?.[profileId];
-  if (
-    last !== undefined &&
-    last !== subjectId &&
-    services.app.subjects.some((entry) => entry.manifest.id === last)
-  ) {
+  if (last === undefined || !services.app.subjects.some((entry) => entry.manifest.id === last)) {
+    return null;
+  }
+  if (last !== subjectId) {
     await get().activateSubject(last);
   }
+  return last;
 }
 
 /** Selects `profile` and lands on Home; with several subjects on the subjects hub instead. */
@@ -124,8 +125,9 @@ async function selectAndGoHome(set: AppSet, get: AppGet, profile: Profile): Prom
   await selectProfile(services.deps, profile.id);
   const settings = await getProfileSettings(services.deps, profile.id);
   const hub = services.app.subjects.length > 1;
-  if (hub) await activateLastSubject(get, profile.id);
+  const lastSubjectId = hub ? await activateLastSubject(get, profile.id) : null;
   await activateProfile(set, get, profile, settings);
+  set({ lastSubjectId });
   get().reset(hub ? { name: 'subjects' } : { name: 'home' });
 }
 
@@ -181,6 +183,8 @@ export function createProfileSlice(
         profile,
         composeDefaultSettings(get().services.deps.subject.settings),
       );
+      // A brand-new profile has opened no subject yet.
+      set({ lastSubjectId: null });
       await reloadProfiles(set, get);
       if (services.app.subjects.length > 1) {
         // The subjects hub next; the placement offer follows the first entry into a subject (multi-subject.md D10).
