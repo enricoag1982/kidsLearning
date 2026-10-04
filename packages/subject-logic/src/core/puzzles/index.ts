@@ -20,3 +20,20 @@ export {
   unitCells,
   unitsOf,
 } from './sudoku.ts';
+export type {
+  CrossCell,
+  CrossCells,
+  CrossLine,
+  CrossSolveResult,
+  CrossStep,
+  CrossTechnique,
+} from './cross.ts';
+export {
+  CROSS_LEVEL,
+  humanSolveCross,
+  lineClue,
+  nextCrossStep,
+  parsePicture,
+  pictureClues,
+  solveLine,
+} from './cross.ts';
