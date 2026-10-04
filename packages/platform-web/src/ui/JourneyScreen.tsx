@@ -590,7 +590,9 @@ function LessonNode({
       >
         {status === 'locked' ? (
           <LockIcon size={28} />
-        ) : isWorldOne ? (
+        ) : isWorldOne && characterEntry === undefined ? (
+          // World 1 lessons taught by the Owl (chess) show the Owl; a subject's own lesson character (the Fox, the
+          // Hedgehog) shows its art in World 1 too.
           <span className="h-12 w-12">
             <OwlIcon />
           </span>
