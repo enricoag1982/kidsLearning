@@ -1,7 +1,7 @@
 import type { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
-import { tapClass } from '@learn/platform-web/ui/ds/tap.ts';
-import type { Digit } from './kind.ts';
+import type { Digit } from '@learn/platform-core/domain/exercise/kinds/number-entry/def';
+import { tapClass } from '../../../ui/ds/tap.ts';
 
 const KEY_SHAPE =
   'flex h-16 min-w-16 items-center justify-center rounded-2xl font-display text-2xl font-semibold';
@@ -17,10 +17,21 @@ export interface NumberPadProps {
   readonly onCheck: () => void;
   /** False while nothing is typed: Check has nothing to check. */
   readonly canCheck: boolean;
+  /** The group's accessible name; default the platform's `cards.pad-label`. */
+  readonly padLabel?: string;
+  /** The erase key's text; default the platform's `cards.erase`. */
+  readonly eraseLabel?: string;
 }
 
-/** 1-9, then Delete, 0 and Check: a 3 × 4 grid of big keys. */
-export function NumberPad({ onDigit, onErase, onCheck, canCheck }: NumberPadProps): JSX.Element {
+/** 1-9, then Delete, 0 and Check: a 3 × 4 grid of big keys. The one pad of every subject with a `number-entry` kind. */
+export function NumberPad({
+  onDigit,
+  onErase,
+  onCheck,
+  canCheck,
+  padLabel,
+  eraseLabel,
+}: NumberPadProps): JSX.Element {
   const { t } = useTranslation();
   const digitKey = (digit: Digit): JSX.Element => (
     <button
@@ -37,12 +48,12 @@ export function NumberPad({ onDigit, onErase, onCheck, canCheck }: NumberPadProp
   return (
     <div
       role="group"
-      aria-label={t('math.pad-label')}
+      aria-label={padLabel ?? t('cards.pad-label')}
       className="mx-auto grid w-full max-w-xs grid-cols-3 gap-x-3 gap-y-2"
     >
       {TOP_DIGITS.map(digitKey)}
       <button type="button" className={WORD_KEY} onClick={onErase}>
-        {t('math.erase')}
+        {eraseLabel ?? t('cards.erase')}
       </button>
       {digitKey(0)}
       <button type="button" className={CHECK_KEY} disabled={!canCheck} onClick={onCheck}>

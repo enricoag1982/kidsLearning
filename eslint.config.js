@@ -164,7 +164,11 @@ export default defineConfig([
       'packages/subject-*/src/web/**/*.{ts,tsx}',
       'packages/subject-*/src/{kinds,modes}/**/*.tsx',
     ],
-    ignores: ['packages/subject-*/src/web/**/e2e-{registry,actions}.ts'],
+    ignores: [
+      'packages/subject-*/src/web/**/e2e-{registry,actions}.ts',
+      // The card kit's own drivers, like a subject's: reachable only from Playwright specs.
+      'packages/platform-web/src/kinds/cards/**/e2e{,-registry}.ts',
+    ],
     rules: {
       'no-restricted-imports': [
         'error',

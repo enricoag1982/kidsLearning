@@ -1,10 +1,35 @@
 import { describe, expect, it, vi } from 'vitest';
+import { createInstance } from 'i18next';
+import { I18nextProvider } from 'react-i18next';
 import { fireEvent, render, screen, within } from '@testing-library/react';
+import type { ReactElement } from 'react';
 import { NumberPad } from './NumberPad.tsx';
+import type { NumberPadProps } from './NumberPad.tsx';
 
-function renderPad(canCheck: boolean) {
+const i18n = createInstance();
+await i18n.init({
+  lng: 'en',
+  resources: {
+    en: {
+      translation: {
+        'cards.pad-label': 'Number pad',
+        'cards.erase': 'Delete',
+        'exercise.check': 'Check',
+      },
+    },
+  },
+});
+
+function withI18n(ui: ReactElement): ReactElement {
+  return <I18nextProvider i18n={i18n}>{ui}</I18nextProvider>;
+}
+
+function renderPad(
+  canCheck: boolean,
+  labels: Pick<NumberPadProps, 'padLabel' | 'eraseLabel'> = {},
+) {
   const handlers = { onDigit: vi.fn(), onErase: vi.fn(), onCheck: vi.fn() };
-  render(<NumberPad {...handlers} canCheck={canCheck} />);
+  render(withI18n(<NumberPad {...handlers} canCheck={canCheck} {...labels} />));
   return handlers;
 }
 
@@ -44,5 +69,12 @@ describe('NumberPad', () => {
     expect(onDigit.mock.calls).toEqual([[7], [0]]);
     expect(onErase).toHaveBeenCalledOnce();
     expect(onCheck).toHaveBeenCalledOnce();
+  });
+
+  it("takes the subject's own group name and erase text over the platform's", () => {
+    renderPad(true, { padLabel: 'Zahlen', eraseLabel: 'Weg' });
+    const pad = screen.getByRole('group', { name: 'Zahlen' });
+    expect(within(pad).getByRole('button', { name: 'Weg' })).toBeTruthy();
+    expect(screen.queryByRole('group', { name: 'Number pad' })).toBeNull();
   });
 });

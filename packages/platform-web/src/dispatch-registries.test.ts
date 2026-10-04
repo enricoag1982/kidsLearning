@@ -12,6 +12,8 @@ const EXERCISE_TYPES = [
   'setup',
   'mate-in-n',
   'number-entry',
+  'true-false',
+  'order',
 ];
 const MODE_TYPES = ['static', 'series', 'versus'];
 

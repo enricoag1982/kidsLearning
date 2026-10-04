@@ -1,10 +1,18 @@
 import type { JSX } from 'react';
+import { useTranslation } from 'react-i18next';
+import { NumberPad } from '@learn/platform-web/kinds/cards/number-entry/NumberPad.tsx';
+import type { NumberPadProps } from '@learn/platform-web/kinds/cards/number-entry/NumberPad.tsx';
 import { ExerciseControls } from '@learn/platform-web/kinds/ExerciseControls.tsx';
 import { ExerciseFrame } from '@learn/platform-web/kinds/ExercisePlay.tsx';
 import { panelBody } from '@learn/platform-web/kinds/panel-body.tsx';
 import { ProblemCard } from '../../web/problem-card.tsx';
-import { NumberPad } from './NumberPad.tsx';
 import type { NumberEntryPlayAreaProps } from './ui.ts';
+
+/** The platform's pad under math's own group name and erase text. */
+function MathPad(props: Omit<NumberPadProps, 'padLabel' | 'eraseLabel'>): JSX.Element {
+  const { t } = useTranslation();
+  return <NumberPad {...props} padLabel={t('math.pad-label')} eraseLabel={t('math.erase')} />;
+}
 
 /** The problem card (it shows what has been typed), the Hint button and the number pad: side by side on a tablet held upright, stacked elsewhere. */
 export function PlayArea({
@@ -40,7 +48,7 @@ export function PlayArea({
           />
         </div>
       )}
-      <NumberPad
+      <MathPad
         canCheck={core.entry !== ''}
         onDigit={(digit) => {
           dispatch({ type: 'enter-digit', digit });

@@ -8,6 +8,8 @@ export interface ChoiceLook<O extends ChoiceOptionBase = ChoiceOptionBase> {
   visual?(option: O): ReactNode;
   /** Accessible name of an option without text. */
   label?(option: O, text: (key: string) => string): string | undefined;
+  /** The tile's minimum height class, in place of the default `min-h-14` (56 px). */
+  readonly tileClass?: string;
 }
 
 export interface ChoiceOptionsProps<O extends ChoiceOptionBase> {
@@ -41,7 +43,7 @@ export function ChoiceOptions<O extends ChoiceOptionBase>({
             onClick={() => {
               onPick(option.id);
             }}
-            className={`tap-raised flex min-h-14 flex-col items-center justify-center gap-1 rounded-2xl px-2 font-display text-sm font-semibold ${
+            className={`tap-raised flex ${look.tileClass ?? 'min-h-14'} flex-col items-center justify-center gap-1 rounded-2xl px-2 font-display text-sm font-semibold ${
               isWrong ? 'border-today text-today opacity-80' : 'bg-card text-ink'
             }`}
           >

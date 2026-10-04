@@ -9,7 +9,7 @@ import type {
 import type { OrderDef, OrderHint, OrderOutcome, PlaceItemAction } from '../order/def.ts';
 import type { AnswerTrueFalseAction, TrueFalseDef, TrueFalseHint } from '../true-false/def.ts';
 import type { AnswerOutcome } from '../../answer.ts';
-import type { CardDefBase, CardItem } from './prompt.ts';
+import type { CardDefBase, CardItem, CardPrompt } from './prompt.ts';
 
 /** An intersection, not `extends`: `CardDefBase.type` is any string, `ChoiceDefBase.type` is `'choice'`. */
 export type CardChoiceDef = ChoiceDefBase<CardItem> & CardDefBase;
@@ -18,6 +18,12 @@ export type CardChoiceDef = ChoiceDefBase<CardItem> & CardDefBase;
 export type CardExerciseDef = CardChoiceDef | TrueFalseDef | NumberEntryDef | OrderDef;
 
 export type CardType = CardExerciseDef['type'];
+
+/** A lesson's demo: its spoken text and, optionally, the card shown with it. */
+export interface CardDemo {
+  readonly textKey: string;
+  readonly prompt?: CardPrompt;
+}
 
 export type CardDefOf<T extends CardType> = Extract<CardExerciseDef, { readonly type: T }>;
 

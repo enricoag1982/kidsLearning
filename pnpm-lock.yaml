@@ -139,6 +139,9 @@ importers:
         specifier: workspace:*
         version: link:../platform-core
     devDependencies:
+      '@learn/platform-content':
+        specifier: workspace:*
+        version: link:../platform-content
       '@playwright/test':
         specifier: ~1.63.0
         version: 1.63.0

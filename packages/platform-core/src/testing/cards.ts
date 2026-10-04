@@ -25,7 +25,7 @@ const choice: CardChoiceDef = {
   options: [
     { id: 'a', big: '2' },
     { id: 'b', big: '3' },
-    { id: 'c', textKey: 'lessons:cc1.five', emoji: '🖐️' },
+    { id: 'c', textKey: 'lessons:count-01-opt-c', emoji: '🖐️' },
   ],
   answer: 'b',
 };
@@ -58,12 +58,13 @@ const order: OrderDef = {
   items: [
     { id: 'three', big: '3' },
     { id: 'one', big: '1' },
-    { id: 'two', textKey: 'lessons:co1.two', big: '2' },
+    { id: 'two', textKey: 'lessons:count-04-two', big: '2' },
   ],
   answer: ['one', 'two', 'three'],
 };
 
-/** One valid def of each card kind. */
+/** One valid def of each card kind. The option / item text keys are those of platform-content's card fixture subject, so a web test
+ * rendering them with that subject's texts shows `Five` and `Two`. */
 export const CARD_SAMPLES = {
   choice,
   'true-false': trueFalse,
