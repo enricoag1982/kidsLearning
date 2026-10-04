@@ -1,0 +1,413 @@
+{
+ "version": 1,
+ "lessons": [
+  {
+   "id": "sample-lesson-1",
+   "world": "first-steps",
+   "order": 1,
+   "concept": "sample-one",
+   "character": "panda",
+   "titleKey": "lessons:sample-lesson-1.title",
+   "storyKey": "lessons:sample-lesson-1.story",
+   "demo": {
+    "textKey": "lessons:sample-lesson-1.demo",
+    "prompt": {
+     "emoji": "🍎🍎🍎",
+     "big": "3"
+    }
+   },
+   "guided": [
+    {
+     "id": "s1-g1",
+     "concept": "sample-one",
+     "textKey": "lessons:s1-g1",
+     "prompt": {
+      "emoji": "🍎🍎"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "big": "2"
+      },
+      {
+       "id": "b",
+       "big": "3"
+      }
+     ],
+     "answer": "a"
+    },
+    {
+     "id": "s1-g2",
+     "concept": "sample-one",
+     "textKey": "lessons:s1-g2",
+     "prompt": {
+      "emoji": "🍎🍎🍎"
+     },
+     "type": "true-false",
+     "answer": true
+    }
+   ],
+   "exercises": [
+    {
+     "id": "s1-01",
+     "concept": "sample-one",
+     "textKey": "lessons:s1-01",
+     "prompt": {
+      "emoji": "🍎🍎🍎🍎"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "big": "3"
+      },
+      {
+       "id": "b",
+       "big": "4"
+      },
+      {
+       "id": "c",
+       "big": "5"
+      }
+     ],
+     "answer": "b",
+     "easier": "s1-01-easy"
+    },
+    {
+     "id": "s1-02",
+     "concept": "sample-one",
+     "textKey": "lessons:s1-02",
+     "prompt": {
+      "big": "2 + 2 = 5"
+     },
+     "type": "true-false",
+     "answer": false
+    },
+    {
+     "id": "s1-03",
+     "concept": "sample-one",
+     "textKey": "lessons:s1-03",
+     "prompt": {
+      "big": "4 + 3"
+     },
+     "type": "number-entry",
+     "answer": 7,
+     "maxDigits": 2
+    },
+    {
+     "id": "s1-04",
+     "concept": "sample-one",
+     "textKey": "lessons:s1-04",
+     "prompt": {
+      "emoji": "🔢"
+     },
+     "type": "order",
+     "items": [
+      {
+       "id": "three",
+       "big": "3"
+      },
+      {
+       "id": "one",
+       "big": "1"
+      },
+      {
+       "id": "two",
+       "big": "2"
+      }
+     ],
+     "answer": [
+      "one",
+      "two",
+      "three"
+     ]
+    },
+    {
+     "id": "s1-05",
+     "concept": "sample-one",
+     "textKey": "lessons:s1-05",
+     "type": "choice",
+     "options": [
+      {
+       "id": "cat",
+       "textKey": "lessons:s1-05-cat",
+       "emoji": "🐱"
+      },
+      {
+       "id": "dog",
+       "textKey": "lessons:s1-05-dog",
+       "emoji": "🐶"
+      },
+      {
+       "id": "fish",
+       "textKey": "lessons:s1-05-fish",
+       "emoji": "🐟"
+      }
+     ],
+     "answer": "cat"
+    }
+   ],
+   "variants": [
+    {
+     "id": "s1-01-easy",
+     "concept": "sample-one",
+     "textKey": "lessons:s1-01-easy",
+     "prompt": {
+      "emoji": "🍎🍎"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "big": "2"
+      },
+      {
+       "id": "b",
+       "big": "3"
+      }
+     ],
+     "answer": "a"
+    }
+   ]
+  },
+  {
+   "id": "sample-lesson-2",
+   "world": "first-steps",
+   "order": 2,
+   "concept": "sample-two",
+   "character": "panda",
+   "titleKey": "lessons:sample-lesson-2.title",
+   "storyKey": "lessons:sample-lesson-2.story",
+   "demo": {
+    "textKey": "lessons:sample-lesson-2.demo",
+    "prompt": {
+     "emoji": "🌳🌳",
+     "big": "2"
+    }
+   },
+   "guided": [
+    {
+     "id": "s2-g1",
+     "concept": "sample-two",
+     "textKey": "lessons:s2-g1",
+     "prompt": {
+      "big": "2 + 1"
+     },
+     "type": "number-entry",
+     "answer": 3,
+     "maxDigits": 2
+    },
+    {
+     "id": "s2-g2",
+     "concept": "sample-two",
+     "textKey": "lessons:s2-g2",
+     "type": "order",
+     "items": [
+      {
+       "id": "b",
+       "big": "B"
+      },
+      {
+       "id": "a",
+       "big": "A"
+      }
+     ],
+     "answer": [
+      "a",
+      "b"
+     ]
+    }
+   ],
+   "exercises": [
+    {
+     "id": "s2-01",
+     "concept": "sample-two",
+     "textKey": "lessons:s2-01",
+     "prompt": {
+      "emoji": "🌳🌳"
+     },
+     "type": "true-false",
+     "answer": true
+    },
+    {
+     "id": "s2-02",
+     "concept": "sample-two",
+     "textKey": "lessons:s2-02",
+     "prompt": {
+      "big": "9 - 4"
+     },
+     "type": "number-entry",
+     "answer": 5,
+     "maxDigits": 2
+    },
+    {
+     "id": "s2-03",
+     "concept": "sample-two",
+     "textKey": "lessons:s2-03",
+     "prompt": {
+      "big": "3 + 3"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "big": "5"
+      },
+      {
+       "id": "b",
+       "big": "6"
+      },
+      {
+       "id": "c",
+       "big": "7"
+      }
+     ],
+     "answer": "b",
+     "easier": "s2-03-easy"
+    },
+    {
+     "id": "s2-04",
+     "concept": "sample-two",
+     "textKey": "lessons:s2-04",
+     "type": "order",
+     "items": [
+      {
+       "id": "c",
+       "big": "C"
+      },
+      {
+       "id": "a",
+       "big": "A"
+      },
+      {
+       "id": "b",
+       "big": "B"
+      }
+     ],
+     "answer": [
+      "a",
+      "b",
+      "c"
+     ]
+    },
+    {
+     "id": "s2-05",
+     "concept": "sample-two",
+     "textKey": "lessons:s2-05",
+     "prompt": {
+      "emoji": "🍎🍎🍎"
+     },
+     "type": "true-false",
+     "answer": false
+    }
+   ],
+   "variants": [
+    {
+     "id": "s2-03-easy",
+     "concept": "sample-two",
+     "textKey": "lessons:s2-03-easy",
+     "prompt": {
+      "big": "2 + 1"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "big": "3"
+      },
+      {
+       "id": "b",
+       "big": "4"
+      }
+     ],
+     "answer": "a"
+    }
+   ]
+  }
+ ],
+ "minigames": [
+  {
+   "mode": "series",
+   "id": "sample-boss",
+   "concept": "sample-two",
+   "rounds": [
+    {
+     "id": "boss-r1",
+     "concept": "sample-two",
+     "textKey": "lessons:boss-r1",
+     "prompt": {
+      "big": "5 + 4"
+     },
+     "type": "number-entry",
+     "answer": 9,
+     "maxDigits": 2
+    },
+    {
+     "id": "boss-r2",
+     "concept": "sample-two",
+     "textKey": "lessons:boss-r2",
+     "prompt": {
+      "emoji": "🍎🍎🍎"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "big": "2"
+      },
+      {
+       "id": "b",
+       "big": "3"
+      },
+      {
+       "id": "c",
+       "big": "4"
+      }
+     ],
+     "answer": "b"
+    },
+    {
+     "id": "boss-r3",
+     "concept": "sample-two",
+     "textKey": "lessons:boss-r3",
+     "type": "order",
+     "items": [
+      {
+       "id": "five",
+       "big": "5"
+      },
+      {
+       "id": "two",
+       "big": "2"
+      },
+      {
+       "id": "four",
+       "big": "4"
+      }
+     ],
+     "answer": [
+      "two",
+      "four",
+      "five"
+     ]
+    },
+    {
+     "id": "boss-r4",
+     "concept": "sample-two",
+     "textKey": "lessons:boss-r4",
+     "prompt": {
+      "big": "6 - 2 = 4"
+     },
+     "type": "true-false",
+     "answer": true
+    }
+   ],
+   "errors3": 0,
+   "errors2": 2,
+   "titleKey": "lessons:sample-boss.title",
+   "goalKey": "lessons:sample-boss.goal",
+   "unlockAfter": "sample-lesson-2"
+  }
+ ]
+}
