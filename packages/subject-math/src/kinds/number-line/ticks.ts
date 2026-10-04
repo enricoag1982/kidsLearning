@@ -52,3 +52,34 @@ export function labelledTicks(
   if (def.labels === 'ends') return [def.from, def.to];
   return def.labels;
 }
+
+/** Where a key moves the marker from `current` (clamped to the line), or `undefined` for a key that does not move it: an arrow goes one
+ * tick (an exact item) or one whole number (an estimate item), Page Up / Down one interval, Home / End the ends. */
+export function keyTarget(
+  def: Pick<NumberLineDef, 'from' | 'to' | 'step' | 'tolerance'>,
+  current: number,
+  key: string,
+): number | undefined {
+  const arrow = def.tolerance > 0 ? 1 : def.step;
+  const moved = ((): number | undefined => {
+    switch (key) {
+      case 'ArrowRight':
+      case 'ArrowUp':
+        return current + arrow;
+      case 'ArrowLeft':
+      case 'ArrowDown':
+        return current - arrow;
+      case 'PageUp':
+        return current + def.step;
+      case 'PageDown':
+        return current - def.step;
+      case 'Home':
+        return def.from;
+      case 'End':
+        return def.to;
+      default:
+        return undefined;
+    }
+  })();
+  return moved === undefined ? undefined : Math.min(def.to, Math.max(def.from, moved));
+}

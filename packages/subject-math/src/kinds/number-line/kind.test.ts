@@ -9,6 +9,7 @@ import {
   gapCount,
   isAccepted,
   isTick,
+  keyTarget,
   labelledTicks,
   nearestInteger,
   nearestTick,
@@ -70,6 +71,36 @@ describe('the line arithmetic', () => {
     expect(isAccepted(estimate, 390)).toBe(true);
     expect(isAccepted(estimate, 289)).toBe(false);
     expect(isAccepted(estimate, 391)).toBe(false);
+  });
+});
+
+describe('the keys', () => {
+  it('an exact item: an arrow goes one tick, a Page key one interval, Home and End to the ends, all kept on the line', () => {
+    expect(keyTarget(exact100, 300, 'ArrowRight')).toBe(400);
+    expect(keyTarget(exact100, 300, 'ArrowUp')).toBe(400);
+    expect(keyTarget(exact100, 300, 'ArrowLeft')).toBe(200);
+    expect(keyTarget(exact100, 300, 'ArrowDown')).toBe(200);
+    expect(keyTarget(exact100, 300, 'PageUp')).toBe(400);
+    expect(keyTarget(exact100, 300, 'PageDown')).toBe(200);
+    expect(keyTarget(exact100, 300, 'Home')).toBe(0);
+    expect(keyTarget(exact100, 300, 'End')).toBe(1000);
+    expect(keyTarget(exact100, 1000, 'ArrowRight')).toBe(1000);
+    expect(keyTarget(exact100, 0, 'PageDown')).toBe(0);
+  });
+
+  it('an estimate item: an arrow goes one whole number, a Page key still a whole interval', () => {
+    expect(keyTarget(estimate, 340, 'ArrowRight')).toBe(341);
+    expect(keyTarget(estimate, 340, 'ArrowLeft')).toBe(339);
+    expect(keyTarget(estimate, 340, 'PageUp')).toBe(440);
+    expect(keyTarget(estimate, 340, 'PageDown')).toBe(240);
+    expect(keyTarget(estimate, 995, 'PageUp')).toBe(1000);
+    expect(keyTarget(estimate, 3, 'ArrowLeft')).toBe(2);
+  });
+
+  it('any other key does not move it', () => {
+    for (const key of ['Enter', 'Tab', 'a', ' ', 'Escape']) {
+      expect(keyTarget(exact100, 300, key), key).toBeUndefined();
+    }
   });
 });
 

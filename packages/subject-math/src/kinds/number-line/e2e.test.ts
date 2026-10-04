@@ -3,6 +3,7 @@ import type { NumberLineDef } from './def.ts';
 import { keysToValue, numberLineE2E } from './e2e.ts';
 import { NUMBER_LINE_SAMPLES } from './samples.ts';
 import { numberLineSolution, numberLineWrongAction } from './solution.ts';
+import { keyTarget } from './ticks.ts';
 
 const { exact100, exact10, exact50, estimate } = NUMBER_LINE_SAMPLES;
 
@@ -72,15 +73,11 @@ describe('keysToValue', () => {
     expect(keysToValue(estimate, 1000)).toHaveLength(10);
   });
 
-  it('every key sequence ends on the value (replayed on the slider the UI draws: Home, arrows by 1 or the step, Page keys by the step)', () => {
-    const replay = (def: NumberLineDef, value: number): number => {
-      let at = def.from;
-      const inc = def.tolerance === 0 ? def.step : 1;
-      for (const key of keysToValue(def, value)) {
-        if (key === 'ArrowRight') at += inc;
-        else if (key === 'ArrowLeft') at -= inc;
-        else if (key === 'PageUp') at += def.step;
-        else if (key === 'PageDown') at -= def.step;
+  it("every key sequence ends on the value when the slider handles it (the UI's own key rules, from Home)", () => {
+    const replay = (def: NumberLineDef, value: number): number | undefined => {
+      let at: number | undefined;
+      for (const key of ['Home', ...keysToValue(def, value)]) {
+        at = keyTarget(def, at ?? def.from, key) ?? at;
       }
       return at;
     };
