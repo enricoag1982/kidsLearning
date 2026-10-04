@@ -1,13 +1,12 @@
 // Math's content behaviour: the card kit's YAML schemas (a `prompt` card, `choice` cards, a `number-entry` pad, the `series` boss)
 // under math's own registries, so math's own kinds (`number-line`, `place-value`, `array`: schema, compile, verify) and
-// the generated-exercise templates of m13.9+ join them here.
+// the generated-exercise templates (`templates/`: W1 since m13.9) join them here.
 import { CARD_KIND_CONTENT, createCardContent } from '@learn/platform-content/kinds/cards/content';
 import { cardVoiceTemplates } from '@learn/platform-content/kinds/cards/voice';
 import { cardStimulus } from '@learn/platform-content/kinds/cards/stimulus';
 import type { ExerciseKindContent } from '@learn/platform-content/kinds/kind-content';
 import { createExerciseSchema } from '@learn/platform-content/lesson-schema';
 import { createSeriesContent } from '@learn/platform-content/modes/series';
-import type { AnyExerciseTemplate } from '@learn/platform-content/generate/template';
 import type { SubjectContent } from '@learn/platform-content/subject';
 import type { z } from 'zod';
 import { MATH_CHARACTERS, mathCore } from '../core/math-core.ts';
@@ -17,6 +16,9 @@ import { numberLine } from './number-line.ts';
 import { numberLineVoiceTemplates } from './number-line-voice.ts';
 import { placeValue } from './place-value.ts';
 import { placeValueVoiceTemplates } from './place-value-voice.ts';
+import { MATH_TEMPLATES } from './templates/index.ts';
+
+export { MATH_TEMPLATES };
 
 /** The kinds, by `type`: the card kit's four and math's own. */
 export const MATH_KIND_CONTENT = {
@@ -29,9 +31,6 @@ export const MATH_KIND_CONTENT = {
 };
 
 export const mathExerciseSchema = createExerciseSchema(MATH_KIND_CONTENT, cardStimulus);
-
-/** Generated-exercise templates by id (`generate: { template: <id>, … }`): none until m13.9. */
-export const MATH_TEMPLATES: Readonly<Record<string, AnyExerciseTemplate>> = {};
 
 /** The narrated math texts that are not an exercise or lesson text: the card kit's feedback notes the content uses (over math's note
  * table), and math's own kinds' notes when the content has such an exercise. */

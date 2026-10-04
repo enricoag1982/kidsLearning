@@ -337,8 +337,6 @@ nl-g1: Put the marker on 300.
 nl-01: Put the marker on 40.
 nl-02: Put the marker where 340 goes.
 nl-easy: Put the marker on 400.
-bugs:
-  ticks-not-gaps: Count the jumps between the marks, not the marks.
 `;
 
   const LESSON = `id: line-up
@@ -464,8 +462,8 @@ variants:
       /reason for 40 is the target/,
     );
     expectIssue(
-      LESSON,
-      TEXTS.replace(/bugs:\n {2}ticks-not-gaps: .*\n/, 'bugs:\n  other-reason: Another one.\n'),
+      LESSON.replace('text: bugs.ticks-not-gaps', 'text: bugs.missing'),
+      TEXTS,
       /reason for 50/,
     );
     expectIssue(

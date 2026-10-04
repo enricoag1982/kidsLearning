@@ -40,3 +40,21 @@ number-parade-r3: What is 5 plus 5?
 number-parade-r4: What is 8 minus 2?
 number-parade-r5: What is 6 plus 2?
 number-parade-r6: What is 7 minus 4?
+bugs:
+  append: 'Each place holds one digit: 2 hundreds is 200, not 2000.'
+  swap: 'Look at the order: hundreds, then tens, then ones.'
+  drop-zero: An empty place still needs a zero to hold its spot.
+  ones-first: Compare the biggest place first.
+  ticks-not-gaps: Count the jumps between the marks, not the marks.
+  truncate: Rounding down every time? Check which number is nearer.
+  five-down: Right in the middle? It goes up to the bigger number.
+templates:
+  pv-build: Build {{n}} with blocks.
+  pv-read: '{{h}} hundreds, {{t}} tens and {{o}} ones. What number is it?'
+  pv-read-4: '{{th}} thousands, {{h}} hundreds, {{t}} tens and {{o}} ones. What number is it?'
+  pv-which: Which number has {{h}} hundreds, {{t}} tens and {{o}} ones?
+  pv-which-4: Which number has {{th}} thousands, {{h}} hundreds, {{t}} tens and {{o}} ones?
+  pv-expanded: Put the parts together. What number is it?
+  cmp-sign: Which sign goes in the gap? The open side faces the bigger number.
+  cmp-order: Put the numbers in order, smallest first.
+  cmp-tf: Is this true?
