@@ -1,0 +1,4 @@
+# One entry per lesson character (`character:` in a lesson). Its portrait is `art.<id>` in src/web/template-pack.ts,
+# or one of the platform's animals (owl, fox, bear, rabbit, cat, panda, penguin, frog, elephant).
+owl:
+  name: Owl

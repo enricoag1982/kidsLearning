@@ -1,0 +1,29 @@
+{
+ "tracks": [
+  {
+   "id": "basics",
+   "kind": "main",
+   "titleKey": "journey:tracks.basics",
+   "worlds": [
+    {
+     "id": "first-steps",
+     "track": "basics",
+     "order": 1,
+     "habitat": "meadow",
+     "titleKey": "journey:worlds.first-steps",
+     "boss": "sample-boss"
+    }
+   ]
+  }
+ ],
+ "ranks": [
+  {
+   "id": "starter",
+   "after": "start"
+  },
+  {
+   "id": "explorer",
+   "after": "world:first-steps"
+  }
+ ]
+}

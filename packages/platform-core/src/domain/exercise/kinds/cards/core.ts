@@ -1,15 +1,11 @@
 // The card kit's `SubjectCore`: a subject made only of YAML + art gets its whole core from this one call.
 import type { AnyNoteEntry } from '../../../notes.ts';
-import type { SubjectCore, SubjectSettingsSlot } from '../../../subject.ts';
+import type { SubjectCore } from '../../../subject.ts';
 import { CARD_KINDS } from './kinds.ts';
 import { CARD_NOTES } from './notes.ts';
+import { CARD_SETTINGS_SLOT } from './settings-slot.ts';
 
-/** No settings fields of its own. */
-export const CARD_SETTINGS_SLOT: SubjectSettingsSlot = {
-  defaults: {},
-  isValid: () => true,
-  loadBackupShape: () => Promise.resolve({}),
-};
+export { CARD_SETTINGS_SLOT };
 
 export interface CardCoreOptions {
   readonly id: string;
