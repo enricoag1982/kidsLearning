@@ -522,15 +522,54 @@ describe('the card fixture subject', () => {
     }
   });
 
-  it('voices the exercise, story and demo texts only', () => {
+  it("voices the content's own texts and the card notes of the kinds it uses", () => {
     const sources = new Set(compiled.voiceTexts.entries.map((entry) => entry.source));
     expect(sources.has('lesson-exercise')).toBe(true);
-    expect(
-      compiled.voiceTexts.entries.some((entry) => entry.text.startsWith('Put the numbers')),
-    ).toBe(true);
-    expect(
-      compiled.voiceTexts.entries.some((entry) => entry.text === 'Not that number. Try again!'),
-    ).toBe(false);
+    const spoken = new Set(compiled.voiceTexts.entries.map((entry) => entry.text));
+    expect(spoken.has('Put the numbers in order, smallest first.')).toBe(true);
+    // The fixture uses all four kinds: their wrong notes (plain and with the easier offer), hints and praise.
+    for (const text of [
+      'Not quite! Try again.',
+      'Not that number. Try again!',
+      'Not that one. Try another!',
+      'Not that number. Try again! This one is tricky. Want an easier one?',
+      'It starts with 7.',
+      'Which one comes next?',
+      'Amazing!',
+    ]) {
+      expect(spoken.has(text), text).toBe(true);
+    }
+  });
+
+  it('voices every reason, authored and generated: nothing a wrong answer can say is left without audio', () => {
+    const spoken = new Set(compiled.voiceTexts.entries.map((entry) => entry.text));
+    const en = compiled.locales.en?.lessons as Record<string, unknown>;
+    const reasons = [
+      'A hand is five fingers. Count the apples!',
+      'Two and two make four, not five.',
+      'That is seven times five. This one is plus!',
+      'So close! Count the last jump again.',
+    ];
+    for (const reason of reasons) {
+      expect(spoken.has(reason), reason).toBe(true);
+    }
+    // Every reasonKey of every compiled def resolves to a voiced text (no easier variant in the fixture: plain only).
+    const defs = [
+      ...compiled.content.lessons.flatMap((lesson) => [...lesson.guided, ...lesson.exercises]),
+      ...compiled.content.minigames.flatMap((game) =>
+        'rounds' in game ? (game.rounds as readonly ExerciseDefBase[]) : [],
+      ),
+    ];
+    const keys = JSON.stringify(defs).match(/"reasonKey":"lessons:([^"]+)"/g) ?? [];
+    expect(keys.length).toBeGreaterThan(5);
+    for (const raw of keys) {
+      const ref = /lessons:([^"]+)/.exec(raw)?.[1] ?? '';
+      const text = ref
+        .split('.')
+        .reduce<unknown>((node, part) => (node as Record<string, unknown> | undefined)?.[part], en);
+      expect(typeof text, ref).toBe('string');
+      expect(spoken.has(text as string), ref).toBe(true);
+    }
   });
 
   it('every text the kit speaks or shows resolves in the merged English bundle', () => {

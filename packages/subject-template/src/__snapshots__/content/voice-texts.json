@@ -15,9 +15,29 @@
   "source": "badge-earned"
  },
  {
+  "key": "09d0d86ca82c29e8",
+  "text": "It starts with 7.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "0a2ba2d1bd8cb77c",
+  "text": "Not that one. Try another! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "0d9116a7e93d40cc",
+  "text": "Which one comes next?",
+  "source": "exercise-note"
+ },
+ {
   "key": "0f88565349c9dcfa",
   "text": "Owl sees two trees. Replace this demo with your own!",
   "source": "lesson-demo"
+ },
+ {
+  "key": "161fdcce3e2e7cdb",
+  "text": "Amazing!",
+  "source": "exercise-note"
  },
  {
   "key": "1a3a236a0e50c1c9",
@@ -40,9 +60,19 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "220b955b268d8b6a",
+  "text": "It starts with 6.",
+  "source": "exercise-note"
+ },
+ {
   "key": "2416a7322ac657df",
   "text": "Every star starts with the first step.",
   "source": "placement"
+ },
+ {
+  "key": "27dfb80057b25845",
+  "text": "Here is the answer.",
+  "source": "exercise-note"
  },
  {
   "key": "30f4cc047f1675bc",
@@ -50,9 +80,19 @@
   "source": "journey"
  },
  {
+  "key": "323fde12bb24ff58",
+  "text": "It starts with 0.",
+  "source": "exercise-note"
+ },
+ {
   "key": "33cacbfd0bfeadc3",
   "text": "A grown-up helps set things up first.",
   "source": "owl-line"
+ },
+ {
+  "key": "42395b2cf6a958b5",
+  "text": "Look closely.",
+  "source": "exercise-note"
  },
  {
   "key": "44ee1e157e7f833d",
@@ -65,9 +105,24 @@
   "source": "journey"
  },
  {
+  "key": "462164a0645e1ed2",
+  "text": "Well done!",
+  "source": "exercise-note"
+ },
+ {
   "key": "4805eee9fb3cd71d",
   "text": "Look at all your friends!",
   "source": "owl-line"
+ },
+ {
+  "key": "4a61f482035c8a48",
+  "text": "It starts with 4.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "530abb19f63d5293",
+  "text": "It starts with 9.",
+  "source": "exercise-note"
  },
  {
   "key": "5975daf7cd7cef89",
@@ -83,6 +138,11 @@
   "key": "5b1f538e8108589f",
   "text": "You've used up all your play time for today. Come back tomorrow!",
   "source": "owl-line"
+ },
+ {
+  "key": "622418bb13e58c02",
+  "text": "It starts with 5.",
+  "source": "exercise-note"
  },
  {
   "key": "62f897c4502712bc",
@@ -135,6 +195,11 @@
   "source": "placement"
  },
  {
+  "key": "8bab8681b7a5146f",
+  "text": "It starts with 3.",
+  "source": "exercise-note"
+ },
+ {
   "key": "8ca943cc133b3f03",
   "text": "Sample try. What is two plus one? Replace it with yours!",
   "source": "lesson-guided"
@@ -143,6 +208,11 @@
   "key": "8f94a90b93df22e1",
   "text": "Sample try. How many apples? Replace it with yours!",
   "source": "lesson-guided"
+ },
+ {
+  "key": "94f516a7b14c3876",
+  "text": "Not that number. Try again!",
+  "source": "exercise-note"
  },
  {
   "key": "957f278d66fde401",
@@ -180,6 +250,11 @@
   "source": "badge-locked"
  },
  {
+  "key": "a4a00559aa6ccb7c",
+  "text": "It starts with 8.",
+  "source": "exercise-note"
+ },
+ {
   "key": "a8842a4abc22c2e0",
   "text": "Easier sample question. How many apples are there?",
   "source": "lesson-variant"
@@ -205,6 +280,11 @@
   "source": "voice-check"
  },
  {
+  "key": "b95ef6e6dbddbf22",
+  "text": "Not quite! Try again. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "bac073bb21b21de1",
   "text": "Star Collector. Earn 10 stars",
   "source": "badge-locked"
@@ -213,6 +293,11 @@
   "key": "bd09bbb7e9ebb05f",
   "text": "Already know some of this? Let's find out where to start you!",
   "source": "placement"
+ },
+ {
+  "key": "be96f81d5e60d899",
+  "text": "Good try!",
+  "source": "exercise-note"
  },
  {
   "key": "c3a5fe94f9fd2264",
@@ -250,9 +335,19 @@
   "source": "home"
  },
  {
+  "key": "d9dd9bde2ed22057",
+  "text": "It starts with 2.",
+  "source": "exercise-note"
+ },
+ {
   "key": "dfa3de465772d747",
   "text": "Easier sample question. What is two plus one?",
   "source": "lesson-variant"
+ },
+ {
+  "key": "e259a020f02b6c7b",
+  "text": "Not that number. Try again! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "e6dd3db7d2a21a07",
@@ -263,6 +358,16 @@
   "key": "e7c0878a15db2d00",
   "text": "5 minutes left — pick something short!",
   "source": "owl-line"
+ },
+ {
+  "key": "ecd4fe369e2640df",
+  "text": "Not quite! Try again.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "f04de88ae98dc1d1",
+  "text": "One choice is ruled out.",
+  "source": "exercise-note"
  },
  {
   "key": "f0d1aa771541305f",
@@ -293,5 +398,15 @@
   "key": "f78033ebdad13ecd",
   "text": "Sample try. Are there three apples? Replace it with yours!",
   "source": "lesson-guided"
+ },
+ {
+  "key": "f80c8fc3dcb61f21",
+  "text": "Not that one. Try another!",
+  "source": "exercise-note"
+ },
+ {
+  "key": "ff9e1b1facd7d976",
+  "text": "It starts with 1.",
+  "source": "exercise-note"
  }
 ]

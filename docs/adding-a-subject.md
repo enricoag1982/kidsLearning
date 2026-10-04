@@ -174,4 +174,6 @@ const add: ExerciseTemplate<{ max: number }, AddItem> = {
 
 Any other wrong answer keeps the default note; scoring, errors and hints do not change. The reason is spoken alone, plus the easier-offer sentence on an exercise that has an `easier` variant.
 
+**Voice** (decision G6): `createCardContent` puts the card notes of the kinds the content uses into the voice inventory (`cardVoiceTemplates(notes)`, computed through core's `exerciseNote`): the wrong notes (plain and with the easier offer), every reason, every hint by level, the 1–3 star praise. A subject with its own `voiceTemplates` composes it: `cardVoiceTemplates(core.notes)(add, r, all)` (coding does). Run `pnpm voice:generate` after adding reasons.
+
 Reference: `packages/platform-content/src/testing/card-fixture.ts` (`fixture-add`, used by one lesson entry and one series round of the card fixture), tests `generate/expand.test.ts`.
