@@ -5,9 +5,13 @@ import type { SubjectCore } from '@learn/platform-core/domain/subject';
 import { CODING_KINDS } from '../kinds/index.ts';
 import { CODING_NOTES } from './notes.ts';
 
-/** Lesson characters that become an "animal friend" in My Den once their lesson is done. The Owl is the platform's own guide;
- * add a character here (and its `characters.<id>.name` / `topic.<id>` texts) to introduce a new one. */
-export const CODING_CHARACTERS = { owl: { topicKey: 'topic.owl' } } as const;
+/** Lesson characters that become an "animal friend" in My Den once their lesson is done: the Owl (the platform's own guide) and the
+ * Fox, whom the child helps through the maps (its image is the board's actor). Add a character here (and its
+ * `characters.<id>.name` / `topic.<id>` texts) to introduce a new one. */
+export const CODING_CHARACTERS = {
+  owl: { topicKey: 'topic.owl' },
+  fox: { topicKey: 'topic.fox' },
+} as const;
 
 export const codingCore: SubjectCore<null> = {
   ...createCardCore({ id: 'coding', characters: CODING_CHARACTERS, notes: CODING_NOTES }),

@@ -26,4 +26,9 @@ export const codingWeb: SubjectWeb = {
     rankGlyphs: { starter: '1', explorer: '2' },
   }),
   kinds: CODING_KIND_UI,
+  // Gated on the compile-time DEV flag so Rollup drops the dev-playground subtree: an ungated `dev` field keeps its `import()` as a
+  // live split point.
+  dev: import.meta.env.DEV
+    ? { '#coding': () => import('./dev/CodingPlayground.tsx').then((m) => m.CodingPlayground) }
+    : undefined,
 };

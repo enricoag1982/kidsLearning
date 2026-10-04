@@ -4,7 +4,7 @@
 id: seq-arrows
 order: 1
 concept: seq-arrows
-character: owl
+character: fox
 demo:
   prompt: { emoji: 🦊🚩 }
 guided:
