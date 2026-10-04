@@ -7,6 +7,7 @@ import { MATH_NOTES } from '../core/notes.ts';
 import {
   MATH_SOLUTIONS,
   NUMBER_LINE_SAMPLES,
+  PLACE_VALUE_SAMPLES,
   playSolution,
   playWrongThenSolve,
   solutionOf,
@@ -14,9 +15,13 @@ import {
 } from '../testing/index.ts';
 import { MATH_KINDS, kindOf, startExercise } from './index.ts';
 
-const TYPES = ['choice', 'number-entry', 'number-line', 'order', 'true-false'];
+const TYPES = ['choice', 'number-entry', 'number-line', 'order', 'place-value', 'true-false'];
 
-const SAMPLES = [...Object.values(CARD_SAMPLES), ...Object.values(NUMBER_LINE_SAMPLES)];
+const SAMPLES = [
+  ...Object.values(CARD_SAMPLES),
+  ...Object.values(NUMBER_LINE_SAMPLES),
+  ...Object.values(PLACE_VALUE_SAMPLES),
+];
 
 describe('the math registry', () => {
   it("is the card kit kinds (same objects) plus math's own, one plain object", () => {
@@ -65,7 +70,9 @@ describe('the math registry', () => {
         hintLevel: 0,
       });
     }
+    // The card kinds share one state with the typed digits; place-value keeps nothing beyond the base state.
     expect(startExercise(CARD_SAMPLES['number-entry'])).toMatchObject({ entry: '' });
+    expect(startExercise(PLACE_VALUE_SAMPLES.zero)).not.toHaveProperty('entry');
   });
 
   it('plays every sample to 3 stars, and a wrong try costs exactly 1 error', () => {

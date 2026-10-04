@@ -5,3 +5,4 @@
 export { MATH_SOLUTIONS, solutionOf, type AnyMathSolution } from '../kinds/solutions.ts';
 export { play, playSolution, playWrongThenSolve, starsFor } from './play.ts';
 export { NUMBER_LINE_SAMPLES, NUMBER_LINE_SAMPLE_TEXTS } from '../kinds/number-line/samples.ts';
+export { PLACE_VALUE_SAMPLES } from './place-value-samples.ts';

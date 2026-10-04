@@ -1,5 +1,5 @@
 // Math's `SubjectCore`: the card kit's core (a prompt card, `choice` and `number-entry` serve the demo world) with math's kind
-// registry in place of the kit's, so math's own kinds (`number-line`; m13.7-m13.8: `place-value`, `array`) join `MATH_KINDS`, and
+// registry in place of the kit's, so math's own kinds (`number-line`, `place-value`; m13.8: `array`) join `MATH_KINDS`, and
 // their feedback notes added to the kit's table. No mode of its own (`series` comes from the runtime).
 import { createCardCore } from '@learn/platform-core/domain/exercise/kinds/cards/core';
 import type { SubjectCore } from '@learn/platform-core/domain/subject';

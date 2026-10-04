@@ -9,6 +9,14 @@ dispatchGuard({
   title: 'subject-math web: type / mode dispatch stays inside the 3 registries',
   root: srcDir,
   files: listSourceFiles(path.join(srcDir)),
-  literals: ['choice', 'true-false', 'number-entry', 'order', 'number-line', 'series'],
+  literals: [
+    'choice',
+    'true-false',
+    'number-entry',
+    'order',
+    'number-line',
+    'place-value',
+    'series',
+  ],
   allowed: ['kinds/ui-registry.ts', 'kinds/e2e-registry.ts', 'modes/e2e-registry.ts'],
 });

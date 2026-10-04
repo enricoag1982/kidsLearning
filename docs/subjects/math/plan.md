@@ -36,7 +36,7 @@ The current demo world (add within 5 / 10, take away) is retired: below the age 
 | `number-entry` | platform card kit | Number pad | exact | nudge / first digit / reveal |
 | `choice`, `true-false`, `order` | platform card kit | Cards ("47 ◻ 52" with `<` `=` `>` is a choice) | exact | card kit |
 | `number-line` | math | Tap a point on a line (labelled ticks exact; estimates within ± ½ interval) | position | benchmark midpoint / more ticks / marker near |
-| `place-value` | math | Tap + / − on hundreds / tens / ones columns (blocks drawn); auto-exchange at 10 | column state | column labels / numeral beside blocks / hundreds placed |
+| `place-value` | math | Tap + / − on (thousands /) hundreds / tens / ones columns (blocks drawn); 0–9 per column, no auto-exchange in v1.2 (+ disabled at 9; lead 2026-10-04: exchange is a column-method idea, W3 Column Canyon) | column state | column labels / numeral beside blocks / highest column filled |
 | `array` | math | Set rows × columns on a dot grid (tap the corner cell) | rows × cols = target (commuted accepted unless fixed) | "rows go across" / row total / rows filled |
 
 ## 4. Generated exercises
