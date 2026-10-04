@@ -400,7 +400,7 @@
     "control-heading": "Parent control",
     "data-body": "A nickname, an avatar picture, and lesson progress for each child — stored only on this device, never sent anywhere.",
     "data-heading": "What we keep",
-    "intro": "Chess for Kids keeps everything on this device. Here's exactly what that means.",
+    "intro": "{{app}} keeps everything on this device. Here's exactly what that means.",
     "network-body": "The only network access is checking for app updates. Updates are static files delivered from GitHub Pages. \"Send to other device\" hands the file to whichever app or device the parent picks — the app itself still sends nothing.",
     "network-heading": "Network use",
     "no-accounts-body": "No sign-up, no analytics, no ads, no third-party services. The app never phones home.",

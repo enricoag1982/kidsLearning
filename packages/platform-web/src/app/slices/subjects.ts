@@ -1,3 +1,4 @@
+import { planPlacement } from '@learn/platform-core';
 import { setSubjectLocales } from '../../i18n.ts';
 import type { AppGet, AppSet, AppState } from '../store.ts';
 import { loadProfileData } from './profile.ts';
@@ -5,7 +6,7 @@ import { loadProfileData } from './profile.ts';
 export interface SubjectsSlice {
   /** Subjects hub tile (`SubjectsScreen`): makes `id` the active subject (loading its pack on first use), remembers it as the
    * profile's last (`AppSettings.lastSubjectByProfile`), reloads the profile's data from that subject's stores and lands on
-   * Home, with the hub below it. */
+   * Home, with the hub below it; the placement offer on top on the first entry into a fresh subject (D10, once per app session). */
   readonly selectSubject: (id: string) => Promise<void>;
   /** Home's "Subjects" button: back to the hub. */
   readonly goToSubjects: () => void;
@@ -32,6 +33,26 @@ const SUBJECT_BOUND_RESET: Partial<AppState> = {
   activeCelebration: null,
 };
 
+/** Placement is due on a profile's first entry into a subject (multi-subject.md D10): the active subject has no lesson progress, no
+ * assessment result and no unlock for `profileId`, offers a non-empty plan (the one `acceptPlacement` plays), and the pair was
+ * not `offered` earlier in this app session. Reads the state after the profile data reload. */
+async function shouldOfferPlacement(
+  get: AppGet,
+  profileId: string,
+  offered: ReadonlySet<string>,
+): Promise<boolean> {
+  const { progress, journey, services, subjectId } = get();
+  if (offered.has(`${profileId}:${subjectId}`)) return false;
+  const { assessment } = services.deps;
+  if (progress.length > 0 || journey === null || assessment === undefined) return false;
+  const [results, unlocks] = await Promise.all([
+    assessment.listAssessmentResults(profileId),
+    assessment.listUnlocks(profileId),
+  ]);
+  if (results.length > 0 || unlocks.length > 0) return false;
+  return planPlacement(journey.catalog, journey.lessons, services.deps.random).length > 0;
+}
+
 /** `initialSubjectId`'s slice is installed by `createAppStore`; every other subject's on its first activation. */
 export function createSubjectsSlice(
   set: AppSet,
@@ -39,6 +60,8 @@ export function createSubjectsSlice(
   initialSubjectId: string,
 ): SubjectsSlice {
   const installed = new Set<string>([initialSubjectId]);
+  /** `profileId:subjectId` pairs already offered placement in this app session (not persisted). */
+  const offered = new Set<string>();
 
   async function activateSubject(id: string): Promise<void> {
     const { services, pack: previous } = get();
@@ -82,6 +105,14 @@ export function createSubjectsSlice(
           });
         }
         set(await loadProfileData(get, profile.id));
+        if (
+          services.app.subjects.length > 1 &&
+          (await shouldOfferPlacement(get, profile.id, offered))
+        ) {
+          offered.add(`${profile.id}:${id}`);
+          get().reset({ name: 'subjects' }, { name: 'home' }, { name: 'placement-offer' });
+          return;
+        }
       }
       get().reset({ name: 'subjects' }, { name: 'home' });
     },

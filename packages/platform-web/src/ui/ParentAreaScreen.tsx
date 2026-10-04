@@ -9,12 +9,14 @@ import {
   isValidPassword,
 } from '@learn/platform-core';
 import { useAppUpdate } from '../app/app-update-context.ts';
+import type { Services } from '../app/services.ts';
 import { useAppStore, useServices } from '../app/store.ts';
 import { RankPill } from './RankPill.tsx';
 import { BackupScreen } from './parent/BackupPanel.tsx';
 import { ChildReportScreen } from './parent/ChildReport.tsx';
 import { ChildSettingsScreen } from './parent/ChildSettings.tsx';
 import { PrivacyScreen } from './parent/PrivacyScreen.tsx';
+import { SubjectTexts, subjectDisplayName } from './parent/subject-scope.tsx';
 import {
   PARENT_INPUT,
   PARENT_NOTE,
@@ -129,15 +131,26 @@ function RefreshBlock(): JSX.Element {
   );
 }
 
-/** One child's Overview card (app-structure.md §11): a tappable row (docs/screens.md §1) opening that child's report. */
+/** One subject's overview of a child, with the subject's own `Services` (its texts: rank names). */
+interface SubjectOverview {
+  readonly scope: Services;
+  readonly overview: ChildOverview;
+}
+
+/** One child's Overview card (app-structure.md §11): a tappable row (docs/screens.md §1) opening that child's report. With
+ * several subjects, one line per subject (name, rank, stars); minutes and streak are the child's, once. */
 function ChildOverviewCard({
-  overview,
+  overviews,
   onOpen,
 }: {
-  readonly overview: ChildOverview;
+  readonly overviews: readonly SubjectOverview[];
   readonly onOpen: () => void;
-}): JSX.Element {
-  const { t } = useTranslation();
+}): JSX.Element | null {
+  const { t, i18n } = useTranslation();
+  const [first] = overviews;
+  if (!first) return null;
+  const { overview } = first;
+  const several = overviews.length > 1;
   return (
     <li>
       <button type="button" onClick={onOpen} className={PARENT_TAPPABLE_ROW}>
@@ -148,10 +161,30 @@ function ChildOverviewCard({
         <span className="flex flex-1 flex-col gap-1">
           <span className="flex items-center gap-2">
             <span className="text-base font-extrabold text-ink">{overview.profile.nickname}</span>
-            <RankPill rank={overview.rank} compact />
+            {!several && <RankPill rank={overview.rank} compact />}
           </span>
+          {several &&
+            overviews.map(({ scope, overview: own }) => {
+              const manifest = scope.app.subjects.find(
+                (entry) => entry.manifest.id === scope.subjectId,
+              )?.manifest;
+              return (
+                <SubjectTexts key={scope.subjectId} scope={scope}>
+                  <span
+                    data-testid={`overview-subject-${scope.subjectId}`}
+                    className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted"
+                  >
+                    <span className="font-bold text-ink">
+                      {manifest ? subjectDisplayName(manifest, i18n.language) : scope.subjectId}
+                    </span>
+                    <RankPill rank={own.rank} compact />
+                    <span>{t('parent.stars-total', { count: own.totalStars })}</span>
+                  </span>
+                </SubjectTexts>
+              );
+            })}
           <span className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-muted">
-            <span>{t('parent.stars-total', { count: overview.totalStars })}</span>
+            {!several && <span>{t('parent.stars-total', { count: overview.totalStars })}</span>}
             <span>
               {t('parent.overview.minutes-today', { count: overview.minutesToday })}
               {' · '}
@@ -188,15 +221,32 @@ export function ParentAreaScreen(): JSX.Element {
   const [view, setView] = useState<ParentView>({ kind: 'overview' });
 
   // Re-fetches on every return to `'overview'`, not only when `profiles` changes: a child's stats
-  // can change (reset, an import) without the `profiles` array reference changing.
+  // can change (reset, an import) without the `profiles` array reference changing. With several subjects every subject
+  // is activated (its pack loads once) and each child's overview is built from its scoped deps.
   const { value: overviews = {} } = useAsync(
-    () =>
-      Promise.all(
+    async () => {
+      const scopes: readonly Services[] =
+        services.app.subjects.length > 1
+          ? await Promise.all(
+              services.app.subjects.map((entry) => services.app.activate(entry.manifest.id)),
+            )
+          : [services];
+      const entries = await Promise.all(
         profiles.map(
           async (profile) =>
-            [profile.id, await buildChildOverview(services.deps, profile.id)] as const,
+            [
+              profile.id,
+              await Promise.all(
+                scopes.map(async (scope): Promise<SubjectOverview> => ({
+                  scope,
+                  overview: await buildChildOverview(scope.deps, profile.id),
+                })),
+              ),
+            ] as const,
         ),
-      ).then((entries) => Object.fromEntries(entries)),
+      );
+      return Object.fromEntries(entries);
+    },
     [profiles, services],
     view.kind === 'overview',
   );
@@ -231,11 +281,11 @@ export function ParentAreaScreen(): JSX.Element {
               </h2>
               <ul className="flex flex-col gap-3">
                 {profiles.map((profile) => {
-                  const overview = overviews[profile.id];
-                  return overview ? (
+                  const childOverviews = overviews[profile.id];
+                  return childOverviews ? (
                     <ChildOverviewCard
                       key={profile.id}
-                      overview={overview}
+                      overviews={childOverviews}
                       onOpen={() => {
                         setView({ kind: 'report', profileId: profile.id });
                       }}

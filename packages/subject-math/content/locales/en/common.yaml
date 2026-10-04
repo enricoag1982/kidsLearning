@@ -10,9 +10,6 @@ den:
   friend-condition: 'Finish the {{piece}} lesson'
 session:
   summary-new-friend: New friend!
-parent:
-  privacy:
-    intro: Math for Kids keeps everything on this device. Here's exactly what that means.
 voice-check:
   sentence: Let's do some math together!
 time-limit:

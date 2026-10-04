@@ -1,5 +1,6 @@
 import type { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useServices } from '../../app/store.ts';
 import { PARENT_INFO_PANEL, PARENT_PRIMARY_BUTTON } from './parent-styles.ts';
 
 const ISSUES_URL = 'https://github.com/enricoag1982/kidsLearning/issues';
@@ -8,9 +9,12 @@ const ISSUES_URL = 'https://github.com/enricoag1982/kidsLearning/issues';
  * `PrivacyDialog`; exported here, in the eager bundle, since it is reached before the parent gate. */
 export function PrivacyPolicyBody(): JSX.Element {
   const { t } = useTranslation();
+  const services = useServices();
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-sm text-muted">{t('parent.privacy.intro')}</p>
+      <p className="text-sm text-muted">
+        {t('parent.privacy.intro', { app: services.deps.app.title })}
+      </p>
       <section className={PARENT_INFO_PANEL}>
         <h3 className="text-sm font-extrabold text-ink">{t('parent.privacy.data-heading')}</h3>
         <p className="mt-1 text-sm text-muted">{t('parent.privacy.data-body')}</p>

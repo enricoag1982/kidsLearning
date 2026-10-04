@@ -4,10 +4,19 @@ import { makeContentSource, makeLesson, testSubject } from '@learn/platform-core
 import type { LoadedSubject, SubjectEntry, SubjectWeb } from '../app/subject.ts';
 
 /** A one-lesson content (`<id>-lesson`, in the only world `<id>-world`) with a catalog, so a Journey loads: two test packs with
- * `createTestContent` differ in what they offer. */
-export function createTestContent(id: string): ContentSource {
+ * `createTestContent` differ in what they offer. `secondLesson` adds `<id>-lesson-2` after it (locked until `<id>-lesson` is complete,
+ * so the parent area has something to unlock). */
+export function createTestContent(
+  id: string,
+  options: { readonly secondLesson?: boolean } = {},
+): ContentSource {
   return makeContentSource({
-    lessons: [makeLesson({ id: `${id}-lesson`, world: `${id}-world` })],
+    lessons: [
+      makeLesson({ id: `${id}-lesson`, world: `${id}-world` }),
+      ...(options.secondLesson === true
+        ? [makeLesson({ id: `${id}-lesson-2`, world: `${id}-world`, order: 2 })]
+        : []),
+    ],
     catalog: {
       tracks: [
         {
@@ -78,7 +87,7 @@ export function createTestEntry(
   };
 }
 
-/** English texts for the screens a multi-subject test walks (picker, hub, Home header, error screen): what a subject's merged
+/** English texts for the screens a multi-subject test walks (picker, new player, placement offer, hub, Home header, error screen): what a subject's merged
  * bundle would carry. `title` is `app.title`, the one text that differs per subject. */
 export function createTestLocales(title: string): LoadedSubject['locales'] {
   return {
@@ -98,7 +107,16 @@ export function createTestLocales(title: string): LoadedSubject['locales'] {
           'switch-player': 'Switch player',
           'start-today': 'Start today',
         },
+        'new-player': {
+          nickname: { title: 'What is your name?', placeholder: 'Your name', primary: 'Next' },
+          avatar: { title: 'Pick your animal!', primary: "Let's play!" },
+        },
         picker: { title: 'Who is playing?', 'new-player': 'New player', 'grown-ups': 'Grown-ups' },
+        placement: {
+          'offer-question': 'Do you already know some?',
+          'offer-yes': 'Yes, test me!',
+          'offer-no': 'No, start at World 1',
+        },
         'stars-count': '{{count}} stars',
         subjects: {
           title: 'What shall we learn?',

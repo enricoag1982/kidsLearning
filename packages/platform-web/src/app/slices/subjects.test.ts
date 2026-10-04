@@ -1,8 +1,8 @@
 import i18next from 'i18next';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AppConfig } from '@learn/platform-core';
-import { createProfile } from '@learn/platform-core';
-import { makeProgress } from '@learn/platform-core/testing';
+import { createProfile, parentUnlock, submitAssessment } from '@learn/platform-core';
+import { makeContentSource, makeProgress } from '@learn/platform-core/testing';
 import { initI18n, setSubjectLocales } from '../../i18n.ts';
 import { createMemoryStorage } from '../../testing/memory-storage.ts';
 import { createTestContent, createTestEntry, createTestPack } from '../../testing/test-pack.ts';
@@ -13,6 +13,7 @@ import type { AppStore } from '../store.ts';
 import type { SubjectEntry, SubjectWeb } from '../subject.ts';
 
 const APP: Omit<AppConfig, 'version'> = {
+  title: 'Test app',
   storagePrefix: 'app:',
   backupAppId: 'app',
   backupFilePrefix: 'app',
@@ -166,7 +167,7 @@ describe('selectSubject', () => {
     await s.store.getState().selectProfileAndHome(s.profileId);
   });
 
-  it('swaps services, pack and texts, and lands on Home above the hub', async () => {
+  it('swaps services, pack and texts, and lands on Home above the hub (the placement offer on top: fresh subject)', async () => {
     await s.store.getState().selectSubject('b');
 
     const state = s.store.getState();
@@ -174,7 +175,7 @@ describe('selectSubject', () => {
     expect(state.pack.core.id).toBe('b');
     expect(state.services.subjectId).toBe('b');
     expect(state.services.deps.subjectId).toBe('b');
-    expect(names(s.store)).toEqual(['subjects', 'home']);
+    expect(names(s.store)).toEqual(['subjects', 'home', 'placement-offer']);
     expect(state.journey?.lessons.map((lesson) => lesson.id)).toEqual(['b-lesson']);
     expect(i18next.t('app.title')).toBe('Title B');
   });
@@ -322,5 +323,160 @@ describe('subject store slices', () => {
     await store.getState().selectSubject('b');
 
     expect(field(store, 'aField')).toBeNull();
+  });
+});
+
+describe('placement offer on the first entry into a subject', () => {
+  let s: Setup;
+  beforeEach(async () => {
+    s = await setup();
+    await s.store.getState().selectProfileAndHome(s.profileId);
+  });
+
+  /** Waits for a fire-and-forget navigation (`declinePlacement`, `finishPlacement`, …) to land. */
+  async function landsOn(expected: readonly string[]): Promise<void> {
+    await vi.waitFor(() => {
+      expect(names(s.store)).toEqual(expected);
+    });
+  }
+
+  it('is offered above Home and the hub on a fresh subject', async () => {
+    await s.store.getState().selectSubject('a');
+
+    expect(names(s.store)).toEqual(['subjects', 'home', 'placement-offer']);
+    expect(s.store.getState().subjectId).toBe('a');
+  });
+
+  it('declining lands on Home of that subject with the hub below, and the offer is not repeated this session', async () => {
+    await s.store.getState().selectSubject('a');
+
+    s.store.getState().declinePlacement();
+    await landsOn(['subjects', 'home']);
+    expect(s.store.getState().subjectId).toBe('a');
+
+    s.store.getState().goToSubjects();
+    await s.store.getState().selectSubject('a');
+    expect(names(s.store)).toEqual(['subjects', 'home']);
+  });
+
+  it('accepting plays the subject worlds, finishing lands on Home with the hub below', async () => {
+    await s.store.getState().selectSubject('b');
+
+    s.store.getState().acceptPlacement();
+    await landsOn(['subjects', 'home', 'placement']);
+    const top = s.store.getState().stack[2];
+    expect(top?.name === 'placement' && top.plan.map((entry) => entry.world.id)).toEqual([
+      'b-world',
+    ]);
+
+    s.store.getState().finishPlacement();
+    await landsOn(['subjects', 'home']);
+    expect(s.store.getState().subjectId).toBe('b');
+  });
+
+  it('is offered again in the other, still fresh subject', async () => {
+    await s.store.getState().selectSubject('a');
+    s.store.getState().declinePlacement();
+    await landsOn(['subjects', 'home']);
+
+    s.store.getState().goToSubjects();
+    await s.store.getState().selectSubject('b');
+
+    expect(names(s.store)).toEqual(['subjects', 'home', 'placement-offer']);
+  });
+
+  it('is offered once per profile', async () => {
+    await s.store.getState().selectSubject('a');
+    const other = await createProfile(s.store.getState().services.deps, 'Leo', 'bear');
+
+    await s.store.getState().selectProfileAndHome(other.id);
+    await s.store.getState().selectSubject('a');
+
+    expect(names(s.store)).toEqual(['subjects', 'home', 'placement-offer']);
+    expect(s.store.getState().profile?.id).toBe(other.id);
+  });
+
+  it('is not persisted: a new app session over the same storage offers it again', async () => {
+    await s.store.getState().selectSubject('a');
+    s.store.getState().declinePlacement();
+    await landsOn(['subjects', 'home']);
+
+    const again = await setup({ storage: s.storage, profileId: s.profileId });
+    await again.store.getState().selectProfileAndHome(s.profileId);
+    await again.store.getState().selectSubject('a');
+
+    expect(names(again.store)).toEqual(['subjects', 'home', 'placement-offer']);
+  });
+
+  it('is not offered in a subject the profile has progress in', async () => {
+    await s.app.subjectData.b?.progress.saveLesson(
+      makeProgress({ id: 'lp-b', profileId: s.profileId, lessonId: 'b-lesson' }),
+    );
+
+    await s.store.getState().selectSubject('b');
+
+    expect(names(s.store)).toEqual(['subjects', 'home']);
+  });
+
+  it('is not offered in a subject with an assessment result or an unlock', async () => {
+    const depsB = (await s.app.activate('b')).deps;
+    await submitAssessment(depsB, {
+      profileId: s.profileId,
+      kind: 'placement',
+      scope: { type: 'world', worldId: 'b-world' },
+      results: [false, false],
+      score: { correct: 0, total: 2, passed: false },
+    });
+    await s.store.getState().selectSubject('b');
+    expect(names(s.store)).toEqual(['subjects', 'home']);
+
+    const depsA = (await s.app.activate('a')).deps;
+    await parentUnlock(depsA, s.profileId, { type: 'world', worldId: 'a-world' });
+    await s.store.getState().selectSubject('a');
+    expect(names(s.store)).toEqual(['subjects', 'home']);
+  });
+
+  it("another subject's progress does not count", async () => {
+    await s.app.subjectData.a?.progress.saveLesson(
+      makeProgress({ id: 'lp-a', profileId: s.profileId, lessonId: 'a-lesson' }),
+    );
+
+    await s.store.getState().selectSubject('b');
+
+    expect(names(s.store)).toEqual(['subjects', 'home', 'placement-offer']);
+  });
+
+  it('is not offered when the subject has nothing to place (a world without lessons)', async () => {
+    const noLessons = createTestPack(
+      'd',
+      undefined,
+      makeContentSource({ catalog: createTestContent('d').catalog?.() }),
+    );
+    const app = createAppServices(
+      [
+        createTestEntry(createTestPack('a', undefined, createTestContent('a'))),
+        createTestEntry(noLessons),
+      ],
+      APP,
+      createMemoryStorage(),
+    );
+    const store = createAppStore(await app.activate('a'));
+    const profile = await createProfile(store.getState().services.deps, 'Mia', 'fox');
+    await store.getState().selectProfileAndHome(profile.id);
+
+    await store.getState().selectSubject('d');
+    expect(names(store)).toEqual(['subjects', 'home']);
+  });
+
+  it('a one-subject app never offers it from selectSubject', async () => {
+    const pack = createTestPack('solo', undefined, createTestContent('solo'));
+    const app = createAppServices([createTestEntry(pack)], APP, createMemoryStorage());
+    const store = createAppStore(await app.activate('solo'));
+    const profile = await createProfile(store.getState().services.deps, 'Mia', 'fox');
+    await store.getState().selectProfileAndHome(profile.id);
+
+    await store.getState().selectSubject('solo');
+
+    expect(names(store)).toEqual(['subjects', 'home']);
   });
 });

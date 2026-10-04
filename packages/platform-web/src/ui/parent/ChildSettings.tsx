@@ -18,7 +18,7 @@ import {
 } from '@learn/platform-core';
 import { exportBackup } from '@learn/platform-core/backup';
 import { usePack } from '../../app/subject.ts';
-import type { ParentPanels } from '../../app/subject.ts';
+import type { ParentPanels, ParentSettingsProps } from '../../app/subject.ts';
 import { useAppStore, useServices } from '../../app/store.ts';
 import { sendBackupToOtherDevice } from '../../adapters/share-backup.ts';
 import { AVATARS, avatarBackground } from '../art/avatar-meta.ts';
@@ -40,6 +40,7 @@ import {
   PARENT_PRIMARY_BUTTON,
   PARENT_SECONDARY_BUTTON,
 } from './parent-styles.ts';
+import { SubjectChips, SubjectScopeProvider } from './subject-scope.tsx';
 import { UnlockPanel } from './UnlockPanel.tsx';
 
 function AvatarPicker({ onPick }: { readonly onPick: (avatar: string) => void }): JSX.Element {
@@ -297,6 +298,17 @@ function ToggleRow({
   );
 }
 
+/** The subject's own settings chips (chess: computer level), for the subject of the nearest `SubjectScopeProvider`; nothing
+ * until its parent panels load, or for a subject without any. */
+function SubjectSettingsPanel(props: ParentSettingsProps): JSX.Element | null {
+  const pack = usePack();
+  const { value: parentPanel } = useAsync(
+    () => pack.loadParent?.() ?? Promise.resolve<ParentPanels>({}),
+    [pack],
+  );
+  return parentPanel?.SettingsPanel ? <parentPanel.SettingsPanel {...props} /> : null;
+}
+
 export interface ChildSettingsScreenProps {
   readonly profile: Profile;
   readonly onBack: () => void;
@@ -311,12 +323,10 @@ export function ChildSettingsScreen({
 }: ChildSettingsScreenProps): JSX.Element {
   const { t } = useTranslation();
   const services = useServices();
-  const pack = usePack();
   const refreshProfiles = useAppStore((state) => state.refreshProfiles);
-  const { value: parentPanel } = useAsync(
-    () => pack.loadParent?.() ?? Promise.resolve<ParentPanels>({}),
-    [pack],
-  );
+  const activeSubjectId = useAppStore((state) => state.subjectId);
+  // Which subject's settings panel and unlock list show (several subjects: chips; `docs/multi-subject.md` D11).
+  const [subjectId, setSubjectId] = useState(activeSubjectId);
 
   const [nickname, setNickname] = useState(profile.nickname);
   const [renaming, setRenaming] = useState(false);
@@ -413,6 +423,8 @@ export function ChildSettingsScreen({
         icon={<ChevronLeftIcon />}
         title={t('parent.settings-title', { name: profile.nickname })}
       />
+
+      <SubjectChips value={subjectId} onChange={setSubjectId} />
 
       <ParentSection>
         <div className="flex items-center gap-3">
@@ -572,18 +584,23 @@ export function ChildSettingsScreen({
             }}
           />
 
-          {parentPanel?.SettingsPanel && (
-            <parentPanel.SettingsPanel
+          <SubjectScopeProvider subjectId={subjectId} fallback={null}>
+            <SubjectSettingsPanel
               profileId={profile.id}
               settings={settings}
               patchSettings={patchSettings}
             />
-          )}
+          </SubjectScopeProvider>
         </ParentSection>
       )}
 
       <ParentSection title={t('parent.unlock-lessons-worlds')}>
-        <UnlockPanel profileId={profile.id} />
+        <SubjectScopeProvider
+          subjectId={subjectId}
+          fallback={<p className={PARENT_NOTE}>{t('parent.unlock-lessons-worlds')}…</p>}
+        >
+          <UnlockPanel profileId={profile.id} />
+        </SubjectScopeProvider>
       </ParentSection>
 
       <ParentSection title={t('parent.backup-heading')}>
