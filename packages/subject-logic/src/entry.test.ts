@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { logicCore } from './core.ts';
+import { logicCore } from './core/logic-core.ts';
 import { logicEntry } from './entry.ts';
 
 /** The module specifiers `file` (relative to `src/`) imports or re-exports statically; a `import()` call is not one. */

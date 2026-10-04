@@ -1,9 +1,6 @@
 /**
- * `@learn/subject-logic/testing`: the card kit's exercise-solving drivers. Never imported from the package barrel, so none of
- * it reaches the app bundle.
+ * `@learn/subject-logic/testing`: the exercise-solving drivers (they play every kind of `LOGIC_KINDS` through one registry). Never
+ * imported from the package barrel, so none of it reaches the app bundle.
  */
-export {
-  CARD_SOLUTIONS,
-  cardSolutionOf,
-} from '@learn/platform-core/domain/exercise/kinds/cards/solutions';
-export { cardStars, playCardSolution, playCardWrongThenSolve } from '@learn/platform-core/testing';
+export { LOGIC_SOLUTIONS, solutionOf, type AnyLogicSolution } from '../kinds/solutions.ts';
+export { play, playSolution, playWrongThenSolve, starsFor } from './play.ts';

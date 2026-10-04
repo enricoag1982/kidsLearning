@@ -1,7 +1,6 @@
 tracks:
-  basics: Basics
+  puzzles: Puzzle Paths
 worlds:
-  first-steps: First steps
+  pattern-pond: Pattern Pond
 ranks:
-  starter: Starter
-  explorer: Explorer
+  thinker: Thinker

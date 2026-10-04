@@ -1,0 +1,144 @@
+{
+ "version": 1,
+ "lessons": [
+  {
+   "id": "fx-first",
+   "world": "pattern-pond",
+   "order": 1,
+   "concept": "fx-first",
+   "character": "panda",
+   "titleKey": "lessons:fx-first.title",
+   "storyKey": "lessons:fx-first.story",
+   "demo": {
+    "textKey": "lessons:fx-first.demo",
+    "prompt": {
+     "emoji": "🐸🐟🐸🐟🐸🐟"
+    }
+   },
+   "guided": [
+    {
+     "id": "fx-g1",
+     "concept": "fx-first",
+     "textKey": "lessons:fx-g1",
+     "prompt": {
+      "emoji": "🐸🐟🐸🐟🐸"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "frog",
+       "emoji": "🐸"
+      },
+      {
+       "id": "fish",
+       "emoji": "🐟"
+      }
+     ],
+     "answer": "fish"
+    },
+    {
+     "id": "fx-g2",
+     "concept": "fx-first",
+     "textKey": "lessons:fx-g2",
+     "type": "order",
+     "items": [
+      {
+       "id": "two",
+       "emoji": "🐟🐟"
+      },
+      {
+       "id": "three",
+       "emoji": "🐟🐟🐟"
+      },
+      {
+       "id": "one",
+       "emoji": "🐟"
+      }
+     ],
+     "answer": [
+      "one",
+      "two",
+      "three"
+     ]
+    }
+   ],
+   "exercises": [
+    {
+     "id": "fx-01",
+     "concept": "fx-first",
+     "textKey": "lessons:fx-01",
+     "prompt": {
+      "emoji": "🐸🐸🐟🐸🐸🐟🐸🐸"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "frog",
+       "emoji": "🐸"
+      },
+      {
+       "id": "fish",
+       "emoji": "🐟"
+      }
+     ],
+     "answer": "fish"
+    },
+    {
+     "id": "fx-02",
+     "concept": "fx-first",
+     "textKey": "lessons:fx-02",
+     "type": "order",
+     "items": [
+      {
+       "id": "three",
+       "emoji": "🐸🐸🐸"
+      },
+      {
+       "id": "one",
+       "emoji": "🐸"
+      },
+      {
+       "id": "four",
+       "emoji": "🐸🐸🐸🐸"
+      },
+      {
+       "id": "two",
+       "emoji": "🐸🐸"
+      }
+     ],
+     "answer": [
+      "one",
+      "two",
+      "three",
+      "four"
+     ]
+    },
+    {
+     "id": "fx-03",
+     "concept": "fx-first",
+     "textKey": "lessons:fx-03",
+     "prompt": {
+      "emoji": "🐸🐟🦆🐸🐟🦆🐸🐟"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "frog",
+       "emoji": "🐸"
+      },
+      {
+       "id": "fish",
+       "emoji": "🐟"
+      },
+      {
+       "id": "duck",
+       "emoji": "🦆"
+      }
+     ],
+     "answer": "duck"
+    }
+   ]
+  }
+ ],
+ "minigames": []
+}

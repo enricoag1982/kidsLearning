@@ -3,14 +3,15 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { logicContent } from './content.ts';
 import { compileAll } from '@learn/platform-content/compile-all';
+import { contentRoot } from '../../scripts/content-root.ts';
+import { logicContent } from './logic-content.ts';
 
-const packageDir = join(dirname(fileURLToPath(import.meta.url)), '..', 'content');
-const compiled = compileAll(logicContent, packageDir);
+const root = contentRoot(join(dirname(fileURLToPath(import.meta.url)), '..', '..'));
+const compiled = compileAll(logicContent, root);
 
 const UPDATE_HINT =
-  'pnpm --filter @learn/subject-logic exec vitest run src/content-snapshot.test.ts -u, then review the diff';
+  'pnpm --filter @learn/subject-logic exec vitest run src/content/content-snapshot.test.ts -u, then review the diff';
 
 /** Pretty-printed (`JSON.stringify(v, null, 1)`, one-space indent) so a content diff stays reviewable. */
 function pretty(value: unknown): string {

@@ -4,11 +4,12 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/core.ts",
+    ".": "./src/logic.ts",
     "./entry": "./src/entry.ts",
     "./testing": "./src/testing/index.ts",
-    "./content": "./src/content.ts",
+    "./content": "./src/content/logic-content.ts",
     "./web/*": "./src/web/*",
+    "./kinds/*": "./src/kinds/*",
     "./dist/*": "./dist/*"
   },
   "scripts": {
@@ -22,6 +23,7 @@
     "@learn/platform-web": "workspace:*"
   },
   "peerDependencies": {
+    "@playwright/test": "~1.63.0",
     "i18next": "^26.4.2",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
@@ -30,6 +32,7 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
+    "@playwright/test": "~1.63.0",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",
     "@types/react": "^19.3.0",
@@ -43,5 +46,10 @@
     "vite": "^8.3.0",
     "zod": "^4.6.5",
     "zustand": "^5.0.15"
+  },
+  "peerDependenciesMeta": {
+    "@playwright/test": {
+      "optional": true
+    }
   }
 }
