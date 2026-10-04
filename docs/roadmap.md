@@ -125,8 +125,8 @@ M5 run order (2026-09-25): `m5.1` ∥ `m5.4` → `m5.2` ∥ `m5.5` → `m5.3` la
 | M9 | Post-v4 owner requests (done) | Real piece names (`m9.1`), release `v4.1.0` (`m9.2`) |
 | M10 | Follow-ups F4–F9 (done) | §3.2: Bear strength + time-cut safety, platform cleanup, check ring in series rounds, README screenshots (`m10.1`–`m10.5`) |
 | M11 | Multi-subject app (`kidsLearning` v1.0) | One app hosting chess + math demo; generic platform kit (card kinds, template, `pnpm new-subject`); `docs/multi-subject.md` §4 (`m11.1`–`m11.9`), done 2026-10-04 |
-| M12 | Coding (v1.1) | Research + plan in `docs/subjects/coding/`, then iterations |
-| M13 | Math (v1.2) | Full curriculum on the math demo; `docs/subjects/math/` |
+| M12 | Coding (`kidsLearning` v1.1) | Research + plan in `docs/subjects/coding/`; grid board, coding core / web, W1–W3 (13 lessons, 3 world bosses); `m12.1`–`m12.7`, done 2026-10-04 |
+| M13 | Math (v1.2) | W1–W3 (16 lessons, generated exercises, misconception reasons, duel boss); `docs/subjects/math/plan.md` §6 (`m13.1`–`m13.15`) |
 | M14 | Logic (v1.3) | `docs/subjects/logic/` |
 | M15 | Store apps | Capacitor Android + iPad, native storage, store listings (was M11) |
 | M16 | Chess paths | Openings, Tactics, Checkmates & Endgames; Lichess puzzle import; path badges (was M12) |

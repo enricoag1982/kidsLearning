@@ -10,10 +10,10 @@ Related: [validation.md](validation.md), [roadmap.md](roadmap.md), [../CONTRIBUT
 | Version bump | `apps/kids-learning/package.json` `version` set to the release version (`1.0.0` for MVP); shown in the parent area (`__APP_VERSION__`, injected at build by `defineAppConfig`'s `define`, `packages/platform-web/build/app-config.ts` — see `docs/architecture.md` §11) |
 | Validation log row | `docs/validation.md` has a row for this iteration's tag (checks run, notes) — the tag workflow refuses to create a tag without one |
 | Privacy page | Parent area → Privacy renders; link from the first-run parent password screen opens it; `docs/privacy-policy.md` matches the in-app text |
-| Offline test | Built app (`pnpm build && pnpm --filter @learn/kids-learning preview`), airplane mode / devtools offline, on an iPad and an Android tablet: reload works, a chess lesson and a math lesson play, computer opponent still moves |
+| Offline test | Built app (`pnpm build && pnpm --filter @learn/kids-learning preview`), airplane mode / devtools offline, on an iPad and an Android tablet: reload works, a chess lesson, a math lesson and a coding lesson play, computer opponent still moves |
 | Cold start | `apps/kids-learning/e2e/performance.spec.ts`'s timing (CPU-throttled, tablet) — logged in `docs/validation.md`, target < 3 s local / < 5 s CI |
 | Data backup / restore | Parent area → Backup: export a profile, import it back (or on a second device), progress matches per subject; a `chess-kids` backup from Chess for Kids imports as chess (kidsLearning v1.0+) |
-| Manual smoke | One full lesson + one mini-game + one full game vs computer, a switch Chess → Math → Chess (each keeps its own stars), on a real tablet if available |
+| Manual smoke | One full lesson + one mini-game + one full game vs computer, a switch Chess → Math → Coding → Chess (each keeps its own stars), one coding program run end to end with sound, on a real tablet if available |
 | README screenshots | Retake when a shown screen changes (1024×768, production build, seeded mid-progress profile) |
 
 ## 2. Tagging `v1.0.0`
