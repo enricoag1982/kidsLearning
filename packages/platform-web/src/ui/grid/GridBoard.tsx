@@ -74,7 +74,7 @@ export interface GridBoardProps {
   readonly onCellTap?: (cell: Cell) => void;
   /** Accessible name per cell (replaces the default, so also its given / notes / clue parts); default "row R, column C" + its
    * content labels (rock, star, flag, item label, actor label, filled, crossed out, highlight), then "given", "notes 1 and 4",
-   * and the column and row "clue …". */
+   * "column clue …" and "row clue …". */
   readonly cellLabel?: (cell: Cell) => string;
   /** Box size for thick borders between boxes (sudoku 4 × 4 → `{ cols: 2, rows: 2 }`; 6 × 6 → `{ cols: 3, rows: 2 }`). */
   readonly boxes?: { readonly cols: number; readonly rows: number };
@@ -134,7 +134,7 @@ function defaultCellLabel(
   if (highlight) parts.push(HIGHLIGHT_NAME[highlight]);
   if (content?.item?.style === 'given') parts.push('given');
   if (marks.length > 0) parts.push(notesLabel(marks));
-  for (const clue of clues) parts.push(`clue ${clue}`);
+  parts.push(...clues);
   return parts.join(', ');
 }
 
@@ -397,9 +397,12 @@ export function GridBoard({
       const content = cells?.[key];
       const highlight = highlights?.[key];
       const marks = visibleMarks(content, showMarks);
-      const clues = [edgeLabels?.top?.[x], edgeLabels?.left?.[y]]
-        .map((clue) => clueLines(clue ?? '').join(' '))
-        .filter((clue) => clue !== '');
+      const columnClue = clueLines(edgeLabels?.top?.[x] ?? '').join(' ');
+      const rowClue = clueLines(edgeLabels?.left?.[y] ?? '').join(' ');
+      const clues = [
+        ...(columnClue === '' ? [] : [`column clue ${columnClue}`]),
+        ...(rowClue === '' ? [] : [`row clue ${rowClue}`]),
+      ];
       const name = cellLabel
         ? cellLabel(cell)
         : defaultCellLabel(cell, content, actor, highlight, marks, clues);

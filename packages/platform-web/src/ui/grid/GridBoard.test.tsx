@@ -619,19 +619,21 @@ describe('GridBoard edge labels', () => {
   it('adds the column clue, then the row clue, to every cell name; a blank label adds none', () => {
     render(<GridBoard {...board({ edgeLabels: clues })} />);
     expect(cellElement(0, 0).getAttribute('aria-label')).toBe(
-      'row 1, column 1, clue 1 1, clue 1 1 1',
+      'row 1, column 1, column clue 1 1, row clue 1 1 1',
     );
-    expect(cellElement(1, 2).getAttribute('aria-label')).toBe('row 3, column 2, clue 3, clue 1');
+    expect(cellElement(1, 2).getAttribute('aria-label')).toBe(
+      'row 3, column 2, column clue 3, row clue 1',
+    );
     expect(cellElement(2, 3).getAttribute('aria-label')).toBe('row 4, column 3');
-    expect(cellElement(2, 4).getAttribute('aria-label')).toBe('row 5, column 3, clue 5');
-    expect(cellElement(3, 3).getAttribute('aria-label')).toBe('row 4, column 4, clue 5');
+    expect(cellElement(2, 4).getAttribute('aria-label')).toBe('row 5, column 3, row clue 5');
+    expect(cellElement(3, 3).getAttribute('aria-label')).toBe('row 4, column 4, column clue 5');
   });
 
   it('works with one edge only', () => {
     render(<GridBoard {...board({ edgeLabels: { left: ['2', '1', '1', '1', '4'] } })} />);
     expect(screen.queryByTestId('grid-lane-top')).toBeNull();
     expect(screen.getByTestId('grid-lane-left')).toBeTruthy();
-    expect(cellElement(4, 0).getAttribute('aria-label')).toBe('row 1, column 5, clue 2');
+    expect(cellElement(4, 0).getAttribute('aria-label')).toBe('row 1, column 5, row clue 2');
   });
 
   it('adds no lane without labels (a coding or math board)', () => {
@@ -654,7 +656,7 @@ describe('GridBoard edge labels', () => {
       />,
     );
     expect(cellElement(0, 0).getAttribute('aria-label')).toBe(
-      'row 1, column 1, 4, selected, given, notes 1, clue 2',
+      'row 1, column 1, 4, selected, given, notes 1, column clue 2',
     );
   });
 
