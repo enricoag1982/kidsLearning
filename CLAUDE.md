@@ -21,6 +21,7 @@ Offline multi-subject learning app for children aged 8–9 (chess, math; coding 
 | `docs/multi-subject.md` | v1.0 plan: one app, many subjects; decisions D1–D18, data scope, M11 iterations |
 | `docs/adding-a-subject.md` | How to add a subject: `pnpm new-subject`, card kinds YAML, going further, ship checklist |
 | `docs/new-subjects.md` | Subject ideas and ranking (coding, math, logic, games, …), product shape |
+| `docs/subjects/coding/plan.md` | Coding v1.1 plan: principles, curriculum W1–W3, kinds, platform needs, M12 iterations (`research.md` beside it) |
 | `docs/subjects/chess/teaching-process.md` | Chess pedagogy: principles, learning loop, phases, mini-games |
 | `docs/subjects/chess/curriculum.md` | Chess lesson list: Basics (worlds 1–5) + 3 paths, mini-game catalogue |
 | `docs/app-structure.md` | Modes, profiles, navigation, flows, progression, theme, parent code, time controls, MVP |
