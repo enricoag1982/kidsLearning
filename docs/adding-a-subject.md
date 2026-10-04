@@ -43,9 +43,9 @@ Layout: `tracks.yaml` (worlds, ranks), `badges.yaml`, `lessons/<world>/<lesson>.
 | Field | Meaning |
 |---|---|
 | `id`, `type`, `text?` | kebab id; kind; text key (default `id`) |
-| `prompt?` | `{ emoji?, big?, image? }`, at least one; `big` ≤ 16 chars (`big: 3` reads as text); `image` = id in `art` |
+| `prompt?` | `{ emoji?, big?, image?, shapes? }`, at least one; `big` ≤ 16 chars (`big: 3` reads as text); `image` = id in `art`; `shapes` = a row of shape tokens (below) |
 | `easier?` | id of a lesson `variants` entry; scored exercises only; each variant is referenced once |
-| item (option / order item) | `{ id, text?, emoji?, big?, image? }`, at least one of the four |
+| item (option / order item) | `{ id, text?, emoji?, big?, image?, shape? }`, at least one of the five |
 
 | `type` | Fields (defaults) | Verify rules |
 |---|---|---|
@@ -60,6 +60,37 @@ Layout: `tracks.yaml` (worlds, ranks), `badges.yaml`, `lessons/<world>/<lesson>.
 - { id: q3, type: number-entry, prompt: { big: 7 + 5 }, answer: 12 }
 - { id: q4, type: order, items: [{ id: b, big: B }, { id: a, big: A }], answer: [a, b] }
 ```
+
+### Shapes
+
+Drawn tokens (kind × colour × size × count) for patterns, odd-one-out and sorting; on an item (`shape`) or as a prompt row (`shapes`).
+
+| Field | Values |
+|---|---|
+| `kind` | `circle` `square` `triangle` `star` `heart` `diamond` |
+| `colour` | `red` `blue` `yellow` `green` `purple` `orange` |
+| `size?` | `tiny` `small` `medium` `big` (default) `huge` (drawing fills 0.5 / 0.62 / 0.75 / 0.88 / 1 of the box) |
+| `count?` | 1–9 (default 1): a cluster of at most 3 × 3 |
+
+```yaml
+- id: next-shape                      # pattern row: a token or `gap` (a dashed "?" box)
+  type: choice
+  prompt:
+    shapes: [{ kind: circle, colour: red }, { kind: square, colour: blue }, { kind: circle, colour: red }, gap]
+  options:
+    - { id: a, shape: { kind: square, colour: blue } }
+    - { id: b, shape: { kind: triangle, colour: yellow, size: small, count: 3 } }
+  answer: a
+```
+
+| Rule | Where | Detail |
+|---|---|---|
+| Row | verify | 1–8 tokens, at most one `gap` |
+| Colour-blind | verify, one exercise | two tokens (items and prompt row together) that differ only in colour, the colours one of red–green, green–orange, blue–purple (`shape-colours.ts`) → issue; change the kind, size or count too |
+| Facts | core | `shapeFacts(shape)` → `['kind:circle', 'colour:red', 'size:big', 'count:1']` (defaults filled in), for a kind's rules and a template's `check` |
+| Labels | web | the card / row carries the name, tokens are `aria-hidden`: `cardItemLabel` = text, big, shape, emoji, id; `shapeLabel` → "3 small red circles" (size word omitted for `big`, number for one); row → "Row of shapes: red circle, blue square, red circle, a gap"; words in `cards.shape.*` (platform `common.yaml`); never narrated |
+
+Colours are `--color-shape-*` in `theme.css` (one light theme), drawn under a dark `--color-ink` outline.
 
 | File | Shape |
 |---|---|
