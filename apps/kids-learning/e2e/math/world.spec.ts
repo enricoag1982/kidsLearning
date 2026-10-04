@@ -11,6 +11,7 @@ import {
   findLesson,
   findMiniGame,
   journeyNodeName,
+  openJourneyWorld,
   playLesson,
   playSeries,
   readMiniGameProgress,
@@ -89,6 +90,8 @@ test.describe('World 1: Number Meadow', () => {
     await page.getByRole('button', { name: worldBossNodeName(boss, 'available') }).click();
     await playSeries(page, boss);
     await page.getByRole('button', { name: contentText('play.back-to-journey') }).click();
+    // World 1 is finished, so the Journey moves on to World 2: the won boss node is on World 1's own tab.
+    await openJourneyWorld(page, 1, 'number-meadow');
     await expect(page.getByRole('button', { name: worldBossNodeName(boss, 'won') })).toBeVisible();
 
     expect(await readMiniGameProgress(page, 'number-train')).toMatchObject({ plays: 1, wins: 1 });

@@ -22,6 +22,7 @@ import { modeE2EOf } from '@learn/subject-math/web/modes/e2e-registry.ts';
 // Node's ESM loader (specs run straight under Playwright, outside Vite) requires this attribute for
 // a JSON import.
 import rawContent from '@learn/subject-math/dist/content.json' with { type: 'json' };
+import rawTracks from '@learn/subject-math/dist/tracks.json' with { type: 'json' };
 import en from '@learn/subject-math/dist/locales/en.json' with { type: 'json' };
 import { getSoleProfileId, withAppStorage } from '../kit/storage.ts';
 
@@ -41,6 +42,24 @@ export const {
 // The content build validates this shape (invalid content fails `pnpm build`), so this is a type
 // conversion, not a runtime check.
 const content = rawContent as unknown as MathContent;
+
+/** World id -> its order in the main track (World 1 Number Meadow, World 2 Mental Math Mountain). */
+const worldOrder = new Map(
+  (
+    rawTracks as unknown as {
+      tracks: readonly { worlds: readonly { id: string; order: number }[] }[];
+    }
+  ).tracks
+    .flatMap((track) => track.worlds)
+    .map((world) => [world.id, world.order] as const),
+);
+
+/** The lessons of one world in Journey order. */
+export function worldLessons(worldId: string): readonly MathLesson[] {
+  return content.lessons
+    .filter((lesson) => lesson.world === worldId)
+    .sort((a, b) => a.order - b.order);
+}
 
 export function findLesson(id: string): MathLesson {
   const lesson = content.lessons.find((entry) => entry.id === id);
@@ -74,9 +93,13 @@ function escapeRegExp(text: string): string {
  * title, so no two nodes share a label).
  */
 export function journeyNodeName(lesson: MathLesson, status: 'current' | 'locked'): RegExp {
+  // The first lesson of a character is the first one of its first world (lesson orders restart in every world).
   const firstOfCharacter = [...content.lessons]
     .filter((entry) => entry.character === lesson.character)
-    .sort((a, b) => a.order - b.order)[0];
+    .sort(
+      (a, b) =>
+        (worldOrder.get(a.world) ?? 0) - (worldOrder.get(b.world) ?? 0) || a.order - b.order,
+    )[0];
   const name =
     MATH_CHARACTERS[lesson.character] !== undefined && firstOfCharacter?.id === lesson.id
       ? `${escapeRegExp(contentText(`characters:${lesson.character}.name`))} the .+`
@@ -86,6 +109,20 @@ export function journeyNodeName(lesson: MathLesson, status: 'current' | 'locked'
     status: escapeRegExp(contentText(`journey:ui.status-${status}`)),
   });
   return new RegExp(`^${pattern}$`);
+}
+
+/**
+ * Opens the Journey's tab of a world ("2 Mental Math Mountain": its number and title). The Journey opens on the world the child is in;
+ * once that world is finished it moves on to the next one (or, when every world is done, back to the first), so a finished world's boss
+ * node is looked up on its own tab.
+ */
+export async function openJourneyWorld(page: Page, order: number, worldId: string): Promise<void> {
+  await page
+    .getByRole('button', {
+      name: `${String(order)} ${contentText(`journey:worlds.${worldId}`)}`,
+      exact: true,
+    })
+    .click();
 }
 
 /** Accessible name of the world boss's Journey node for `status`. */
