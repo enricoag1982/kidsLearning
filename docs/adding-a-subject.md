@@ -105,6 +105,7 @@ Colours are `--color-shape-*` in `theme.css` (one light theme), drawn under a da
 | Own exercise kind | core kind + `solution` + content kind + UI + e2e driver, registered in the subject's registries; type dispatch only via registries (`dispatchGuard`) | `subject-chess/src/kinds/`, `subject-coding/src/kinds/` |
 | Own mini-game mode | mode def + content + UI | `subject-chess/src/modes/` |
 | Small two-player game against a bot | the platform's opt-in `duel` mode: a `TurnGame` + a board (§7) | `platform-core/src/testing/take-away-game.ts`, card fixture |
+| Sort cards into boxes (a row, a Carroll 2 × 2, a Venn) | the platform's opt-in `group` kind: add it to the four registries (§8) | card fixture lesson `sort-up` |
 | Routes, home tiles, store slice, parent panels, surfaces, `characterArt` | optional `SubjectWeb` fields | `subject-chess/src/web/chess-pack.ts` |
 | Profile settings | own `SubjectSettingsSlot`; field names unique across subjects | chess `computerLevel` |
 | Mix | `createCardCore({ notes })`, `characterColor`; start from `subject-coding` (card kit + own kinds) for a hand-built pack | `subject-coding/` |
@@ -239,3 +240,63 @@ hint: take-away-hint         # optional text key; default "Look for a move that 
 - Bot: a best move, unless `services.deps.random` draws under the level's mistake rate (then a random legal move); a random legal move when losing. It answers after 900 ms (150 ms with reduced motion).
 - Voice: bounded set (`duelVoiceTemplates`): `boss.duel.your-turn`, `.bot-turn` (per distinct bot name), `.won`, `.lost`, `.draw`, the hint line (platform or each game's own), plus the goal text; `pnpm voice:generate` picks them up.
 - Reference: `packages/platform-core/src/testing/take-away-game.ts`, `packages/platform-web/src/testing/take-away-board.tsx`, `card-test-entry.tsx`; tests `modes/duel/DuelStep.test.tsx`, `e2e.test.tsx`.
+
+## 8. Opt-in `group` kind
+
+Sort cards into boxes: tap a card, then the box it goes in. Not in `CARD_KINDS`: a subject that does not register it pays nothing (no code, no voice line, no audio). The platform owns rules, hints, notes, stars, the UI and the e2e driver; the subject writes YAML and the box / axis texts.
+
+| Layout | Boxes | Box ids (`answer` values) | Use |
+|---|---|---|---|
+| `row` | `boxes`: 2–4, each `{ id, text? \| emoji? \| shape?, rule? }`; 2 × 2 under 480 px for 3–4 | your own ids | sort by one idea (colour, big / small) |
+| `carroll` | `axes`: 2 × `{ text, notText, rule? }`; columns = axis 1 (a), rows = axis 2 (b) | `a-b`, `a-not-b`, `not-a-b`, `not-a-not-b` | two yes / no ideas at once |
+| `venn` | `axes`: same; two overlapping circles (a, b) and the outside | `both`, `only-a`, `only-b`, `neither` | what fits both, one, neither |
+
+```yaml
+- id: sort-01                         # row: 3–8 items, `answer` = item id → box id
+  type: group
+  layout: row
+  boxes:
+    - { id: red, text: sort-red, rule: { all: ['colour:red'] } }
+    - { id: blue, text: sort-blue, rule: { all: ['colour:blue'] } }
+  items:
+    - { id: r-circle, shape: { kind: circle, colour: red } }
+    - { id: b-square, shape: { kind: square, colour: blue } }
+    - { id: r-triangle, shape: { kind: triangle, colour: red } }
+  answer: { r-circle: red, b-square: blue, r-triangle: red }
+- id: sort-02                         # carroll: colour (columns) × kind (rows)
+  type: group
+  layout: carroll
+  axes:
+    - { text: sort-red, notText: sort-not-red, rule: { all: ['colour:red'] } }
+    - { text: sort-circle, notText: sort-not-circle, rule: { all: ['kind:circle'] } }
+  items: [ ... ]                      # one card per cell at least
+  answer: { r-circle: a-b, r-square: a-not-b, b-circle: not-a-b, y-triangle: not-a-not-b }
+- id: sort-03                         # venn: same axes; `allowEmpty: true` lets `neither` stay empty
+  type: group
+  layout: venn
+  axes: [ ... ]
+  items: [ ... ]
+  answer: { b-square: both, r-square: only-a, b-triangle: only-b, y-circle: neither }
+```
+
+| Part | Detail |
+|---|---|
+| Items | `{ id, text?, emoji?, big?, image?, shape?, tags? }` (at least one of the five visuals); facts = `shapeFacts(shape)` (`kind:circle`, `colour:red`, `size:big`, `count:1`) + `tags` (`animal`, `can:fly`; kebab words, `key:value` or one word) |
+| Rule | `{ all?: [facts the card must have], none?: [facts it must not have] }`, at least one; a box rule picks a row box, an axis rule is the yes side ("Red"; the other side is "Not red") |
+| Verify (content build) | row: every box has a label (`text`, `emoji` or `shape`); layout fields match (`boxes` for row, `axes` for carroll / venn); item and box ids unique; `answer` names every item once and a box / zone of the layout; when rules exist, the rules put every card (exactly one box; both axes with a rule) where `answer` does; every box / zone holds ≥ 1 card (venn `neither` may be empty with `allowEmpty`); every text key resolves |
+| No rules | allowed: the `answer` alone decides and nothing is cross-checked; give rules whenever the facts are in the cards (the rule check is the author's guard against a wrong `answer`) |
+| Names (screen reader, e2e) | row: the box label; carroll: "Red, Not circle" (`cards.group.zone`); venn: "In both", "Only Red", "Only Circle", "Neither" (`cards.group.venn.*`); the drawn labels, headers and circles are `aria-hidden` |
+| Notes | wrong put: "Not this box. Check what the box wants."; carroll "Right column! Now check the row." / "Right row! Now check the column."; venn "Does it fit both circles, or just one?" / "Does it fit either circle?"; hints 1 "Look at what each box wants." (headers outlined), 2 "It does not go here." (a wrong box dimmed for the first unplaced card), 3 "Watch: it goes here." (places it); stars as `order` (error and hint cost) |
+
+Register the kind in the subject's four registries (the platform texts `cards.group.*` come with the platform bundle):
+
+| Registry | Add | Reference |
+|---|---|---|
+| Core | `createCardCore({ id, characters, notes: GROUP_NOTES })` and `kinds: { ...core.kinds, group: GROUP_KIND }` (from `@learn/platform-core`); tests / e2e solutions `{ ...CARD_SOLUTIONS, group: GROUP_SOLUTION }` | `platform-web/src/testing/card-test-entry.tsx` |
+| Content | `kinds: { ...CARD_KIND_CONTENT, group: GROUP_KIND_CONTENT }` (`@learn/platform-content/kinds/group/content`); the `series` schema built over those kinds (`createSeriesContent(createExerciseSchema(kinds, cardStimulus), …)`); `voiceTemplates` also calls `groupVoiceTemplates({ ...CARD_NOTES, ...GROUP_NOTES })` (`.../kinds/group/voice`; adds lines only for the layouts the content uses) | `platform-content/src/testing/card-fixture.ts` |
+| Web | `kinds: { ...web.kinds, group: GROUP_KIND_UI }` (`@learn/platform-web/kinds/group/ui.ts`) | `card-test-entry.tsx` |
+| e2e | `{ ...CARD_KIND_E2E, group: GROUP_KIND_E2E }` (`@learn/platform-web/kinds/group/e2e.ts`): selects the card in the pool by its label, presses the box by its name | `group/e2e.test.tsx` |
+
+Then run `pnpm voice:generate` and `pnpm voice:check` (the notes join the inventory) and the content review rule: one reading of each box text leads to the `answer`; no distractor cards.
+
+Reference: card fixture lesson `sort-up` (`platform-content/src/testing/card-subject/lessons/sorting/sort-up.yaml`: one exercise per layout); tests `platform-core/.../kinds/group/`, `platform-content/src/kinds/group/`, `platform-web/src/kinds/group/` (`ui`, `flow`, `e2e`, geometry).

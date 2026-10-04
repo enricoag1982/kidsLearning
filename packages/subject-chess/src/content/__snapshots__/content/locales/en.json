@@ -142,6 +142,25 @@
    "entry-label": "Your answer: {{value}}",
    "erase": "Delete",
    "false": "False",
+   "group": {
+    "boxes": "Boxes",
+    "hint-1": "Look at what each box wants.",
+    "hint-2": "It does not go here.",
+    "hint-3": "Watch: it goes here.",
+    "holds": "Holds: {{items}}",
+    "pool": "Cards to sort",
+    "venn": {
+     "both": "In both",
+     "neither": "Neither",
+     "only": "Only {{label}}"
+    },
+    "wrong": "Not this box. Check what the box wants.",
+    "wrong-column": "Right row! Now check the column.",
+    "wrong-outside": "Does it fit either circle?",
+    "wrong-overlap": "Does it fit both circles, or just one?",
+    "wrong-row": "Right column! Now check the row.",
+    "zone": "{{column}}, {{row}}"
+   },
    "hint-first-digit": "It starts with {{digit}}.",
    "hint-look": "Look closely.",
    "number-wrong": "Not that number. Try again!",
