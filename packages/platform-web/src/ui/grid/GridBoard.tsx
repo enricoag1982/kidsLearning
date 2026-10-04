@@ -8,6 +8,7 @@ import {
   LANE_FONT_PX,
   LANE_LINE_PX,
   LANE_PAD_PX,
+  LANE_WORD_GAP_PX,
   clueLines,
   laneSizes,
   useGridFit,
@@ -284,8 +285,11 @@ function ClueLane({
               className={`flex shadow-[inset_0_0_0_1px_var(--color-grid-line)] ${
                 top ? 'flex-col items-center justify-end pb-0.5' : 'items-center justify-end pr-2'
               }`}
+              style={top ? undefined : { columnGap: LANE_WORD_GAP_PX }}
             >
-              {top ? words.map((word, at) => <span key={at}>{word}</span>) : words.join(' ')}
+              {words.map((word, at) => (
+                <span key={at}>{word}</span>
+              ))}
             </div>
           );
         })}

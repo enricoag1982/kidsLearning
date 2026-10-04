@@ -472,3 +472,414 @@ describe('GridBoard fitting', () => {
     expect(group.style.width).toBe('');
   });
 });
+
+function stubSizedArea(width: number, height: number): void {
+  vi.stubGlobal(
+    'ResizeObserver',
+    class {
+      observe(): void {}
+      unobserve(): void {}
+      disconnect(): void {}
+    },
+  );
+  vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+    width,
+    height,
+    top: 0,
+    left: 0,
+    right: width,
+    bottom: height,
+    x: 0,
+    y: 0,
+    toJSON: () => ({}),
+  });
+}
+
+function boxEdgesOf(x: number, y: number): string | undefined {
+  return cellElement(x, y).dataset['boxEdges'];
+}
+
+describe('GridBoard box borders', () => {
+  it('has no box edge without `boxes`, and ignores a box size below 1', () => {
+    const { rerender } = render(<GridBoard {...board({ size: { cols: 4, rows: 4 } })} />);
+    for (const element of screen.getAllByTestId(/^grid-cell-/)) {
+      expect(element.dataset['boxEdges']).toBeUndefined();
+      expect(element.getAttribute('style')).toBeNull();
+    }
+    rerender(<GridBoard {...board({ size: { cols: 4, rows: 4 }, boxes: { cols: 0, rows: 2 } })} />);
+    expect(
+      screen.getAllByTestId(/^grid-cell-/).every((el) => el.dataset['boxEdges'] === undefined),
+    ).toBe(true);
+  });
+
+  it('marks a 4 x 4 sudoku (boxes 2 x 2) on both sides of the two inner lines, never on the outer frame', () => {
+    render(<GridBoard {...board({ size: { cols: 4, rows: 4 }, boxes: { cols: 2, rows: 2 } })} />);
+    const edges = [0, 1, 2, 3].map((y) => [0, 1, 2, 3].map((x) => boxEdgesOf(x, y) ?? '-'));
+    expect(edges).toEqual([
+      ['-', 'right', 'left', '-'],
+      ['bottom', 'right bottom', 'bottom left', 'bottom'],
+      ['top', 'top right', 'top left', 'top'],
+      ['-', 'right', 'left', '-'],
+    ]);
+    // Row 1 / column 1 of the outer frame: no cell reports an outer side.
+    expect(cellElement(0, 0).dataset['boxEdges']).toBeUndefined();
+    expect(cellElement(3, 3).dataset['boxEdges']).toBeUndefined();
+  });
+
+  it('marks a 6 x 6 sudoku with 3 x 2 boxes: one vertical line after column 3, horizontal lines after rows 2 and 4', () => {
+    render(<GridBoard {...board({ size: { cols: 6, rows: 6 }, boxes: { cols: 3, rows: 2 } })} />);
+    const withEdge = (edge: string): string[] =>
+      screen
+        .getAllByTestId(/^grid-cell-/)
+        .filter((element) => (element.dataset['boxEdges'] ?? '').split(' ').includes(edge))
+        .map((element) => element.dataset['testid']?.replace('grid-cell-', '') ?? '');
+    expect(withEdge('right')).toEqual(['2-0', '2-1', '2-2', '2-3', '2-4', '2-5']);
+    expect(withEdge('left')).toEqual(['3-0', '3-1', '3-2', '3-3', '3-4', '3-5']);
+    expect(withEdge('bottom')).toEqual([
+      '0-1',
+      '1-1',
+      '2-1',
+      '3-1',
+      '4-1',
+      '5-1',
+      '0-3',
+      '1-3',
+      '2-3',
+      '3-3',
+      '4-3',
+      '5-3',
+    ]);
+    expect(withEdge('top')).toEqual([
+      '0-2',
+      '1-2',
+      '2-2',
+      '3-2',
+      '4-2',
+      '5-2',
+      '0-4',
+      '1-4',
+      '2-4',
+      '3-4',
+      '4-4',
+      '5-4',
+    ]);
+  });
+
+  it('draws each box line once, 3 px dark, in the cell right of / below it; the rest stays 1 px', () => {
+    render(<GridBoard {...board({ size: { cols: 4, rows: 4 }, boxes: { cols: 2, rows: 2 } })} />);
+    const left = cellElement(1, 0).style.boxShadow;
+    const right = cellElement(2, 0).style.boxShadow;
+    // The left cell draws no right side, the right cell a 3 px dark left side; both keep the 1 px lines elsewhere.
+    expect(left).not.toContain('-1px 0 0 0');
+    expect(left).toContain('1px 0 0 0');
+    expect(right).toContain('3px 0 0 0');
+    expect(right).toContain('var(--color-ink)');
+    const below = cellElement(0, 2).style.boxShadow;
+    expect(below).toContain('0 3px 0 0');
+    expect(cellElement(0, 1).style.boxShadow).not.toContain('0 -1px 0 0');
+    // A cell with no box edge keeps the plain 1 px line of every other board.
+    expect(cellElement(0, 0).getAttribute('style')).toBeNull();
+  });
+
+  it('keeps the cell positions and count with or without boxes', () => {
+    render(<GridBoard {...board({ size: { cols: 6, rows: 6 }, boxes: { cols: 3, rows: 2 } })} />);
+    expect(screen.getAllByTestId(/^grid-cell-/)).toHaveLength(36);
+    expect(cellElement(3, 2).getAttribute('aria-label')).toBe('row 3, column 4');
+  });
+});
+
+describe('GridBoard edge labels', () => {
+  const clues = { top: ['1 1', '3', '', '5', '2'], left: ['1 1 1', '3', '1', '', '5'] };
+
+  it('draws a lane of labels on each edge, top words one under the other, hidden from assistive technology', () => {
+    render(<GridBoard {...board({ edgeLabels: clues })} />);
+    const top = screen.getByTestId('grid-lane-top');
+    const left = screen.getByTestId('grid-lane-left');
+    expect(top.getAttribute('aria-hidden')).toBe('true');
+    expect(left.getAttribute('aria-hidden')).toBe('true');
+    const topFirst = screen.getByTestId('grid-clue-top-0');
+    expect(Array.from(topFirst.querySelectorAll('span')).map((span) => span.textContent)).toEqual([
+      '1',
+      '1',
+    ]);
+    expect(screen.getByTestId('grid-clue-top-1').textContent).toBe('3');
+    expect(screen.getByTestId('grid-clue-top-2').textContent).toBe('');
+    // A left label's words stay on one line, as separate spans a gap apart.
+    const leftFirst = screen.getByTestId('grid-clue-left-0');
+    expect(Array.from(leftFirst.querySelectorAll('span')).map((span) => span.textContent)).toEqual([
+      '1',
+      '1',
+      '1',
+    ]);
+    expect(screen.getAllByTestId(/^grid-clue-top-/)).toHaveLength(5);
+    expect(screen.getAllByTestId(/^grid-clue-left-/)).toHaveLength(5);
+    expect(screen.queryAllByRole('img').every((cell) => !top.contains(cell))).toBe(true);
+  });
+
+  it('adds the column clue, then the row clue, to every cell name; a blank label adds none', () => {
+    render(<GridBoard {...board({ edgeLabels: clues })} />);
+    expect(cellElement(0, 0).getAttribute('aria-label')).toBe(
+      'row 1, column 1, clue 1 1, clue 1 1 1',
+    );
+    expect(cellElement(1, 2).getAttribute('aria-label')).toBe('row 3, column 2, clue 3, clue 1');
+    expect(cellElement(2, 3).getAttribute('aria-label')).toBe('row 4, column 3');
+    expect(cellElement(2, 4).getAttribute('aria-label')).toBe('row 5, column 3, clue 5');
+    expect(cellElement(3, 3).getAttribute('aria-label')).toBe('row 4, column 4, clue 5');
+  });
+
+  it('works with one edge only', () => {
+    render(<GridBoard {...board({ edgeLabels: { left: ['2', '1', '1', '1', '4'] } })} />);
+    expect(screen.queryByTestId('grid-lane-top')).toBeNull();
+    expect(screen.getByTestId('grid-lane-left')).toBeTruthy();
+    expect(cellElement(4, 0).getAttribute('aria-label')).toBe('row 1, column 5, clue 2');
+  });
+
+  it('adds no lane without labels (a coding or math board)', () => {
+    render(<GridBoard {...board({ edgeLabels: {} })} />);
+    expect(screen.queryByTestId('grid-lane-top')).toBeNull();
+    expect(screen.queryByTestId('grid-lane-left')).toBeNull();
+    expect(cellElement(0, 0).getAttribute('aria-label')).toBe('row 1, column 1');
+  });
+
+  it('puts the clue after every other part of the name', () => {
+    render(
+      <GridBoard
+        {...board({
+          edgeLabels: { top: ['2'] },
+          cells: {
+            '0,0': { item: { text: '4', label: '4', style: 'given' }, marks: ['1'] },
+          },
+          highlights: { '0,0': 'selected' },
+        })}
+      />,
+    );
+    expect(cellElement(0, 0).getAttribute('aria-label')).toBe(
+      'row 1, column 1, 4, selected, given, notes 1, clue 2',
+    );
+  });
+
+  it('lets cellLabel name the cell alone', () => {
+    render(
+      <GridBoard
+        {...board({ edgeLabels: { top: ['2'] }, cellLabel: () => 'square', cells: {} })}
+      />,
+    );
+    expect(cellElement(0, 0).getAttribute('aria-label')).toBe('square');
+  });
+
+  it('shrinks the cells so the lanes fit the same area', () => {
+    stubSizedArea(600, 400);
+    const { unmount } = render(<GridBoard {...board()} />);
+    // No lanes: (400 - 24) / 5 = 75.2 -> 75 px cells.
+    expect(screen.getByTestId('grid-board').style.getPropertyValue('--grid-cell')).toBe('75px');
+    unmount();
+
+    render(
+      <GridBoard
+        {...board({
+          edgeLabels: { top: ['1 1', '3', '', '5', '2'], left: ['1 1', '3', '1', '', '5'] },
+        })}
+      />,
+    );
+    const group = screen.getByTestId('grid-board');
+    // Lanes: top 2 lines * 22 + 8 = 52, left "1 1" = 2 chars * 11 + one 8 px gap + 16 = 46: min((600 - 24 - 46) / 5, (400 - 24 - 52) / 5) = 64.8 -> 64.
+    expect(group.style.getPropertyValue('--grid-cell')).toBe('64px');
+    expect(group.style.width).toBe(String(64 * 5 + 24 + 46) + 'px');
+    expect(group.style.height).toBe(String(64 * 5 + 24 + 52) + 'px');
+  });
+
+  it('sizes the top lane by its tallest label and the left lane by its longest', () => {
+    stubSizedArea(900, 900);
+    render(
+      <GridBoard
+        {...board({
+          edgeLabels: { top: ['1', '1 1 1', '2', '1', '1'], left: ['1', '1', '1', '1', '1 1 1'] },
+        })}
+      />,
+    );
+    const group = screen.getByTestId('grid-board');
+    // top 3 * 22 + 8 = 74, left "1 1 1" = 3 chars * 11 + two 8 px gaps + 16 = 65: (900 - 24 - 74) / 5 = 160.4 -> 160.
+    expect(group.style.getPropertyValue('--grid-cell')).toBe('160px');
+    expect(group.style.height).toBe(String(160 * 5 + 24 + 74) + 'px');
+    expect(group.style.width).toBe(String(160 * 5 + 24 + 65) + 'px');
+  });
+
+  it('keeps the cells at the same size when a lane is absent', () => {
+    stubSizedArea(600, 400);
+    render(<GridBoard {...board({ edgeLabels: { top: [], left: [] } })} />);
+    const group = screen.getByTestId('grid-board');
+    expect(group.style.getPropertyValue('--grid-cell')).toBe('75px');
+    expect(group.style.width).toBe('399px');
+  });
+});
+
+describe('GridBoard pencil marks', () => {
+  function marksOf(x: number, y: number): HTMLElement | null {
+    return screen.queryByTestId(`grid-marks-${String(x)}-${String(y)}`);
+  }
+
+  it('lays up to 4 marks in a 2 x 2 mini grid and 5 to 9 in a 3 x 3 one, in the order given', () => {
+    render(
+      <GridBoard
+        {...board({
+          cells: {
+            '0,0': { marks: ['1'] },
+            '1,0': { marks: ['1', '4'] },
+            '2,0': { marks: ['1', '2', '3', '4'] },
+            '3,0': { marks: ['1', '2', '3', '4', '5'] },
+            '4,0': { marks: ['1', '2', '3', '4', '5', '6', '7', '8', '9'] },
+          },
+        })}
+      />,
+    );
+    const columns = (x: number): string | undefined => marksOf(x, 0)?.style.gridTemplateColumns;
+    expect(columns(0)).toBe('repeat(2, minmax(0, 1fr))');
+    expect(columns(1)).toBe('repeat(2, minmax(0, 1fr))');
+    expect(columns(2)).toBe('repeat(2, minmax(0, 1fr))');
+    expect(columns(3)).toBe('repeat(3, minmax(0, 1fr))');
+    expect(columns(4)).toBe('repeat(3, minmax(0, 1fr))');
+    expect(marksOf(1, 0)?.textContent).toBe('14');
+    expect(
+      Array.from(marksOf(4, 0)?.querySelectorAll('span') ?? []).map((span) => span.textContent),
+    ).toEqual(['1', '2', '3', '4', '5', '6', '7', '8', '9']);
+  });
+
+  it('draws at most 9 marks and skips blank ones', () => {
+    render(
+      <GridBoard
+        {...board({
+          cells: {
+            '0,0': { marks: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '9', '9'] },
+            '1,0': { marks: ['', '3', ''] },
+          },
+        })}
+      />,
+    );
+    expect(marksOf(0, 0)?.querySelectorAll('span')).toHaveLength(9);
+    expect(marksOf(1, 0)?.textContent).toBe('3');
+    expect(marksOf(2, 0)).toBeNull();
+    expect(cellElement(0, 0).getAttribute('aria-label')).toBe(
+      'row 1, column 1, notes 1, 2, 3, 4, 5, 6, 7, 8 and 9',
+    );
+  });
+
+  it('keeps the marks out of the accessibility tree and names them "notes 1 and 4"', () => {
+    render(
+      <GridBoard
+        {...board({
+          cells: {
+            '0,0': { marks: ['1', '4'] },
+            '1,0': { marks: ['2'] },
+            '2,0': { marks: ['1', '2', '4'] },
+            '3,0': { marks: [] },
+          },
+        })}
+      />,
+    );
+    expect(marksOf(0, 0)?.getAttribute('aria-hidden')).toBe('true');
+    expect(cellElement(0, 0).getAttribute('aria-label')).toBe('row 1, column 1, notes 1 and 4');
+    expect(cellElement(1, 0).getAttribute('aria-label')).toBe('row 1, column 2, notes 2');
+    expect(cellElement(2, 0).getAttribute('aria-label')).toBe('row 1, column 3, notes 1, 2 and 4');
+    expect(cellElement(3, 0).getAttribute('aria-label')).toBe('row 1, column 4');
+    expect(marksOf(3, 0)).toBeNull();
+  });
+
+  it('sizes the digits to a quarter of the cell', () => {
+    render(<GridBoard {...board({ cells: { '0,0': { marks: ['1'] } } })} />);
+    expect(marksOf(0, 0)?.style.fontSize).toBe('calc(var(--grid-cell, 3rem) * 0.25)');
+  });
+
+  it('hides the marks, and their words in the name, when the cell is under 40 px', () => {
+    // (219 - 24) / 5 = 39 px cells.
+    stubSizedArea(219, 219);
+    const { unmount } = render(
+      <GridBoard {...board({ cells: { '0,0': { marks: ['1', '4'] } } })} />,
+    );
+    expect(screen.getByTestId('grid-board').style.getPropertyValue('--grid-cell')).toBe('39px');
+    expect(marksOf(0, 0)).toBeNull();
+    expect(cellElement(0, 0).getAttribute('aria-label')).toBe('row 1, column 1');
+    unmount();
+
+    // (224 - 24) / 5 = 40 px cells.
+    vi.restoreAllMocks();
+    stubSizedArea(224, 224);
+    render(<GridBoard {...board({ cells: { '0,0': { marks: ['1', '4'] } } })} />);
+    expect(screen.getByTestId('grid-board').style.getPropertyValue('--grid-cell')).toBe('40px');
+    expect(marksOf(0, 0)).not.toBeNull();
+    expect(cellElement(0, 0).getAttribute('aria-label')).toBe('row 1, column 1, notes 1 and 4');
+  });
+
+  it('draws the marks while the cell size is unknown', () => {
+    render(<GridBoard {...board({ cells: { '0,0': { marks: ['1'] } } })} />);
+    expect(marksOf(0, 0)).not.toBeNull();
+  });
+});
+
+describe('GridBoard given and entered digits', () => {
+  function digit(x: number, y: number): HTMLElement {
+    const element = within(cellElement(x, y)).getByText(/^\d$/);
+    return element;
+  }
+
+  it('shows a given digit bold in ink, with "given" in the name', () => {
+    render(
+      <GridBoard
+        {...board({ cells: { '0,0': { item: { text: '3', label: '3', style: 'given' } } } })}
+      />,
+    );
+    expect(digit(0, 0).className).toContain('font-bold');
+    expect(digit(0, 0).className).toContain('text-ink');
+    expect(digit(0, 0).closest('[data-style]')?.getAttribute('data-style')).toBe('given');
+    expect(cellElement(0, 0).getAttribute('aria-label')).toBe('row 1, column 1, 3, given');
+  });
+
+  it('shows an entered digit in the info colour and normal weight, no word in the name', () => {
+    render(
+      <GridBoard
+        {...board({ cells: { '1,0': { item: { text: '2', label: '2', style: 'entry' } } } })}
+      />,
+    );
+    expect(digit(1, 0).className).toContain('text-info');
+    expect(digit(1, 0).className).toContain('font-normal');
+    expect(digit(1, 0).className).not.toContain('font-bold');
+    expect(digit(1, 0).closest('[data-style]')?.getAttribute('data-style')).toBe('entry');
+    expect(cellElement(1, 0).getAttribute('aria-label')).toBe('row 1, column 2, 2');
+  });
+
+  it('keeps an item without a style as before: semibold ink, no data-style', () => {
+    render(<GridBoard {...board({ cells: { '2,0': { item: { text: '7', label: 'seven' } } } })} />);
+    expect(digit(2, 0).className).toContain('font-semibold');
+    expect(digit(2, 0).className).toContain('text-ink');
+    expect(digit(2, 0).closest('[data-style]')).toBeNull();
+    expect(cellElement(2, 0).getAttribute('aria-label')).toBe('row 1, column 3, seven');
+  });
+
+  it('keeps white digits on a filled cell whatever the style', () => {
+    render(
+      <GridBoard
+        {...board({
+          cells: {
+            '0,0': { tone: 'filled', item: { text: '1', label: '1', style: 'given' } },
+            '1,0': { tone: 'filled', item: { text: '2', label: '2', style: 'entry' } },
+          },
+        })}
+      />,
+    );
+    expect(digit(0, 0).className).toContain('text-white');
+    expect(digit(1, 0).className).toContain('text-white');
+  });
+
+  it('works in tap mode: a given digit is a named button too', () => {
+    render(
+      <GridBoard
+        {...board({
+          onCellTap: vi.fn(),
+          cells: { '0,0': { item: { text: '3', label: '3', style: 'given' } } },
+        })}
+      />,
+    );
+    expect(screen.getByRole('button', { name: 'row 1, column 1, 3, given' })).toBe(
+      cellElement(0, 0),
+    );
+  });
+});

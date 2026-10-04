@@ -14,10 +14,12 @@ export interface GridLanes {
 export const NO_LANES: GridLanes = { top: 0, left: 0 };
 
 /** Lane text metrics (px): an 18 px bold label on a 22 px line; a character is estimated wide (11 px) so a label never
- * overruns its lane; the pad is the room around the text, half of it the gap to the cells. */
+ * overruns its lane; words in a left label stand 8 px apart ("1 1" must not read as "11"); the pad is the room around the
+ * text, half of it the gap to the cells. */
 export const LANE_FONT_PX = 18;
 export const LANE_LINE_PX = 22;
 export const LANE_CHAR_PX = 11;
+export const LANE_WORD_GAP_PX = 8;
 export const LANE_PAD_PX = 8;
 
 /** The words of a clue label, one per line in a top lane ("1 1" is two lines); empty for a blank label. */
@@ -32,13 +34,17 @@ export function laneSizes(edgeLabels?: {
   readonly left?: readonly string[];
 }): GridLanes {
   const lines = Math.max(0, ...(edgeLabels?.top ?? []).map((label) => clueLines(label).length));
-  const chars = Math.max(
+  const text = Math.max(
     0,
-    ...(edgeLabels?.left ?? []).map((label) => Array.from(clueLines(label).join(' ')).length),
+    ...(edgeLabels?.left ?? []).map((label) => {
+      const words = clueLines(label);
+      const chars = words.reduce((sum, word) => sum + Array.from(word).length, 0);
+      return words.length === 0 ? 0 : chars * LANE_CHAR_PX + (words.length - 1) * LANE_WORD_GAP_PX;
+    }),
   );
   return {
     top: lines > 0 ? lines * LANE_LINE_PX + LANE_PAD_PX : 0,
-    left: chars > 0 ? chars * LANE_CHAR_PX + 2 * LANE_PAD_PX : 0,
+    left: text > 0 ? text + 2 * LANE_PAD_PX : 0,
   };
 }
 
