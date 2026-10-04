@@ -1,0 +1,30 @@
+# W2 lesson 4: add and take away 10 and 100 (one digit changes), and compensate with 9 and 99 (use the round number, then fix the 1).
+# Generated; seeds are stored, never change them. All symbols. `comp-easy` is a + 9 for `comp-minus-1` (a take-away of 99).
+id: mm-tens
+order: 4
+concept: mm-tens
+character: hedgehog
+demo:
+  prompt: { big: 46 + 99 }
+guided:
+  - id: tens-g
+    generate: { template: tens-hundreds, count: 1, seed: 5, params: { step: 10, op: '+' } }
+  - id: comp-g
+    generate: { template: compensate, count: 1, seed: 6, params: { near: 9, op: '+' } }
+exercises:
+  - id: tens-ten
+    generate: { template: tens-hundreds, count: 1, seed: 4, params: { step: 10, op: '-' } }
+  - id: tens-hundred
+    generate: { template: tens-hundreds, count: 1, seed: 2, params: { step: 100, op: '+' } }
+  - id: comp-nine
+    generate: { template: compensate, count: 1, seed: 2, params: { near: 9, op: '-' } }
+  - id: comp-ninety
+    generate: { template: compensate, count: 1, seed: 5, params: { near: 99, op: '+' } }
+  - id: comp-minus
+    easier: comp-easy-1
+    generate: { template: compensate, count: 1, seed: 2, params: { near: 99, op: '-' } }
+  - id: tens-gap
+    generate: { template: equals-balance, count: 1, seed: 15, params: { max: 20 } }
+variants:
+  - id: comp-easy
+    generate: { template: compensate, count: 1, seed: 3, params: { near: 9, op: '+' } }

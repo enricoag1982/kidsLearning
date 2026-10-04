@@ -65,8 +65,11 @@ describe('race-to-20.yaml', () => {
     }
   });
 
-  it('is an unlock of World 1’s last lesson, not a world boss (the track ends with Number Train; m13.14 makes Race to 20 the World 3 boss)', () => {
-    expect(shipped.tracks.tracks[0]?.worlds.map((world) => world.boss)).toEqual(['number-train']);
+  it('is an unlock of World 1’s last lesson, not a world boss (the worlds end with Number Train and Market Orders; m13.14 makes Race to 20 the World 3 boss)', () => {
+    expect(shipped.tracks.tracks[0]?.worlds.map((world) => world.boss)).toEqual([
+      'number-train',
+      'market-orders',
+    ]);
     expect(
       shipped.content.lessons.find((lesson) => lesson.id === 'pv-round')?.boss,
     ).toBeUndefined();

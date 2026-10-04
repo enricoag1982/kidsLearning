@@ -2,6 +2,8 @@ tracks:
   numbers: Number Adventures
 worlds:
   number-meadow: Number Meadow
+  mental-mountain: Mental Math Mountain
 ranks:
   counter: Counter
   builder: Builder
+  climber: Climber

@@ -100,14 +100,16 @@ export function sample<I extends ExerciseYamlBase>(
   throw new Error(`no sample of ${template} that fits the test`);
 }
 
-/** The instruction rules of every generated card (curriculum §4): at most 14 words, every `{{var}}` filled, a `big` of at most 16
- * characters. */
-export function wordingProblems(item: ExerciseYamlBase, text: string): string[] {
+/** The instruction rules of every generated card (curriculum §4): at most `maxWords` words (14; a story problem 20), every `{{var}}`
+ * filled, a `big` of at most 16 characters. */
+export function wordingProblems(item: ExerciseYamlBase, text: string, maxWords = 14): string[] {
   const problems: string[] = [];
   if (text === '' || text.includes('{{'))
     problems.push(`${item.id}: text "${text}" is empty or unfilled`);
   const words = text.split(/\s+/).filter((word) => word !== '');
-  if (words.length > 14) problems.push(`${item.id}: "${text}" has ${String(words.length)} words`);
+  if (words.length > maxWords) {
+    problems.push(`${item.id}: "${text}" has ${String(words.length)} words`);
+  }
   const bigs = JSON.stringify(item).matchAll(/"big":"([^"]*)"/g);
   for (const [, big] of bigs) {
     if ((big ?? '').length > 16) problems.push(`${item.id}: big "${big ?? ''}" is longer than 16`);
@@ -115,11 +117,13 @@ export function wordingProblems(item: ExerciseYamlBase, text: string): string[] 
   return problems;
 }
 
-/** Runs `solve` over seeds 0 … `SEEDS - 1` (one item each) and gathers every problem it and the build path report. */
+/** Runs `solve` over seeds 0 … `SEEDS - 1` (one item each) and gathers every problem it and the build path report (sentences of at most
+ * `maxWords` words). */
 export function overSeeds<I extends ExerciseYamlBase>(
   template: string,
   params: unknown,
   solve: (drawn: Drawn<I>, seed: number) => readonly string[],
+  maxWords = 14,
 ): { readonly problems: readonly string[]; readonly items: readonly Drawn<I>[] } {
   const problems: string[] = [];
   const items: Drawn<I>[] = [];
@@ -128,7 +132,7 @@ export function overSeeds<I extends ExerciseYamlBase>(
     problems.push(...issues);
     for (const one of drawn) {
       items.push(one);
-      problems.push(...wordingProblems(one.item, one.text), ...solve(one, seed));
+      problems.push(...wordingProblems(one.item, one.text, maxWords), ...solve(one, seed));
     }
   }
   return { problems: problems.slice(0, 10), items };

@@ -547,6 +547,7 @@
   },
   "ranks": {
    "builder": "Builder",
+   "climber": "Climber",
    "counter": "Counter"
   },
   "tracks": {
@@ -582,20 +583,78 @@
    "world-stars": "{{earned}} of {{max}} stars"
   },
   "worlds": {
+   "mental-mountain": "Mental Math Mountain",
    "number-meadow": "Number Meadow"
   }
  },
  "lessons": {
   "bugs": {
+   "answer-next": "The equals sign means both sides are the same.",
    "append": "Each place holds one digit: 2 hundreds is 200, not 2000.",
+   "digit-tens": "The tens make 90, then the ones make 10 more.",
    "drop-zero": "An empty place still needs a zero to hold its spot.",
    "five-down": "Right in the middle? It goes up to the bigger number.",
+   "forgot-adjust": "You used the round number. Now fix the answer by 1.",
+   "halve-tens-only": "Halve the tens and the ones.",
+   "off-by-one": "So close! Count the last jump again.",
+   "off-by-ten": "Check the tens.",
    "ones-first": "Compare the biggest place first.",
    "swap": "Look at the order: hundreds, then tens, then ones.",
+   "tens-only": "Double the tens and the ones.",
    "ticks-not-gaps": "Count the jumps between the marks, not the marks.",
-   "truncate": "Rounding down every time? Check which number is nearer."
+   "truncate": "Rounding down every time? Check which number is nearer.",
+   "wrong-op": "Read it again: does the number get bigger or smaller?",
+   "wrong-place": "Ten changes the tens digit. A hundred changes the hundreds digit."
   },
   "gen": {
+   "bonds-easy-1": {
+    "text": "What number makes 100?"
+   },
+   "bonds-g-ten-1": {
+    "text": "What number makes 10?"
+   },
+   "bonds-g-twenty-1": {
+    "text": "What number makes 20?"
+   },
+   "bonds-gap-1": {
+    "text": "Both sides must be the same. What goes in the gap?"
+   },
+   "bonds-hundred-1": {
+    "text": "What number makes 100?"
+   },
+   "bonds-pair-1": {
+    "text": "Which two numbers make 100?"
+   },
+   "bonds-rest-1": {
+    "text": "What number makes 100?"
+   },
+   "bonds-ten-1": {
+    "text": "What number makes 10?"
+   },
+   "bonds-twenty-1": {
+    "text": "What number makes 20?"
+   },
+   "bridge-1": {
+    "text": "Make a ten first. What is the total?"
+   },
+   "bridge-2": {
+    "text": "Make a ten first. What is the total?"
+   },
+   "bridge-3": {
+    "text": "Make a ten first. What is the total?"
+   },
+   "bridge-easy-1": {
+    "text": "Make a ten first. What is the total?"
+   },
+   "bridge-g-1": {
+    "text": "Make a ten first. What is the total?"
+   },
+   "bridge-g-2": {
+    "text": "Make a ten first. What is the total?"
+   },
+   "bridge-hard-1": {
+    "text": "Make a ten first. What is the total?"
+   },
    "cmp-close-1": {
     "text": "Which sign goes in the gap? The open side faces the bigger number."
    },
@@ -622,6 +681,45 @@
    },
    "cmp-true-1": {
     "text": "Is this true?"
+   },
+   "comp-easy-1": {
+    "text": "Add 10, then take 1 away. What is it?"
+   },
+   "comp-g-1": {
+    "text": "Add 10, then take 1 away. What is it?"
+   },
+   "comp-minus-1": {
+    "text": "Take away 100, then add 1 back. What is it?"
+   },
+   "comp-nine-1": {
+    "text": "Take away 10, then add 1 back. What is it?"
+   },
+   "comp-ninety-1": {
+    "text": "Add 100, then take 1 away. What is it?"
+   },
+   "count-1": {
+    "text": "Count up from the smaller number. How many?"
+   },
+   "count-2": {
+    "text": "Count up from the smaller number. How many?"
+   },
+   "dbl-big-1": {
+    "text": "Double 36."
+   },
+   "dbl-easy-1": {
+    "text": "Double 14."
+   },
+   "dbl-g-1": {
+    "text": "Double 13."
+   },
+   "dbl-more-1": {
+    "text": "Double 21."
+   },
+   "half-1": {
+    "text": "What is half of 76?"
+   },
+   "half-2": {
+    "text": "What is half of 14?"
    },
    "hto-build-1": {
     "text": "Build 932 with blocks."
@@ -677,6 +775,30 @@
    "line-tens-1": {
     "text": "Put 70 on the number line."
    },
+   "near-1": {
+    "text": "Use a double to help. What is the total?"
+   },
+   "near-2": {
+    "text": "Use a double to help. What is the total?"
+   },
+   "near-g-1": {
+    "text": "Use a double to help. What is the total?"
+   },
+   "order-gets-1": {
+    "text": "Penguin had 56 fish. Then Penguin caught 17 more. How many fish does Penguin have now?"
+   },
+   "order-gives-1": {
+    "text": "Panda baked 53 buns and sold 47 of them. How many buns are left?"
+   },
+   "order-left-1": {
+    "text": "Rabbit had 59 carrots. Rabbit ate 22 of them. How many carrots are left?"
+   },
+   "order-more-1": {
+    "text": "Elephant has 93 peanuts. Penguin has 31 peanuts. How many more peanuts does Elephant have than Penguin?"
+   },
+   "order-parts-1": {
+    "text": "Bear sold 73 loaves in the morning and 10 in the afternoon. How many loaves did Bear sell?"
+   },
    "round-big-1": {
     "text": "Round 698 to the nearest ten."
    },
@@ -703,6 +825,45 @@
    },
    "round-true-1": {
     "text": "Is this the nearest hundred?"
+   },
+   "story-easy-1": {
+    "text": "Bear sold 6 loaves in the morning and 7 in the afternoon. How many loaves did Bear sell?"
+   },
+   "story-fewer-1": {
+    "text": "Cat has 11 stickers. Bear has 27 stickers. How many more stickers does Bear have than Cat?"
+   },
+   "story-g-change-1": {
+    "text": "Frog has 25 stickers. A friend gives Frog 32 more. How many stickers does Frog have now?"
+   },
+   "story-g-parts-1": {
+    "text": "Bear sold 17 loaves in the morning and 53 in the afternoon. How many loaves did Bear sell?"
+   },
+   "story-gets-1": {
+    "text": "Penguin had 21 fish. Then Penguin caught 68 more. How many fish does Penguin have now?"
+   },
+   "story-gives-1": {
+    "text": "Panda baked 54 buns and sold 29 of them. How many buns are left?"
+   },
+   "story-more-1": {
+    "text": "Elephant has 71 peanuts. Penguin has 54 peanuts. How many more peanuts does Elephant have than Penguin?"
+   },
+   "story-part-1": {
+    "text": "Fox has 68 red berries and 25 blue berries. How many berries in all?"
+   },
+   "story-parts-1": {
+    "text": "Rabbit picked 29 carrots and Cat picked 7 carrots. How many carrots did they pick together?"
+   },
+   "tens-g-1": {
+    "text": "What is the answer?"
+   },
+   "tens-gap-1": {
+    "text": "Both sides must be the same. What goes in the gap?"
+   },
+   "tens-hundred-1": {
+    "text": "What is the answer?"
+   },
+   "tens-ten-1": {
+    "text": "What is the answer?"
    },
    "th-build-1": {
     "text": "Build 9321 with blocks."
@@ -747,6 +908,35 @@
     "text": "Put 40 on the number line."
    }
   },
+  "market-orders": {
+   "goal": "Help the market animals with their orders!",
+   "title": "Market Orders"
+  },
+  "mm-bonds": {
+   "demo": "Look: 64 plus what makes 100? The tens: 6 and 3 make 90. The ones: 4 and 6 make 10. So 36 goes in the gap!",
+   "story": "Owl says: number bonds are pairs that make a round number. Hedgie knows 6 and 4 make 10, so 60 and 40 make 100. Find the partner and fill the gap!",
+   "title": "Number bonds"
+  },
+  "mm-bridge": {
+   "demo": "Look: 38 plus 7. Make a ten first: 2 more makes 40. Then 5 are left, so 40 plus 5 is 45!",
+   "story": "Owl says: a ten is a bridge. Hedgie makes a ten first, then adds what is left. To count up, jump to the next ten and then on!",
+   "title": "Bridge through ten"
+  },
+  "mm-doubles": {
+   "demo": "Look: 35 plus 36. Double 35 is 70, and 36 is one more than 35, so the answer is 71!",
+   "story": "Owl says: a double adds a number to itself, and half is one of two equal parts. Hedgie uses doubles to help: 35 plus 36 is double 35 and 1 more. To halve, split the tens and the ones!",
+   "title": "Doubles and halves"
+  },
+  "mm-problems": {
+   "demo": "Look: Fox has 12 berries and finds 5 more. The berries come together, so add. 12 plus 5 makes 17!",
+   "story": "Owl says: read the story, then ask what is happening. Hedgie adds when parts come together and takes away when some go. How many more compares two numbers: take the smaller from the larger!",
+   "title": "Story problems"
+  },
+  "mm-tens": {
+   "demo": "Look: 46 plus 99. Add 100 to get 146. But 99 is 1 less than 100, so take 1 away: 145!",
+   "story": "Owl says: adding 10 changes only the tens digit, and adding 100 only the hundreds digit. Hedgie uses round numbers for the nearly ones, because 99 is 100 less 1. Add the round number, then fix the 1!",
+   "title": "Tens, hundreds, nearly"
+  },
   "number-train": {
    "goal": "Put every carriage number where it belongs on the line!",
    "title": "Number Train"
@@ -787,10 +977,38 @@
    "goal": "Take turns adding 1, 2 or 3. Whoever says 20 wins!",
    "title": "Race to 20"
   },
+  "stories": {
+   "change-add-1": "Penguin had {{a}} fish. Then Penguin caught {{b}} more. How many fish does Penguin have now?",
+   "change-add-2": "Frog has {{a}} stickers. A friend gives Frog {{b}} more. How many stickers does Frog have now?",
+   "change-add-3": "Elephant had {{a}} peanuts in a bag. Elephant puts in {{b}} more. How many peanuts are in the bag now?",
+   "change-add-4": "Cat has {{a}} coins. Cat finds {{b}} more coins. How many coins does Cat have now?",
+   "change-take-1": "Rabbit had {{a}} carrots. Rabbit ate {{b}} of them. How many carrots are left?",
+   "change-take-2": "Fox has {{a}} marbles and gives {{b}} to Bear. How many marbles does Fox have left?",
+   "change-take-3": "Panda baked {{a}} buns and sold {{b}} of them. How many buns are left?",
+   "change-take-4": "Frog had {{a}} stamps and used {{b}} of them on letters. How many stamps are left?",
+   "compare-1": "Elephant has {{a}} peanuts. Penguin has {{b}} peanuts. How many more peanuts does Elephant have than Penguin?",
+   "compare-2": "Cat has {{b}} stickers. Bear has {{a}} stickers. How many more stickers does Bear have than Cat?",
+   "compare-3": "Fox found {{a}} shells. Frog found {{b}} shells. How many more shells did Fox find than Frog?",
+   "compare-4": "Panda has {{b}} marbles. Rabbit has {{a}} marbles. How many more marbles does Rabbit have than Panda?",
+   "part-whole-1": "Fox has {{a}} red berries and {{b}} blue berries. How many berries in all?",
+   "part-whole-2": "Bear sold {{a}} loaves in the morning and {{b}} in the afternoon. How many loaves did Bear sell?",
+   "part-whole-3": "Rabbit picked {{a}} carrots and Cat picked {{b}} carrots. How many carrots did they pick together?",
+   "part-whole-4": "Panda has {{a}} bamboo sticks in one pile and {{b}} in another. How many sticks are in both piles?"
+  },
   "templates": {
+   "bond-missing": "What number makes {{total}}?",
+   "bond-pairs": "Which two numbers make {{total}}?",
+   "bridge-add": "Make a ten first. What is the total?",
    "cmp-order": "Put the numbers in order, smallest first.",
    "cmp-sign": "Which sign goes in the gap? The open side faces the bigger number.",
    "cmp-tf": "Is this true?",
+   "compensate-add": "Add {{round}}, then take 1 away. What is it?",
+   "compensate-take": "Take away {{round}}, then add 1 back. What is it?",
+   "count-up": "Count up from the smaller number. How many?",
+   "double": "Double {{n}}.",
+   "equals-balance": "Both sides must be the same. What goes in the gap?",
+   "halve": "What is half of {{n}}?",
+   "near-double": "Use a double to help. What is the total?",
    "nl-estimate": "About where is {{n}}? Put it on the line.",
    "nl-half": "What number is halfway between {{a}} and {{b}}?",
    "nl-place": "Put {{n}} on the number line.",
@@ -802,11 +1020,16 @@
    "pv-which-4": "Which number has {{th}} thousands, {{h}} hundreds, {{t}} tens and {{o}} ones?",
    "round-hundred": "Round {{n}} to the nearest hundred.",
    "round-ten": "Round {{n}} to the nearest ten.",
-   "round-tf": "Is this the nearest {{unit}}?"
+   "round-tf": "Is this the nearest {{unit}}?",
+   "tens-hundreds": "What is the answer?"
   }
  },
  "rewards": {
   "badges": {
+   "mountain-climber": {
+    "condition": "Master Mental Math Mountain and beat Market Orders",
+    "name": "Mountain Climber"
+   },
    "number-builder": {
     "condition": "Master Number Meadow and beat Number Train",
     "name": "Number Builder"

@@ -3,6 +3,9 @@ badges:
   - id: number-builder
     category: milestone
     condition: { type: mastered, scope: 'world:number-meadow', thresholds: [1] }
+  - id: mountain-climber
+    category: milestone
+    condition: { type: mastered, scope: 'world:mental-mountain', thresholds: [1] }
   - id: star-counter
     category: skill
     condition: { type: stars-total, thresholds: [10, 30] }

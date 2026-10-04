@@ -1,0 +1,19 @@
+# Market Orders: World 2's boss, a `series` of 5 story problems, one customer animal per round, mixed strategies (add the parts, take
+# some away, compare, add more, take some away). Generated like a lesson's exercises; seeds are stored, never change them.
+id: market-orders
+mode: series
+concept: mm-problems
+unlockAfter: mm-problems
+errors3: 0
+errors2: 2
+rounds:
+  - id: order-parts
+    generate: { template: story, count: 1, seed: 2, params: { frame: part-whole, max: 100 } }
+  - id: order-left
+    generate: { template: story, count: 1, seed: 13, params: { frame: change-take, max: 100 } }
+  - id: order-more
+    generate: { template: story, count: 1, seed: 4, params: { frame: compare, max: 100 } }
+  - id: order-gets
+    generate: { template: story, count: 1, seed: 13, params: { frame: change-add, max: 100 } }
+  - id: order-gives
+    generate: { template: story, count: 1, seed: 10, params: { frame: change-take, max: 100 } }

@@ -1,0 +1,26 @@
+# W2 lesson 2: doubles, near doubles and halves. Generated; seeds are stored, never change them. All symbols (a double has no picture).
+# `dbl-easy` is a double up to 20 for `dbl-big-1` (a double up to 50).
+id: mm-doubles
+order: 2
+concept: mm-doubles
+character: hedgehog
+demo:
+  prompt: { big: 35 + 36 }
+guided:
+  - id: dbl-g
+    generate: { template: double, count: 1, seed: 6, params: { max: 20 } }
+  - id: near-g
+    generate: { template: near-double, count: 1, seed: 1, params: { max: 20 } }
+exercises:
+  - id: dbl-big
+    easier: dbl-easy-1
+    generate: { template: double, count: 1, seed: 1, params: { max: 50 } }
+  - id: dbl-more
+    generate: { template: double, count: 1, seed: 0, params: { max: 50 } }
+  - id: near
+    generate: { template: near-double, count: 2, seed: 2, params: { max: 50 } }
+  - id: half
+    generate: { template: halve, count: 2, seed: 3, params: { max: 100 } }
+variants:
+  - id: dbl-easy
+    generate: { template: double, count: 1, seed: 13, params: { max: 20 } }

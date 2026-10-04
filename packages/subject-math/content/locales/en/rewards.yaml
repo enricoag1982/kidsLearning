@@ -2,6 +2,9 @@ badges:
   number-builder:
     name: Number Builder
     condition: Master Number Meadow and beat Number Train
+  mountain-climber:
+    name: Mountain Climber
+    condition: Master Mental Math Mountain and beat Market Orders
   star-counter:
     name: Star Counter
     condition_one: 'Earn {{count}} star'

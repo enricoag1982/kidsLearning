@@ -2,6 +2,857 @@
  "version": 1,
  "lessons": [
   {
+   "id": "mm-bonds",
+   "world": "mental-mountain",
+   "order": 1,
+   "concept": "mm-bonds",
+   "character": "hedgehog",
+   "titleKey": "lessons:mm-bonds.title",
+   "storyKey": "lessons:mm-bonds.story",
+   "demo": {
+    "textKey": "lessons:mm-bonds.demo",
+    "prompt": {
+     "big": "64 + 36 = 100"
+    }
+   },
+   "guided": [
+    {
+     "id": "bonds-g-ten-1",
+     "concept": "mm-bonds",
+     "textKey": "lessons:gen.bonds-g-ten-1.text",
+     "prompt": {
+      "big": "6 + ? = 10"
+     },
+     "type": "number-entry",
+     "answer": 4,
+     "maxDigits": 2
+    },
+    {
+     "id": "bonds-g-twenty-1",
+     "concept": "mm-bonds",
+     "textKey": "lessons:gen.bonds-g-twenty-1.text",
+     "prompt": {
+      "big": "12 + ? = 20"
+     },
+     "type": "number-entry",
+     "answer": 8,
+     "maxDigits": 2
+    }
+   ],
+   "exercises": [
+    {
+     "id": "bonds-ten-1",
+     "concept": "mm-bonds",
+     "textKey": "lessons:gen.bonds-ten-1.text",
+     "prompt": {
+      "big": "3 + ? = 10"
+     },
+     "type": "number-entry",
+     "answer": 7,
+     "maxDigits": 2
+    },
+    {
+     "id": "bonds-twenty-1",
+     "concept": "mm-bonds",
+     "textKey": "lessons:gen.bonds-twenty-1.text",
+     "prompt": {
+      "big": "6 + ? = 20"
+     },
+     "type": "number-entry",
+     "answer": 14,
+     "maxDigits": 2
+    },
+    {
+     "id": "bonds-hundred-1",
+     "concept": "mm-bonds",
+     "textKey": "lessons:gen.bonds-hundred-1.text",
+     "prompt": {
+      "big": "63 + ? = 100"
+     },
+     "type": "number-entry",
+     "answer": 37,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 47,
+       "reasonKey": "lessons:bugs.digit-tens"
+      }
+     ],
+     "easier": "bonds-easy-1"
+    },
+    {
+     "id": "bonds-rest-1",
+     "concept": "mm-bonds",
+     "textKey": "lessons:gen.bonds-rest-1.text",
+     "prompt": {
+      "big": "67 + ? = 100"
+     },
+     "type": "number-entry",
+     "answer": 33,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 43,
+       "reasonKey": "lessons:bugs.digit-tens"
+      }
+     ]
+    },
+    {
+     "id": "bonds-pair-1",
+     "concept": "mm-bonds",
+     "textKey": "lessons:gen.bonds-pair-1.text",
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "reasonKey": "lessons:bugs.digit-tens",
+       "big": "28 + 82"
+      },
+      {
+       "id": "b",
+       "big": "28 + 72"
+      },
+      {
+       "id": "c",
+       "big": "28 + 62"
+      }
+     ],
+     "answer": "b"
+    },
+    {
+     "id": "bonds-gap-1",
+     "concept": "mm-bonds",
+     "textKey": "lessons:gen.bonds-gap-1.text",
+     "prompt": {
+      "big": "10 + 6 = 9 + ?"
+     },
+     "type": "number-entry",
+     "answer": 7,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 16,
+       "reasonKey": "lessons:bugs.answer-next"
+      }
+     ]
+    }
+   ],
+   "variants": [
+    {
+     "id": "bonds-easy-1",
+     "concept": "mm-bonds",
+     "textKey": "lessons:gen.bonds-easy-1.text",
+     "prompt": {
+      "big": "60 + ? = 100"
+     },
+     "type": "number-entry",
+     "answer": 40,
+     "maxDigits": 2
+    }
+   ]
+  },
+  {
+   "id": "mm-bridge",
+   "world": "mental-mountain",
+   "order": 3,
+   "concept": "mm-bridge",
+   "character": "hedgehog",
+   "titleKey": "lessons:mm-bridge.title",
+   "storyKey": "lessons:mm-bridge.story",
+   "demo": {
+    "textKey": "lessons:mm-bridge.demo",
+    "prompt": {
+     "big": "38 + 7"
+    }
+   },
+   "guided": [
+    {
+     "id": "bridge-g-1",
+     "concept": "mm-bridge",
+     "textKey": "lessons:gen.bridge-g-1.text",
+     "prompt": {
+      "big": "7 + 5"
+     },
+     "type": "number-entry",
+     "answer": 12,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 11,
+       "reasonKey": "lessons:bugs.off-by-one"
+      },
+      {
+       "value": 2,
+       "reasonKey": "lessons:bugs.off-by-ten"
+      }
+     ]
+    },
+    {
+     "id": "bridge-g-2",
+     "concept": "mm-bridge",
+     "textKey": "lessons:gen.bridge-g-2.text",
+     "prompt": {
+      "big": "86 + 7"
+     },
+     "type": "number-entry",
+     "answer": 93,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 92,
+       "reasonKey": "lessons:bugs.off-by-one"
+      },
+      {
+       "value": 83,
+       "reasonKey": "lessons:bugs.off-by-ten"
+      }
+     ]
+    }
+   ],
+   "exercises": [
+    {
+     "id": "bridge-1",
+     "concept": "mm-bridge",
+     "textKey": "lessons:gen.bridge-1.text",
+     "prompt": {
+      "big": "28 + 6"
+     },
+     "type": "number-entry",
+     "answer": 34,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 33,
+       "reasonKey": "lessons:bugs.off-by-one"
+      },
+      {
+       "value": 24,
+       "reasonKey": "lessons:bugs.off-by-ten"
+      }
+     ]
+    },
+    {
+     "id": "bridge-2",
+     "concept": "mm-bridge",
+     "textKey": "lessons:gen.bridge-2.text",
+     "prompt": {
+      "big": "45 + 9"
+     },
+     "type": "number-entry",
+     "answer": 54,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 53,
+       "reasonKey": "lessons:bugs.off-by-one"
+      },
+      {
+       "value": 44,
+       "reasonKey": "lessons:bugs.off-by-ten"
+      }
+     ]
+    },
+    {
+     "id": "bridge-3",
+     "concept": "mm-bridge",
+     "textKey": "lessons:gen.bridge-3.text",
+     "prompt": {
+      "big": "59 + 3"
+     },
+     "type": "number-entry",
+     "answer": 62,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 61,
+       "reasonKey": "lessons:bugs.off-by-one"
+      },
+      {
+       "value": 52,
+       "reasonKey": "lessons:bugs.off-by-ten"
+      }
+     ]
+    },
+    {
+     "id": "bridge-hard-1",
+     "concept": "mm-bridge",
+     "textKey": "lessons:gen.bridge-hard-1.text",
+     "prompt": {
+      "big": "69 + 8"
+     },
+     "type": "number-entry",
+     "answer": 77,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 76,
+       "reasonKey": "lessons:bugs.off-by-one"
+      },
+      {
+       "value": 67,
+       "reasonKey": "lessons:bugs.off-by-ten"
+      }
+     ],
+     "easier": "bridge-easy-1"
+    },
+    {
+     "id": "count-1",
+     "concept": "mm-bridge",
+     "textKey": "lessons:gen.count-1.text",
+     "prompt": {
+      "big": "45 − 39"
+     },
+     "type": "number-entry",
+     "answer": 6,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 16,
+       "reasonKey": "lessons:bugs.off-by-ten"
+      }
+     ]
+    },
+    {
+     "id": "count-2",
+     "concept": "mm-bridge",
+     "textKey": "lessons:gen.count-2.text",
+     "prompt": {
+      "big": "22 − 14"
+     },
+     "type": "number-entry",
+     "answer": 8,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 18,
+       "reasonKey": "lessons:bugs.off-by-ten"
+      }
+     ]
+    }
+   ],
+   "variants": [
+    {
+     "id": "bridge-easy-1",
+     "concept": "mm-bridge",
+     "textKey": "lessons:gen.bridge-easy-1.text",
+     "prompt": {
+      "big": "67 + 5"
+     },
+     "type": "number-entry",
+     "answer": 72,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 71,
+       "reasonKey": "lessons:bugs.off-by-one"
+      },
+      {
+       "value": 62,
+       "reasonKey": "lessons:bugs.off-by-ten"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mm-doubles",
+   "world": "mental-mountain",
+   "order": 2,
+   "concept": "mm-doubles",
+   "character": "hedgehog",
+   "titleKey": "lessons:mm-doubles.title",
+   "storyKey": "lessons:mm-doubles.story",
+   "demo": {
+    "textKey": "lessons:mm-doubles.demo",
+    "prompt": {
+     "big": "35 + 36"
+    }
+   },
+   "guided": [
+    {
+     "id": "dbl-g-1",
+     "concept": "mm-doubles",
+     "textKey": "lessons:gen.dbl-g-1.text",
+     "prompt": {
+      "big": "13 + 13"
+     },
+     "type": "number-entry",
+     "answer": 26,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 23,
+       "reasonKey": "lessons:bugs.tens-only"
+      }
+     ]
+    },
+    {
+     "id": "near-g-1",
+     "concept": "mm-doubles",
+     "textKey": "lessons:gen.near-g-1.text",
+     "prompt": {
+      "big": "14 + 15"
+     },
+     "type": "number-entry",
+     "answer": 29,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 28,
+       "reasonKey": "lessons:bugs.off-by-one"
+      }
+     ]
+    }
+   ],
+   "exercises": [
+    {
+     "id": "dbl-big-1",
+     "concept": "mm-doubles",
+     "textKey": "lessons:gen.dbl-big-1.text",
+     "prompt": {
+      "big": "36 + 36"
+     },
+     "type": "number-entry",
+     "answer": 72,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 66,
+       "reasonKey": "lessons:bugs.tens-only"
+      }
+     ],
+     "easier": "dbl-easy-1"
+    },
+    {
+     "id": "dbl-more-1",
+     "concept": "mm-doubles",
+     "textKey": "lessons:gen.dbl-more-1.text",
+     "prompt": {
+      "big": "21 + 21"
+     },
+     "type": "number-entry",
+     "answer": 42,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 41,
+       "reasonKey": "lessons:bugs.tens-only"
+      }
+     ]
+    },
+    {
+     "id": "near-1",
+     "concept": "mm-doubles",
+     "textKey": "lessons:gen.near-1.text",
+     "prompt": {
+      "big": "38 + 39"
+     },
+     "type": "number-entry",
+     "answer": 77,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 76,
+       "reasonKey": "lessons:bugs.off-by-one"
+      }
+     ]
+    },
+    {
+     "id": "near-2",
+     "concept": "mm-doubles",
+     "textKey": "lessons:gen.near-2.text",
+     "prompt": {
+      "big": "20 + 21"
+     },
+     "type": "number-entry",
+     "answer": 41,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 40,
+       "reasonKey": "lessons:bugs.off-by-one"
+      }
+     ]
+    },
+    {
+     "id": "half-1",
+     "concept": "mm-doubles",
+     "textKey": "lessons:gen.half-1.text",
+     "prompt": {
+      "big": "76"
+     },
+     "type": "number-entry",
+     "answer": 38,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 41,
+       "reasonKey": "lessons:bugs.halve-tens-only"
+      }
+     ]
+    },
+    {
+     "id": "half-2",
+     "concept": "mm-doubles",
+     "textKey": "lessons:gen.half-2.text",
+     "prompt": {
+      "big": "14"
+     },
+     "type": "number-entry",
+     "answer": 7,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 9,
+       "reasonKey": "lessons:bugs.halve-tens-only"
+      }
+     ]
+    }
+   ],
+   "variants": [
+    {
+     "id": "dbl-easy-1",
+     "concept": "mm-doubles",
+     "textKey": "lessons:gen.dbl-easy-1.text",
+     "prompt": {
+      "big": "14 + 14"
+     },
+     "type": "number-entry",
+     "answer": 28,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 24,
+       "reasonKey": "lessons:bugs.tens-only"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mm-problems",
+   "world": "mental-mountain",
+   "order": 5,
+   "concept": "mm-problems",
+   "character": "hedgehog",
+   "titleKey": "lessons:mm-problems.title",
+   "storyKey": "lessons:mm-problems.story",
+   "demo": {
+    "textKey": "lessons:mm-problems.demo",
+    "prompt": {
+     "big": "12 + 5"
+    }
+   },
+   "guided": [
+    {
+     "id": "story-g-parts-1",
+     "concept": "mm-problems",
+     "textKey": "lessons:gen.story-g-parts-1.text",
+     "type": "number-entry",
+     "answer": 70,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 36,
+       "reasonKey": "lessons:bugs.wrong-op"
+      }
+     ]
+    },
+    {
+     "id": "story-g-change-1",
+     "concept": "mm-problems",
+     "textKey": "lessons:gen.story-g-change-1.text",
+     "type": "number-entry",
+     "answer": 57,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 7,
+       "reasonKey": "lessons:bugs.wrong-op"
+      }
+     ]
+    }
+   ],
+   "exercises": [
+    {
+     "id": "story-part-1",
+     "concept": "mm-problems",
+     "textKey": "lessons:gen.story-part-1.text",
+     "type": "number-entry",
+     "answer": 93,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 43,
+       "reasonKey": "lessons:bugs.wrong-op"
+      }
+     ],
+     "easier": "story-easy-1"
+    },
+    {
+     "id": "story-parts-1",
+     "concept": "mm-problems",
+     "textKey": "lessons:gen.story-parts-1.text",
+     "type": "number-entry",
+     "answer": 36,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 22,
+       "reasonKey": "lessons:bugs.wrong-op"
+      }
+     ]
+    },
+    {
+     "id": "story-gets-1",
+     "concept": "mm-problems",
+     "textKey": "lessons:gen.story-gets-1.text",
+     "type": "number-entry",
+     "answer": 89,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 47,
+       "reasonKey": "lessons:bugs.wrong-op"
+      }
+     ]
+    },
+    {
+     "id": "story-gives-1",
+     "concept": "mm-problems",
+     "textKey": "lessons:gen.story-gives-1.text",
+     "type": "number-entry",
+     "answer": 25,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 83,
+       "reasonKey": "lessons:bugs.wrong-op"
+      }
+     ]
+    },
+    {
+     "id": "story-more-1",
+     "concept": "mm-problems",
+     "textKey": "lessons:gen.story-more-1.text",
+     "type": "number-entry",
+     "answer": 17,
+     "maxDigits": 3,
+     "reasons": [
+      {
+       "value": 125,
+       "reasonKey": "lessons:bugs.wrong-op"
+      }
+     ]
+    },
+    {
+     "id": "story-fewer-1",
+     "concept": "mm-problems",
+     "textKey": "lessons:gen.story-fewer-1.text",
+     "type": "number-entry",
+     "answer": 16,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 38,
+       "reasonKey": "lessons:bugs.wrong-op"
+      }
+     ]
+    }
+   ],
+   "variants": [
+    {
+     "id": "story-easy-1",
+     "concept": "mm-problems",
+     "textKey": "lessons:gen.story-easy-1.text",
+     "type": "number-entry",
+     "answer": 13,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 1,
+       "reasonKey": "lessons:bugs.wrong-op"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mm-tens",
+   "world": "mental-mountain",
+   "order": 4,
+   "concept": "mm-tens",
+   "character": "hedgehog",
+   "titleKey": "lessons:mm-tens.title",
+   "storyKey": "lessons:mm-tens.story",
+   "demo": {
+    "textKey": "lessons:mm-tens.demo",
+    "prompt": {
+     "big": "46 + 99"
+    }
+   },
+   "guided": [
+    {
+     "id": "tens-g-1",
+     "concept": "mm-tens",
+     "textKey": "lessons:gen.tens-g-1.text",
+     "prompt": {
+      "big": "762 + 10"
+     },
+     "type": "number-entry",
+     "answer": 772,
+     "maxDigits": 3,
+     "reasons": [
+      {
+       "value": 763,
+       "reasonKey": "lessons:bugs.wrong-place"
+      }
+     ]
+    },
+    {
+     "id": "comp-g-1",
+     "concept": "mm-tens",
+     "textKey": "lessons:gen.comp-g-1.text",
+     "prompt": {
+      "big": "52 + 9"
+     },
+     "type": "number-entry",
+     "answer": 61,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 62,
+       "reasonKey": "lessons:bugs.forgot-adjust"
+      }
+     ]
+    }
+   ],
+   "exercises": [
+    {
+     "id": "tens-ten-1",
+     "concept": "mm-tens",
+     "textKey": "lessons:gen.tens-ten-1.text",
+     "prompt": {
+      "big": "932 − 10"
+     },
+     "type": "number-entry",
+     "answer": 922,
+     "maxDigits": 3,
+     "reasons": [
+      {
+       "value": 931,
+       "reasonKey": "lessons:bugs.wrong-place"
+      }
+     ]
+    },
+    {
+     "id": "tens-hundred-1",
+     "concept": "mm-tens",
+     "textKey": "lessons:gen.tens-hundred-1.text",
+     "prompt": {
+      "big": "632 + 100"
+     },
+     "type": "number-entry",
+     "answer": 732,
+     "maxDigits": 3,
+     "reasons": [
+      {
+       "value": 642,
+       "reasonKey": "lessons:bugs.wrong-place"
+      }
+     ]
+    },
+    {
+     "id": "comp-nine-1",
+     "concept": "mm-tens",
+     "textKey": "lessons:gen.comp-nine-1.text",
+     "prompt": {
+      "big": "74 − 9"
+     },
+     "type": "number-entry",
+     "answer": 65,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 64,
+       "reasonKey": "lessons:bugs.forgot-adjust"
+      }
+     ]
+    },
+    {
+     "id": "comp-ninety-1",
+     "concept": "mm-tens",
+     "textKey": "lessons:gen.comp-ninety-1.text",
+     "prompt": {
+      "big": "77 + 99"
+     },
+     "type": "number-entry",
+     "answer": 176,
+     "maxDigits": 3,
+     "reasons": [
+      {
+       "value": 177,
+       "reasonKey": "lessons:bugs.forgot-adjust"
+      }
+     ]
+    },
+    {
+     "id": "comp-minus-1",
+     "concept": "mm-tens",
+     "textKey": "lessons:gen.comp-minus-1.text",
+     "prompt": {
+      "big": "733 − 99"
+     },
+     "type": "number-entry",
+     "answer": 634,
+     "maxDigits": 3,
+     "reasons": [
+      {
+       "value": 633,
+       "reasonKey": "lessons:bugs.forgot-adjust"
+      }
+     ],
+     "easier": "comp-easy-1"
+    },
+    {
+     "id": "tens-gap-1",
+     "concept": "mm-tens",
+     "textKey": "lessons:gen.tens-gap-1.text",
+     "prompt": {
+      "big": "6 + 7 = 5 + ?"
+     },
+     "type": "number-entry",
+     "answer": 8,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 13,
+       "reasonKey": "lessons:bugs.answer-next"
+      }
+     ]
+    }
+   ],
+   "variants": [
+    {
+     "id": "comp-easy-1",
+     "concept": "mm-tens",
+     "textKey": "lessons:gen.comp-easy-1.text",
+     "prompt": {
+      "big": "72 + 9"
+     },
+     "type": "number-entry",
+     "answer": 81,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 82,
+       "reasonKey": "lessons:bugs.forgot-adjust"
+      }
+     ]
+    }
+   ]
+  },
+  {
    "id": "pv-compare",
    "world": "number-meadow",
    "order": 2,
@@ -1028,6 +1879,88 @@
   }
  ],
  "minigames": [
+  {
+   "mode": "series",
+   "id": "market-orders",
+   "concept": "mm-problems",
+   "rounds": [
+    {
+     "id": "order-parts-1",
+     "concept": "mm-problems",
+     "textKey": "lessons:gen.order-parts-1.text",
+     "type": "number-entry",
+     "answer": 83,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 63,
+       "reasonKey": "lessons:bugs.wrong-op"
+      }
+     ]
+    },
+    {
+     "id": "order-left-1",
+     "concept": "mm-problems",
+     "textKey": "lessons:gen.order-left-1.text",
+     "type": "number-entry",
+     "answer": 37,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 81,
+       "reasonKey": "lessons:bugs.wrong-op"
+      }
+     ]
+    },
+    {
+     "id": "order-more-1",
+     "concept": "mm-problems",
+     "textKey": "lessons:gen.order-more-1.text",
+     "type": "number-entry",
+     "answer": 62,
+     "maxDigits": 3,
+     "reasons": [
+      {
+       "value": 124,
+       "reasonKey": "lessons:bugs.wrong-op"
+      }
+     ]
+    },
+    {
+     "id": "order-gets-1",
+     "concept": "mm-problems",
+     "textKey": "lessons:gen.order-gets-1.text",
+     "type": "number-entry",
+     "answer": 73,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 39,
+       "reasonKey": "lessons:bugs.wrong-op"
+      }
+     ]
+    },
+    {
+     "id": "order-gives-1",
+     "concept": "mm-problems",
+     "textKey": "lessons:gen.order-gives-1.text",
+     "type": "number-entry",
+     "answer": 6,
+     "maxDigits": 3,
+     "reasons": [
+      {
+       "value": 100,
+       "reasonKey": "lessons:bugs.wrong-op"
+      }
+     ]
+    }
+   ],
+   "errors3": 0,
+   "errors2": 2,
+   "titleKey": "lessons:market-orders.title",
+   "goalKey": "lessons:market-orders.goal",
+   "unlockAfter": "mm-problems"
+  },
   {
    "mode": "series",
    "id": "number-train",

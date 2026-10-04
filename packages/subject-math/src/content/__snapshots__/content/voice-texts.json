@@ -10,6 +10,26 @@
   "source": "exercise-note"
  },
  {
+  "key": "0063e6084b5401f5",
+  "text": "Mountain Climber. Master Mental Math Mountain and beat Market Orders",
+  "source": "badge-locked"
+ },
+ {
+  "key": "020b263dfbd1a798",
+  "text": "Count up from the smaller number. How many?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "02ad3a8c4f9ee3bf",
+  "text": "Cat has 11 stickers. Bear has 27 stickers. How many more stickers does Bear have than Cat?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "030380e85348e652",
+  "text": "Look: 64 plus what makes 100? The tens: 6 and 3 make 90. The ones: 4 and 6 make 10. So 36 goes in the gap!",
+  "source": "lesson-demo"
+ },
+ {
   "key": "035fab1c1f095fe6",
   "text": "You add 2. Now it's 6.",
   "source": "race-you-add"
@@ -25,6 +45,11 @@
   "source": "owl-line"
  },
  {
+  "key": "082c1205ad7d720d",
+  "text": "Bear sold 17 loaves in the morning and 53 in the afternoon. How many loaves did Bear sell?",
+  "source": "lesson-guided"
+ },
+ {
   "key": "09d0d86ca82c29e8",
   "text": "It starts with 7.",
   "source": "exercise-note"
@@ -33,6 +58,11 @@
   "key": "0a2ba2d1bd8cb77c",
   "text": "Not that one. Try another! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "0adad9392203eca4",
+  "text": "Look: Fox has 12 berries and finds 5 more. The berries come together, so add. 12 plus 5 makes 17!",
+  "source": "lesson-demo"
  },
  {
   "key": "0adfa5ef877f3ded",
@@ -60,6 +90,11 @@
   "source": "race-you-add"
  },
  {
+  "key": "12854dc48d118f2a",
+  "text": "Check the tens.",
+  "source": "exercise-note"
+ },
+ {
   "key": "1319e1d7ccd9104f",
   "text": "You add 1. Now it's 9.",
   "source": "race-you-add"
@@ -78,6 +113,11 @@
   "key": "159b3dec13ee4d7b",
   "text": "You add 1. Now it's 18.",
   "source": "race-you-add"
+ },
+ {
+  "key": "15cb245201fdca70",
+  "text": "You already know 1 world! Off you go!",
+  "source": "placement"
  },
  {
   "key": "161fdcce3e2e7cdb",
@@ -100,9 +140,19 @@
   "source": "exercise-note"
  },
  {
+  "key": "19ec971cf6b3801f",
+  "text": "What number makes 100?",
+  "source": "lesson-variant"
+ },
+ {
   "key": "1a3815a5556c46cd",
   "text": "Hedgie adds 2. Now it's 3.",
   "source": "race-bot-adds"
+ },
+ {
+  "key": "1bbe1997a90792f7",
+  "text": "So close! Count the last jump again.",
+  "source": "exercise-note"
  },
  {
   "key": "1c34d091721707b7",
@@ -113,6 +163,11 @@
   "key": "1dd0842b73d9826e",
   "text": "Round 354 to the nearest hundred.",
   "source": "lesson-exercise"
+ },
+ {
+  "key": "1e5957546ab31adf",
+  "text": "Double 13.",
+  "source": "lesson-guided"
  },
  {
   "key": "1ecd5512c0d691cb",
@@ -140,6 +195,16 @@
   "source": "exercise-note"
  },
  {
+  "key": "2316a5e8da7c762f",
+  "text": "Both sides must be the same. What goes in the gap?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "2432e0e693c52e35",
+  "text": "World boss time: Market Orders!",
+  "source": "home"
+ },
+ {
   "key": "24697ff09138b3ea",
   "text": "Round 45 to the nearest ten.",
   "source": "lesson-exercise"
@@ -165,14 +230,34 @@
   "source": "exercise-note-easier-offer"
  },
  {
+  "key": "26d022e16da63ffb",
+  "text": "Elephant has 93 peanuts. Penguin has 31 peanuts. How many more peanuts does Elephant have than Penguin?",
+  "source": "minigame-round"
+ },
+ {
+  "key": "27926fb89f8ed575",
+  "text": "The tens make 90, then the ones make 10 more. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "27dfb80057b25845",
   "text": "Here is the answer.",
   "source": "exercise-note"
  },
  {
+  "key": "284a0a38e213836f",
+  "text": "Double the tens and the ones. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "289dc8b48e417118",
   "text": "Hedgie adds 1. Now it's 8.",
   "source": "race-bot-adds"
+ },
+ {
+  "key": "289ddbf20c286ee4",
+  "text": "Mountain Climber",
+  "source": "badge-earned"
  },
  {
   "key": "295d1293c6cb3154",
@@ -200,6 +285,11 @@
   "source": "race-bot-adds"
  },
  {
+  "key": "2b4130ef3fcbaa42",
+  "text": "Double 36.",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "2bc8ac486893a8fb",
   "text": "You add 2. Now it's 16.",
   "source": "race-you-add"
@@ -220,6 +310,11 @@
   "source": "race-you-add"
  },
  {
+  "key": "2e9b289230cd2da1",
+  "text": "Owl says: read the story, then ask what is happening. Hedgie adds when parts come together and takes away when some go. How many more compares two numbers: take the smaller from the larger!",
+  "source": "lesson-story"
+ },
+ {
   "key": "311d471061f2e9b7",
   "text": "Hedgie adds 1. Now it's 17.",
   "source": "race-bot-adds"
@@ -233,6 +328,11 @@
   "key": "32813fb993cc7953",
   "text": "You add 3. Now it's 12.",
   "source": "race-you-add"
+ },
+ {
+  "key": "33c7bae80c76f22c",
+  "text": "Want to show me you already know World 2 · Mental Math Mountain?",
+  "source": "journey"
  },
  {
   "key": "33cacbfd0bfeadc3",
@@ -250,6 +350,11 @@
   "source": "race-bot-adds"
  },
  {
+  "key": "396adb0d3249bc26",
+  "text": "Owl says: adding 10 changes only the tens digit, and adding 100 only the hundreds digit. Hedgie uses round numbers for the nearly ones, because 99 is 100 less 1. Add the round number, then fix the 1!",
+  "source": "lesson-story"
+ },
+ {
   "key": "39845df5f7eacbe1",
   "text": "Number Builder",
   "source": "badge-earned"
@@ -265,13 +370,28 @@
   "source": "lesson-variant"
  },
  {
+  "key": "3acb2424f8ae131f",
+  "text": "Look: 46 plus 99. Add 100 to get 146. But 99 is 1 less than 100, so take 1 away: 145!",
+  "source": "lesson-demo"
+ },
+ {
   "key": "3b199d66b044403d",
   "text": "You add 3. Now it's 4.",
   "source": "race-you-add"
  },
  {
+  "key": "3c2f8a1874702ecd",
+  "text": "Which two numbers make 100?",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "3d5f11edd51339bf",
   "text": "Build 507 with blocks.",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "3d757d2a6345d283",
+  "text": "Fox has 68 red berries and 25 blue berries. How many berries in all?",
   "source": "lesson-exercise"
  },
  {
@@ -325,6 +445,11 @@
   "source": "race-you-add"
  },
  {
+  "key": "49bde4abb4da9767",
+  "text": "Look: 35 plus 36. Double 35 is 70, and 36 is one more than 35, so the answer is 71!",
+  "source": "lesson-demo"
+ },
+ {
   "key": "4a61f482035c8a48",
   "text": "It starts with 4.",
   "source": "exercise-note"
@@ -333,6 +458,16 @@
   "key": "4ab4f4a9237a15e2",
   "text": "Hedgie adds 1. Now it's 9.",
   "source": "race-bot-adds"
+ },
+ {
+  "key": "4aff35d616e91efa",
+  "text": "You already know Mental Math Mountain — 5 lessons are yours!",
+  "source": "assessment"
+ },
+ {
+  "key": "4b689e8883d9f9d1",
+  "text": "Look: 38 plus 7. Make a ten first: 2 more makes 40. Then 5 are left, so 40 plus 5 is 45!",
+  "source": "lesson-demo"
  },
  {
   "key": "4b8f57473d4f9733",
@@ -353,6 +488,11 @@
   "key": "50bf363dae1e648e",
   "text": "You add 1. Now it's 4.",
   "source": "race-you-add"
+ },
+ {
+  "key": "510c7804c482d755",
+  "text": "Owl says: a double adds a number to itself, and half is one of two equal parts. Hedgie uses doubles to help: 35 plus 36 is double 35 and 1 more. To halve, split the tens and the ones!",
+  "source": "lesson-story"
  },
  {
   "key": "5197ec2f064d8dbc",
@@ -435,6 +575,11 @@
   "source": "journey"
  },
  {
+  "key": "5d3904aeb3dcfc94",
+  "text": "Double 14.",
+  "source": "lesson-variant"
+ },
+ {
   "key": "5eeb75a57ea8ca64",
   "text": "Hedgie adds 1. Now it's 6.",
   "source": "race-bot-adds"
@@ -443,6 +588,16 @@
   "key": "5fde40d71e9f4ea2",
   "text": "You add 2. Now it's 7.",
   "source": "race-you-add"
+ },
+ {
+  "key": "60081291f8de43bc",
+  "text": "Add 100, then take 1 away. What is it?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "6074f891bc59348b",
+  "text": "Owl says: number bonds are pairs that make a round number. Hedgie knows 6 and 4 make 10, so 60 and 40 make 100. Find the partner and fill the gap!",
+  "source": "lesson-story"
  },
  {
   "key": "616e3105145292c8",
@@ -460,9 +615,19 @@
   "source": "race-bot-adds"
  },
  {
+  "key": "66948cd619897f7b",
+  "text": "You used the round number. Now fix the answer by 1. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "671bd59b87923163",
   "text": "7 hundreds, 3 tens and 8 ones. What number is it?",
   "source": "lesson-exercise"
+ },
+ {
+  "key": "6798614b21db24b8",
+  "text": "Rabbit had 59 carrots. Rabbit ate 22 of them. How many carrots are left?",
+  "source": "minigame-round"
  },
  {
   "key": "6842a59d60e89216",
@@ -473,6 +638,11 @@
   "key": "68724bd6b9fbaabb",
   "text": "Hedgie adds 2. Now it's 10.",
   "source": "race-bot-adds"
+ },
+ {
+  "key": "68fd609a755bbff1",
+  "text": "What number makes 20?",
+  "source": "lesson-exercise"
  },
  {
   "key": "6b2352d3fb67886a",
@@ -490,6 +660,11 @@
   "source": "duel"
  },
  {
+  "key": "6c241247b129211f",
+  "text": "What is half of 14?",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "6c4f0bd80504b24e",
   "text": "Hedgie adds 3. Now it's 18.",
   "source": "race-bot-adds"
@@ -503,6 +678,16 @@
   "key": "6f752ca2de41d910",
   "text": "Hedgie adds 2. Now it's 7.",
   "source": "race-bot-adds"
+ },
+ {
+  "key": "70adb4eed0a06fa3",
+  "text": "Rabbit picked 29 carrots and Cat picked 7 carrots. How many carrots did they pick together?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "72d6932a37cac1e6",
+  "text": "Read it again: does the number get bigger or smaller?",
+  "source": "exercise-note"
  },
  {
   "key": "73467fceb66c0ef0",
@@ -555,6 +740,11 @@
   "source": "race-you-add"
  },
  {
+  "key": "8160cc4d11e77c69",
+  "text": "Bear sold 73 loaves in the morning and 10 in the afternoon. How many loaves did Bear sell?",
+  "source": "minigame-round"
+ },
+ {
   "key": "829f3c22c5904107",
   "text": "Hedgie adds 1. Now it's 2.",
   "source": "race-bot-adds"
@@ -572,6 +762,11 @@
  {
   "key": "848775eb81255f4a",
   "text": "Which sign goes in the gap? The open side faces the bigger number.",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "8532f73d5154ecb0",
+  "text": "What number makes 10?",
   "source": "lesson-exercise"
  },
  {
@@ -645,6 +840,11 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "902b96873a210262",
+  "text": "So close! Count the last jump again. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "90415c95a9f1dd53",
   "text": "Build 7463 with blocks.",
   "source": "lesson-guided"
@@ -660,6 +860,11 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "9094f5209cdd38a4",
+  "text": "Panda baked 53 buns and sold 47 of them. How many buns are left?",
+  "source": "minigame-round"
+ },
+ {
   "key": "9396b12b12df91f1",
   "text": "Hedgie adds 1. Now it's 13.",
   "source": "race-bot-adds"
@@ -670,9 +875,19 @@
   "source": "lesson-guided"
  },
  {
+  "key": "94d193fcf533b325",
+  "text": "You used the round number. Now fix the answer by 1.",
+  "source": "exercise-note"
+ },
+ {
   "key": "94f516a7b14c3876",
   "text": "Not that number. Try again!",
   "source": "exercise-note"
+ },
+ {
+  "key": "95386be292d6ec7a",
+  "text": "Bear sold 6 loaves in the morning and 7 in the afternoon. How many loaves did Bear sell?",
+  "source": "lesson-variant"
  },
  {
   "key": "957f278d66fde401",
@@ -693,6 +908,11 @@
   "key": "96812a855d0850fe",
   "text": "Find the middle: 50.",
   "source": "exercise-note"
+ },
+ {
+  "key": "984d98933b33154d",
+  "text": "Elephant has 71 peanuts. Penguin has 54 peanuts. How many more peanuts does Elephant have than Penguin?",
+  "source": "lesson-exercise"
  },
  {
   "key": "98925a40f39e713e",
@@ -720,6 +940,11 @@
   "source": "home"
  },
  {
+  "key": "a0217010724c94e5",
+  "text": "Add 10, then take 1 away. What is it?",
+  "source": "lesson-variant"
+ },
+ {
   "key": "a1b5484c6340d3d5",
   "text": "Hedgie adds 3. Now it's 14.",
   "source": "race-bot-adds"
@@ -745,6 +970,11 @@
   "source": "race-bot-adds"
  },
  {
+  "key": "a38213bc685a50ee",
+  "text": "Use a double to help. What is the total?",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "a39e61565a7b1cce",
   "text": "Put the parts together. What number is it?",
   "source": "lesson-exercise"
@@ -753,6 +983,11 @@
   "key": "a4a00559aa6ccb7c",
   "text": "It starts with 8.",
   "source": "exercise-note"
+ },
+ {
+  "key": "a58aba8195011222",
+  "text": "Panda baked 54 buns and sold 29 of them. How many buns are left?",
+  "source": "lesson-exercise"
  },
  {
   "key": "a6b6a5b8e605822b",
@@ -768,6 +1003,11 @@
   "key": "a7e432a24b9dd8a0",
   "text": "Put 250 on the number line.",
   "source": "minigame-round"
+ },
+ {
+  "key": "a84a3b065aa59181",
+  "text": "Take away 100, then add 1 back. What is it?",
+  "source": "lesson-exercise"
  },
  {
   "key": "a84b5a79bcc60791",
@@ -793,6 +1033,16 @@
   "key": "aaf8b8bedf36610a",
   "text": "Hedgie adds 3. Now it's 7.",
   "source": "race-bot-adds"
+ },
+ {
+  "key": "ab3f26baec0a4896",
+  "text": "The equals sign means both sides are the same.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "abebbe5282005fc8",
+  "text": "Take away 10, then add 1 back. What is it?",
+  "source": "lesson-exercise"
  },
  {
   "key": "ac2efcff7ac79249",
@@ -825,9 +1075,24 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "aef7bc4f5d6e7e7a",
+  "text": "You earned the Mountain Climber badge!",
+  "source": "celebration"
+ },
+ {
+  "key": "afe6dcf0c4d041f6",
+  "text": "Penguin had 56 fish. Then Penguin caught 17 more. How many fish does Penguin have now?",
+  "source": "minigame-round"
+ },
+ {
   "key": "afedea340ddd7bd6",
   "text": "You add 1. Now it's 6.",
   "source": "race-you-add"
+ },
+ {
+  "key": "b0c65114a2ce7f99",
+  "text": "Double 21.",
+  "source": "lesson-exercise"
  },
  {
   "key": "b160d99191a39000",
@@ -880,14 +1145,29 @@
   "source": "race-you-add"
  },
  {
+  "key": "bd2d37691b9849c5",
+  "text": "Owl says: a ten is a bridge. Hedgie makes a ten first, then adds what is left. To count up, jump to the next ten and then on!",
+  "source": "lesson-story"
+ },
+ {
   "key": "bd4393ba39bfaa77",
   "text": "Try to land on 4, 8, 12 or 16.",
   "source": "duel-hint"
  },
  {
+  "key": "bdf155532b630c66",
+  "text": "Frog has 25 stickers. A friend gives Frog 32 more. How many stickers does Frog have now?",
+  "source": "lesson-guided"
+ },
+ {
   "key": "be3f2288a9204073",
   "text": "Hedgie adds 2. Now it's 4.",
   "source": "race-bot-adds"
+ },
+ {
+  "key": "be75ce1d216fa3da",
+  "text": "What is the answer?",
+  "source": "lesson-exercise"
  },
  {
   "key": "be96f81d5e60d899",
@@ -955,6 +1235,11 @@
   "source": "race-bot-adds"
  },
  {
+  "key": "ca7844242aea789b",
+  "text": "Help the market animals with their orders!",
+  "source": "minigame-goal"
+ },
+ {
   "key": "cb29077c74b6295c",
   "text": "Round 36 to the nearest ten.",
   "source": "lesson-guided"
@@ -980,6 +1265,11 @@
   "source": "lesson-story"
  },
  {
+  "key": "ce178f1e32174476",
+  "text": "Check the tens. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "ce2d8a3230330bf8",
   "text": "Hedgie adds 1. Now it's 18.",
   "source": "race-bot-adds"
@@ -995,9 +1285,19 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "d1246d33bc6e8f64",
+  "text": "Halve the tens and the ones.",
+  "source": "exercise-note"
+ },
+ {
   "key": "d31d36fd7746c990",
   "text": "You add 3. Now it's 14.",
   "source": "race-you-add"
+ },
+ {
+  "key": "d3b714da95dd88b0",
+  "text": "Ten changes the tens digit. A hundred changes the hundreds digit.",
+  "source": "exercise-note"
  },
  {
   "key": "d566676799134a64",
@@ -1030,6 +1330,11 @@
   "source": "badge-locked"
  },
  {
+  "key": "d8eff244a0581f64",
+  "text": "Penguin had 21 fish. Then Penguin caught 68 more. How many fish does Penguin have now?",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "d96b4cd87383bac7",
   "text": "Hedgie adds 3. Now it's 3.",
   "source": "race-bot-adds"
@@ -1053,6 +1358,11 @@
   "key": "dad9535645e6f516",
   "text": "You add 3. Now it's 10.",
   "source": "race-you-add"
+ },
+ {
+  "key": "dbb69e7ce5923ab7",
+  "text": "Double the tens and the ones.",
+  "source": "exercise-note"
  },
  {
   "key": "dc7817cf955c3205",
@@ -1088,6 +1398,11 @@
   "key": "e173ccd43e93cb3d",
   "text": "You add 3. Now it's 9.",
   "source": "race-you-add"
+ },
+ {
+  "key": "e1b44f2ca89f0fd0",
+  "text": "Read it again: does the number get bigger or smaller? This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "e259a020f02b6c7b",
@@ -1160,6 +1475,11 @@
   "source": "race-bot-adds"
  },
  {
+  "key": "f0400873f412a4f3",
+  "text": "The tens make 90, then the ones make 10 more.",
+  "source": "exercise-note"
+ },
+ {
   "key": "f04de88ae98dc1d1",
   "text": "One choice is ruled out.",
   "source": "exercise-note"
@@ -1175,9 +1495,19 @@
   "source": "race-bot-adds"
  },
  {
+  "key": "f2b6e360840d81d6",
+  "text": "Make a ten first. What is the total?",
+  "source": "lesson-variant"
+ },
+ {
   "key": "f2d1457382e5d95b",
   "text": "Your turn",
   "source": "duel"
+ },
+ {
+  "key": "f42fcc11d901f393",
+  "text": "What is half of 76?",
+  "source": "lesson-exercise"
  },
  {
   "key": "f4f8438175b5bd11",
