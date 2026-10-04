@@ -126,25 +126,33 @@ describe('SubjectsScreen', () => {
     }
   });
 
-  it('a tap activates that subject and opens its Home above the hub', async () => {
+  it('a tap activates that subject and opens its Home above the hub (a fresh subject: placement offer on top)', async () => {
     const { store } = await renderHub();
 
     fireEvent.click(screen.getByTestId('subject-tile-b'));
 
     await waitFor(() => {
-      expect(store.getState().stack.map((route) => route.name)).toEqual(['subjects', 'home']);
+      expect(store.getState().stack.map((route) => route.name)).toEqual([
+        'subjects',
+        'home',
+        'placement-offer',
+      ]);
     });
     expect(store.getState().subjectId).toBe('b');
     expect(store.getState().pack.core.id).toBe('b');
   });
 
-  it('tapping the active subject keeps it and opens its Home', async () => {
+  it('tapping the active subject keeps it and opens its Home (a fresh subject: placement offer on top)', async () => {
     const { store } = await renderHub();
 
     fireEvent.click(screen.getByTestId('subject-tile-a'));
 
     await waitFor(() => {
-      expect(store.getState().stack.map((route) => route.name)).toEqual(['subjects', 'home']);
+      expect(store.getState().stack.map((route) => route.name)).toEqual([
+        'subjects',
+        'home',
+        'placement-offer',
+      ]);
     });
     expect(store.getState().subjectId).toBe('a');
   });
