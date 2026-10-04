@@ -21,3 +21,71 @@ placement:
 # What a lesson character teaches (`topicKey` in src/core/coding-core.ts), shown in My Den and on the Journey.
 topic:
   owl: Owl
+  fox: Fox
+# The program editor, the map and the kind UIs (src/web, src/kinds/*): names a screen reader reads, buttons, notes under the
+# question and hints. `{{n}}` counts from 1; `{{tile}}` is a `tiles.*` text.
+coding:
+  tiles:
+    up: Step up
+    down: Step down
+    left: Step left
+    right: Step right
+    forward: Step forward
+    turn-left: Turn left
+    turn-right: Turn right
+    jump: Jump
+    repeat: 'Repeat {{times}} times'
+    repeat-new: Repeat
+  tray:
+    label: Tiles
+  strip:
+    label: Your program
+    slot-filled: 'Slot {{n}}: {{tile}}'
+    slot-locked: 'Slot {{n}}: {{tile}}, locked'
+    slot-empty: 'Slot {{n}}, empty'
+    inside: 'Slot {{n}}, inside the repeat: {{tile}}'
+    inside-empty: 'Slot {{n}}, inside the repeat, empty'
+    times: 'Repeat {{times}} times, tap to change'
+    fill: 'Put tiles inside slot {{n}}'
+    loop: '{{iteration}} of {{times}}'
+    tile: 'Tile {{n}}: {{tile}}'
+    tile-bug: 'Tile {{n}}: {{tile}}, the bug'
+  board:
+    label: 'Map, {{cols}} by {{rows}}'
+    cell: 'Row {{row}}, column {{column}}'
+    rock: rock
+    star: star
+    flag: flag
+    actor: Fox
+    actor-facing: 'Fox, facing {{heading}}'
+    heading:
+      up: up
+      right: right
+      down: down
+      left: left
+    target: the answer
+    good: correct
+    bad: not right
+    hint: look here
+  buttons:
+    run: Run
+    reset: Reset
+    watch: Watch
+  notes:
+    bumped: 'Oops, bumped into a rock at step {{step}}!'
+    bumped-edge: 'Oops, Fox hit the edge at step {{step}}!'
+    unfinished: Not there yet — try again!
+    too-many: Too many tiles
+    not-in-tray: Use the tiles in the box
+    incomplete: Fill the empty steps first
+    predict-wrong: Not that square. Follow the arrows again!
+    bug-wrong: That step is fine. Look again!
+  hint:
+    first: Look at the glowing square. Fox goes there first.
+    ghost: The faded tiles show the first steps.
+    fill: Here are all the steps. Tap Run!
+    replay: Watch the first steps again.
+    predict-answer: Fox stops on the glowing square.
+    bug-replay: Watch Fox. Where does it go wrong?
+    bug-candidates: The bug is one of the bright steps.
+    bug-flash: The flashing step is the bug.

@@ -2,3 +2,5 @@
 # or one of the platform's animals (owl, fox, bear, rabbit, cat, panda, penguin, frog, elephant).
 owl:
   name: Owl
+fox:
+  name: Fox
