@@ -1,0 +1,11 @@
+# Lesson texts: `<id>.title`, `<id>.story`, `<id>.demo` for a lesson, and one text per exercise `id` (the question the child hears
+# and reads). The fixture lesson of m14.5; m14.9 replaces it.
+fx-first:
+  title: Pond patterns
+  story: Pip the Panda sits by the pond. Frogs and fish line up in a pattern. A pattern repeats, so you can tell what comes next!
+  demo: Pip sees a frog, a fish, a frog, a fish, a frog, a fish. The pattern repeats, so Pip knows what comes next.
+fx-g1: Try it with Pip. Frog, fish, frog, fish, frog. What comes next?
+fx-g2: Try it with Pip. Put the groups of fish in order. Start with the fewest fish.
+fx-01: Two frogs, a fish, two frogs, a fish, two frogs. What comes next?
+fx-02: Put the groups of frogs in order. Start with the fewest frogs.
+fx-03: Frog, fish, duck, frog, fish, duck, frog, fish. What comes next?

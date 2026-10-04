@@ -1,0 +1,11 @@
+# One main track, "Puzzle Paths", with the fixture world Pattern Pond (no boss yet); m14.9 adds the real worlds. `title` / world names
+# are texts in locales/en/journey.yaml.
+tracks:
+  - id: puzzles
+    kind: main
+    title: tracks.puzzles
+    worlds:
+      - { id: pattern-pond, order: 1, habitat: river, title: worlds.pattern-pond }
+# A rank is earned `after` a world (`world:<id>`) or at the `start`; its name is in locales/en/journey.yaml.
+ranks:
+  - { id: thinker, after: start }

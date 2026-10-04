@@ -1,0 +1,24 @@
+{
+ "tracks": [
+  {
+   "id": "puzzles",
+   "kind": "main",
+   "titleKey": "journey:tracks.puzzles",
+   "worlds": [
+    {
+     "id": "pattern-pond",
+     "track": "puzzles",
+     "order": 1,
+     "habitat": "river",
+     "titleKey": "journey:worlds.pattern-pond"
+    }
+   ]
+  }
+ ],
+ "ranks": [
+  {
+   "id": "thinker",
+   "after": "start"
+  }
+ ]
+}
