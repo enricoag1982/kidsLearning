@@ -10,7 +10,6 @@ import {
 import { seedReturningProfile } from '@learn/subject-chess/web/testing/app-test-helpers.ts';
 import { renderApp } from '@learn/subject-chess/web/testing/render-app.tsx';
 import { renderWithStore } from '@learn/platform-web/testing/render-with-store.tsx';
-import { chessWeb } from '@learn/subject-chess/web/chess-pack.ts';
 import { createTestServices } from '@learn/subject-chess/web/testing/test-services.ts';
 import { PracticeScreen } from '@learn/platform-web/ui/PracticeScreen.tsx';
 
@@ -18,7 +17,7 @@ describe('PracticeScreen', () => {
   it('nothing complete yet: no topics, warm-up disabled ("All done for today!")', async () => {
     const lesson = fixtureLesson();
     const services = createTestServices(fixtureContentSource(lesson));
-    await renderWithStore(<PracticeScreen />, services, chessWeb);
+    await renderWithStore(<PracticeScreen />, services);
 
     await screen.findByText('Finish a lesson to see it here!');
     expect(screen.getByText('All done for today!')).toBeTruthy();
@@ -30,7 +29,7 @@ describe('PracticeScreen', () => {
   it('a complete lesson shows as a topic, with accuracy dots from its attempts', async () => {
     const lesson = fixtureLesson();
     const services = createTestServices(fixtureContentSource(lesson));
-    const { store } = await renderWithStore(<PracticeScreen />, services, chessWeb);
+    const { store } = await renderWithStore(<PracticeScreen />, services);
     const profileId = store.getState().profile?.id ?? '';
     const exercise = lesson.exercises[0] ?? fixtureExercise();
 
@@ -52,7 +51,7 @@ describe('PracticeScreen', () => {
   it('a weak concept (accuracy < 60%, ≥3 results) gets the "Needs practice" tag', async () => {
     const lesson = fixtureLesson();
     const services = createTestServices(fixtureContentSource(lesson));
-    const { store } = await renderWithStore(<PracticeScreen />, services, chessWeb);
+    const { store } = await renderWithStore(<PracticeScreen />, services);
     const profileId = store.getState().profile?.id ?? '';
 
     await services.deps.progress.saveLesson({

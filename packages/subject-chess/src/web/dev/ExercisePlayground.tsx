@@ -31,9 +31,7 @@ function ExercisePreview({
   readonly lesson: Lesson;
   readonly def: ExerciseDef;
 }): JSX.Element {
-  const [store] = useState(() =>
-    createAppStore(createTestServices(fixtureContentSource(lesson)), chessWeb),
-  );
+  const [store] = useState(() => createAppStore(createTestServices(fixtureContentSource(lesson))));
   const [ready, setReady] = useState(false);
 
   useEffect(() => {

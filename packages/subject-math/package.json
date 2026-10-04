@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./src/math.ts",
+    "./entry": "./src/entry.ts",
     "./testing": "./src/testing/index.ts",
     "./content": "./src/content/math-content.ts",
     "./web/*": "./src/web/*",

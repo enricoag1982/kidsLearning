@@ -1,12 +1,8 @@
 // Chess's `SubjectCore` + `AppConfig`: the concrete values every platform seam
 // (`createSubjectRuntime`, `AppDeps.subject`/`app`) plugs in for this app. Chess-bound.
 import { chessGameRecordOf } from './app/games.ts';
-import {
-  CHESS_LEGACY_EXPORT,
-  CHESS_RETIRED_SETTINGS,
-  CHESS_SETTINGS_DEFAULTS,
-  isValidComputerLevel,
-} from './chess/settings.ts';
+import { CHESS_APP_CONFIG } from './chess/app-config.ts';
+import { CHESS_SETTINGS_SLOT } from './chess/settings-slot.ts';
 import { chessJsRules } from './chess/chessjs-rules.ts';
 import {
   chessRewardFacts,
@@ -21,7 +17,7 @@ import { EXERCISE_NOTES } from './exercise/notes.ts';
 import { staticMode } from '../modes/static/mode.ts';
 import { versusMode } from '../modes/versus/mode.ts';
 import { composeDefaultSettings } from '@learn/platform-core/domain/profile-settings';
-import type { AppConfig, SubjectCore } from '@learn/platform-core/domain/subject';
+import type { SubjectCore } from '@learn/platform-core/domain/subject';
 import type { ProfileSettings } from '@learn/platform-core/domain/profile-settings';
 
 /** The World-2 piece-lesson characters, one per piece (Rook .. Pawn): the one source `CHESS_CHARACTERS.topicKey`,
@@ -55,26 +51,11 @@ export const chessCore: SubjectCore<VariantRules, ChessRewardFacts> = {
   characters: CHESS_CHARACTERS,
   notes: EXERCISE_NOTES,
   noteVars: () => ({}),
-  settings: {
-    defaults: CHESS_SETTINGS_DEFAULTS,
-    retired: CHESS_RETIRED_SETTINGS,
-    legacyExport: CHESS_LEGACY_EXPORT,
-    isValid: (s) => isValidComputerLevel(s.computerLevel),
-    loadBackupShape: async () =>
-      (await import('./chess/settings-backup.ts')).chessSettingsBackupShape,
-  },
+  settings: CHESS_SETTINGS_SLOT,
 };
 
 /** The chess app's full default settings as a plain constant (the web store's initial / new-profile state). */
 export const DEFAULT_PROFILE_SETTINGS: ProfileSettings = composeDefaultSettings(chessCore.settings);
 
-/** Chess's storage / backup / parent-code identifiers. No `version`: it is the running build's, filled in by the
- * platform-web shell (`__APP_VERSION__`). */
-export const CHESS_APP_CONFIG: Omit<AppConfig, 'version'> = {
-  storagePrefix: 'chess-kids:',
-  // Interim (m11.2–m11.5): one store, keys unchanged; m11.6 moves to `kids:` + `kids-<id>:`.
-  subjectStoragePrefix: () => 'chess-kids:',
-  backupAppId: 'chess-kids',
-  backupFilePrefix: 'chess-for-kids',
-  parentCodeFilePrefix: 'chess-for-kids-parent-code',
-};
+// Defined in `chess/app-config.ts` (a light module the app shell imports without the pack); re-exported for the core's users.
+export { CHESS_APP_CONFIG };

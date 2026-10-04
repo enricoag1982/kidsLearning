@@ -2,7 +2,6 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, cleanup, fireEvent, screen } from '@testing-library/react';
 import type { BestMoveDef, ExerciseDef, YesNoDef } from '@learn/subject-chess';
 import { parseDiagram } from '@learn/subject-chess';
-import { chessWeb } from '@learn/subject-chess/web/chess-pack.ts';
 import '../../app-i18n.ts';
 import {
   fixtureContentSource,
@@ -45,7 +44,7 @@ describe('lesson header and story / demo steps', () => {
   it('the close button is a 56px round icon button', async () => {
     const lesson = fixtureLesson();
     const services = createTestServices(fixtureContentSource(lesson));
-    const { store } = await renderWithStore(<LessonScreen />, services, chessWeb);
+    const { store } = await renderWithStore(<LessonScreen />, services);
     await act(async () => {
       await store.getState().startLesson(lesson.id);
     });
@@ -58,7 +57,7 @@ describe('lesson header and story / demo steps', () => {
   it('Story and Demo: the replay icon leaves the bubble row; Skip shares one row with the 64px primary', async () => {
     const lesson = fixtureLesson();
     const services = createTestServices(fixtureContentSource(lesson));
-    const { store } = await renderWithStore(<LessonScreen />, services, chessWeb);
+    const { store } = await renderWithStore(<LessonScreen />, services);
     await act(async () => {
       await store.getState().startLesson(lesson.id);
     });
@@ -101,7 +100,6 @@ describe('exercise action row', () => {
         onSkip={vi.fn()}
       />,
       services,
-      chessWeb,
     );
 
     const hint = screen.getByRole('button', { name: 'Hint' });
@@ -139,7 +137,6 @@ describe('exercise action row', () => {
     await renderWithStore(
       <ExerciseStep lesson={lesson} exercise={noteExercise} guided={false} nextStepIndex={3} />,
       services,
-      chessWeb,
     );
 
     fireEvent.click(screen.getByRole('button', { name: 'Hint' }));
@@ -168,7 +165,6 @@ describe('exercise action row', () => {
     await renderWithStore(
       <ExerciseStep lesson={lesson} exercise={original} guided={false} nextStepIndex={3} />,
       services,
-      chessWeb,
     );
     expect(screen.queryByRole('button', { name: 'Skip' })).toBeNull();
 
@@ -196,7 +192,6 @@ describe('exercise action row', () => {
     await renderWithStore(
       <ExerciseStep lesson={lesson} exercise={exercise} guided={false} nextStepIndex={3} />,
       services,
-      chessWeb,
     );
 
     for (const name of ['Yes', 'No']) {
@@ -211,7 +206,6 @@ describe('exercise action row', () => {
     await renderWithStore(
       <ExerciseStep lesson={lesson} exercise={exercise} guided={false} nextStepIndex={3} />,
       services,
-      chessWeb,
     );
 
     fireEvent.click(screen.getByRole('button', { name: /^a1,/ }));

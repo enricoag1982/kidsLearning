@@ -1,13 +1,11 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import type { ComponentType, JSX } from 'react';
-import type { AppConfig } from '@learn/platform-core';
+import { useStore } from 'zustand';
 import { AppUpdateProvider, NOOP_APP_UPDATE } from './app/app-update-context.ts';
 import { createAppStore, StoreProvider, useAppStore } from './app/store.ts';
 import type { RouteName } from './app/routes.ts';
-import { createServices } from './app/services.ts';
 import type { Services } from './app/services.ts';
 import { PackProvider } from './app/subject.ts';
-import type { SubjectWeb } from './app/subject.ts';
 import type { AppUpdate } from './adapters/app-update.ts';
 import { AppNotice } from './ui/AppNotice.tsx';
 import { AppUpdater } from './ui/AppUpdater.tsx';
@@ -25,6 +23,7 @@ import { PracticeRunScreen } from './ui/PracticeRunScreen.tsx';
 import { PracticeScreen } from './ui/PracticeScreen.tsx';
 import { ProfilePickerScreen } from './ui/ProfilePickerScreen.tsx';
 import { SessionSummaryScreen } from './ui/SessionSummaryScreen.tsx';
+import { SubjectsScreen } from './ui/SubjectsScreen.tsx';
 import { TimeLimitScreen } from './ui/TimeLimitScreen.tsx';
 import { TimeTracker } from './ui/TimeTracker.tsx';
 import { WarmUpScreen } from './ui/WarmUpScreen.tsx';
@@ -51,12 +50,13 @@ function LoadingScreen(): JSX.Element {
   return <main className="min-h-dvh bg-cream" />;
 }
 
-/** Platform route → component table; a subject's routes (chess: Play, Full game, Friend play) come from `pack.routes`. */
+/** Platform route → component table; the active subject's routes (chess: Play, Full game, Friend play) come from `pack.routes`. */
 const PLATFORM_ROUTE_SCREENS: Readonly<Partial<Record<RouteName, ComponentType>>> = {
   loading: LoadingScreen,
   'first-run': FirstRunScreen,
   'new-player': NewPlayerScreen,
   picker: ProfilePickerScreen,
+  subjects: SubjectsScreen,
   password: PasswordScreen,
   parent: ParentAreaScreen,
   lesson: LessonScreen,
@@ -83,21 +83,15 @@ function Screens(): JSX.Element {
 }
 
 export interface AppProps {
-  /** Injected in tests (fake narrator + in-memory storage); defaults to the real web adapters. */
-  readonly services?: Services;
+  /** The app's services with the first subject active (`mountApp`: loaded and activated; tests: `createServices`). */
+  readonly services: Services;
   readonly appUpdate?: AppUpdate;
-  readonly pack: SubjectWeb;
-  /** The app's identity (storage prefix, file prefixes); `version` is stamped at build time. */
-  readonly app: Omit<AppConfig, 'version'>;
 }
 
-export default function App({
-  services,
-  appUpdate = NOOP_APP_UPDATE,
-  pack,
-  app,
-}: AppProps): JSX.Element {
-  const [store] = useState(() => createAppStore(services ?? createServices([pack], app), pack));
+export default function App({ services, appUpdate = NOOP_APP_UPDATE }: AppProps): JSX.Element {
+  const [store] = useState(() => createAppStore(services));
+  // From the store, not the props: a subject switch replaces it and the whole tree re-renders under the new pack.
+  const pack = useStore(store, (state) => state.pack);
   const [initError, setInitError] = useState<Error | null>(null);
 
   useEffect(() => {

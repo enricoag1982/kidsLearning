@@ -18,7 +18,6 @@ import {
 } from '@learn/platform-core';
 import { requestPersistentStorageIfNeeded } from '../../adapters/persistent-storage.ts';
 import type { AppGet, AppSet } from '../store.ts';
-import type { SubjectWeb } from '../subject.ts';
 import { loadRewards, type RewardsSlice } from './rewards.ts';
 
 export interface ProfileSlice {
@@ -34,9 +33,12 @@ export interface ProfileSlice {
   readonly conceptStats: readonly ConceptStats[];
   readonly journey: Journey | null;
 
-  /** First run: after "Saved", to the new-player wizard, Home (one existing profile) or the picker (more than one). */
+  /** First run: after "Saved", to the new-player wizard, Home (one existing profile; the subjects hub with several subjects) or the picker (more than one). */
   readonly finishFirstRun: () => Promise<void>;
+  /** Creates the profile and selects it: back to the parent area when opened from there, else Home with the placement offer
+   * on top; with several subjects the subjects hub instead (no offer there, multi-subject.md D10). */
   readonly finishNewPlayer: (nickname: string, avatar: string) => Promise<void>;
+  /** Selects the profile and lands on Home, or on the subjects hub with several subjects (the profile's last subject active). */
   readonly selectProfileAndHome: (profileId: string) => Promise<void>;
   readonly refreshProfiles: () => Promise<void>;
   /** Re-reads lesson + mini-game progress and the derived Journey, e.g. after a lesson or mini-game session. */
@@ -51,7 +53,7 @@ type ProfileData = Pick<
   Pick<RewardsSlice, 'earnedBadges' | 'streak'>;
 
 /** Progress, journey and rewards loaded in parallel; shared by `activateProfile` and `refreshProgress`. */
-async function loadProfileData(get: AppGet, profileId: string): Promise<ProfileData> {
+export async function loadProfileData(get: AppGet, profileId: string): Promise<ProfileData> {
   const { services } = get();
   const [progress, miniGameProgress, gameRecords, conceptStats, journey, rewards] =
     await Promise.all([
@@ -101,16 +103,38 @@ export async function reloadProfiles(set: AppSet, get: AppGet): Promise<readonly
   return profiles;
 }
 
+/** Several subjects: the profile's last one becomes the active subject (the hub highlights it, a later Home shows it) when it
+ * differs from the active one; a profile without one keeps the active subject. */
+async function activateLastSubject(get: AppGet, profileId: string): Promise<void> {
+  const { services, subjectId } = get();
+  const { lastSubjectByProfile } = await services.deps.settings.get();
+  const last = lastSubjectByProfile?.[profileId];
+  if (
+    last !== undefined &&
+    last !== subjectId &&
+    services.app.subjects.some((entry) => entry.manifest.id === last)
+  ) {
+    await get().activateSubject(last);
+  }
+}
+
+/** Selects `profile` and lands on Home; with several subjects on the subjects hub instead. */
 async function selectAndGoHome(set: AppSet, get: AppGet, profile: Profile): Promise<void> {
   const { services } = get();
   await selectProfile(services.deps, profile.id);
   const settings = await getProfileSettings(services.deps, profile.id);
+  const hub = services.app.subjects.length > 1;
+  if (hub) await activateLastSubject(get, profile.id);
   await activateProfile(set, get, profile, settings);
-  get().reset({ name: 'home' });
+  get().reset(hub ? { name: 'subjects' } : { name: 'home' });
 }
 
-export function createProfileSlice(set: AppSet, get: AppGet, pack: SubjectWeb): ProfileSlice {
-  const defaultSettings = composeDefaultSettings(pack.core.settings);
+/** `defaultSettings` is the composed default (`composeDefaultSettings`) of the settings slot, the same for every subject. */
+export function createProfileSlice(
+  set: AppSet,
+  get: AppGet,
+  defaultSettings: ProfileSettings,
+): ProfileSlice {
   return {
     profiles: [],
     profile: null,
@@ -151,8 +175,18 @@ export function createProfileSlice(set: AppSet, get: AppGet, pack: SubjectWeb): 
       }
       await selectProfile(services.deps, profile.id);
       // A brand-new profile has no stored settings yet; defaults apply as-is (voice on).
-      await activateProfile(set, get, profile, defaultSettings);
+      await activateProfile(
+        set,
+        get,
+        profile,
+        composeDefaultSettings(get().services.deps.subject.settings),
+      );
       await reloadProfiles(set, get);
+      if (services.app.subjects.length > 1) {
+        // The subjects hub next; the placement offer follows the first entry into a subject (multi-subject.md D10).
+        get().reset({ name: 'subjects' });
+        return;
+      }
       // domain-model.md §3.2: placement offered once, right after creating a new player.
       get().reset({ name: 'home' }, { name: 'placement-offer' });
     },

@@ -111,6 +111,17 @@ const twoPeople = (
 
 export const SwitchPlayerIcon = strokeIcon({ size: 28, strokeWidth: 2 }, twoPeople);
 
+/** Grid of four tiles: "Subjects" (Home header, back to the subjects hub). */
+export const SubjectsIcon = strokeIcon(
+  { size: 28, strokeWidth: 2 },
+  <>
+    <rect x={3.5} y={3.5} width={7} height={7} rx={1.8} />
+    <rect x={13.5} y={3.5} width={7} height={7} rx={1.8} />
+    <rect x={3.5} y={13.5} width={7} height={7} rx={1.8} />
+    <rect x={13.5} y={13.5} width={7} height={7} rx={1.8} />
+  </>,
+);
+
 export const FriendIcon = strokeIcon({ size: 34, strokeWidth: 2, stroke: '#B8561A' }, twoPeople);
 
 export const WarmUpIcon = strokeIcon(

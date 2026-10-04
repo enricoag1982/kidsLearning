@@ -4,8 +4,6 @@ import { registerSW } from 'virtual:pwa-register';
 import '@fontsource-variable/fredoka';
 import '@fontsource-variable/nunito';
 import './index.css';
-import './app-i18n.ts';
-import { CHESS_APP_CONFIG } from '@learn/subject-chess';
-import { chessWeb } from '@learn/subject-chess/web/chess-pack.ts';
+import { CHESS_APP_CONFIG, chessEntry } from '@learn/subject-chess/entry';
 
-mountApp({ pack: chessWeb, app: CHESS_APP_CONFIG, registerSW });
+void mountApp({ subjects: [chessEntry], app: CHESS_APP_CONFIG, registerSW });

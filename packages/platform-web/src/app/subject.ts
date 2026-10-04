@@ -8,6 +8,7 @@ import type {
   Profile,
   ProfileSettings,
   SubjectCore,
+  SubjectManifest,
 } from '@learn/platform-core';
 import type { AnyExerciseKindUI } from '../kinds/kind-ui.ts';
 import type { MiniGameModeUI } from '../modes/mode-ui.ts';
@@ -117,6 +118,28 @@ export interface HomeTile {
   /** Tapping the tile navigates here — a literal `Route` value, so a subject's own routes stay
    * fully typed (chess: `{ name: 'play' }`). */
   readonly route: Route;
+}
+
+/** A subject as the app shell registers it: a static manifest plus the lazily loaded pack. */
+export interface SubjectEntry {
+  readonly manifest: SubjectWebManifest;
+  load(): Promise<LoadedSubject>;
+}
+
+/** What the shell shows of a subject before its pack loads (the hub tile); `settings` composes the flat profile settings. */
+export interface SubjectWebManifest extends SubjectManifest {
+  /** Display name per language (`en` required): the hub tile, before the subject's own texts load. */
+  readonly names: Readonly<Record<string, string>>;
+  /** Hub tile picture (an imported image URL). */
+  readonly icon: string;
+  readonly colors: HomeTileColors;
+}
+
+/** A loaded subject: the pack and its texts. */
+export interface LoadedSubject {
+  readonly pack: SubjectWeb;
+  /** The subject's merged locale bundles by language (platform + subject keys: `dist/locales/<lng>.json`). */
+  readonly locales: Readonly<Record<string, Readonly<Record<string, unknown>>>>;
 }
 
 const PackContext = createContext<SubjectWeb | null>(null);

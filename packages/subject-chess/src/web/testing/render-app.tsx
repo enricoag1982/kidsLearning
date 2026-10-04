@@ -1,8 +1,6 @@
 import { render, screen, type RenderResult } from '@testing-library/react';
-import { CHESS_APP_CONFIG } from '../../core/chess-core.ts';
 import App from '@learn/platform-web/App.tsx';
 import type { AppProps } from '@learn/platform-web/App.tsx';
-import { chessWeb } from '../chess-pack.ts';
 import type { Services } from '@learn/platform-web/app/services.ts';
 import { pickProfileFromPicker } from './app-test-helpers.ts';
 
@@ -25,10 +23,10 @@ export async function renderApp(
   return result;
 }
 
-/** Renders `<App>` over `services` with the chess pack and config, as `mountApp` composes it. */
+/** Renders `<App>` over `services` (the chess pack active), as `mountApp` composes it. */
 export function renderAppRaw(
   services: Services,
-  props: Omit<AppProps, 'services' | 'pack' | 'app'> = {},
+  props: Omit<AppProps, 'services'> = {},
 ): RenderResult {
-  return render(<App services={services} pack={chessWeb} app={CHESS_APP_CONFIG} {...props} />);
+  return render(<App services={services} {...props} />);
 }
