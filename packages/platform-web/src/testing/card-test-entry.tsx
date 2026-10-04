@@ -14,11 +14,10 @@ import type {
 } from '@learn/platform-core/domain/exercise/kinds/cards/def';
 import type { Lesson } from '@learn/platform-core';
 import { compileAll } from '@learn/platform-content/compile-all';
-import { createCardContent } from '@learn/platform-content/kinds/cards/content';
 import {
   CARD_FIXTURE_CHARACTERS,
   CARD_FIXTURE_ROOT,
-  CARD_FIXTURE_TEMPLATES,
+  createCardFixtureContent,
 } from '@learn/platform-content/testing/card-fixture';
 import { PackProvider } from '../app/subject.ts';
 import type { LoadedSubject, SubjectEntry, SubjectWeb } from '../app/subject.ts';
@@ -27,10 +26,7 @@ import { createCardWeb } from '../kinds/cards/web.ts';
 import { createTestEntry } from './test-pack.ts';
 
 /** The fixture subject compiled once per test file (YAML → JSON, in memory). */
-export const cardFixture = compileAll(
-  createCardContent({ characters: CARD_FIXTURE_CHARACTERS, templates: CARD_FIXTURE_TEMPLATES }),
-  CARD_FIXTURE_ROOT,
-);
+export const cardFixture = compileAll(createCardFixtureContent(), CARD_FIXTURE_ROOT);
 
 /** The fixture's merged English bundles (platform + subject), as `dist/locales/en.json` would hold them. */
 export const cardLocales: LoadedSubject['locales'] = { en: cardFixture.locales.en ?? {} };

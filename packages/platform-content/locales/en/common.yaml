@@ -289,6 +289,15 @@ cards:
   order-wrong: Not that one. Try another!
 boss:
   ended: Good try!
+  # The turn-based duel mini-game (`duel` mode): the turn banner and the lines it speaks.
+  duel:
+    your-turn: Your turn
+    bot-turn: "{{bot}}'s turn"
+    bot-default: Owl
+    hint: Look for a move that leaves me stuck.
+    won: You won! Great thinking!
+    lost: I won this time. Try again!
+    draw: A draw! Try again.
   series:
     round-of: 'Round {{current}} of {{total}}'
     mistakes_one: '{{count}} mistake so far'

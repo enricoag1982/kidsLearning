@@ -1,0 +1,9 @@
+id: take-away
+mode: duel
+concept: counting
+unlockAfter: count-up
+game: take-away-fixture
+params: { pile: 6 }
+level: 1
+first: bot
+hint: take-away-hint

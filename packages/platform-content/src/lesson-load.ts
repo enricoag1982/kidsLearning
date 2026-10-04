@@ -183,6 +183,9 @@ function validateSemantics(
     checkExercise: (exercise, where) => {
       checkExerciseSemantics(exercise, where, locales, content, issues);
     },
+    checkTextKey: (key, where) => {
+      checkTextKey(key, locales, where, issues);
+    },
   };
 
   for (const minigame of minigames) {

@@ -258,6 +258,21 @@
    "titleKey": "lessons:parade.title",
    "goalKey": "lessons:parade.goal",
    "unlockAfter": "count-up"
+  },
+  {
+   "mode": "duel",
+   "id": "take-away",
+   "concept": "counting",
+   "game": "take-away-fixture",
+   "params": {
+    "pile": 6
+   },
+   "level": 1,
+   "first": "bot",
+   "hintKey": "lessons:take-away-hint",
+   "titleKey": "lessons:take-away.title",
+   "goalKey": "lessons:take-away.goal",
+   "unlockAfter": "count-up"
   }
  ]
 }
