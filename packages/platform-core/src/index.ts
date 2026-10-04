@@ -218,6 +218,34 @@ export {
 export type { DuelMode } from './domain/exercise/modes/duel/mode.ts';
 export { createDuelMode, isDuelMode } from './domain/exercise/modes/duel/mode.ts';
 
+// The opt-in `group` exercise kind (sort cards into boxes: a row, a Carroll table, a Venn): not in `CARD_KINDS`; a subject adds
+// `group: GROUP_KIND` to its core's kinds, `GROUP_NOTES` to its notes and `GROUP_SOLUTION` to its test / e2e solutions itself.
+export type {
+  GroupAxis,
+  GroupBox,
+  GroupDef,
+  GroupHint,
+  GroupItem,
+  GroupLayout,
+  GroupMiss,
+  GroupOutcome,
+  GroupState,
+  PutItemAction,
+  ZoneRule,
+} from './domain/exercise/kinds/group/def.ts';
+export { CARROLL_ZONES, VENN_ZONES } from './domain/exercise/kinds/group/def.ts';
+export {
+  groupHint,
+  groupZones,
+  itemFacts,
+  putItem,
+  zoneOf,
+} from './domain/exercise/kinds/group/engine.ts';
+export { GROUP_KIND, initGroupState } from './domain/exercise/kinds/group/kind.ts';
+export type { GroupFeedback } from './domain/exercise/kinds/group/notes.ts';
+export { GROUP_NOTES, groupHintText } from './domain/exercise/kinds/group/notes.ts';
+export { GROUP_SOLUTION } from './domain/exercise/kinds/group/solution.ts';
+
 // A subject's kind/mode registries and app identifiers, injected via `AppDeps.subject` / `AppDeps.app`.
 export type {
   AnyKind,
