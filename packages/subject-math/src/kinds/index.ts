@@ -1,30 +1,37 @@
-// The exercise-kind registry: the only place exercise-type dispatch happens.
-import type { AnswerOutcome } from '@learn/platform-core/domain/exercise/answer';
-import type { AnswerChoiceAction } from '@learn/platform-core/domain/exercise/kinds/choice/def';
-import type { MathExerciseDef, MathKind, MathState } from '../core/types.ts';
-import { mathChoiceKind } from './choice/kind.ts';
-import type { NumberEntryAction, NumberEntryOutcome } from './number-entry/kind.ts';
-import { numberEntryKind } from './number-entry/kind.ts';
+// The exercise-kind registry: the only place exercise-type dispatch happens. Today the card kit's four kinds, one plain object
+// that math's own kinds join (m13.6-m13.8).
+import type {
+  CardAction,
+  CardHint,
+  CardOutcome,
+  CardState,
+} from '@learn/platform-core/domain/exercise/kinds/cards/def';
+import { CARD_KINDS } from '@learn/platform-core/domain/exercise/kinds/cards/kinds';
+import type { ExerciseKind } from '@learn/platform-core/domain/exercise/kind';
+import type { MathExerciseDef } from '../core/types.ts';
 
 export type ExerciseType = MathExerciseDef['type'];
 export type DefOf<T extends ExerciseType> = Extract<MathExerciseDef, { readonly type: T }>;
 
-export type MathAction = AnswerChoiceAction | NumberEntryAction;
-export type MathOutcome = AnswerOutcome | NumberEntryOutcome;
+export type MathAction = CardAction;
+export type MathOutcome = CardOutcome;
+export type MathHint = CardHint;
+export type MathState = CardState;
+
+export type AnyMathKind = ExerciseKind<
+  MathExerciseDef,
+  MathState,
+  MathAction,
+  MathOutcome,
+  MathHint,
+  null
+>;
 
 export const MATH_KINDS = {
-  choice: mathChoiceKind,
-  'number-entry': numberEntryKind,
-} as const satisfies { readonly [T in ExerciseType]: MathKind<DefOf<T>, MathAction, MathOutcome> };
+  ...CARD_KINDS,
+} as const satisfies { readonly [T in ExerciseType]: AnyMathKind & { readonly type: T } };
 
-export type ActionOf<T extends ExerciseType> = Parameters<(typeof MATH_KINDS)[T]['act']>[1];
-export type OutcomeOf<T extends ExerciseType> = ReturnType<
-  (typeof MATH_KINDS)[T]['act']
->['outcome'];
-
-export type AnyMathKind = MathKind<MathExerciseDef, MathAction, MathOutcome>;
-
-export function kindOf(def: MathExerciseDef): AnyMathKind {
+export function kindOf(def: { readonly type: ExerciseType }): AnyMathKind {
   return MATH_KINDS[def.type];
 }
 

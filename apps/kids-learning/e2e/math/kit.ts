@@ -1,6 +1,6 @@
 // The math e2e kit: the platform's page flows bound to the math subject of the Kids Learning app (through the subjects
-// hub) and its locale, plus a driver that plays any exercise from its kind's `solution()` through the kind's own e2e
-// driver (one path for every kind).
+// hub) and its locale, plus a driver that plays any exercise from its kind's `solution()` through the kind's e2e driver
+// (math's registry: the card kit's drivers, and math's own kinds as they join; one path for every kind).
 import { expect } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import { createE2ETexts } from '@learn/platform-web/e2e/i18n.ts';
@@ -14,14 +14,14 @@ import type {
 } from '@learn/subject-math';
 import { MATH_CHARACTERS, kindOf } from '@learn/subject-math';
 import { solutionOf } from '@learn/subject-math/testing';
-import { kindE2EOf } from '@learn/subject-math/web/kinds/e2e-registry.ts';
+import { mathKindE2EOf } from '@learn/subject-math/web/kinds/e2e-registry.ts';
 import { modeE2EOf } from '@learn/subject-math/web/modes/e2e-registry.ts';
 // Node's ESM loader (specs run straight under Playwright, outside Vite) requires this attribute for
 // a JSON import.
 import rawContent from '@learn/subject-math/dist/content.json' with { type: 'json' };
 import en from '@learn/subject-math/dist/locales/en.json' with { type: 'json' };
 
-/** The math locale's texts, resolved as the app renders them (`lessons:add-within-5.title`, `math.erase`). */
+/** The math locale's texts, resolved as the app renders them (`lessons:add-within-5.title`, `cards.erase`). */
 export const { contentText, interpolate } = createE2ETexts({ en });
 
 /** The shared page flows bound to the math subject's Home title and locale. */
@@ -93,16 +93,16 @@ async function runActions(
   actions: readonly MathAction[],
 ): Promise<void> {
   const kind = kindOf(def);
-  const driver = kindE2EOf(def.type);
+  const driver = mathKindE2EOf(def.type);
   let state = kind.init(def);
   for (const action of actions) {
     const before = state;
     const { state: next, outcome } = kind.act(before, action, null);
     await driver.perform(page, action, { def, before, outcome, text: contentText });
     state = next;
-    // The problem card echoes what was typed; waiting for it keeps the next tap off a stale render.
+    // The entry strip echoes what was typed; waiting for it keeps the next tap off a stale render.
     if (!next.solved && next.entry !== '') {
-      const label = interpolate(contentText('math.entry-label'), { value: next.entry });
+      const label = interpolate(contentText('cards.entry-label'), { value: next.entry });
       await expect(page.getByRole('status', { name: label, exact: true })).toBeVisible();
     }
   }

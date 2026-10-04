@@ -15,14 +15,29 @@
   "source": "badge-locked"
  },
  {
+  "key": "09d0d86ca82c29e8",
+  "text": "It starts with 7.",
+  "source": "exercise-note"
+ },
+ {
   "key": "0f5e967b7bc3cb26",
   "text": "What is 5 plus 5?",
   "source": "minigame-round"
  },
  {
+  "key": "161fdcce3e2e7cdb",
+  "text": "Amazing!",
+  "source": "exercise-note"
+ },
+ {
   "key": "1b96d247671c85ff",
   "text": "What is 3 plus 1?",
   "source": "lesson-exercise"
+ },
+ {
+  "key": "220b955b268d8b6a",
+  "text": "It starts with 6.",
+  "source": "exercise-note"
  },
  {
   "key": "238c6caa997d35fa",
@@ -35,9 +50,19 @@
   "source": "journey"
  },
  {
+  "key": "27dfb80057b25845",
+  "text": "Here is the answer.",
+  "source": "exercise-note"
+ },
+ {
   "key": "2a5c3beb2d8a6b2b",
   "text": "Hedgie loves collecting berries! When she finds some more, she counts them all together. Adding means putting groups together to see how many there are.",
   "source": "lesson-story"
+ },
+ {
+  "key": "323fde12bb24ff58",
+  "text": "It starts with 0.",
+  "source": "exercise-note"
  },
  {
   "key": "327d6304af983436",
@@ -60,6 +85,11 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "42395b2cf6a958b5",
+  "text": "Look closely.",
+  "source": "exercise-note"
+ },
+ {
   "key": "440d9ca4a28987df",
   "text": "What is 4 plus 5?",
   "source": "lesson-exercise"
@@ -75,6 +105,11 @@
   "source": "assessment"
  },
  {
+  "key": "462164a0645e1ed2",
+  "text": "Well done!",
+  "source": "exercise-note"
+ },
+ {
   "key": "4805eee9fb3cd71d",
   "text": "Look at all your friends!",
   "source": "owl-line"
@@ -88,6 +123,16 @@
   "key": "49d56d80cb7af153",
   "text": "Hedgie has 2 berries and finds 1 more. Count all the dots. 2 plus 1 makes 3!",
   "source": "lesson-demo"
+ },
+ {
+  "key": "4a61f482035c8a48",
+  "text": "It starts with 4.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "530abb19f63d5293",
+  "text": "It starts with 9.",
+  "source": "exercise-note"
  },
  {
   "key": "560280972f061d0e",
@@ -118,6 +163,11 @@
   "key": "616e3105145292c8",
   "text": "Star Counter, Bronze",
   "source": "badge-earned"
+ },
+ {
+  "key": "622418bb13e58c02",
+  "text": "It starts with 5.",
+  "source": "exercise-note"
  },
  {
   "key": "649a35c92457f8f1",
@@ -200,6 +250,11 @@
   "source": "placement"
  },
  {
+  "key": "8bab8681b7a5146f",
+  "text": "It starts with 3.",
+  "source": "exercise-note"
+ },
+ {
   "key": "8f81bb9992b8ae08",
   "text": "What is 9 minus 5?",
   "source": "lesson-exercise"
@@ -208,6 +263,11 @@
   "key": "910c2ea026165cb2",
   "text": "What is 1 plus 1?",
   "source": "lesson-guided"
+ },
+ {
+  "key": "94f516a7b14c3876",
+  "text": "Not that number. Try again!",
+  "source": "exercise-note"
  },
  {
   "key": "957f278d66fde401",
@@ -230,6 +290,11 @@
   "source": "home"
  },
  {
+  "key": "a4a00559aa6ccb7c",
+  "text": "It starts with 8.",
+  "source": "exercise-note"
+ },
+ {
   "key": "a84b5a79bcc60791",
   "text": "Let's do some math together!",
   "source": "voice-check"
@@ -245,6 +310,11 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "b95ef6e6dbddbf22",
+  "text": "Not quite! Try again. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "bb46f7ec1e8bf998",
   "text": "What is 3 minus 1?",
   "source": "lesson-guided"
@@ -253,6 +323,11 @@
   "key": "bbf1c8ba7d0c49ac",
   "text": "Owl has bigger numbers to add today. Start at the bigger number and count on. It is quicker than counting everything again!",
   "source": "lesson-story"
+ },
+ {
+  "key": "be96f81d5e60d899",
+  "text": "Good try!",
+  "source": "exercise-note"
  },
  {
   "key": "c09b7476aa931db7",
@@ -300,9 +375,19 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "d9dd9bde2ed22057",
+  "text": "It starts with 2.",
+  "source": "exercise-note"
+ },
+ {
   "key": "dfe3e013f29e8780",
   "text": "Star Counter, Silver",
   "source": "badge-earned"
+ },
+ {
+  "key": "e259a020f02b6c7b",
+  "text": "Not that number. Try again! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "e4f1be22becc5086",
@@ -325,9 +410,19 @@
   "source": "owl-line"
  },
  {
+  "key": "ecd4fe369e2640df",
+  "text": "Not quite! Try again.",
+  "source": "exercise-note"
+ },
+ {
   "key": "eee0c307c1b06c9a",
   "text": "You already know Adding — 3 lessons are yours!",
   "source": "assessment"
+ },
+ {
+  "key": "f04de88ae98dc1d1",
+  "text": "One choice is ruled out.",
+  "source": "exercise-note"
  },
  {
   "key": "f2c41bd5f237f0eb",
@@ -343,5 +438,10 @@
   "key": "fadb0a787446c172",
   "text": "Already know some math? Let's find out where to start you!",
   "source": "placement"
+ },
+ {
+  "key": "ff9e1b1facd7d976",
+  "text": "It starts with 1.",
+  "source": "exercise-note"
  }
 ]

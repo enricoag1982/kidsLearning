@@ -45,7 +45,7 @@ describe('Kids Learning app', () => {
     await screen.findByRole('heading', { level: 1, name: 'Math' });
     fireEvent.click(await screen.findByRole('button', { name: /Start/ }));
     await screen.findByRole('button', { name: /Let me try/ });
-    await screen.findByText('2 + 1 = ?');
+    await screen.findByText('2 + 1');
 
     const keys = storageKeys(storage);
     expect(keys).toContain('kids:profiles');

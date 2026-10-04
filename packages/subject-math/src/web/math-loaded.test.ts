@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { mathEntry } from '../entry.ts';
+import { MATH_KIND_UI } from './kinds/ui-registry.ts';
 import { mathWeb } from './math-pack.ts';
 
 describe('mathEntry.load', () => {
@@ -11,5 +12,30 @@ describe('mathEntry.load', () => {
     expect(Object.keys(loaded.locales)).toEqual(['en']);
     const common = loaded.locales.en?.common as { app?: { title?: string } } | undefined;
     expect(common?.app?.title).toBe('Math');
+  });
+
+  it('serves the compiled demo world: 3 lessons and the Number Parade, in the Numbers track', async () => {
+    const { pack } = await mathEntry.load();
+    const content = pack.createServices().content;
+
+    expect(content.lessons().map((lesson) => lesson.id)).toEqual([
+      'add-within-10',
+      'add-within-5',
+      'take-away',
+    ]);
+    expect(content.minigame('number-parade')?.id).toBe('number-parade');
+    expect(content.catalog?.().tracks.map((track) => track.id)).toEqual(['numbers']);
+    expect(content.badges?.().map((badge) => badge.id)).toEqual(['first-sums', 'star-counter']);
+  });
+
+  it('draws the card kit kinds, in math’s own UI registry (the kit UIs, same objects)', async () => {
+    const { pack } = await mathEntry.load();
+    expect(Object.keys(pack.kinds).sort()).toEqual([
+      'choice',
+      'number-entry',
+      'order',
+      'true-false',
+    ]);
+    expect(pack.kinds).toBe(MATH_KIND_UI);
   });
 });

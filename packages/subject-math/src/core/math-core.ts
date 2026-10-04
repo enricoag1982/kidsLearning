@@ -1,28 +1,18 @@
-// Math's `SubjectCore` + `AppConfig`: the concrete values every platform seam
-// (`createSubjectRuntime`, `AppDeps.subject` / `app`) plugs in for this app.
+// Math's `SubjectCore`: the card kit's core (a prompt card, `choice` and `number-entry` serve the demo world) with math's kind
+// registry in place of the kit's, so the kinds of m13.6-m13.8 (`number-line`, `place-value`, `array`) join `MATH_KINDS`. No mode of
+// its own (`series` comes from the runtime).
+import { createCardCore } from '@learn/platform-core/domain/exercise/kinds/cards/core';
+import { CARD_NOTES } from '@learn/platform-core/domain/exercise/kinds/cards/notes';
 import type { SubjectCore } from '@learn/platform-core/domain/subject';
 import { MATH_KINDS } from '../kinds/index.ts';
-import { MATH_APP_CONFIG } from './app-config.ts';
-import { MATH_NOTES } from './notes.ts';
-import { MATH_SETTINGS_SLOT } from './settings-slot.ts';
 
-/** Lesson characters that double as an "animal friend" once their lesson is done. */
+/** Lesson characters that double as an "animal friend" once their lesson is done (the Owl guides every world and is not one). Add a
+ * character here (and its `characters.<id>.name` / `topic.<id>` texts) to introduce a new one. */
 export const MATH_CHARACTERS: Readonly<Record<string, { readonly topicKey: string }>> = {
   hedgehog: { topicKey: 'topic.counter' },
 };
 
-/** Math's `SubjectCore`: 2 exercise kinds and no mode of its own (`series` comes from `createSubjectRuntime`); no badge
- * facts, game log or settings slot. */
 export const mathCore: SubjectCore<null> = {
-  id: 'math',
-  context: null,
+  ...createCardCore({ id: 'math', characters: MATH_CHARACTERS, notes: CARD_NOTES }),
   kinds: MATH_KINDS,
-  modes: {},
-  characters: MATH_CHARACTERS,
-  notes: MATH_NOTES,
-  noteVars: () => ({}),
-  settings: MATH_SETTINGS_SLOT,
 };
-
-// Defined in `app-config.ts` (a light module the app shell imports without the pack); re-exported for the core's users.
-export { MATH_APP_CONFIG };
