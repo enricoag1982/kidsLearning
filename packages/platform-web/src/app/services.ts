@@ -178,7 +178,7 @@ export function createAppServices(
     clock: createSystemClock(),
     ids: createCryptoIds(),
     parentLock: new LocalStorageParentLockRepository(sharedStore),
-    passwordFile: createDownloadPasswordFileWriter(appConfig.parentCodeFilePrefix),
+    passwordFile: createDownloadPasswordFileWriter(appConfig.parentCodeFilePrefix, appConfig.title),
     settings: new LocalStorageSettingsRepository(sharedStore),
     random: createMathRandom(),
     backupFileWriter: createLazyBackupFileWriter(),

@@ -1,0 +1,164 @@
+import { gzipSync } from 'node:zlib';
+import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+/**
+ * Offline size budget (non-functional.md §4): *initial* JS ≤ 300 KB gzipped — the app shell before
+ * a kid ever opens a lazy-loaded screen (parent area, friend play, placement / test-out —
+ * `App.tsx`'s own `React.lazy` calls), not the whole app. Inside it (`docs/multi-subject.md` D7, risks):
+ * the entry JS (what `index.html` loads, below) ≤ 135 KB gzipped, and each subject pack — its own lazy
+ * chunk, `<id>-loaded-<hash>.js` — ≤ 70 KB gzipped, so adding a subject never grows the entry. `dist/index.html`'s own
+ * `<script type="module">` (the entry chunk) plus every `<link rel="modulepreload">` it lists (the
+ * entry's own static, non-lazy dependencies — Vite already resolved exactly the set a first paint
+ * needs; a chunk only ever reached through a lazy screen's own dynamic `import()` is never listed
+ * here) is exactly what a first, cold load actually fetches before Home is interactive. Every
+ * other built JS file (the lazy screens' own chunks, the bot worker, …) is reported too, as the
+ * grand total, but does not count against the budget — each is precached by the service worker
+ * right after first load either way (`vite.config.ts`'s `workbox.globPatterns`), so a repeat visit
+ * pays no network cost for it regardless of when it is first fetched.
+ */
+const BUDGET_BYTES = 300 * 1024;
+const ENTRY_CEILING_KB = 135;
+const PACK_CEILING_KB = 70;
+/** The subjects `src/main.tsx` registers: each one's pack must stay its own chunk, `<id>-loaded-<hash>.js`. */
+const SUBJECT_PACKS = ['chess', 'math'] as const;
+
+const distDir = join(dirname(fileURLToPath(import.meta.url)), '../dist');
+const assetsDir = join(distDir, 'assets');
+const jsFiles = readdirSync(assetsDir).filter((file) => file.endsWith('.js'));
+
+if (jsFiles.length === 0) {
+  throw new Error(`no .js files found in ${assetsDir} — run the build first`);
+}
+
+/** Every `assets/<file>.js` (or `assets/<file>.js` without the `assets/` prefix, matching
+ * either an absolute `/assets/…` or relative `assets/…` href) named in `dist/index.html`, in the
+ * order it appears: the entry `<script type="module">` first, then each `<link
+ * rel="modulepreload">`. */
+function initialChunkNames(html: string): string[] {
+  const names: string[] = [];
+  const pattern =
+    /<(?:script[^>]*\btype="module"|link[^>]*\brel="modulepreload")[^>]*\b(?:src|href)="([^"]+)"/g;
+  for (const match of html.matchAll(pattern)) {
+    const href = match[1];
+    if (href === undefined) continue;
+    const name = href.split('/').pop();
+    if (name !== undefined && name.endsWith('.js')) {
+      names.push(name);
+    }
+  }
+  return names;
+}
+
+const indexHtml = readFileSync(join(distDir, 'index.html'), 'utf-8');
+const initialNames = new Set(initialChunkNames(indexHtml));
+if (initialNames.size === 0) {
+  throw new Error(`no <script type="module">/<link rel="modulepreload"> found in index.html`);
+}
+
+let initialBytes = 0;
+let totalBytes = 0;
+for (const file of jsFiles) {
+  const bytes = gzipSync(readFileSync(join(assetsDir, file))).length;
+  totalBytes += bytes;
+  const isInitial = initialNames.has(file);
+  if (isInitial) {
+    initialBytes += bytes;
+  }
+  console.log(`  ${file}: ${(bytes / 1024).toFixed(1)} KB gzip${isInitial ? ' (initial)' : ''}`);
+}
+
+const missing = [...initialNames].filter(
+  (name) => !jsFiles.includes(name) && !name.includes('registerSW'),
+);
+if (missing.length > 0) {
+  throw new Error(`index.html references JS not found in dist/assets: ${missing.join(', ')}`);
+}
+
+const initialKb = (initialBytes / 1024).toFixed(1);
+const totalKb = (totalBytes / 1024).toFixed(1);
+const budgetKb = (BUDGET_BYTES / 1024).toFixed(0);
+console.log(
+  `Entry JS (index.html: script + preloads): ${initialKb} KB gzip (budget ${budgetKb} KB, ceiling ${String(ENTRY_CEILING_KB)} KB)`,
+);
+console.log(`Total JS (incl. lazy chunks + worker): ${totalKb} KB gzip`);
+
+if (initialBytes > BUDGET_BYTES) {
+  throw new Error(`initial JS size budget exceeded: ${initialKb} KB > ${budgetKb} KB`);
+}
+
+// Ceiling of the entry (`docs/multi-subject.md` D7): m11.4 measured 128.8 KB with two subjects registered; raise it only on purpose.
+if (initialBytes > ENTRY_CEILING_KB * 1024) {
+  throw new Error(`entry JS above its ceiling: ${initialKb} KB > ${String(ENTRY_CEILING_KB)} KB`);
+}
+
+// One chunk per subject pack (`SubjectEntry.load`'s dynamic import); the list grows with the app's subjects.
+for (const id of SUBJECT_PACKS) {
+  const file = jsFiles.find((name) => new RegExp(`^${id}-loaded-[\\w-]+\\.js$`).test(name));
+  if (file === undefined) {
+    throw new Error(
+      `no ${id}-loaded-*.js chunk in dist/assets: the ${id} pack is not its own lazy chunk`,
+    );
+  }
+  const bytes = gzipSync(readFileSync(join(assetsDir, file))).length;
+  const kb = (bytes / 1024).toFixed(1);
+  console.log(`Subject pack ${id}: ${kb} KB gzip (${file}; ceiling ${String(PACK_CEILING_KB)} KB)`);
+  if (initialNames.has(file)) {
+    throw new Error(`the ${id} pack (${file}) is loaded by index.html, not on demand`);
+  }
+  if (bytes > PACK_CEILING_KB * 1024) {
+    throw new Error(`${id} pack above its ceiling: ${kb} KB > ${String(PACK_CEILING_KB)} KB`);
+  }
+}
+
+/**
+ * Offline precache size (`docs/non-functional.md` §1's ≤ 50 MB/language budget,
+ * `docs/voice.md`'s own ≤ 25 MB English audio slice being the dominant piece of it): every file
+ * the built service worker (`vite-plugin-pwa`'s `dist/sw.js`) actually precaches on first install,
+ * parsed straight out of its own `precacheAndRoute([{ url, revision }, …])` call — the exact list
+ * workbox itself caches, not a re-derived guess — so this always matches what a first offline
+ * visit really stores. Reports the `audio/en/*` slice separately from the rest.
+ */
+const PRECACHE_BUDGET_BYTES = 50 * 1024 * 1024;
+
+/** Every `url:"…"` (or `url:'…'`) in `precacheAndRoute([{ url: "…", revision: "…" }, …])` — the
+ * built, minified `sw.js` quotes each string, but not always with the same quote character. */
+function precachedUrls(swJs: string): string[] {
+  const urls: string[] = [];
+  const pattern = /\burl:(["'])((?:(?!\1).)*?)\1/g;
+  for (const match of swJs.matchAll(pattern)) {
+    const url = match[2];
+    if (url !== undefined) urls.push(url);
+  }
+  return urls;
+}
+
+const swPath = join(distDir, 'sw.js');
+const swJs = readFileSync(swPath, 'utf-8');
+const precacheUrls = precachedUrls(swJs);
+if (precacheUrls.length === 0) {
+  throw new Error(`no precacheAndRoute(...) entries found in ${swPath} — run the build first`);
+}
+
+let precacheBytes = 0;
+let audioBytes = 0;
+for (const url of precacheUrls) {
+  const filePath = join(distDir, decodeURIComponent(url));
+  const bytes = statSync(filePath).size;
+  precacheBytes += bytes;
+  if (url.startsWith('audio/')) audioBytes += bytes;
+}
+
+const precacheMb = (precacheBytes / 1024 / 1024).toFixed(1);
+const audioMb = (audioBytes / 1024 / 1024).toFixed(1);
+const precacheBudgetMb = (PRECACHE_BUDGET_BYTES / 1024 / 1024).toFixed(0);
+console.log(
+  `Offline precache: ${precacheMb} MB (budget ${precacheBudgetMb} MB), of which audio: ${audioMb} MB`,
+);
+
+if (precacheBytes > PRECACHE_BUDGET_BYTES) {
+  throw new Error(
+    `offline precache size budget exceeded: ${precacheMb} MB > ${precacheBudgetMb} MB`,
+  );
+}

@@ -1,0 +1,1160 @@
+import { expect, test } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+import type { TracksCatalog } from '@learn/platform-core';
+import type { CompiledContent, Lesson, MiniGame } from '@learn/subject-chess';
+import type { ExerciseDef } from '@learn/subject-chess';
+import { SQUARES } from '@learn/subject-chess';
+import rawContent from '@learn/subject-chess/dist/content.json' with { type: 'json' };
+import rawTracks from '@learn/subject-chess/dist/tracks.json' with { type: 'json' };
+import { modeE2EOf } from '@learn/subject-chess/web/modes/e2e-registry.ts';
+import {
+  answerExerciseWrongThenSolve,
+  clickSquare,
+  completeBoss,
+  completeExercise,
+  completeFirstRun,
+  contentText,
+  dismissCelebrationIfShown,
+  findMiniGame,
+  firstTwoLessons,
+  getSoleProfileId,
+  isMoveCountedExercise,
+  journeyNodeName,
+  lessonsInJourneyOrder,
+  pickProfileFromPicker,
+  playOneKidVersusMove,
+  playSolveLine,
+  playVersusBoss,
+  seedDailyLimit,
+  seedLessonsMastered,
+  seedMiniGameWon,
+  seedMinutesToday,
+  selectSquaresAnswer,
+  shownExercise,
+  solveExercise,
+  waitForVersusTurnOrEnd,
+  worldBossMiniGame,
+  worldTabName,
+} from './helpers.ts';
+
+const content = rawContent as unknown as CompiledContent;
+const catalog = rawTracks as unknown as TracksCatalog;
+
+/**
+ * Clears any concept stats this walk's own deep-scanning has produced (an exercise scanned
+ * through its wrong-answer states reaches `EASIER_AFTER_ERRORS` and puts its concept in review,
+ * due immediately) so the next Home "Start/Continue" goes straight to its lesson/mini-game — this
+ * walk exists to scan lesson/exercise/boss/Practice/summary screens, not the warm-up run itself
+ * (covered on its own by `today-session.spec.ts`), and a warm-up's exact task is picked at random
+ * from the whole curriculum, too unpredictable to solve on sight reliably here.
+ */
+async function clearConceptStats(page: Page): Promise<void> {
+  await page.evaluate(() => {
+    localStorage.removeItem('kids-chess:concept-stats');
+  });
+}
+
+/**
+ * A lesson finished via Home's Start/Continue may also be followed by one trailing mini-game
+ * (session order: warm-up → lesson → mini-game → summary), whichever the session picked at
+ * its start. Plays it through like `completeBoss`, but its own final "Continue" (not "Next" —
+ * `BossPlaySession.primaryLabel`, `miniGameOrigin: 'today'`) leads to the session summary.
+ */
+async function passThroughTrailingMiniGame(page: Page): Promise<void> {
+  const summary = page.getByText('Great session!');
+  if (await summary.isVisible().catch(() => false)) return;
+
+  const title = await page.getByRole('heading', { level: 2 }).textContent();
+  const game = content.minigames.find((candidate) => contentText(candidate.titleKey) === title);
+  if (!game) {
+    throw new Error(`passThroughTrailingMiniGame: no mini-game titled "${title ?? ''}"`);
+  }
+  await modeE2EOf(game.mode).play(page, game, { text: contentText, solve: solveExercise });
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await summary.waitFor();
+}
+
+/** Fails on `serious` / `critical` axe-core violations (non-functional.md §2: WCAG 2.2 AA). */
+async function expectNoSeriousViolations(page: Page, screen: string): Promise<void> {
+  const results = await new AxeBuilder({ page }).analyze();
+  const serious = results.violations.filter(
+    (violation) => violation.impact === 'serious' || violation.impact === 'critical',
+  );
+  expect(serious, `${screen}: ${JSON.stringify(serious, null, 2)}`).toEqual([]);
+}
+
+/**
+ * Tappable vs info (docs/screens.md §1, roadmap F3; widened v1.1.0 part B, playtest 2): every real
+ * `<button>` on the screen carries the shared `.tap-raised` marker class, and no non-button element
+ * does; every raised, enabled button's boundary (its border, or its background if the border is
+ * transparent) has >= 3:1 contrast (WCAG 2.2 SC 1.4.11) against the nearest opaque ancestor
+ * background it sits on; and a rank/stars pill (`RankPill`/`StarsPill`, "Info = no box") has no
+ * background box or border. The board (`role="grid"`, one button per square) is its own established
+ * game surface, not part of this contrast, so it is excluded, as is a disabled or `.tap-locked`
+ * button (docs/screens.md §1 "Disabled: ... exempt"); a `role="dialog"`/`"alertdialog"` open at scan
+ * time is included (its own buttons still need to be raised).
+ */
+async function expectOnlyButtonsRaised(page: Page, screen: string): Promise<void> {
+  const result = await page.evaluate(() => {
+    const board = document.querySelector('[role="grid"]');
+    const unraisedButtons = Array.from(document.querySelectorAll('button'))
+      .filter((button) => !board?.contains(button))
+      .filter((button) => !button.classList.contains('tap-raised'))
+      .map(
+        (button) => button.getAttribute('aria-label') ?? (button.textContent.trim() || '(unnamed)'),
+      );
+    const raisedNonButtons = Array.from(document.querySelectorAll('.tap-raised'))
+      .filter((el) => el.tagName !== 'BUTTON')
+      .map((el) => `<${el.tagName.toLowerCase()}> ${el.outerHTML.slice(0, 100)}`);
+
+    // WCAG relative luminance / contrast ratio (same formula as the lead's own contrast-calc
+    // script, docs/screens.md §1.1) computed live from `getComputedStyle`, since only the browser
+    // knows the actual rendered (post-cascade, post-CSS-variable) colour of every element.
+    function parseColor(value: string): { r: number; g: number; b: number; a: number } | null {
+      const m = value.match(/rgba?\(([^)]+)\)/);
+      const inner = m?.[1];
+      if (inner === undefined) return null;
+      const parts = inner.split(',').map((s) => parseFloat(s.trim()));
+      const [r, g, b, a = 1] = parts;
+      if (r === undefined || g === undefined || b === undefined) return null;
+      return { r, g, b, a };
+    }
+    function relLuminance(c: { r: number; g: number; b: number }): number {
+      const f = (channel: number): number => {
+        const cs = channel / 255;
+        return cs <= 0.03928 ? cs / 12.92 : Math.pow((cs + 0.055) / 1.055, 2.4);
+      };
+      return 0.2126 * f(c.r) + 0.7152 * f(c.g) + 0.0722 * f(c.b);
+    }
+    function contrastRatio(
+      c1: { r: number; g: number; b: number },
+      c2: { r: number; g: number; b: number },
+    ): number {
+      const l1 = relLuminance(c1);
+      const l2 = relLuminance(c2);
+      const [lighter, darker] = l1 > l2 ? [l1, l2] : [l2, l1];
+      return (lighter + 0.05) / (darker + 0.05);
+    }
+    // Walks up from an element's parent to the first ancestor with a fully opaque background —
+    // the "surface around it" a boundary is judged against (docs/screens.md §1 "Measurable rule").
+    function nearestOpaqueAncestorBg(el: Element): { r: number; g: number; b: number } {
+      let node = el.parentElement;
+      while (node) {
+        const c = parseColor(getComputedStyle(node).backgroundColor);
+        if (c && c.a >= 0.999) return c;
+        node = node.parentElement;
+      }
+      return { r: 255, g: 255, b: 255 }; // none found: the default document canvas is white
+    }
+
+    const lowContrastButtons: string[] = [];
+    for (const button of Array.from(document.querySelectorAll('button.tap-raised'))) {
+      if (board?.contains(button)) continue;
+      const el = button as HTMLButtonElement;
+      if (el.disabled || el.classList.contains('tap-locked')) continue;
+      const style = getComputedStyle(el);
+      const borderColor = parseColor(style.borderTopColor);
+      const hasBorder =
+        borderColor !== null && borderColor.a > 0 && parseFloat(style.borderTopWidth) > 0;
+      const boundary = hasBorder ? borderColor : parseColor(style.backgroundColor);
+      if (!boundary) continue;
+      const ratio = contrastRatio(boundary, nearestOpaqueAncestorBg(el));
+      if (ratio < 3) {
+        const name = el.getAttribute('aria-label') ?? (el.textContent.trim() || '(unnamed)');
+        lowContrastButtons.push(`${name}: ${ratio.toFixed(2)}:1`);
+      }
+    }
+
+    const pillViolations = Array.from(
+      document.querySelectorAll('[data-testid="rank-pill"], [data-testid="stars-pill"]'),
+    )
+      .filter((el) => {
+        const style = getComputedStyle(el);
+        const bg = parseColor(style.backgroundColor);
+        const hasVisibleBg = bg !== null && bg.a > 0;
+        const hasBorder = style.borderTopStyle !== 'none' && parseFloat(style.borderTopWidth) > 0;
+        return hasVisibleBg || hasBorder;
+      })
+      .map((el) => el.getAttribute('data-testid') ?? '(pill)');
+
+    return { unraisedButtons, raisedNonButtons, lowContrastButtons, pillViolations };
+  });
+  expect(result.unraisedButtons, `${screen}: <button>s missing .tap-raised`).toEqual([]);
+  expect(result.raisedNonButtons, `${screen}: non-<button> elements with .tap-raised`).toEqual([]);
+  expect(
+    result.lowContrastButtons,
+    `${screen}: raised buttons under 3:1 boundary contrast`,
+  ).toEqual([]);
+  expect(result.pillViolations, `${screen}: rank/stars pill with a background or border`).toEqual(
+    [],
+  );
+}
+
+async function expectTargetSize(page: Page, name: RegExp | string, min: number): Promise<void> {
+  const box = await page.getByRole('button', { name }).boundingBox();
+  expect(box, `no bounding box for button matching ${String(name)}`).not.toBeNull();
+  expect(box?.width ?? 0, `${String(name)} width`).toBeGreaterThanOrEqual(min);
+  expect(box?.height ?? 0, `${String(name)} height`).toBeGreaterThanOrEqual(min);
+}
+
+/** Kid touch targets outside the game screens (Home, Journey, Den, picker, first run, results,
+ * primary Next) must be >= 64px both ways (docs/screens.md §1). */
+async function expectKidTouchTarget(page: Page, name: RegExp | string): Promise<void> {
+  await expectTargetSize(page, name, 64);
+}
+
+/** Game screens (lesson steps, boss / series, review, vs Computer / vs Friend, assessment tasks):
+ * >= 56px both ways (docs/screens.md §1, owner 2026-09-30). */
+async function expectGameTouchTarget(page: Page, name: RegExp | string): Promise<void> {
+  await expectTargetSize(page, name, 56);
+}
+
+/** Parent-area touch targets must be >= 44px both ways (docs/screens.md §1). `role` defaults to
+ * `'button'`; a toggle (voice/sound/hints) is `role="switch"` instead. `scope` narrows the
+ * lookup (the daily-limit block's own "Off" chip is no longer unique on the settings screen
+ * — "Play until"/"Not before" each have one too — so a caller passes that chip row's own `group`
+ * locator instead of the whole `page`). */
+async function expectParentTouchTarget(
+  scope: Page | Locator,
+  name: RegExp | string,
+  role: 'button' | 'switch' = 'button',
+): Promise<void> {
+  const box = await scope.getByRole(role, { name }).boundingBox();
+  expect(box, `no bounding box for ${role} matching ${String(name)}`).not.toBeNull();
+  expect(box?.width ?? 0, `${String(name)} width`).toBeGreaterThanOrEqual(44);
+  expect(box?.height ?? 0, `${String(name)} height`).toBeGreaterThanOrEqual(44);
+}
+
+test('onboarding and profile screens have no serious/critical violations and correctly sized touch targets', async ({
+  page,
+}) => {
+  // 1. First run: Welcome (kid style).
+  await page.goto('/');
+  await expectKidTouchTarget(page, 'Start setup');
+  await expectNoSeriousViolations(page, 'First run: Welcome');
+
+  // 2. First run: parent password (parent style).
+  await page.getByRole('button', { name: 'Start setup' }).click();
+  await expectParentTouchTarget(page, 'Save parent code');
+  await expectNoSeriousViolations(page, 'First run: Password');
+
+  // 2.5. Its "Read our privacy policy" link: an in-screen dialog, not a new store screen.
+  await page.getByRole('button', { name: 'Read our privacy policy' }).click();
+  const privacyDialog = page.getByRole('dialog', { name: 'Privacy' });
+  await privacyDialog.waitFor();
+  await expectParentTouchTarget(page, 'Close');
+  await expectNoSeriousViolations(page, 'First run: Privacy dialog');
+  await privacyDialog.getByRole('button', { name: 'Close' }).click();
+  await privacyDialog.waitFor({ state: 'hidden' });
+
+  await page.getByLabel('Parent code', { exact: true }).fill('1234');
+  await page.getByLabel('Repeat parent code').fill('1234');
+  await Promise.all([
+    page.waitForEvent('download'),
+    page.getByRole('button', { name: 'Save parent code' }).click(),
+  ]);
+
+  // 3. First run: Saved (parent style).
+  await expectParentTouchTarget(page, 'Next');
+  await expectNoSeriousViolations(page, 'First run: Saved');
+  await page.getByRole('button', { name: 'Next' }).click();
+
+  // 4. New player: nickname (kid style).
+  await expectKidTouchTarget(page, 'Next');
+  await expectNoSeriousViolations(page, 'New player: nickname');
+  await page.getByPlaceholder('Your name').fill('Mia');
+  await page.getByRole('button', { name: 'Next' }).click();
+
+  // 5. New player: avatar (kid style).
+  await expectKidTouchTarget(page, 'Fox');
+  await expectKidTouchTarget(page, "Let's play!");
+  await expectNoSeriousViolations(page, 'New player: avatar');
+  await page.getByRole('button', { name: "Let's play!" }).click();
+
+  // 5.4. Subjects hub (kid style): one big tile per subject; Chess goes on.
+  await page.getByRole('heading', { level: 1, name: 'What shall we learn?' }).waitFor();
+  await expectKidTouchTarget(page, 'Chess');
+  await expectKidTouchTarget(page, 'Math');
+  await expectKidTouchTarget(page, 'Switch player');
+  await expectNoSeriousViolations(page, 'Subjects hub');
+  await page.getByTestId('subject-tile-chess').click();
+
+  // 5.5. Placement offer (kid style): declined here (a full placement run is scanned in its
+  // own dedicated test below, alongside the test-out sheet/runner/results).
+  await page.getByText(contentText('placement.offer-question')).waitFor();
+  await expectKidTouchTarget(page, contentText('placement.offer-yes'));
+  await expectKidTouchTarget(page, contentText('placement.offer-no'));
+  await expectNoSeriousViolations(page, 'Placement offer');
+  await page.getByRole('button', { name: contentText('placement.offer-no') }).click();
+
+  // 6. Home's switch-player button, then the picker (kid style).
+  await expectKidTouchTarget(page, 'Switch player');
+  await page.getByRole('button', { name: 'Switch player' }).click();
+  await expectKidTouchTarget(page, 'Mia');
+  await expectKidTouchTarget(page, /Grown-ups/);
+  await expectNoSeriousViolations(page, 'Picker');
+
+  // 7. Password screen (parent style).
+  await page.getByRole('button', { name: /Grown-ups/ }).click();
+  await expectParentTouchTarget(page, 'Open');
+  await expectNoSeriousViolations(page, 'Password screen');
+
+  // 8. Parent area overview (parent style: tappable child cards, no inline management
+  // buttons any more — those moved to the child's own Settings screen, scanned next).
+  await page.getByLabel('Parent code', { exact: true }).fill('1234');
+  await page.getByRole('button', { name: 'Open' }).click();
+  await expectParentTouchTarget(page, 'Add child');
+  await expectParentTouchTarget(page, 'Backup');
+  await expectNoSeriousViolations(page, 'Parent area: overview');
+  await expectOnlyButtonsRaised(page, 'Parent area: overview');
+
+  // 8.5. Overview -> Mia's card -> child report (parent style).
+  await page.getByRole('button', { name: /^Mia/ }).click();
+  await expectParentTouchTarget(page, 'Settings');
+  await expectNoSeriousViolations(page, 'Parent area: child report');
+  await expectOnlyButtonsRaised(page, 'Parent area: child report');
+
+  // 8.6. Report -> Settings: rename/avatar, daily limit (weekend toggle + hours), voice/
+  // sound/hints, computer level, unlock panel, export, reset/delete — every control
+  // on the busiest parent screen.
+  await page.getByRole('button', { name: 'Settings' }).click();
+  await expectParentTouchTarget(page, 'Rename');
+  await expectParentTouchTarget(page, 'Change avatar');
+  await expectParentTouchTarget(page.getByRole('group', { name: 'Every day' }), 'Off');
+  await expectParentTouchTarget(page, 'Different limit at the weekend', 'switch');
+  await expectParentTouchTarget(page.getByRole('group', { name: 'Play until' }), '20:00');
+  await expectParentTouchTarget(page.getByRole('group', { name: 'Not before' }), '08:00');
+  await expectParentTouchTarget(page, 'Voice', 'switch');
+  await expectParentTouchTarget(page, 'Automatic');
+  await expectParentTouchTarget(page, "Export this child's data");
+  await expectParentTouchTarget(page, 'Reset progress');
+  await expectParentTouchTarget(page, 'Delete');
+  await expectNoSeriousViolations(page, 'Parent area: child settings');
+  await expectOnlyButtonsRaised(page, 'Parent area: child settings');
+
+  // 8.7. Settings -> Report -> Overview -> Backup.
+  await page.getByRole('button', { name: 'Back' }).click();
+  await page.getByRole('button', { name: 'Back' }).click();
+  await page.getByRole('button', { name: 'Backup' }).click();
+  await expectParentTouchTarget(page, 'Export all');
+  await expectNoSeriousViolations(page, 'Parent area: backup');
+
+  // 8.8. Backup -> Overview -> Privacy: same policy text as the first-run dialog above.
+  await page.getByRole('button', { name: 'Back' }).click();
+  await page.getByRole('button', { name: 'Privacy' }).click();
+  await expectParentTouchTarget(page, 'Back');
+  await expectNoSeriousViolations(page, 'Parent area: privacy');
+  await expectOnlyButtonsRaised(page, 'Parent area: privacy');
+
+  // 8.9. Daily time limit: "See you tomorrow" (kid style) once over the limit, then its own
+  // "Parent: more time" password flow resuming the gated activity.
+  await page.getByRole('button', { name: 'Back' }).click(); // Privacy -> Overview
+  await page.getByRole('button', { name: contentText('parent.done') }).click(); // Overview -> picker
+  await pickProfileFromPicker(page, 'Mia');
+  const profileId = await getSoleProfileId(page);
+  await seedDailyLimit(page, profileId, 15);
+  await seedMinutesToday(page, profileId, 15);
+
+  await page.getByRole('button', { name: /Start today/ }).click();
+  await page.getByRole('heading', { name: 'See you tomorrow!' }).waitFor();
+  await expectKidTouchTarget(page, 'Switch player');
+  await expectKidTouchTarget(page, 'Parent: more time');
+  await expectNoSeriousViolations(page, 'Time limit: See you tomorrow');
+  await expectOnlyButtonsRaised(page, 'Time limit: See you tomorrow');
+
+  await page.getByRole('button', { name: 'Parent: more time' }).click();
+  await page.getByLabel('Parent code', { exact: true }).fill('1234');
+  await page.getByRole('button', { name: 'Open' }).click();
+  await page.getByRole('button', { name: /Let me try/ }).waitFor(); // resumed into the lesson
+});
+
+/** Every exercise type actually authored in the bundled content (scored exercises only). */
+function allExerciseTypes(): ReadonlySet<string> {
+  return new Set(
+    content.lessons.flatMap((lesson) => lesson.exercises.map((exercise) => exercise.type)),
+  );
+}
+
+/**
+ * Full a11y + touch-target scan of one exercise definition, tailored to its type's own controls
+ * (Hint always; Undo only for a move-counted type; Check only for select-squares; Yes/No for
+ * yes-no; choice tiles for choice), then solves and advances past it. For select-squares, also
+ * exercises a wrong pick (orange note, never red — non-functional.md §2).
+ */
+async function deepScanExercise(page: Page, def: ExerciseDef): Promise<void> {
+  await expectGameTouchTarget(page, /Hint/);
+  if (isMoveCountedExercise(def)) {
+    await expectGameTouchTarget(page, /Undo/);
+  }
+  await expectGameTouchTarget(page, /Say it again/);
+
+  // With a hint note under the instruction the panel is at its tallest: targets must not shrink.
+  await page.getByRole('button', { name: /Hint/ }).click();
+  await expectGameTouchTarget(page, /Say it again/);
+  await expectGameTouchTarget(page, /Hint/);
+  await expectNoSeriousViolations(page, `Exercise (${def.type}, hint shown)`);
+  await expectOnlyButtonsRaised(page, `Exercise (${def.type}, hint shown)`);
+
+  if (def.type === 'yes-no') {
+    await expectGameTouchTarget(page, contentText('exercise.yes'));
+    await expectGameTouchTarget(page, contentText('exercise.no'));
+  } else if (def.type === 'choice') {
+    for (const option of def.options) {
+      if (option.textKey !== undefined) {
+        await expectGameTouchTarget(page, contentText(option.textKey));
+        continue;
+      }
+      if (!option.piece) {
+        throw new Error(`choice exercise "${def.id}" option has neither text nor piece`);
+      }
+      const color = contentText(`board.color.${option.piece.color}`);
+      const piece = contentText(`board.piece.${option.piece.type}`);
+      await expectGameTouchTarget(page, `${color} ${piece}`);
+    }
+  } else if (def.type === 'select-squares') {
+    const answer = new Set(selectSquaresAnswer(def));
+    const wrongSquare = SQUARES.find((square) => !answer.has(square));
+    if (wrongSquare === undefined) {
+      throw new Error(`select-squares exercise "${def.id}": every square is a correct answer`);
+    }
+    await clickSquare(page, wrongSquare);
+    await expectGameTouchTarget(page, /Check/);
+    await page.getByRole('button', { name: /Check/ }).click();
+    await expect(page.getByText(contentText('exercise.select-both'))).toBeVisible();
+    await expectNoSeriousViolations(page, 'Exercise (select-squares, wrong pick)');
+    await clickSquare(page, wrongSquare); // deselect the wrong pick
+  }
+
+  await completeExercise(page, def);
+}
+
+test('lesson flow has no serious/critical accessibility violations and kid-sized touch targets', async ({
+  page,
+}, testInfo) => {
+  // Full curriculum walk: chromium only (m8.2 item 3 — it already does the voice-miss check here
+  // too). `tablet`/`tablet-portrait`/`phone` run the seeded scan below instead, reaching the same
+  // scan points (`journey`/`story`/`demo`/every exercise type/every boss mode/`complete`/`session
+  // summary`) without playing the whole curriculum on each viewport.
+  test.skip(
+    testInfo.project.name !== 'chromium',
+    'full curriculum walk runs on chromium only; see the seeded scan test below',
+  );
+  // Walking far enough into the curriculum to reach a versus boss (possibly two: Pawn Wars
+  // Jr. and Pawn Wars, the latter reached for its `choice`/`best-move` exercises) pushes this well
+  // past the 30s default even with the bot's "thinking" pause shortened below (typically ~1min).
+  // Walks the whole curriculum: grows with every world (2.3–2.5 min at World 4 under load).
+  test.setTimeout(300_000);
+
+  // Voice (`docs/voice.md`): the missed-text report, chromium project only (this walk
+  // already runs 3x, once per viewport project — no need to also fetch/decode the same audio 3x).
+  const checkVoiceMisses = testInfo.project.name === 'chromium';
+
+  // Walk the Journey's lessons in order, deep-scanning the first exercise of each type that
+  // exists in content, the first series boss (mid-round) and first static boss, and the Complete
+  // step — whichever lessons those turn out to be, so this stays correct as content grows.
+  const orderedLessons = lessonsInJourneyOrder(catalog, content.lessons);
+  const wantedTypes = allExerciseTypes();
+  const scannedTypes = new Set<string>();
+  let seriesBossScanned = false;
+  let staticBossScanned = false;
+  let versusBossScanned = false;
+  let completeScanned = false;
+  let storyDemoScanned = false;
+  let journeyScanned = false;
+  let summaryScanned = false;
+  let currentWorldId: string | undefined;
+  // Logged at the end (m8.2 item 3): the seeded scan on the other 3 projects must reach this same
+  // set of labels.
+  const scannedLabels: string[] = [];
+  async function scan(screen: string): Promise<void> {
+    scannedLabels.push(screen);
+    await expectNoSeriousViolations(page, screen);
+  }
+
+  await completeFirstRun(page);
+  // Shortens the bot's "thinking" pause for every versus boss reached below (Pawn Wars Jr. and,
+  // to deep-scan `choice`/`best-move`, Pawn Wars too) — set now, well before either is reached.
+  // The voice-report flag (above) is set here too, not via `addInitScript` before the first
+  // `page.goto`: every `kids:*` / `kids-<subject>:*` key is reserved for the app's own versioned storage
+  // (`local-store.ts`), which throws "Unversioned data found under …" if one is
+  // already present before the app's own startup writes its version key. Setting it only once the
+  // app is already up (same as `test-seed` already did) still covers the whole curriculum walk
+  // below — only the first-run screens themselves go unwatched, and those are scanned separately
+  // by the "onboarding and profile screens" test above, with nothing to narrate incorrectly there.
+  await page.evaluate(
+    ({ checkVoiceMisses: check }: { checkVoiceMisses: boolean }) => {
+      localStorage.setItem('chess-kids:test-seed', '1');
+      if (check) localStorage.setItem('kids:voice-report', '1');
+    },
+    { checkVoiceMisses },
+  );
+  await expectKidTouchTarget(page, /Start/);
+  await expectKidTouchTarget(page, /Journey/);
+  await scan('Home');
+  await expectOnlyButtonsRaised(page, 'Home');
+
+  // Play and My Den (app-structure.md §4): a fresh install, so every mini-game is locked and no
+  // rank/friend is earned yet — still worth their own a11y + touch-target pass.
+  await page.getByRole('button', { name: 'Play', exact: true }).click();
+  await expectKidTouchTarget(page, 'Back to Home');
+  await expectKidTouchTarget(page, /Play a full game/);
+  await expectKidTouchTarget(page, /^Hungry Rook,/);
+  await scan('Play');
+  await expectOnlyButtonsRaised(page, 'Play');
+  await page.getByRole('button', { name: 'Back to Home' }).click();
+
+  await page.getByRole('button', { name: 'My Den', exact: true }).click();
+  await expectKidTouchTarget(page, 'Back to Home');
+  await scan('My Den');
+  await expectOnlyButtonsRaised(page, 'My Den');
+  await page.getByRole('button', { name: 'Back to Home' }).click();
+
+  // Practice: nothing complete yet, so the "All done for today!" / no-topics state.
+  await page.getByRole('button', { name: 'Practice', exact: true }).click();
+  await expectKidTouchTarget(page, 'Back to Home');
+  await expectKidTouchTarget(page, /Daily warm-up/);
+  await scan('Practice');
+  await page.getByRole('button', { name: 'Back to Home' }).click();
+
+  for (const lesson of orderedLessons) {
+    const allScanned =
+      scannedTypes.size === wantedTypes.size &&
+      seriesBossScanned &&
+      staticBossScanned &&
+      versusBossScanned &&
+      completeScanned;
+    if (allScanned) break;
+
+    // Enter the lesson: via the Journey for the first lesson of a new world (the case where a
+    // static boss, say, is only reachable later), else via Home's Start/Continue button.
+    const enteringNewWorld = lesson.world !== currentWorldId;
+    const previousWorldId = currentWorldId;
+    currentWorldId = lesson.world;
+
+    // Crossing into a new world requires the previous one to be fully "mastered"
+    // (docs/domain-model.md §3: every lesson mastered, incl. `bossStars >= 2` on any lesson with
+    // its own boss, plus the world's own `World.boss` — e.g. World 3's win-the-queen — won too).
+    // Every exercise and lesson boss above was already played for real, for its own a11y/touch-
+    // target scan; a lesson boss played against the bot can end in a loss or draw depending on the
+    // opponent's random draws though, same as a real kid's might, which would leave that one lesson
+    // short of "mastered" and so the whole world short of "mastered" even though nothing is wrong —
+    // this walk needs the world unlocked regardless to keep scanning, so `bossStars` (only) is
+    // force-corrected to 3 here for every lesson of the world just finished, never touching the
+    // real `bestStars` a kid earned answering each exercise (already scanned above). A full reload
+    // is the one reliable way to make the store pick the patch up (`refreshProgress` only fires on
+    // specific store actions, not a bare localStorage write), so the profile is re-picked after.
+    if (enteringNewWorld && previousWorldId !== undefined) {
+      const previousWorldLessons = content.lessons.filter(
+        (entry) => entry.world === previousWorldId,
+      );
+      await page.evaluate(
+        ({ lessonIds }: { lessonIds: readonly string[] }) => {
+          const raw = localStorage.getItem('kids:profiles');
+          const profiles = raw ? (JSON.parse(raw) as Record<string, { id: string }>) : {};
+          const [profile] = Object.values(profiles);
+          if (!profile) return;
+          const key = 'kids-chess:lesson-progress';
+          const allRaw = localStorage.getItem(key);
+          const all = allRaw ? (JSON.parse(allRaw) as Record<string, { bossStars?: number }>) : {};
+          for (const lessonId of lessonIds) {
+            const record = all[`${profile.id}:${lessonId}`];
+            if (record) record.bossStars = 3;
+          }
+          localStorage.setItem(key, JSON.stringify(all));
+        },
+        { lessonIds: previousWorldLessons.map((entry) => entry.id) },
+      );
+      await page.reload();
+      await pickProfileFromPicker(page, 'Kid');
+
+      const previousWorldBoss = worldBossMiniGame(catalog, previousWorldId);
+      if (previousWorldBoss !== undefined) {
+        // The world's own boss (distinct from any lesson's own boss slot): win it for real, same
+        // route a kid uses from the Journey map. This leaves the page on the Journey screen.
+        await page.getByRole('button', { name: /Journey/ }).click();
+        await page.getByRole('button', { name: worldTabName(catalog, previousWorldId) }).click();
+        await page
+          .getByRole('button', {
+            name: new RegExp(`^World boss: ${contentText(previousWorldBoss.titleKey)},`),
+          })
+          .click();
+        if (previousWorldBoss.mode !== 'versus') {
+          throw new Error(
+            `world boss "${previousWorldBoss.id}" is expected to be a versus mini-game`,
+          );
+        }
+        await playVersusBoss(page, previousWorldBoss);
+        await page.getByRole('button', { name: contentText('play.back-to-journey') }).click();
+
+        if (previousWorldBoss.id === 'first-game') {
+          // Play's own "Full game" entry (vs Computer card) — reachable only once World 4
+          // is mastered, which winning `first-game` above just did. Scans the level-picked start,
+          // a mid-game position, and the "Stop this game?" leave confirm, then returns to Journey
+          // (this block's exit invariant, same as the plain mini-game-won path above).
+          await page.getByRole('button', { name: 'Back to Home' }).click();
+          await page.getByRole('button', { name: 'Play', exact: true }).click();
+          await expectKidTouchTarget(page, /Play a full game/);
+          await page.getByRole('button', { name: 'Play a full game' }).click();
+          await expectGameTouchTarget(page, 'Close');
+          await scan('Full game (start)');
+
+          await playOneKidVersusMove(page, previousWorldBoss);
+          await waitForVersusTurnOrEnd(page);
+          await scan('Full game (mid-game)');
+
+          await page.getByRole('button', { name: 'Close' }).click();
+          await page.getByRole('alertdialog', { name: 'Stop this game?' }).waitFor();
+          await expectGameTouchTarget(page, 'Stop game');
+          await expectGameTouchTarget(page, 'Keep playing');
+          await scan('Full game (leave confirm)');
+          await page.getByRole('button', { name: 'Stop game' }).click();
+
+          await page.getByRole('heading', { name: 'Play' }).waitFor();
+          await page.getByRole('button', { name: 'Back to Home' }).click();
+
+          // vs Friend — Pawn Wars and Win the Queen unlocked earlier already, so this is the
+          // full choice of games. Only one profile exists in this walk, so the second player is
+          // Guest (no second `GameRecord`, decision log). Pass-and-play (not face-to-face) keeps
+          // every control to a single on-screen instance for the touch-target checks below.
+          await page.getByRole('button', { name: 'Play', exact: true }).click();
+          await expectKidTouchTarget(page, 'vs Friend');
+          await page.getByRole('button', { name: 'vs Friend' }).click();
+          await page.getByRole('heading', { name: 'vs Friend' }).waitFor();
+          await expectKidTouchTarget(page, 'Guest');
+          await expectKidTouchTarget(page, 'Full Game');
+          await scan('vs Friend (setup sheet)');
+
+          await page.getByRole('button', { name: 'Guest' }).click();
+          await page.getByRole('button', { name: 'Full Game' }).click();
+          await page.getByRole('button', { name: 'Pass and play' }).click();
+          await page.getByRole('button', { name: 'Start' }).click();
+          await page.getByRole('button', { name: /^e2,/ }).waitFor();
+          await expectGameTouchTarget(page, 'Take back');
+          await expectGameTouchTarget(page, 'Stop');
+          await scan('vs Friend (game, start)');
+
+          await clickSquare(page, 'e2');
+          await clickSquare(page, 'e4');
+          await page.getByRole('button', { name: /^e4, white pawn/ }).waitFor();
+          await scan('vs Friend (game, after a move)');
+
+          await page.getByRole('button', { name: 'Take back' }).click();
+          await page.getByRole('alertdialog', { name: 'Allow take back?' }).waitFor();
+          await expectGameTouchTarget(page, 'Yes');
+          await expectGameTouchTarget(page, 'No');
+          await scan('vs Friend (take-back ask)');
+          await page.getByRole('button', { name: 'Yes' }).click();
+          await page.getByRole('button', { name: /^e2, white pawn/ }).waitFor();
+
+          await page.getByRole('button', { name: 'Stop' }).click();
+          await page.getByRole('alertdialog', { name: 'Stop this game?' }).waitFor();
+          await expectGameTouchTarget(page, 'Stop game');
+          await expectGameTouchTarget(page, 'Keep playing');
+          await scan('vs Friend (stop confirm)');
+          await page.getByRole('button', { name: 'Stop game' }).click();
+
+          await page.getByRole('heading', { name: 'Play' }).waitFor();
+          await page.getByRole('button', { name: 'Back to Home' }).click();
+          await page.getByRole('button', { name: /Journey/ }).click();
+        }
+      }
+    }
+
+    if (enteringNewWorld) {
+      // Already on the Journey screen when a world boss was just won above; otherwise get there
+      // from Home. Either way, the target world's own tab must be selected explicitly: the
+      // Journey's default map only follows `nextStep`, which does not always match this loop's own
+      // (purely content-order) walk.
+      if (
+        previousWorldId === undefined ||
+        worldBossMiniGame(catalog, previousWorldId) === undefined
+      ) {
+        await page.getByRole('button', { name: /Journey/ }).click();
+      }
+      await page.getByRole('button', { name: worldTabName(catalog, lesson.world) }).click();
+      await expectKidTouchTarget(page, journeyNodeName(lesson, 'current'));
+      if (!journeyScanned) {
+        await expectKidTouchTarget(page, /Back to Home/);
+        await scan('Journey');
+        journeyScanned = true;
+      }
+      await page.getByRole('button', { name: journeyNodeName(lesson, 'current') }).click();
+    } else {
+      await clearConceptStats(page);
+      await page.getByRole('button', { name: /Start|Continue/ }).click();
+    }
+
+    // Story.
+    if (!storyDemoScanned) {
+      await expectGameTouchTarget(page, 'Close lesson');
+      await expectGameTouchTarget(page, /Listen again/);
+      await expectKidTouchTarget(page, /Let me try/);
+      await expectGameTouchTarget(page, 'Skip'); // playtest 2
+      await scan('Story');
+    }
+    await page.getByRole('button', { name: /Let me try/ }).click();
+
+    // Demo.
+    if (!storyDemoScanned) {
+      await expectKidTouchTarget(page, /^Next/);
+      await expectGameTouchTarget(page, 'Skip'); // playtest 2
+      await scan('Demo');
+      storyDemoScanned = true;
+    }
+    await page.getByRole('button', { name: /^Next/ }).click();
+
+    // Guided tries (not individually a11y-scanned; deep-scanned scored exercises cover the UI).
+    for (const guided of lesson.guided) {
+      await expectGameTouchTarget(page, 'Skip'); // playtest 2: every guided try shows it
+      await expectGameTouchTarget(page, /Hint/);
+      if (isMoveCountedExercise(guided)) {
+        await expectGameTouchTarget(page, /Undo/);
+      }
+      await completeExercise(page, guided);
+    }
+
+    // Scored exercises: deep-scan the first occurrence of each not-yet-seen type.
+    for (const exercise of lesson.exercises) {
+      if (scannedTypes.has(exercise.type)) {
+        await completeExercise(page, exercise);
+      } else {
+        await deepScanExercise(page, exercise); // scans `Exercise (${type}, hint shown)` itself
+        scannedLabels.push(`Exercise (${exercise.type}, hint shown)`);
+        if (exercise.type === 'select-squares') {
+          scannedLabels.push('Exercise (select-squares, wrong pick)');
+        }
+        scannedTypes.add(exercise.type);
+      }
+    }
+
+    // Boss: deep-scan the first series boss mid-round, and the first static boss before solving.
+    if (lesson.boss) {
+      const boss: MiniGame = findMiniGame(lesson.boss);
+      if (boss.mode === 'series' && !seriesBossScanned) {
+        const [firstRound, ...restRounds] = boss.rounds;
+        if (!firstRound) throw new Error(`mini-game "${boss.id}" has no rounds`);
+        await completeExercise(page, firstRound);
+        await scan('Boss (series, mid-round)');
+        for (const round of restRounds) {
+          await completeExercise(page, round);
+        }
+        await page.getByRole('button', { name: /^Next/ }).click();
+        seriesBossScanned = true;
+      } else if (boss.mode === 'static' && !staticBossScanned) {
+        await scan('Boss (static)');
+        const goal = boss.goal === 'collect-stars' ? 'collect-stars' : 'capture';
+        await playSolveLine(page, boss.position, goal);
+        await page.getByRole('button', { name: /^Next/ }).click();
+        staticBossScanned = true;
+      } else if (boss.mode === 'versus' && !versusBossScanned) {
+        await expectGameTouchTarget(page, /Take back/);
+        await scan('Boss (versus, start)');
+        await playOneKidVersusMove(page, boss);
+        await waitForVersusTurnOrEnd(page);
+        await scan('Boss (versus, mid-game)');
+        await playVersusBoss(page, boss);
+        await page.getByRole('button', { name: /^Next/ }).click();
+        versusBossScanned = true;
+      } else {
+        await completeBoss(page, boss);
+      }
+    }
+
+    // Complete.
+    await expect(page.getByText('Lesson complete!')).toBeVisible();
+    // A newly earned badge celebrates first, its own "Continue" sharing this screen's own
+    // button text — dismissed here (scanned on its own in `rewards.spec.ts`) so the checks below,
+    // and the plain Continue click past them, see this screen alone, unambiguously.
+    await dismissCelebrationIfShown(page);
+    if (!completeScanned) {
+      await expectKidTouchTarget(page, /Play again/);
+      await expectKidTouchTarget(page, /Continue/);
+      await scan('Complete');
+      completeScanned = true;
+    }
+    await page.getByRole('button', { name: /Continue/ }).click();
+
+    if (enteringNewWorld) {
+      // A lesson opened from the Journey returns to the Journey, not Home, on Continue.
+      await page.getByRole('button', { name: /Back to Home/ }).click();
+    } else {
+      // A lesson opened via Home's Start/Continue is its own Today session: Continue may
+      // first lead through a trailing mini-game, then lands on the session summary — not Home
+      // directly.
+      await passThroughTrailingMiniGame(page);
+      await expect(page.getByText('Great session!')).toBeVisible();
+      if (!summaryScanned) {
+        await expectKidTouchTarget(page, 'Done');
+        await scan('Session summary');
+        summaryScanned = true;
+      }
+      await page.getByRole('button', { name: 'Done' }).click();
+    }
+  }
+
+  console.log(`full walk (${testInfo.project.name}): ${[...new Set(scannedLabels)].join(', ')}`);
+
+  expect([...scannedTypes].sort(), 'every exercise type in content got a deep scan').toEqual(
+    [...wantedTypes].sort(),
+  );
+  expect(seriesBossScanned, 'a series boss got a mid-round scan').toBe(true);
+  expect(staticBossScanned, 'a static boss got a scan').toBe(true);
+  expect(versusBossScanned, 'a versus boss got a mid-game scan').toBe(true);
+  expect(completeScanned, 'the Complete step got a scan').toBe(true);
+  expect(summaryScanned, 'the session summary got a scan').toBe(true);
+
+  if (checkVoiceMisses) {
+    const misses = await page.evaluate(
+      () => (window as unknown as { __learnVoiceMisses?: string[] }).__learnVoiceMisses ?? [],
+    );
+    // A miss records the *original* text (`audio-narrator.ts`), which may still carry the
+    // nickname this walk's profile used ("Kid") even though the generated-audio lookup itself
+    // strips it first (`docs/voice.md` "Nickname") — excepted here, same as that rule.
+    const unexpected = misses.filter((text) => !text.includes('Kid'));
+    expect(
+      unexpected,
+      `voice misses (no generated audio played): ${JSON.stringify(misses)}`,
+    ).toEqual([]);
+  }
+});
+
+/** One lesson the seeded scan below needs to visit, and what it deep-scans there. */
+interface SeededScanTarget {
+  readonly lesson: Lesson;
+  /** First-in-curriculum occurrence of each not-yet-seen exercise type, in lesson order. */
+  readonly exercisesToScan: readonly ExerciseDef[];
+  /** Set when this lesson's own boss is the curriculum's first occurrence of that mode. */
+  readonly bossToScan: 'series' | 'static' | 'versus' | undefined;
+}
+
+/**
+ * Content-only plan for the seeded scan (m8.2 item 3): in journey order, every lesson that
+ * introduces the curriculum's first occurrence of an exercise type or a boss mode — the same
+ * first-occurrence rule the full curriculum walk above applies lesson by lesson, computed here
+ * without Playwright so the seeded scan can jump straight to each one via seeded progress instead
+ * of playing everything before it. Stops as soon as every type/mode has a target, same as the walk.
+ */
+function planSeededScan(
+  catalog: TracksCatalog,
+  lessons: readonly Lesson[],
+): readonly SeededScanTarget[] {
+  const wantedTypes = allExerciseTypes();
+  const seenTypes = new Set<string>();
+  let seriesDone = false;
+  let staticDone = false;
+  let versusDone = false;
+  const targets: SeededScanTarget[] = [];
+
+  for (const lesson of lessonsInJourneyOrder(catalog, lessons)) {
+    const exercisesToScan = lesson.exercises.filter((exercise) => {
+      if (seenTypes.has(exercise.type)) return false;
+      seenTypes.add(exercise.type);
+      return true;
+    });
+    let bossToScan: 'series' | 'static' | 'versus' | undefined;
+    if (lesson.boss) {
+      const boss = findMiniGame(lesson.boss);
+      if (boss.mode === 'series' && !seriesDone) {
+        bossToScan = 'series';
+        seriesDone = true;
+      } else if (boss.mode === 'static' && !staticDone) {
+        bossToScan = 'static';
+        staticDone = true;
+      } else if (boss.mode === 'versus' && !versusDone) {
+        bossToScan = 'versus';
+        versusDone = true;
+      }
+    }
+    if (exercisesToScan.length > 0 || bossToScan !== undefined) {
+      targets.push({ lesson, exercisesToScan, bossToScan });
+    }
+    if (seenTypes.size === wantedTypes.size && seriesDone && staticDone && versusDone) break;
+  }
+  return targets;
+}
+
+/**
+ * Seeds every main-track lesson before `targetLessonId` (journey order) as mastered, plus any
+ * earlier world's own boss as won — everything `nextLesson`/`lessonAvailability` (`domain/
+ * journey.ts`) need to call `targetLessonId` itself the next available lesson, without seeding it.
+ */
+async function seedProgressBeforeLesson(
+  page: Page,
+  profileId: string,
+  targetLessonId: string,
+): Promise<void> {
+  const ordered = lessonsInJourneyOrder(catalog, content.lessons);
+  const targetIndex = ordered.findIndex((lesson) => lesson.id === targetLessonId);
+  if (targetIndex < 0) {
+    throw new Error(`seedProgressBeforeLesson: lesson "${targetLessonId}" not in journey order`);
+  }
+  const before = ordered.slice(0, targetIndex);
+  await seedLessonsMastered(page, profileId, before);
+
+  const targetWorldId = ordered[targetIndex]?.world;
+  const priorWorldIds = new Set(
+    before.map((lesson) => lesson.world).filter((world) => world !== targetWorldId),
+  );
+  const mainTrack = catalog.tracks.find((track) => track.kind === 'main');
+  for (const world of mainTrack?.worlds ?? []) {
+    if (priorWorldIds.has(world.id) && world.boss !== undefined) {
+      await seedMiniGameWon(page, profileId, world.boss);
+    }
+  }
+}
+
+test('seeded scan reaches the lesson-flow walk’s scan points without playing the curriculum (m8.2)', async ({
+  page,
+}, testInfo) => {
+  // The counterpart to the full curriculum walk above: chromium runs that one, this runs on every
+  // other a11y project (tablet/tablet-portrait/phone) instead — same scan points (Home/Play/My Den/
+  // Practice, Journey/Story/Demo, every exercise type, every boss mode, Complete/session summary),
+  // reached by seeding a profile straight to each lesson that first introduces something new,
+  // instead of playing every lesson. The scanned-label set must equal chromium's.
+  test.skip(
+    testInfo.project.name === 'chromium',
+    'chromium runs the full curriculum walk above instead',
+  );
+  test.setTimeout(120_000);
+
+  const targets = planSeededScan(catalog, content.lessons);
+  const [completionTarget] = targets;
+  if (!completionTarget) throw new Error('planSeededScan: content has no scan targets');
+
+  const wantedTypes = allExerciseTypes();
+  const scannedTypes = new Set<string>();
+  let seriesBossScanned = false;
+  let staticBossScanned = false;
+  let versusBossScanned = false;
+  let completeScanned = false;
+  let summaryScanned = false;
+  let storyDemoScanned = false;
+  const scannedLabels: string[] = [];
+  async function scan(screen: string): Promise<void> {
+    scannedLabels.push(screen);
+    await expectNoSeriousViolations(page, screen);
+  }
+
+  await completeFirstRun(page);
+  const profileId = await getSoleProfileId(page);
+  // Deterministic bot (as in the full walk above): a time-derived seed can leave the kid's Pawn
+  // Wars pawns all blocked mid-game, which `chooseKidVersusMove` can't play.
+  await page.evaluate(() => {
+    localStorage.setItem('chess-kids:test-seed', '1');
+  });
+
+  // Home, Play, My Den, Practice (fresh-install state, same checks the walk runs there): these
+  // aren't content-dependent, but their layout is viewport-dependent, so every project scans them
+  // too (not just chromium) — the scanned-label set must equal chromium's.
+  await expectKidTouchTarget(page, /Start/);
+  await expectKidTouchTarget(page, /Journey/);
+  await scan('Home');
+  await expectOnlyButtonsRaised(page, 'Home');
+
+  await page.getByRole('button', { name: 'Play', exact: true }).click();
+  await expectKidTouchTarget(page, 'Back to Home');
+  await expectKidTouchTarget(page, /Play a full game/);
+  await expectKidTouchTarget(page, /^Hungry Rook,/);
+  await scan('Play');
+  await expectOnlyButtonsRaised(page, 'Play');
+  await page.getByRole('button', { name: 'Back to Home' }).click();
+
+  await page.getByRole('button', { name: 'My Den', exact: true }).click();
+  await expectKidTouchTarget(page, 'Back to Home');
+  await scan('My Den');
+  await expectOnlyButtonsRaised(page, 'My Den');
+  await page.getByRole('button', { name: 'Back to Home' }).click();
+
+  await page.getByRole('button', { name: 'Practice', exact: true }).click();
+  await expectKidTouchTarget(page, 'Back to Home');
+  await expectKidTouchTarget(page, /Daily warm-up/);
+  await scan('Practice');
+  await page.getByRole('button', { name: 'Back to Home' }).click();
+
+  // Journey (scanned once — same label the full walk uses, docs/screens.md §1).
+  await page.getByRole('button', { name: /Journey/ }).click();
+  await expectKidTouchTarget(page, journeyNodeName(completionTarget.lesson, 'current'));
+  await expectKidTouchTarget(page, /Back to Home/);
+  await scan('Journey');
+  await page.getByRole('button', { name: /Back to Home/ }).click();
+
+  for (const target of targets) {
+    const fullCompletion = target.bossToScan !== undefined || target === completionTarget;
+
+    await seedProgressBeforeLesson(page, profileId, target.lesson.id);
+    await page.reload();
+    await pickProfileFromPicker(page, 'Kid');
+    // Deep-scanning an exercise (a wrong pick / hint) can put its concept in review, due
+    // immediately — cleared before every entry so Home's Start/Continue always opens the target
+    // lesson directly, never a warm-up first (same reason the full walk clears it above).
+    await clearConceptStats(page);
+    await page.getByRole('button', { name: /Start|Continue/ }).click();
+
+    // Story.
+    if (!storyDemoScanned) {
+      await expectGameTouchTarget(page, 'Close lesson');
+      await expectGameTouchTarget(page, /Listen again/);
+      await expectKidTouchTarget(page, /Let me try/);
+      await expectGameTouchTarget(page, 'Skip');
+      await scan('Story');
+    }
+    await page.getByRole('button', { name: 'Skip' }).click(); // Story -> Demo
+
+    // Demo.
+    if (!storyDemoScanned) {
+      await expectKidTouchTarget(page, /^Next/);
+      await expectGameTouchTarget(page, 'Skip');
+      await scan('Demo');
+      storyDemoScanned = true;
+    }
+    await page.getByRole('button', { name: 'Skip' }).click(); // Demo -> first guided/exercise
+
+    // One tap on the first guided try skips the rest of the whole "try" phase (`SkipButton.tsx`).
+    if (target.lesson.guided.length > 0) {
+      await page.getByRole('button', { name: 'Skip' }).click();
+    }
+
+    const idSet = new Set(target.exercisesToScan.map((exercise) => exercise.id));
+    const lastNeededIndex = target.lesson.exercises.reduce(
+      (last, exercise, index) => (idSet.has(exercise.id) ? index : last),
+      -1,
+    );
+    const lastIndex = fullCompletion ? target.lesson.exercises.length - 1 : lastNeededIndex;
+    for (let i = 0; i <= lastIndex; i += 1) {
+      const exercise = target.lesson.exercises[i];
+      if (exercise === undefined) continue;
+      if (idSet.has(exercise.id)) {
+        await deepScanExercise(page, exercise); // scans `Exercise (${type}, hint shown)` itself
+        scannedLabels.push(`Exercise (${exercise.type}, hint shown)`);
+        if (exercise.type === 'select-squares') {
+          scannedLabels.push('Exercise (select-squares, wrong pick)');
+        }
+        scannedTypes.add(exercise.type);
+      } else {
+        await completeExercise(page, exercise);
+      }
+    }
+
+    if (!fullCompletion) {
+      await page.getByRole('button', { name: 'Close lesson' }).click();
+      continue;
+    }
+
+    // Boss (deep-scanned only when it is the curriculum's first occurrence of its mode).
+    if (target.lesson.boss) {
+      const boss: MiniGame = findMiniGame(target.lesson.boss);
+      if (target.bossToScan !== undefined && boss.mode === 'series') {
+        const [firstRound, ...restRounds] = boss.rounds;
+        if (!firstRound) throw new Error(`mini-game "${boss.id}" has no rounds`);
+        await completeExercise(page, firstRound);
+        await scan('Boss (series, mid-round)');
+        for (const round of restRounds) {
+          await completeExercise(page, round);
+        }
+        await page.getByRole('button', { name: /^Next/ }).click();
+        seriesBossScanned = true;
+      } else if (target.bossToScan !== undefined && boss.mode === 'static') {
+        await scan('Boss (static)');
+        const goal = boss.goal === 'collect-stars' ? 'collect-stars' : 'capture';
+        await playSolveLine(page, boss.position, goal);
+        await page.getByRole('button', { name: /^Next/ }).click();
+        staticBossScanned = true;
+      } else if (target.bossToScan !== undefined && boss.mode === 'versus') {
+        await expectGameTouchTarget(page, /Take back/);
+        await scan('Boss (versus, start)');
+        await playOneKidVersusMove(page, boss);
+        await waitForVersusTurnOrEnd(page);
+        await scan('Boss (versus, mid-game)');
+        await playVersusBoss(page, boss);
+        await page.getByRole('button', { name: /^Next/ }).click();
+        versusBossScanned = true;
+      } else {
+        await completeBoss(page, boss);
+      }
+    }
+
+    // Complete.
+    await expect(page.getByText('Lesson complete!')).toBeVisible();
+    await dismissCelebrationIfShown(page);
+    if (!completeScanned) {
+      await expectKidTouchTarget(page, /Play again/);
+      await expectKidTouchTarget(page, /Continue/);
+      await scan('Complete');
+      completeScanned = true;
+    }
+    await page.getByRole('button', { name: /Continue/ }).click();
+
+    // A Today-session lesson (every target here is entered via Home) may lead through a trailing
+    // mini-game before the session summary, same as the full walk.
+    await passThroughTrailingMiniGame(page);
+    await expect(page.getByText('Great session!')).toBeVisible();
+    if (!summaryScanned) {
+      await expectKidTouchTarget(page, 'Done');
+      await scan('Session summary');
+      summaryScanned = true;
+    }
+    await page.getByRole('button', { name: 'Done' }).click();
+  }
+
+  console.log(`seeded scan (${testInfo.project.name}): ${[...new Set(scannedLabels)].join(', ')}`);
+
+  expect([...scannedTypes].sort(), 'every exercise type in content got a deep scan').toEqual(
+    [...wantedTypes].sort(),
+  );
+  expect(seriesBossScanned, 'a series boss got a mid-round scan').toBe(true);
+  expect(staticBossScanned, 'a static boss got a scan').toBe(true);
+  expect(versusBossScanned, 'a versus boss got a mid-game scan').toBe(true);
+  expect(completeScanned, 'the Complete step got a scan').toBe(true);
+  expect(summaryScanned, 'the session summary got a scan').toBe(true);
+});
+
+test('test-out sheet, runner and result screen have no serious/critical violations and kid-sized touch targets (M4.5)', async ({
+  page,
+}) => {
+  test.setTimeout(60_000);
+  const { second } = firstTwoLessons();
+
+  await completeFirstRun(page, 'Kid');
+  await page.getByRole('button', { name: /Journey/ }).click();
+  await page.getByRole('button', { name: journeyNodeName(second, 'locked') }).click();
+
+  // Locked-lesson message bar's "Show you know it?" button.
+  await expectKidTouchTarget(page, contentText('journey:ui.show-you-know-it'));
+  await expectNoSeriousViolations(page, 'Journey (locked lesson message)');
+  await page.getByRole('button', { name: contentText('journey:ui.show-you-know-it') }).click();
+
+  // The sheet itself (docs/screens.md §1: Owl row always stacked in a dialog).
+  await page.getByRole('dialog', { name: contentText('journey:ui.show-you-know-it') }).waitFor();
+  await expectKidTouchTarget(page, contentText('journey:ui.test-out-yes'));
+  await expectKidTouchTarget(page, contentText('journey:ui.test-out-no'));
+  await expectNoSeriousViolations(page, 'Test-out sheet');
+  await page.getByRole('button', { name: contentText('journey:ui.test-out-yes') }).click();
+
+  // The runner: no Hint control (domain-model.md §3.2 "no hints offered").
+  await page.getByText(/^Task 1\//).waitFor();
+  await expect(page.getByRole('button', { name: /Hint/ })).toHaveCount(0);
+  await expectGameTouchTarget(page, /Say it again/);
+  await expectNoSeriousViolations(page, 'Test-out runner');
+
+  // Answers every task wrong-then-right (whichever the app picked at random from the lesson's own
+  // exercise pool): a deterministic "Fail" result to also scan, without depending on which of its
+  // (up to 5) tasks got picked.
+  const failHeading = page.getByRole('heading', { name: contentText('assessment.fail-title') });
+  for (let i = 0; i < second.exercises.length + 1; i += 1) {
+    if (await failHeading.isVisible().catch(() => false)) break;
+    const matched = await shownExercise(page, second.exercises);
+    if (!matched)
+      throw new Error('test-out runner: no candidate exercise matched the current task');
+    await answerExerciseWrongThenSolve(page, matched);
+    await page.getByRole('button', { name: /^Next/ }).click();
+  }
+  await failHeading.waitFor();
+
+  await expectKidTouchTarget(page, contentText('assessment.continue'));
+  await expectNoSeriousViolations(page, 'Test-out result (fail)');
+  await page.getByRole('button', { name: contentText('assessment.continue') }).click();
+
+  // Back on the Journey, no penalty: still locked (domain-model.md §3.2 "Fail").
+  await page.getByRole('button', { name: journeyNodeName(second, 'locked') }).waitFor();
+});

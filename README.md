@@ -66,7 +66,6 @@ pnpm test             # unit + content tests
 pnpm test:slow        # slow unit tests (bot self-play / strength / timing, winnability, deep perft)
 pnpm build             # production build
 pnpm test:e2e         # Playwright, against the production build
-pnpm dev:math          # math demo app (proves the platform is reusable; not deployed)
 ```
 
 ## Documentation
@@ -100,6 +99,6 @@ pnpm dev:math          # math demo app (proves the platform is reusable; not dep
 
 - Animal art: [Fluent Emoji 3D](https://github.com/microsoft/fluentui-emoji) by Microsoft, via
   [@lobehub/fluent-emoji-3d](https://www.npmjs.com/package/@lobehub/fluent-emoji-3d) (MIT — full
-  notice: [`apps/chess-kids/public/licenses/fluent-emoji.txt`](apps/chess-kids/public/licenses/fluent-emoji.txt)).
+  notice: [`apps/kids-learning/public/licenses/fluent-emoji.txt`](apps/kids-learning/public/licenses/fluent-emoji.txt)).
 - Narration voice: generated offline with [Kokoro](https://huggingface.co/hexgrad/Kokoro-82M)
   (Apache License 2.0) — see [`docs/voice.md`](docs/voice.md).

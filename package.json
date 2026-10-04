@@ -1,5 +1,5 @@
 {
-  "name": "chess-for-kids",
+  "name": "kids-learning",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.33.0",
@@ -8,8 +8,7 @@
   },
   "scripts": {
     "prepare": "pnpm --filter \"@learn/subject-*\" build",
-    "dev": "pnpm --filter @learn/chess-kids dev",
-    "dev:math": "pnpm --filter @learn/math-demo dev",
+    "dev": "pnpm --filter @learn/kids-learning dev",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
@@ -17,12 +16,11 @@
     "test": "pnpm -r test",
     "test:slow": "pnpm -r --if-present test:slow",
     "build": "pnpm -r build",
-    "test:e2e": "pnpm --filter @learn/chess-kids test:e2e",
-    "test:e2e:math": "pnpm --filter @learn/math-demo exec playwright test",
-    "size": "pnpm --filter @learn/chess-kids size",
-    "compat": "pnpm --filter @learn/chess-kids compat",
-    "voice:check": "pnpm --filter @learn/subject-chess voice-check",
-    "voice:generate": "pnpm --filter @learn/subject-chess voice-texts && python3 tools/voice/generate.py"
+    "test:e2e": "pnpm --filter @learn/kids-learning test:e2e",
+    "size": "pnpm --filter @learn/kids-learning size",
+    "compat": "pnpm --filter @learn/kids-learning compat",
+    "voice:check": "pnpm --filter @learn/kids-learning voice-check",
+    "voice:generate": "pnpm --filter \"@learn/subject-*\" build && python3 tools/voice/generate.py"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

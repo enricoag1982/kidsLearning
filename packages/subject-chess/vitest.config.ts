@@ -17,7 +17,7 @@ export default defineConfig({
         },
       },
       {
-        // `__APP_VERSION__` (`apps/chess-kids/vite.config.ts`'s own `define`): the test services stamp it.
+        // `__APP_VERSION__` (`apps/kids-learning/vite.config.ts`'s own `define`): the test services stamp it.
         define: { __APP_VERSION__: JSON.stringify('0.0.0-test') },
         plugins: [react()],
         test: {

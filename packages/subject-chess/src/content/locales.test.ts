@@ -16,7 +16,7 @@ describe('real locales directories', () => {
   });
 
   it('merge to an en/common namespace with app.title', () => {
-    expect(merged().en?.common?.app).toEqual({ title: 'Chess for Kids' });
+    expect(merged().en?.common?.app).toEqual({ title: 'Chess' });
   });
 
   it('have no divergence from the reference language', () => {

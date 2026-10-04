@@ -56,3 +56,19 @@ describe('setSubjectLocales', () => {
     expect(screen.getByRole('heading').textContent).toBe('Second');
   });
 });
+
+describe('initI18n', () => {
+  it('works on a copy: the given resources survive subject switches, so a switch back finds them', () => {
+    const first = { en: { common: { app: { title: 'First' }, only: 'Only first' } } };
+    const copy = JSON.parse(JSON.stringify(first)) as typeof first;
+    initI18n(first);
+
+    setSubjectLocales({ en: { common: { app: { title: 'Second' } } } });
+    expect(i18next.t('app.title')).toBe('Second');
+    expect(first).toEqual(copy);
+
+    setSubjectLocales(first);
+    expect(i18next.t('app.title')).toBe('First');
+    expect(i18next.t('only')).toBe('Only first');
+  });
+});

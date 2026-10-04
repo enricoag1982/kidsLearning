@@ -49,9 +49,8 @@ Workspace `packages/*` + `apps/*`. Direction: app → `subject-*` → `platform-
 | `@learn/platform-content` | YAML → Zod → JSON pipeline, platform locales, voice-text inventory, `createChoiceContent`, `createSeriesContent`, `testing/` fixture subject | platform-core, zod, yaml |
 | `@learn/platform-web` | React: `App`, `mountApp`, routes + store slices, screens, design system, adapters, i18n, generic `choice` UI, `testing/` (incl. `dispatchGuard`); outside `src`: `build/` (Vite / Vitest / Playwright config factories), `theme.css`, `e2e/` (page flows, texts) | platform-core |
 | `@learn/subject-chess` | Chess pack: `src/{core,kinds,modes,content,web}`, `content/` (YAML), `scripts/` | platform-core, platform-content, platform-web, chess.js |
-| `@learn/subject-math` | Math demo pack: `src/{core,kinds,content,web}`, `content/` (YAML) | platform-core, platform-content, platform-web |
-| `@learn/chess-kids` | Shell (`apps/chess-kids`): `src/main.tsx` passes `chessWeb` + `CHESS_APP_CONFIG` to `mountApp` (platform-web `src/mount.tsx`); configs via platform-web `build/`, e2e | platform-core, platform-web, subject-chess |
-| `@learn/math-demo` | Shell (`apps/math-demo`), same shape with `mathWeb` + `MATH_APP_CONFIG`; dev / test only, not deployed | platform-web, subject-math |
+| `@learn/subject-math` | Math pack (demo: 1 world, 3 lessons): `src/{core,kinds,content,web}`, `content/` (YAML) | platform-core, platform-content, platform-web |
+| `@learn/kids-learning` | The deployed app (`apps/kids-learning`, `m11.6`): `src/main.tsx` passes `[chessEntry, mathEntry]` + `KIDS_APP_CONFIG` (`src/app-config.ts`) to `mountApp` (platform-web `src/mount.tsx`); configs via platform-web `build/`; e2e (chess kit + `e2e/math/` + `subjects.spec.ts`); scripts: size, compat, icons, voice check | platform-core, platform-content, platform-web, subject-chess, subject-math |
 
 | Seam | Defined in | Provides |
 |---|---|---|
@@ -74,7 +73,7 @@ Chess: `chessCore` (`src/core/chess-core.ts`), `chessContent` (`src/content/ches
 ## 4. Repository layout
 
 - `packages/*` (§3): `src/`, plus `platform-content/locales/`, `platform-web/{build,e2e,theme.css}`, `subject-*/{content,scripts,dist}` (YAML, build scripts, content build output: git-ignored).
-- `apps/chess-kids`: `index.html`, `vite.config.ts`, `src/`, `e2e/`, `test-fixtures/`, `scripts/`, `public/`. `apps/math-demo`: same shell, no `test-fixtures/` / `scripts/`. `tools/`: `voice/` (Kokoro), `art/`.
+- `apps/kids-learning`: `index.html`, `vite.config.ts`, `src/`, `e2e/`, `test-fixtures/`, `scripts/`, `public/` (icons, licences, `audio/en/` for every subject). `tools/`: `voice/` (Kokoro), `art/`.
 - One line per folder: [refactor-v4.md](refactor-v4.md) §3. A native UI, if ever needed: a new `apps/*`.
 
 ## 5. Ports
@@ -135,13 +134,13 @@ stars2: 5              # explicit: default (stars3 + 1) doesn't match the optima
 |---|---|---|
 | Unit | Vitest per package (`pnpm test` = `pnpm -r test`) | Platform packages run without a subject (`testSubject`, fixture subject); `subject-chess`: rules, variants, bot, kinds, modes |
 | Content | Vitest | Every exercise: schema valid, valid position, legal solution, solution reaches goal within star limits; all text keys present in every locale |
-| Components | React Testing Library | Board, screens (`subject-chess/src/web`); full-app flows (`apps/chess-kids/src`) |
-| End-to-end | Playwright, `apps/chess-kids/e2e/` (`kit/`) | Create profile → lesson → mini-game → progress persisted |
+| Components | React Testing Library | Board, screens (`subject-chess/src/web`); full-app flows (`apps/kids-learning/src`) |
+| End-to-end | Playwright, `apps/kids-learning/e2e/` (`kit/`) | Create profile → lesson → mini-game → progress persisted |
 | Static | `tsc` strict, ESLint (typescript-eslint `strictTypeChecked` + layer rules), Prettier | Every PR via CI |
 | Slow unit (M8.2) | Vitest, `*.slow.test.ts`, `pnpm test:slow` | Bot self-play / strength / timing, winnability, deep perft; excluded from `pnpm test` |
 | CI (M8.2) | GitHub Actions `ci.yml` | Parallel jobs `checks` (format, lint, typecheck, unit, build, size, compat, voice), `slow`, `e2e` × 3 shards; `quality` = the one required check, green only if all succeed. Full a11y curriculum walk on chromium; tablet / tablet-portrait / phone reach the same 21 scan points by seeded progress |
 | Content snapshot (M8.1) | Vitest `toMatchFileSnapshot` | Every `dist/` output of the content build (`compileAll`), pretty JSON in `packages/subject-chess/src/content/__snapshots__/content/`. Changes only with a deliberate content change: `pnpm --filter @learn/subject-chess exec vitest run -u`, review the diff |
-| Storage compat (M8.1) | Vitest + Playwright | `apps/chess-kids/test-fixtures/storage/<tag>/`: localStorage + backup files recorded with real `v1.0.0`, `v1.1.0`, `v2.0.0` builds; load and merge snapshots must stay equal; add a fixture per release (folder README) |
+| Storage compat (M8.1) | Vitest + Playwright | `apps/kids-learning/test-fixtures/storage/<tag>/`: localStorage + backup files recorded with real `v1.0.0`, `v1.1.0`, `v2.0.0` builds; load and merge snapshots must stay equal; add a fixture per release (folder README) |
 | Test kits (M8.4, R4) | `@learn/platform-core/testing`, `@learn/subject-chess/testing`, `src/testing/` of `platform-content` / `platform-web`, `subject-chess/src/web/testing/`, `apps/chess-kids/e2e/kit/` | Builders, port fakes, `makeDeps`, `testSubject` (non-chess `SubjectCore`), fixture `SubjectContent`, `renderApp`, `solutionOf`; never in the app bundle |
 
 ## 9. Rejected

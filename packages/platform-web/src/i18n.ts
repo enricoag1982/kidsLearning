@@ -5,8 +5,16 @@ import { i18nOptions } from './i18n-options.ts';
 
 // Resources are bundled at build time, so init completes synchronously: the
 // first render already has translated text (no loading flash, no suspense).
+//
+// i18next keeps the `resources` object it is given as its own store and edits it in place (`removeResourceBundle` deletes
+// from it, `addResourceBundle` adds to it), so it gets a copy. `LoadedSubject.locales` is shared with the subject's cached
+// `Services`: edited, the first subject's texts would be gone when a later switch comes back to it.
 export function initI18n(resources: InitOptions['resources']): void {
-  void i18next.use(initReactI18next).init(i18nOptions(resources));
+  const own =
+    resources === undefined
+      ? undefined
+      : (JSON.parse(JSON.stringify(resources)) as InitOptions['resources']);
+  void i18next.use(initReactI18next).init(i18nOptions(own));
 }
 
 /** Swaps the loaded resources for a subject's merged bundles (`LoadedSubject.locales`, multi-subject.md D8): per language and

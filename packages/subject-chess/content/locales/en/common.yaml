@@ -152,7 +152,7 @@ exercise:
     hint-piece: 'Place the {{color}} {{piece}} next.'
     hint-square: Put it on the orange square.
 app:
-  title: Chess for Kids
+  title: Chess
 den:
   owl-line: Look at all your pieces!
   friends-heading: Your pieces
