@@ -188,7 +188,7 @@ Opt-in mini-game `mode: duel`: the child and a bot alternate in a small game (ra
 | `TurnGame<P, S, M>` | subject core, pure | `start(params, first)`, `toMove`, `moves`, `play` (throws on an illegal move), `result` (`'kid' \| 'bot' \| 'draw'`), `bestMoves` (moves that keep a won position won; `[]` when losing), `sameMove`. State and moves are plain JSON |
 | Core mode | `modes: { duel: createDuelMode({ <game id>: game }) }` | engine: `startDuel`, `kidMove`, `botMove`, `duelHint`, `duelStars` (3 stars; 2 with a hint; 0 lost / drawn) |
 | Content mode | `modes: { duel: createDuelContent({ <game id>: { params: zodSchema, game } }) }`, `voiceTemplates` includes `duelVoiceTemplates(characters)` | schema, compile, verify |
-| Board | `modes: { duel: createDuelModeUi({ <game id>: Board }) }` in `SubjectWeb` | `Board({ state, legalMoves, disabled, hintMoves?, lastMove?, onMove })`; every move button carries `data-move="<JSON of the move>"` |
+| Board | `modes: { duel: createDuelModeUi({ <game id>: Board }) }` in `SubjectWeb` | `Board({ state, legalMoves, disabled, hintMoves?, lastMove?, bot, onMove })`; every move button carries `data-move="<JSON of the move>"` |
 | e2e | `createDuelE2E(games).play(page, game, { outcome: 'win' \| 'lose' })` (`platform-web/src/modes/duel/e2e.ts`) | reads `data-duel-state` / `data-duel-turn` / `data-duel-status`, plays `bestMoves[0]` (or a non-best move to lose) |
 
 ```yaml

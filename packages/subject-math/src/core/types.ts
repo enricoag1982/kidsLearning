@@ -4,6 +4,7 @@ import type {
   CardDemo,
   CardExerciseDef,
 } from '@learn/platform-core/domain/exercise/kinds/cards/def';
+import type { DuelGameDef } from '@learn/platform-core/domain/exercise/modes/duel/def';
 import type { SeriesGameDef } from '@learn/platform-core/domain/exercise/modes/series/def';
 import type { Lesson, MiniGameBase } from '@learn/platform-core/domain/subject';
 import type { ArrayDef } from '../kinds/array/def.ts';
@@ -23,8 +24,14 @@ export interface MathSeriesGame extends MiniGameBase, SeriesGameDef<MathExercise
   readonly mode: 'series';
 }
 
+/** A `duel` mini-game (m13.13: Race to 20): the platform's def, whose `params` is the game's own (`RaceParams`). */
+export type MathDuelGame = DuelGameDef;
+
+/** Every mini-game math has: a `series` of rounds, or a turn-based `duel` against a bot. */
+export type MathMiniGame = MathSeriesGame | MathDuelGame;
+
 export interface MathContent {
   readonly version: 1;
   readonly lessons: readonly MathLesson[];
-  readonly minigames: readonly MathSeriesGame[];
+  readonly minigames: readonly MathMiniGame[];
 }

@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
+import { isDuelMode } from '@learn/platform-core';
 import { CARD_KINDS } from '@learn/platform-core/domain/exercise/kinds/cards/kinds';
 import { CARD_SOLUTIONS } from '@learn/platform-core/domain/exercise/kinds/cards/solutions';
 import { CARD_SAMPLES } from '@learn/platform-core/testing';
+import { MATH_GAMES } from '../core/games/index.ts';
 import { MATH_CHARACTERS, mathCore } from '../core/math-core.ts';
 import { MATH_NOTES } from '../core/notes.ts';
 import {
@@ -49,7 +51,10 @@ describe('the math registry', () => {
     expect(mathCore.id).toBe('math');
     expect(mathCore.characters).toBe(MATH_CHARACTERS);
     expect(Object.keys(MATH_CHARACTERS)).toEqual(['hedgehog']);
-    expect(mathCore.modes).toEqual({});
+    // The opt-in `duel` mode over math's own games is its one mode (`series` comes from the runtime).
+    expect(Object.keys(mathCore.modes)).toEqual(['duel']);
+    expect(isDuelMode(mathCore.modes.duel)).toBe(true);
+    expect(isDuelMode(mathCore.modes.duel) && mathCore.modes.duel.games).toBe(MATH_GAMES);
     expect(mathCore.context).toBeNull();
   });
 

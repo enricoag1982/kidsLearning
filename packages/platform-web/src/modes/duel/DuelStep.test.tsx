@@ -126,6 +126,12 @@ async function kidTurnAtFour(): Promise<Mounted> {
 }
 
 describe('the duel step', () => {
+  it("hands the board the bot's name as the banner shows it", async () => {
+    await mount();
+    expect(banner()).toBe("Fox's turn");
+    expect(document.querySelector('[data-bot]')?.getAttribute('data-bot')).toBe('Fox');
+  });
+
   it("shows the bot's turn first, and the bot moves after its pause, not before", async () => {
     await mount();
     expect(banner()).toBe("Fox's turn");

@@ -150,6 +150,7 @@ export function DuelStep({
               disabled={!kidTurn}
               {...(hint === undefined ? {} : { hintMoves: hint })}
               {...(last === undefined ? {} : { lastMove: last })}
+              bot={bot}
               onMove={handleMove}
             />
           </div>

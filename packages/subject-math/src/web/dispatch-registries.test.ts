@@ -18,6 +18,7 @@ dispatchGuard({
     'place-value',
     'array',
     'series',
+    'duel',
   ],
   allowed: ['kinds/ui-registry.ts', 'kinds/e2e-registry.ts', 'modes/e2e-registry.ts'],
 });
