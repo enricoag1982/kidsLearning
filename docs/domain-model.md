@@ -137,6 +137,7 @@ A parent shares a backup file between two devices the same child plays on (`docs
 | Full game vs computer | Available after World 4 mastered (Mouse); every level above unlocks per `computer-opponent.md` §3 (3 full-game wins vs the level below, or a direct win at that level). Kid always plays White (no colour choice) |
 | Game record | Every full game and `versus` mini-game (standalone, a lesson's boss, or vs Friend) saves a `GameRecord` — one per profile involved for vs Friend, none for a guest; leaving mid-game ("Stop game?" confirm) saves it `abandoned`, never a loss |
 | Next step (Home "Today" / Journey highlight) | Next available lesson; once a world's lessons are all done and its world boss is available but unwon, the world boss |
+| Retired content (`m13.4`) | Stored progress for lessons / concepts / mini-games / badges the content no longer has is kept (backup, merge, total stars: "nothing is lost") but ignored everywhere else: warm-up, Practice due count and Home's warm-up only use concepts with an exercise left; the parent report lists content concepts and lessons only; the celebration queue skips badges the content does not define |
 
 ### 3.1 Review scheduler (Leitner)
 - Concept enters box 1, due in 1 day, when its lesson becomes complete (every exercise ≥ 1 star, incl. via an easier variant crediting the original).
