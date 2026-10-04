@@ -48,7 +48,7 @@ describe("World 5 lessons play to completion via the engine, using each exercise
   }
 });
 
-describe('World 5 exercise counts match docs/curriculum.md and the M4.1 spec', () => {
+describe('World 5 exercise counts match docs/subjects/chess/curriculum.md and the M4.1 spec', () => {
   const EXPECTED: readonly { readonly id: string; readonly exerciseCount: number }[] = [
     { id: 'castling', exerciseCount: 8 },
     { id: 'en-passant', exerciseCount: 5 },

@@ -1,6 +1,6 @@
-# Chess for Kids — project guide
+# Kids Learning — project guide
 
-Offline chess learning app for an 8-year-old beginner. `v4.0.0` = v2 features on a reusable learning platform (`docs/refactor-v4.md`), proven by a math demo app.
+Offline multi-subject learning app for children aged 8–9 (chess, math; coding and logic planned). Forked 2026-10-04 from `enricoag1982/learningChess` (Chess for Kids `v4.1.0`, full history kept). v1.0 plan: `docs/multi-subject.md`.
 
 ## Working style (user preferences)
 
@@ -18,36 +18,37 @@ Offline chess learning app for an 8-year-old beginner. `v4.0.0` = v2 features on
 
 | Doc | Content |
 |---|---|
-| `docs/teaching-process.md` | Pedagogy: principles, learning loop, phases, mini-games |
-| `docs/curriculum.md` | Lesson list: Basics (worlds 1–5) + 3 paths, mini-game catalogue |
+| `docs/multi-subject.md` | v1.0 plan: one app, many subjects; decisions D1–D18, data scope, M11 iterations |
+| `docs/new-subjects.md` | Subject ideas and ranking (coding, math, logic, games, …), product shape |
+| `docs/subjects/chess/teaching-process.md` | Chess pedagogy: principles, learning loop, phases, mini-games |
+| `docs/subjects/chess/curriculum.md` | Chess lesson list: Basics (worlds 1–5) + 3 paths, mini-game catalogue |
 | `docs/app-structure.md` | Modes, profiles, navigation, flows, progression, theme, parent code, time controls, MVP |
 | `docs/domain-model.md` | Entities, exercise types, rules (mastery, review, unlocks), use cases, ports, content files |
 | `docs/architecture.md` | Stack, layers, repo layout, ports, content format, tests, decisions |
-| `docs/computer-opponent.md` | Bot levels (Mouse → Bear), move choice, aids, tests |
+| `docs/subjects/chess/computer-opponent.md` | Bot levels (Mouse → Bear), move choice, aids, tests |
 | `docs/rewards.md` | Reward rules, badge catalogue, badge engine |
 | `docs/non-functional.md` | Offline, accessibility, privacy, performance, reliability |
 | `docs/screens.md` | UI rules, screen list; sketches: https://claude.ai/artifact/HohYgZ3J9mqBrsamJnin5S |
-| `docs/roadmap.md` | MVP scope, epics, milestones M0–M5, playtests, metrics, decisions |
+| `docs/roadmap.md` | MVP scope, epics, milestones M0–M14, playtests, metrics, decisions |
 | `docs/validation.md` | Check IDs, per-tag validation log |
 | `docs/release.md` | Release checklist, tagging, rollback |
-| `docs/retrospective.md` | M0–M5 retrospective: outcome, time spent, went well / wrong, learnings |
+| `docs/retrospective.md` | Chess M0–M5 retrospective: outcome, time spent, went well / wrong, learnings |
 | `docs/refactor-v4.md` | v4 plan: learning-platform refactor (platform packages + chess subject pack), phases, targets |
 
 ## Key decisions
 
 - Offline app: no server; all data on device. v2 = offline time controls + device sharing by file with merge (owner 2026-09-25). Online (login, remote play, automatic sync) parked, hooks only.
 - TypeScript + React + Vite PWA; Capacitor later for Android / iPad. GitHub Pages hosts the static app.
-- Packages (`packages/*`, `apps/*`): `@learn/platform-core` (pure TS: domain, use cases, ports); `@learn/platform-content` (YAML → Zod → JSON build); `@learn/platform-web` (React shell, adapters); `@learn/subject-chess` (chess pack: core, kinds, modes, content, web); `@learn/subject-math` (math demo pack); apps `@learn/chess-kids` (deployed) and `@learn/math-demo` (dev / test only), thin shells. Dependencies point only to earlier entries; platform never imports a subject (ESLint boundaries, `docs/architecture.md` §3).
+- Packages (`packages/*`, `apps/*`): `@learn/platform-core` (pure TS: domain, use cases, ports); `@learn/platform-content` (YAML → Zod → JSON build); `@learn/platform-web` (React shell, adapters); `@learn/subject-chess` (chess pack: core, kinds, modes, content, web); `@learn/subject-math` (math demo pack); apps `@learn/chess-kids` (deployed) and `@learn/math-demo` (dev / test only), thin shells; from `m11.6` one app `@learn/kids-learning` hosts every subject (`docs/multi-subject.md` D1). Dependencies point only to earlier entries; platform never imports a subject (ESLint boundaries, `docs/architecture.md` §3).
 - Animal theme (avatars, Journey, bots; pieces use real names, no animal badges — owner 2026-09-30); English first (i18n); narration = Web Speech API (device voices) up to v1.1, pre-generated audio (Kokoro) from M6.
 - Parent code (UI term; not a real password) kept in a simple plain-text file; the code screen reminds where the file is (web: copy in Downloads, again via "Download parent code file" in the grown-ups area; store apps: editable file in app Documents). Daily time limit in v1.
 
 ## Status and next step
 
-- Done: M0–M7 (`m0` … `m7`), releases `v1.0.0`, `v1.1.0` (owner playtest 2), `v1.1.1` (iPad mini 4 / iOS 15 fix), `v2.0.0` (generated voice, Fluent 3D art, parent code, time controls, device sharing); M8 = v4 refactor, `m8.1` … `m8.36` (R0–R4 package split, R4.5 trim, R5 math demo, owner requests m8.34–m8.35), `v4.0.0` (tag after the owner's `docs/release.md` §1 checks). Live: https://enricoag1982.github.io/learningChess/ (deploy on every push to `master`). Owner checks done 2026-10-02: playtests 1–4, offline on iPad + Android tablet; tags `v4.0.0`, `v4.1.0`.
-- M9 (post-v4 owner requests): `m9.1` real piece names (no animal badges, no Piece style setting; owner 2026-09-30), `m9.2` release `v4.1.0`.
-- M10 (follow-ups): `m10.1` Bear beats Wolf (F4), `m10.2` Bear time-cut safety, `m10.3` platform cleanup (F7 + F8), `m10.4` check ring in series rounds (F6), `m10.5` README screenshots (F9).
-- v4 refactor closed (owner 2026-10-02): docs 264 KB and ≈ 33 k test lines accepted as is (`docs/refactor-v4.md` §6).
-- Next (when the owner asks): M11 Store apps, M12 Paths (`docs/roadmap.md` §4); apply `docs/retrospective.md` §6 and §9 learnings. Release steps: `docs/release.md`.
+- Chess history (repo `learningChess`): M0–M10 done, releases up to `v4.1.0` (tags live in `learningChess` only); v4 refactor closed (`docs/refactor-v4.md` §6). Details: `docs/roadmap.md`, `docs/validation.md`.
+- Owner plan (2026-10-04): v1.0 = multi-subject app serving chess + math demo (M11, `docs/multi-subject.md` §4); then v1.1 Coding (M12), v1.2 Math (M13), v1.3 Logic (M14), each researched and planned in `docs/subjects/<id>/` before building; target age 8–9, extendable.
+- Now: M11 (`m11.1` docs + identity).
+- Live: https://enricoag1982.github.io/kidsLearning/ (deploy on every push to `master`; owner sets Pages source = GitHub Actions).
 - Local: `pnpm install` (also builds the content JSON) · `pnpm dev` · `pnpm test` (one package: `pnpm --filter @learn/<pkg> test`) · `pnpm test:slow` · `pnpm lint` · `pnpm typecheck` · `pnpm format:check` · `pnpm build && PW_CHROMIUM_PATH=/opt/pw-browsers/chromium pnpm test:e2e` (cloud sandbox browser path) · `pnpm size` · `pnpm compat` · `pnpm voice:check` · math demo: `pnpm dev:math`, `pnpm test:e2e:math`.
 - Dev playgrounds (dev builds only): `/#board`, `/#exercises`, `/#lesson=<id>&view=<story|demo|boss|exercise id>`.
 - Content review rule: every select-squares / yes-no / choice / setup text is checked against its board so exactly one reading leads to the accepted answer (log it as check N). No distractor pieces: a piece the question is not about pulls the eye (playtest: "row closest to you" with a king in the middle was read as "squares closest to the king"); say "bottom row" / "top row", not "closest to you". Diagonals: every non-corner square sits on two; "tap the diagonal" only from a corner square, otherwise name which one ("from corner to corner", "the short one") (owner 2026-09-26).

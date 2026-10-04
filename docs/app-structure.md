@@ -1,6 +1,6 @@
-# App Structure — Chess for Kids
+# App Structure — Kids Learning
 
-Platform/tech independent. Pedagogy in [teaching-process.md](teaching-process.md).
+Platform/tech independent. Pedagogy in [teaching-process.md](subjects/chess/teaching-process.md).
 
 ## 1. Decisions
 

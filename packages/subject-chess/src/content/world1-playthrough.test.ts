@@ -59,7 +59,7 @@ describe('World 1 series bosses (Square Hunt, Setup Race) play to completion for
   for (const lessonId of WORLD1_LESSON_IDS) {
     const lesson = content.lessons.find((candidate) => candidate.id === lessonId);
     if (lesson === undefined || lesson.boss === undefined) {
-      continue; // Squares has no boss (docs/curriculum.md World 1 table).
+      continue; // Squares has no boss (docs/subjects/chess/curriculum.md World 1 table).
     }
     const bossId = lesson.boss;
 

@@ -1,4 +1,4 @@
-# Voice — Chess for Kids
+# Voice — Kids Learning
 
 Related: [architecture.md](architecture.md) §Narration, [non-functional.md](non-functional.md) §1–2.
 

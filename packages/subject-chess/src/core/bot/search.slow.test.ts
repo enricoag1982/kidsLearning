@@ -119,7 +119,7 @@ describe('performance', () => {
     expect(elapsed).toBeLessThan(5000);
   });
 
-  // 10 varied middlegame positions (`docs/computer-opponent.md` §3/§8 "Bear speed" reference set):
+  // 10 varied middlegame positions (`docs/subjects/chess/computer-opponent.md` §3/§8 "Bear speed" reference set):
   // open and closed, tactical and quiet, both sides to move. Measured p50/p95 on this machine
   // before move ordering / transposition table / iterative deepening / quiescence:
   // p50 ≈ 1850ms, p95 ≈ 4080ms; after: p50 ≈ 270-330ms, p95 ≈ 290-360ms (`TIME_BUDGET_MS = 250`

@@ -1,6 +1,6 @@
-# Computer Opponent — Chess for Kids
+# Computer Opponent — Chess
 
-Related: [domain-model.md](domain-model.md), [architecture.md](architecture.md). Paths: `packages/subject-chess/` unless `packages/…`.
+Related: [domain-model.md](../../domain-model.md), [architecture.md](../../architecture.md). Paths: `packages/subject-chess/` unless `packages/…`.
 
 ## 1. Goals
 

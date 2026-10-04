@@ -50,7 +50,7 @@ export function PlayScreen(): JSX.Element {
 
   const [lockedMessage, setLockedMessage] = useState<string | null>(null);
   // `null` = no manual pick yet this session: the level chips default to the profile's stored
-  // "Automatic level" suggestion (`docs/computer-opponent.md` §5), loaded once below.
+  // "Automatic level" suggestion (`docs/subjects/chess/computer-opponent.md` §5), loaded once below.
   const [selectedLevel, setSelectedLevel] = useState<number | null>(null);
   const bubbleText = t('play.owl-line');
   const { value: storedSuggestion } = useAsync(

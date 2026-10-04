@@ -80,7 +80,7 @@ describe('safe-or-not (series) plays every round for 3 stars', () => {
   });
 });
 
-describe('World 3 exercise counts match docs/curriculum.md and the M3.2b spec', () => {
+describe('World 3 exercise counts match docs/subjects/chess/curriculum.md and the M3.2b spec', () => {
   const EXPECTED: readonly { readonly id: string; readonly exerciseCount: number }[] = [
     { id: 'attack', exerciseCount: 8 },
     { id: 'defend', exerciseCount: 8 },

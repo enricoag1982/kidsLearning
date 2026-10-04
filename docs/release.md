@@ -1,4 +1,4 @@
-# Release Checklist — Chess for Kids
+# Release Checklist — Kids Learning
 
 Related: [validation.md](validation.md), [roadmap.md](roadmap.md), [../CONTRIBUTING.md](../CONTRIBUTING.md).
 

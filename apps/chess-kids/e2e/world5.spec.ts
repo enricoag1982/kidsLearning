@@ -46,7 +46,7 @@ async function seedUpTo(page: import('@playwright/test').Page, lessonId: string)
 }
 
 /**
- * World 5 "Castling" (no boss of its own — `docs/curriculum.md` World 5): every prior world
+ * World 5 "Castling" (no boss of its own — `docs/subjects/chess/curriculum.md` World 5): every prior world
  * mastered, then the lesson is played end to end via `playLesson` — story, demo, both guided tries,
  * all 8 exercises (yes-no `can-castle` and best-move `castle`, the two new verify kinds this
  * milestone adds), same generic `solveExercise` helper every other lesson type uses.

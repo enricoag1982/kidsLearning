@@ -17,7 +17,7 @@ import {
 import type { BotLevel } from './levels.ts';
 
 // Alpha-beta move search (Bear adds tt/killers/history/null-move/LMR/quiescence; every other level
-// runs the plain search). See `docs/computer-opponent.md` §3/§8.
+// runs the plain search). See `docs/subjects/chess/computer-opponent.md` §3/§8.
 
 function other(color: Color): Color {
   return color === 'w' ? 'b' : 'w';

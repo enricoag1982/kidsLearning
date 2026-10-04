@@ -63,7 +63,7 @@ function botThinkDelayMs(): number {
   return readTestSeed() !== null || prefersReducedMotion() ? 300 : 800 + Math.random() * 700;
 }
 
-/** Aids per bot level (`docs/computer-opponent.md` §4); Mouse's for an unknown level (never: `opponentLevel` is 1-5). */
+/** Aids per bot level (`docs/subjects/chess/computer-opponent.md` §4); Mouse's for an unknown level (never: `opponentLevel` is 1-5). */
 function aidsForLevel(level: number): bot.BotAids {
   return (
     bot.BOT_LEVELS.find((entry) => entry.level === level)?.aids ??
@@ -338,7 +338,7 @@ function resultText(t: TFunction, status: 'won' | 'lost' | 'draw'): string {
   return t('boss.versus.lost');
 }
 
-/** A second, explaining line for a draw result (docs/computer-opponent.md §6): `undefined` for a
+/** A second, explaining line for a draw result (docs/subjects/chess/computer-opponent.md §6): `undefined` for a
  * reason with no kid-friendly explanation, or no draw at all. */
 function drawReasonI18nKey(
   reason: string | undefined,

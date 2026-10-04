@@ -1,4 +1,4 @@
-# Teaching Process — Chess for Kids (age 8, beginner)
+# Teaching Process — Chess (age 8, beginner)
 
 ## 1. Principles
 
@@ -41,8 +41,8 @@ Steps 1–3 (Story/Demo/Guided try) each carry a "Skip" button (owner playtest 2
 the rest of that step straight to step 4 (Exercises) or the next of 1–3. Exercises and the
 mini-game are never skippable — they decide stars/mastery. Marked `skipped` in `LessonProgress`
 and the lesson's progress track; unmarked if that step is later played through normally (e.g. a
-replay). Scoring/mastery/review unchanged either way. Details: [app-structure.md](app-structure.md)
-lesson flow, [domain-model.md](domain-model.md) §2 `LessonProgress`.
+replay). Scoring/mastery/review unchanged either way. Details: [app-structure.md](../../app-structure.md)
+lesson flow, [domain-model.md](../../domain-model.md) §2 `LessonProgress`.
 
 ### 3.2 Per session (~12–15 min)
 Warm-up review (2 min) → 1 new concept (5–8 min) → 1 mini-game (5 min).
@@ -51,7 +51,7 @@ Warm-up review (2 min) → 1 new concept (5–8 min) → 1 mini-game (5 min).
 - Wrong move: undo + short spoken explanation.
 - Hint ladder: highlight piece → highlight target squares → show move.
 - 3 stars = no hint, no error.
-- 2 failures on a concept → easier variant offered (kid may keep trying), concept added to review. Rules: [domain-model.md](domain-model.md) §3.
+- 2 failures on a concept → easier variant offered (kid may keep trying), concept added to review. Rules: [domain-model.md](../../domain-model.md) §3.
 - Mastery = ≥80% of max stars on the concept; required to move on.
 
 ## 4. Curriculum

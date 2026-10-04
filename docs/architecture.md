@@ -1,6 +1,6 @@
-# Architecture — Chess for Kids
+# Architecture — Kids Learning
 
-Related: [teaching-process.md](teaching-process.md), [app-structure.md](app-structure.md).
+Related: [teaching-process.md](subjects/chess/teaching-process.md), [app-structure.md](app-structure.md).
 
 ## 1. Requirements
 
@@ -20,7 +20,7 @@ Related: [teaching-process.md](teaching-process.md), [app-structure.md](app-stru
 | Styling / motion | Tailwind CSS + Motion | Consistent design, smooth animations |
 | Board | Own SVG component | Full control: stars, blocked squares, arrows, tap-tap; crisp on tablets |
 | Chess rules | chess.js (BSD-2) + own variant layer | Standard rules from chess.js; variants (no kings, custom win conditions) in own layer |
-| Computer opponent | Own engine (minimax depth 1–4 + controlled mistakes) in a Web Worker | Weak human-like play for kids; no GPL; UI stays smooth. Details: [computer-opponent.md](computer-opponent.md) |
+| Computer opponent | Own engine (minimax depth 1–4 + controlled mistakes) in a Web Worker | Weak human-like play for kids; no GPL; UI stays smooth. Details: [computer-opponent.md](subjects/chess/computer-opponent.md) |
 | Content | YAML (authoring) → Zod validation → JSON (runtime) | Readable, commentable lessons; app loads plain JSON |
 | i18n | i18next | English first, more languages without code changes |
 | Narration | `Narrator` port: pre-generated audio files primary, Web Speech API (device voices) fallback | One port; swapping the underlying voice needs no caller changes |
@@ -189,4 +189,4 @@ stars2: 5              # explicit: default (stars3 + 1) doesn't match the optima
 | Test layers (web) | Vitest + jsdom + Testing Library (components, adapters; own config per package); Playwright on the production build |
 | App version | `packages/platform-web/src/app-version.d.ts` declares `__APP_VERSION__: string`, set by `defineAppConfig` / `defineAppTestConfig`'s `define` (each reads the calling app's `package.json` `version`) — compile-time only; shown as a small line under the parent-area overview |
 
-Offline, PWA update, CSP and lazy-loading details: [non-functional.md](non-functional.md) §1. Bear's search techniques and their Bear-only scoping: [computer-opponent.md](computer-opponent.md) §6.5–6.6. Parent area, backup screen and device-sharing merge rules: [app-structure.md](app-structure.md) §11, [domain-model.md](domain-model.md) §3.5.
+Offline, PWA update, CSP and lazy-loading details: [non-functional.md](non-functional.md) §1. Bear's search techniques and their Bear-only scoping: [computer-opponent.md](subjects/chess/computer-opponent.md) §6.5–6.6. Parent area, backup screen and device-sharing merge rules: [app-structure.md](app-structure.md) §11, [domain-model.md](domain-model.md) §3.5.
