@@ -18,7 +18,8 @@ describe('logicEntry', () => {
     expect(logicEntry.manifest.settings).toBe(logicCore.settings);
     expect(logicEntry.manifest.names.en).toBe('Logic');
     expect(logicEntry.manifest.icon).not.toBe('');
-    expect(Object.keys(logicEntry.manifest.colors).sort()).toEqual(['bg', 'fg', 'ledge']);
+    // The Home palette's purple: chess uses the green, math the orange, coding the blue.
+    expect(logicEntry.manifest.colors).toEqual({ bg: '#EFE4F7', fg: '#4B3A63', ledge: '#352945' });
   });
 
   it('imports only light modules statically (no pack, kinds or core)', () => {
