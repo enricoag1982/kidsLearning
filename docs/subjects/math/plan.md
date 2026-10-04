@@ -85,4 +85,4 @@ Re-cut 2026-10-04 (one concern per iteration, ≤ 4 commits):
 | `m13.12` | Platform `duel` mode |
 | `m13.13` | Race to 20 + W3 world boss |
 | `m13.14` | W3 templates + content |
-| `m13.15` | Release `v1.2.0` |
+| `m13.15` | Release `v1.2.0`. Done: version 1.2.0, README Math row + screenshots, visual pass (follow-ups F8–F13 in `docs/multi-subject.md` §4.1), math Home line fits every lesson |
