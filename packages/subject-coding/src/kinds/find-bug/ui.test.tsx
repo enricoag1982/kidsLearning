@@ -104,7 +104,10 @@ describe('find-bug UI', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Watch' }));
       await play(0);
       await play(700);
-      expect(tile('Tile 2: Step right').dataset['active']).toBe('true');
+      // While it plays the tiles are pictures, the glowing one the step being run.
+      expect(screen.getByRole('img', { name: 'Tile 2: Step right' }).dataset['active']).toBe(
+        'true',
+      );
       await play(5000);
       fireEvent.click(screen.getByRole('button', { name: 'Watch' }));
       await play(0);
@@ -112,14 +115,16 @@ describe('find-bug UI', () => {
       expect(session().dataset['errors']).toBe('1');
     });
 
-    it('cannot be tapped while it plays: the tiles wait', async () => {
+    it('cannot be tapped while it plays: the tiles are pictures until it ends', async () => {
       mount();
       fireEvent.click(screen.getByRole('button', { name: 'Watch' }));
       await play(0);
-      expect(tile('Tile 4: Step up').hasAttribute('disabled')).toBe(true);
-      fireEvent.click(tile('Tile 4: Step up'));
+      expect(screen.queryAllByRole('button', { name: /^Tile \d/ })).toHaveLength(0);
+      fireEvent.click(screen.getByRole('img', { name: 'Tile 4: Step up' }));
       await play(10_000);
       expect(session().dataset['solved']).toBe('false');
+      expect(session().dataset['errors']).toBe('0');
+      expect(screen.getAllByRole('button', { name: /^Tile \d/ })).toHaveLength(5);
     });
   });
 
@@ -188,7 +193,7 @@ describe('find-bug UI', () => {
       await play(0);
       await play(3 * 700);
       expect(actorCell()).toBe('3,0');
-      expect(tile('Tile 4: Step up').dataset['active']).toBe('true');
+      expect(screen.getByRole('img', { name: 'Tile 4: Step up' }).dataset['active']).toBe('true');
       // It stays put: no return to the start.
       await play(10_000);
       expect(actorCell()).toBe('3,0');
@@ -222,8 +227,9 @@ describe('find-bug UI', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Hint' }));
       }
       expect(note()).toBe('The flashing step is the bug.');
-      expect(tile('Tile 4: Step up').className).toContain('animate-pulse');
-      expect(tile('Tile 3: Step right').className).not.toContain('animate-pulse');
+      // (Hint 1's replay may still be playing, so the tiles can be pictures for a moment: match by name.)
+      expect(screen.getByLabelText('Tile 4: Step up').className).toContain('animate-pulse');
+      expect(screen.getByLabelText('Tile 3: Step right').className).not.toContain('animate-pulse');
     });
 
     it('keeps the greyed tiles after a wrong tap among the bright ones', async () => {
@@ -234,6 +240,15 @@ describe('find-bug UI', () => {
       fireEvent.click(tile('Tile 3: Step right'));
       expect(note()).toBe('That step is fine. Look again!');
       expect(tile('Tile 1: Step right').hasAttribute('disabled')).toBe(true);
+    });
+
+    it('asked for while the fix goes in, a hint does not cancel the run', async () => {
+      mount();
+      fireEvent.click(tile('Tile 4: Step up'));
+      fireEvent.click(screen.getByRole('button', { name: 'Hint' }));
+      await play(700);
+      await play(20_000);
+      expect(session().dataset['solved']).toBe('true');
     });
 
     it('1 on a guided try comes by itself and plays at once', async () => {

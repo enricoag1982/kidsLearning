@@ -78,16 +78,16 @@ function Glyph({ kind }: { readonly kind: TileKind }): JSX.Element {
     case 'jump':
       return (
         <>
-          <circle cx="20" cy="32" r="4.5" fill="currentColor" />
+          <circle cx="18" cy="32" r="4.5" fill="currentColor" />
           <path
-            d="M6 28 C9 6 31 6 34 26"
+            d="M5 28 C8 6 28 6 31 23"
             fill="none"
             stroke="currentColor"
             strokeWidth={4}
             strokeLinecap="round"
           />
           <path
-            d="M27 22 L41 22 L34 33 Z"
+            d="M24 21 L38 21 L31 33 Z"
             fill="currentColor"
             stroke="currentColor"
             strokeWidth={1.5}

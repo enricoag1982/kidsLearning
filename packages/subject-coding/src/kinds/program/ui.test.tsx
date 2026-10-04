@@ -126,9 +126,9 @@ describe('program UI', () => {
     // The run plays; nothing can be changed and the engine has not heard of it.
     await play(0);
     expect(actorCell()).toBe('1,0');
-    expect(screen.getByRole('button', { name: 'Slot 1: Step right' }).dataset['active']).toBe(
-      'true',
-    );
+    expect(screen.getByRole('img', { name: 'Slot 1: Step right' }).dataset['active']).toBe('true');
+    // While it plays the tiles are pictures: nothing in the strip can be tapped.
+    expect(screen.queryAllByRole('button', { name: /^Slot \d: / })).toHaveLength(0);
     expect(screen.getByRole('button', { name: 'Run' }).hasAttribute('disabled')).toBe(true);
     expect(screen.getByRole('button', { name: 'Step down' }).hasAttribute('disabled')).toBe(true);
     expect(session().dataset['solved']).toBe('false');
@@ -136,9 +136,7 @@ describe('program UI', () => {
 
     await play(700);
     expect(actorCell()).toBe('2,0');
-    expect(screen.getByRole('button', { name: 'Slot 2: Step right' }).dataset['active']).toBe(
-      'true',
-    );
+    expect(screen.getByRole('img', { name: 'Slot 2: Step right' }).dataset['active']).toBe('true');
     await play(700);
     expect(actorCell()).toBe('2,1');
     expect(session().dataset['solved']).toBe('false');
@@ -149,9 +147,7 @@ describe('program UI', () => {
     expect(screen.getByTestId('done').dataset['stars']).toBe('3');
     expect(screen.queryByRole('button', { name: 'Run' })).toBeNull();
     // The finished program stays on screen, nothing in it glows.
-    expect(screen.getByRole('button', { name: 'Slot 3: Step down' }).dataset['active']).toBe(
-      'false',
-    );
+    expect(screen.getByRole('img', { name: 'Slot 3: Step down' }).dataset['active']).toBe('false');
   });
 
   it('shows a trail of footprints behind the animal', async () => {
@@ -356,14 +352,16 @@ describe('program UI', () => {
       tap('Run');
       await play(0);
       await play(700);
-      const badge = screen.getByRole('button', { name: 'Slot 1: Repeat 5 times, tap to change' });
+      // While it plays the block is a picture: its count shows the round, its tile the step.
+      const badge = screen.getByRole('img', { name: 'Slot 1: Repeat 5 times' });
       expect(badge.textContent).toBe('2 of 5');
       expect(badge.dataset['iterating']).toBe('true');
       expect(
-        screen.getByRole('button', { name: 'Slot 1, inside the repeat: Step right' }).dataset[
+        screen.getByRole('img', { name: 'Slot 1, inside the repeat: Step right' }).dataset[
           'active'
         ],
       ).toBe('true');
+      expect(screen.queryAllByRole('button', { name: /^Slot 1/ })).toHaveLength(0);
       expect(actorCell()).toBe('2,0');
 
       await play(10_000);
@@ -446,6 +444,18 @@ describe('program UI', () => {
       expect(screen.queryAllByTestId(/^grid-highlight-/)).toHaveLength(0);
     });
 
+    it('asked for while a run plays, a hint does not cancel the run (hint 3 waits for the next tap)', async () => {
+      mount();
+      tray('Step right', 'Step right', 'Step down');
+      tap('Run');
+      await play(0);
+      tap('Hint');
+      tap('Hint');
+      tap('Hint');
+      await play(10_000);
+      expect(session().dataset['solved']).toBe('true');
+    });
+
     it('hides the Hint button when hints are off', () => {
       renderCodingUi(<KindHarness def={reach} showHint={false} />);
       expect(screen.queryByRole('button', { name: 'Hint' })).toBeNull();
@@ -464,12 +474,8 @@ describe('program UI', () => {
     tap('Run');
     await play(0);
     await play(700);
-    expect(screen.getByRole('button', { name: 'Slot 3: Step down' }).dataset['active']).toBe(
-      'true',
-    );
-    expect(screen.getByRole('button', { name: 'Slot 1: Step right' }).dataset['active']).toBe(
-      'false',
-    );
+    expect(screen.getByRole('img', { name: 'Slot 3: Step down' }).dataset['active']).toBe('true');
+    expect(screen.getByRole('img', { name: 'Slot 1: Step right' }).dataset['active']).toBe('false');
   });
 
   describe('relative tiles', () => {

@@ -50,9 +50,9 @@ function FindBugPlay({
     [],
   );
 
-  // Hint 1 replays the failing run and pauses on the bug.
+  // Hint 1 replays the failing run and pauses on the bug (not over the fixed run that is about to be sent to the engine).
   useChanged(state.hint, null, (next) => {
-    if (findBugHint(next)?.replayUntil !== undefined) {
+    if (findBugHint(next)?.replayUntil !== undefined && phase === 'looking') {
       playback.play(partialRun(failing, stepsUntil(failing, def.program, def.bug)));
     }
   });

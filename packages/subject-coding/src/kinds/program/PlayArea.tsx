@@ -5,7 +5,7 @@ import { cellKey } from '@learn/platform-core/domain/grid';
 import { ExerciseControls } from '@learn/platform-web/kinds/ExerciseControls.tsx';
 import { ExerciseFrame } from '@learn/platform-web/kinds/ExercisePlay.tsx';
 import { panelBody } from '@learn/platform-web/kinds/panel-body.tsx';
-import { PlayIcon, ReplayIcon } from '@learn/platform-web/ui/ds/icons.tsx';
+import { PlayIcon, Svg } from '@learn/platform-web/ui/ds/icons.tsx';
 import { PRIMARY_BUTTON, SECONDARY_BUTTON } from '@learn/platform-web/ui/lesson/button-styles.ts';
 import type { GridHighlight } from '@learn/platform-web/ui/grid/GridBoard.tsx';
 import { usesHeading } from '../../web/board/board-model.ts';
@@ -20,6 +20,16 @@ import { kindsUsed, programKind } from './kind.ts';
 import type { ProgramAction } from './kind.ts';
 import type { ProgramPlayAreaProps } from './ui.ts';
 import { firstMoveCell, ghostSlots, slotPathOf } from './view-model.ts';
+
+/** A circular arrow, turning back: Reset. */
+function ResetIcon(): JSX.Element {
+  return (
+    <Svg size={22}>
+      <path d="M3 12a9 9 0 1 0 3-6.7" />
+      <path d="M3 4v5h5" />
+    </Svg>
+  );
+}
 
 /** The board and its controls for `program`; hooks live here, in a component, so `PlayArea` below can be called as a function. */
 function ProgramPlay({
@@ -39,10 +49,11 @@ function ProgramPlay({
   const hint = programHint(state.hint);
   const busy = playback.playing;
 
-  // Hint 3 fills the strip with the solution (the child still taps Run); the actor goes back to the start.
+  // Hint 3 fills the strip with the solution (the child still taps Run); the actor goes back to the start. Not while a run plays: it
+  // would cancel the run before the engine hears of it.
   useChanged(state.hint, null, (next) => {
     const reveal = programHint(next)?.reveal;
-    if (reveal !== undefined) {
+    if (reveal !== undefined && !busy) {
       playback.stop();
       draft.load(reveal);
     }
@@ -158,7 +169,7 @@ function ProgramPlay({
               }}
               className={SECONDARY_BUTTON}
             >
-              <ReplayIcon size={22} />
+              <ResetIcon />
               {t('coding.buttons.reset')}
             </button>
           </>

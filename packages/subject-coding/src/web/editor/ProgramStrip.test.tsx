@@ -63,14 +63,25 @@ describe('ProgramStrip, edit mode', () => {
     expect(screen.getByRole('button', { name: 'Slot 2: Step down' })).toBeTruthy();
   });
 
-  it('nothing can be tapped while a run plays', () => {
+  it('while a run plays every tile is a picture: no button to tap, the glow on the running one', () => {
     const onRemove = vi.fn();
-    edit({ slots: [right, repeat(2, down)], busy: true, onRemove });
-    for (const button of screen.getAllByRole('button')) {
-      expect(button.hasAttribute('disabled')).toBe(true);
-    }
-    fireEvent.click(screen.getByRole('button', { name: 'Slot 1: Step right' }));
+    edit({
+      slots: [right, repeat(2, down)],
+      busy: true,
+      onRemove,
+      onToggleRepeat: vi.fn(),
+      onCycleTimes: vi.fn(),
+      active: { path: [1, 0], iteration: 2 },
+    });
+    expect(screen.queryAllByRole('button')).toHaveLength(0);
+    fireEvent.click(screen.getByRole('img', { name: 'Slot 1: Step right' }));
     expect(onRemove).not.toHaveBeenCalled();
+    expect(
+      screen.getByRole('img', { name: 'Slot 2, inside the repeat: Step down' }).dataset['active'],
+    ).toBe('true');
+    const block = screen.getByRole('img', { name: 'Slot 2: Repeat 2 times' });
+    expect(block.textContent).toBe('2 of 2');
+    expect(block.dataset['iterating']).toBe('true');
   });
 
   it('the running tile glows', () => {

@@ -35,10 +35,11 @@ function PredictPlay({
   const hint = predictHint(state.hint);
   const result = useMemo(() => run(def.level, def.program), [def]);
 
-  // Hints 1 and 2 play the first steps of the program, then the animal returns to the start.
+  // Hints 1 and 2 play the first steps of the program, then the animal returns to the start (not over a run that is about to be sent
+  // to the engine).
   useChanged(state.hint, null, (next) => {
     const steps = predictHint(next)?.replaySteps;
-    if (steps !== undefined) {
+    if (steps !== undefined && !playback.playing) {
       playback.play(partialRun(result, steps), { returnAfterMs: REPLAY_RETURN_MS });
     }
   });

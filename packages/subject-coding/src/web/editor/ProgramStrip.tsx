@@ -36,7 +36,7 @@ export interface ProgramStripProps {
   readonly locked?: readonly number[];
   /** The repeat taking the next tapped tile (edit mode). */
   readonly openRepeat?: number | null;
-  /** A run is playing: nothing can be tapped. */
+  /** A run is playing: every tile is a picture, nothing can be tapped. */
   readonly busy?: boolean;
   readonly active?: ActiveStep | null;
   /** Faded tiles in empty top-level slots, by index (a hint). */
@@ -109,7 +109,8 @@ interface TileViewProps {
   readonly busy: boolean;
 }
 
-/** A primitive tile: a raised button when tappable, else a flat picture (a locked one carries its lock). */
+/** A primitive tile: a raised button when tappable, else a flat picture (a locked one carries its lock; while a run plays every
+ * tile is a picture, the glowing one the step being run). A tile a hint ruled out stays a button, greyed and disabled. */
 function PrimitiveTile({
   tile,
   name,
@@ -127,7 +128,7 @@ function PrimitiveTile({
     'data-wrong': status.wrong !== undefined,
     'data-bug': status.bug === true,
   };
-  const tappable = onTap !== undefined && !locked;
+  const tappable = onTap !== undefined && !locked && !busy;
   const looks = `${SLOT} ${CENTER} ${statusClass(status, active)}`;
   if (!tappable) {
     return (
@@ -142,13 +143,12 @@ function PrimitiveTile({
       </div>
     );
   }
-  const disabled = busy || status.dim === true;
   return (
     <button
       // The error count in the key restarts the shake when the same tile is tapped wrong twice.
       key={status.wrong === undefined ? undefined : `wrong-${String(status.wrong)}`}
       type="button"
-      disabled={disabled}
+      disabled={status.dim === true}
       {...common}
       onClick={onTap}
       className={tapClass('custom', 'neutral', looks)}
@@ -208,7 +208,8 @@ function RepeatBlock({ index, tile, props, slotName }: BlockProps): JSX.Element 
     : `×${String(tile.times)}`;
   const room = isOpen && tile.body.length < MAX_REPEAT_BODY;
   const headerName = slotName([index], tile);
-  const frame = `flex flex-col gap-1.5 rounded-2xl border-2 border-edge-info bg-info/10 p-1.5 ${
+  // A C: a thick bar on the left and arms above and below, open on the right.
+  const frame = `flex flex-col gap-1.5 rounded-l-3xl rounded-r-lg border-y-[6px] border-l-[12px] border-edge-info bg-info/10 p-1.5 pr-2 ${
     isOpen ? 'ring-4 ring-info/40' : ''
   }`;
   const pill = `${CENTER} h-14 flex-none gap-2 rounded-2xl px-2`;
@@ -219,12 +220,11 @@ function RepeatBlock({ index, tile, props, slotName }: BlockProps): JSX.Element 
   );
 
   let header: JSX.Element;
-  if (edit && !isLocked) {
+  if (edit && !isLocked && !busy) {
     header = (
       <>
         <button
           type="button"
-          disabled={busy}
           aria-label={tContent(t, 'coding.strip.fill', { n: index + 1 })}
           aria-pressed={isOpen}
           onClick={() => {
@@ -240,7 +240,6 @@ function RepeatBlock({ index, tile, props, slotName }: BlockProps): JSX.Element 
         </button>
         <button
           type="button"
-          disabled={busy}
           aria-label={tContent(t, 'coding.strip.times', { n: index + 1, times: tile.times })}
           data-iterating={iterating}
           onClick={() => {
@@ -256,12 +255,12 @@ function RepeatBlock({ index, tile, props, slotName }: BlockProps): JSX.Element 
         </button>
       </>
     );
-  } else if (!edit && onPick !== undefined) {
+  } else if (!edit && onPick !== undefined && !busy) {
     header = (
       <button
         key={own.wrong === undefined ? undefined : `wrong-${String(own.wrong)}`}
         type="button"
-        disabled={busy || own.dim === true}
+        disabled={own.dim === true}
         aria-label={headerName}
         data-path={String(index)}
         data-active={ownActive}
@@ -284,9 +283,10 @@ function RepeatBlock({ index, tile, props, slotName }: BlockProps): JSX.Element 
         aria-label={headerName}
         data-path={String(index)}
         data-active={ownActive}
+        data-iterating={iterating}
         className={`${pill} border-2 bg-card ${
           isLocked ? 'border-dashed border-edge-locked' : 'border-line'
-        } ${statusClass(own, ownActive)}`}
+        } ${statusClass(own, ownActive || iterating)}`}
       >
         <TileIcon kind="repeat" />
         {count}

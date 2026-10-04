@@ -178,6 +178,16 @@ describe('predict UI', () => {
       expect(session().dataset['hintLevel']).toBe('1');
     });
 
+    it('asked for while the right answer plays, a hint does not cancel the run', async () => {
+      mount();
+      fireEvent.click(cell(2, 1));
+      await play(0);
+      fireEvent.click(screen.getByRole('button', { name: 'Hint' }));
+      await play(20_000);
+      expect(session().dataset['solved']).toBe('true');
+      expect(highlight(2, 1)).toBe('good');
+    });
+
     it('a tap during the replay is ignored', async () => {
       mount();
       fireEvent.click(screen.getByRole('button', { name: 'Hint' }));
