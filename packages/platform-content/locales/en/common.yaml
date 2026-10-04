@@ -233,6 +233,7 @@ parent:
     offline: No internet connection. Connect and try again.
   privacy:
     title: Privacy
+    intro: "{{app}} keeps everything on this device. Here's exactly what that means."
     data-heading: What we keep
     data-body: A nickname, an avatar picture, and lesson progress for each child — stored only on this device, never sent anywhere.
     no-accounts-heading: No accounts, no tracking

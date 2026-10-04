@@ -4,6 +4,7 @@ import type { AppConfig } from '@learn/platform-core/domain/subject';
 
 /** No `version`: it is the running build's, filled in by the platform-web shell (`__APP_VERSION__`). */
 export const CHESS_APP_CONFIG: Omit<AppConfig, 'version'> = {
+  title: 'Chess for Kids',
   storagePrefix: 'chess-kids:',
   // Interim (m11.2–m11.5): one store, keys unchanged; m11.6 moves to `kids:` + `kids-<id>:`.
   subjectStoragePrefix: () => 'chess-kids:',

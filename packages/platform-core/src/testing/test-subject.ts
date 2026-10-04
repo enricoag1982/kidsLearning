@@ -102,6 +102,7 @@ export const testSubject: SubjectCore<null, readonly GameRecord[]> = {
 };
 
 export const TEST_APP_CONFIG: AppConfig = {
+  title: 'Test app',
   storagePrefix: 'test:',
   backupAppId: 'test-app',
   backupFilePrefix: 'test-app',

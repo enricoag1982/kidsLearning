@@ -44,6 +44,7 @@ import type { AppDeps } from './use-cases.ts';
 const NOW = new Date('2026-01-10T12:00:00.000Z');
 
 const APP: AppConfig = {
+  title: 'Chess for Kids',
   storagePrefix: 'chess-kids:',
   backupAppId: 'chess-kids',
   backupFilePrefix: 'chess-for-kids',

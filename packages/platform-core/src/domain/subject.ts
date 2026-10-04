@@ -139,6 +139,8 @@ export interface SubjectCore<Ctx = unknown, F = unknown> {
 export type SettingsBackupShape = Readonly<Record<string, ZodType>>;
 
 export interface AppConfig {
+  /** The app's display name (first run, privacy text); a subject's own name comes from its manifest / bundle. */
+  readonly title: string;
   /** localStorage key prefix, e.g. `'chess-kids:'`. */
   readonly storagePrefix: string;
   /** localStorage key prefix of one subject's own store (progress, attempts, …); absent = `defaultSubjectStoragePrefix`. */

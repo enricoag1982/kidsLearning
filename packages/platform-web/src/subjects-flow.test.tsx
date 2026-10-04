@@ -17,6 +17,7 @@ import {
 } from './testing/test-pack.ts';
 
 const APP: Omit<AppConfig, 'version'> = {
+  title: 'Test app',
   storagePrefix: 'app:',
   backupAppId: 'app',
   backupFilePrefix: 'app',
@@ -120,6 +121,26 @@ describe('two subjects in one app', () => {
     const again = await twoSubjectApp(first.storage);
 
     expect(again.services.subjectId).toBe('b');
+  });
+});
+
+describe('app-level texts', () => {
+  it('the first run names the app, not the active subject', async () => {
+    const storage = createMemoryStorage();
+    const packs = [
+      createTestPack('a', undefined, createTestContent('a')),
+      createTestPack('b', undefined, createTestContent('b')),
+    ];
+    const entries = packs.map((pack) =>
+      createTestEntry(pack, { locales: createTestLocales(`Title ${pack.core.id.toUpperCase()}`) }),
+    );
+    const app = createAppServices(entries, APP, storage);
+    const services = await app.activate('a');
+
+    render(<App services={services} />);
+
+    await screen.findByRole('heading', { level: 1, name: 'Test app' });
+    expect(screen.queryByRole('heading', { name: 'Title A' })).toBeNull();
   });
 });
 

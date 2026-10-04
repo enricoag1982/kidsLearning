@@ -13,6 +13,7 @@ import type { AppStore } from '../store.ts';
 import type { SubjectEntry, SubjectWeb } from '../subject.ts';
 
 const APP: Omit<AppConfig, 'version'> = {
+  title: 'Test app',
   storagePrefix: 'app:',
   backupAppId: 'app',
   backupFilePrefix: 'app',

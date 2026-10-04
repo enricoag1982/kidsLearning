@@ -15,11 +15,12 @@ type Step = 'welcome' | 'password' | 'saved';
 
 function Welcome({ onNext }: { readonly onNext: () => void }): JSX.Element {
   const { t } = useTranslation();
+  const services = useServices();
   const text = t('first-run.welcome.owl');
 
   return (
     <Screen kind="center" className="gap-8 px-4 py-8 sm:px-10">
-      <h1 className="font-display text-2xl text-ink sm:text-3xl">{t('app.title')}</h1>
+      <h1 className="font-display text-2xl text-ink sm:text-3xl">{services.deps.app.title}</h1>
       <Owl className="h-24 w-24" />
       <NarratedBubble
         text={text}

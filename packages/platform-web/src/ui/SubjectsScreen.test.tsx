@@ -21,6 +21,7 @@ import { AppErrorBoundary } from './AppErrorBoundary.tsx';
 import { SubjectsScreen } from './SubjectsScreen.tsx';
 
 const APP: Omit<AppConfig, 'version'> = {
+  title: 'Test app',
   storagePrefix: 'app:',
   backupAppId: 'app',
   backupFilePrefix: 'app',

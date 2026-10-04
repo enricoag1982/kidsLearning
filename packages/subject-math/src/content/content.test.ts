@@ -131,7 +131,6 @@ describe('texts', () => {
   it('the app shell texts every subject supplies say "Math"', () => {
     expect(resolve('app.title')).toBe('Math for Kids');
     for (const key of [
-      'parent.privacy.intro',
       'voice-check.sentence',
       'placement.offer-question',
       'placement.summary-none-body',

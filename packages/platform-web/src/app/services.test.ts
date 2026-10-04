@@ -17,6 +17,7 @@ import type { LoadedSubject } from './subject.ts';
 import { createAppServices, createServices } from './services.ts';
 
 const APP: Omit<AppConfig, 'version'> = {
+  title: 'Test app',
   storagePrefix: 'app:',
   backupAppId: 'app',
   backupFilePrefix: 'app',
