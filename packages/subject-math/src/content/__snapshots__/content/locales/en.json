@@ -206,6 +206,14 @@
    },
    "pv": {
     "add": "Add a {{place}}",
+    "group": "{{place}}: {{count}}",
+    "name": {
+     "hundreds": "Hundreds",
+     "ones": "Ones",
+     "tens": "Tens",
+     "thousands": "Thousands"
+    },
+    "numeral": "Your number: {{value}}",
     "one": {
      "hundreds": "hundred",
      "ones": "one",
@@ -218,7 +226,13 @@
      "tens": "tens",
      "thousands": "thousands"
     },
-    "remove": "Take away a {{place}}"
+    "remove": "Take away a {{place}}",
+    "short": {
+     "hundreds": "H",
+     "ones": "O",
+     "tens": "T",
+     "thousands": "Th"
+    }
    }
   },
   "new-player": {

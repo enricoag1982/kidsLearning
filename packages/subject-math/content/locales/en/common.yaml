@@ -21,8 +21,8 @@ topic:
   counter: Counter
 math:
   # The number line kind (src/kinds/number-line): the name a screen reader reads, the notes under the question and the hints.
-  # The place-value kind (src/kinds/place-value): its notes, hints and the names of the blocks' buttons (`pv`); `{{place}}` is one of
-  # the `pv.plural` / `pv.one` texts.
+  # The place-value kind (src/kinds/place-value): its notes, hints and the names a screen reader reads (`pv`); `{{place}}` is one of the
+  # `pv.name` (a column), `pv.plural` (a sentence) or `pv.one` (a button) texts.
   line:
     label: 'Number line from {{from}} to {{to}}, a mark every {{step}}'
     marker-at: 'Marker at {{value}}'
@@ -37,6 +37,18 @@ math:
     pv-numeral: The number beside the blocks shows what you built.
     pv-fill: 'Here are the {{place}}. Now finish!'
   pv:
+    short:
+      thousands: Th
+      hundreds: H
+      tens: T
+      ones: O
+    name:
+      thousands: Thousands
+      hundreds: Hundreds
+      tens: Tens
+      ones: Ones
+    group: '{{place}}: {{count}}'
+    numeral: 'Your number: {{value}}'
     plural:
       thousands: thousands
       hundreds: hundreds
