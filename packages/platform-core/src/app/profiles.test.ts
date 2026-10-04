@@ -1,11 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import {
-  makeProfileRepo,
-  makeProgressRepo,
+  makeAssessmentRepo,
+  makeAttempt,
   makeGameRecordRepo,
+  makeProfileRepo,
+  makeProgress,
+  makeProgressRepo,
   makeRewardsRepo,
   makeDeps as buildDeps,
 } from '../testing/index.ts';
+import type { EarnedBadge } from '../domain/badges.ts';
+import type { SessionLog } from '../domain/session-log.ts';
+import type { Streak } from '../domain/streak.ts';
 import {
   changeAvatar,
   changeParentPassword,
@@ -20,7 +26,7 @@ import {
   setupParentPassword,
   verifyParentPassword,
 } from './profiles.ts';
-import type { PasswordFileWriter } from './ports.ts';
+import type { PasswordFileWriter, SubjectDataRepositories } from './ports.ts';
 import type { AppDeps } from './use-cases.ts';
 
 /** This app writes to "Downloads" (app-structure.md §2); the kit's own fake location format
@@ -259,5 +265,139 @@ describe('resetProfileData', () => {
 
     await expect(resetProfileData(deps, profile.id)).resolves.toBeUndefined();
     expect(progress.deletedFor).toEqual([profile.id]);
+  });
+});
+
+type SeededSubject = SubjectDataRepositories & {
+  readonly assessment: ReturnType<typeof makeAssessmentRepo>;
+};
+
+/** Two subjects' own repositories (seeded with one profile's rows each) plus the shared rewards (streak / logs). */
+function seedTwoSubjects(profileId: string): {
+  readonly deps: AppDeps;
+  readonly a: SeededSubject;
+  readonly b: SeededSubject;
+  readonly shared: ReturnType<typeof makeRewardsRepo>;
+} {
+  const badge = (id: string): EarnedBadge => ({
+    id,
+    profileId,
+    badgeId: 'first-win',
+    at: 't',
+    seen: false,
+    createdAt: 't',
+    updatedAt: 't',
+  });
+  const subjectOf = (id: string): SeededSubject => ({
+    progress: makeProgressRepo({
+      lessons: [makeProgress({ id: `lp-${id}`, profileId })],
+      attempts: [makeAttempt({ id: `at-${id}`, profileId })],
+    }),
+    gameRecords: makeGameRecordRepo(),
+    assessment: makeAssessmentRepo(),
+    badges: makeRewardsRepo({ badges: [badge(`badge-${id}`)] }),
+  });
+  const a = subjectOf('a');
+  const b = subjectOf('b');
+  const streak: Streak = {
+    id: 's1',
+    profileId,
+    current: 2,
+    best: 2,
+    skipsUsedThisWeek: 0,
+    createdAt: 't',
+    updatedAt: 't',
+  };
+  const log: SessionLog = {
+    id: 'sl1',
+    profileId,
+    date: '2026-01-05',
+    minutes: 10,
+    createdAt: 't',
+    updatedAt: 't',
+  };
+  const shared = makeRewardsRepo({ streaks: [streak], sessionLogs: [log] });
+  const deps = makeDeps({
+    progress: a.progress,
+    gameRecords: a.gameRecords,
+    assessment: a.assessment,
+    rewards: shared,
+    subjectData: { a, b },
+  });
+  return { deps, a, b, shared };
+}
+
+describe('multi-subject deleteProfile / resetProfileData', () => {
+  it('deleteProfile clears every subject and the shared streak / session logs', async () => {
+    const deps0 = makeDeps();
+    const profile = await createProfile(deps0, 'Mia', 'panda');
+    const { deps, a, b, shared } = seedTwoSubjects(profile.id);
+    await deps.profiles.save(profile);
+
+    await deleteProfile(deps, profile.id);
+
+    expect(await deps.profiles.get(profile.id)).toBeUndefined();
+    for (const subject of [a, b]) {
+      expect(await subject.progress.listLessons(profile.id)).toEqual([]);
+      expect(await subject.progress.listAttempts(profile.id)).toEqual([]);
+      expect(await subject.badges.listEarnedBadges(profile.id)).toEqual([]);
+      expect(subject.assessment.deletedFor).toEqual([profile.id]);
+    }
+    expect(await shared.getStreak(profile.id)).toBeUndefined();
+    expect(await shared.listSessionLogs(profile.id)).toEqual([]);
+  });
+
+  it("deleteProfile keeps another profile's rows in every subject", async () => {
+    const { deps, a, b } = seedTwoSubjects('p-other');
+    const mia = await createProfile(deps, 'Mia', 'panda');
+
+    await deleteProfile(deps, mia.id);
+
+    for (const subject of [a, b]) {
+      expect(await subject.progress.listLessons('p-other')).toHaveLength(1);
+      expect(await subject.badges.listEarnedBadges('p-other')).toHaveLength(1);
+    }
+  });
+
+  it('deleteProfile also clears the shared streak / logs in single-subject deps (was orphaned)', async () => {
+    const rewards = makeRewardsRepo();
+    const deps = makeDeps({ rewards });
+    const profile = await createProfile(deps, 'Mia', 'panda');
+
+    await deleteProfile(deps, profile.id);
+
+    expect(rewards.deletedFor).toEqual([profile.id]);
+    expect(rewards.badgesDeletedFor).toEqual([profile.id]);
+  });
+
+  it('resetProfileData clears every subject and the shared streak / logs but keeps the profile and assessment', async () => {
+    const deps0 = makeDeps();
+    const profile = await createProfile(deps0, 'Mia', 'panda');
+    const { deps, a, b, shared } = seedTwoSubjects(profile.id);
+    await deps.profiles.save(profile);
+
+    await resetProfileData(deps, profile.id);
+
+    expect(await deps.profiles.get(profile.id)).toEqual(profile);
+    for (const subject of [a, b]) {
+      expect(await subject.progress.listLessons(profile.id)).toEqual([]);
+      expect(await subject.progress.listAttempts(profile.id)).toEqual([]);
+      expect(await subject.badges.listEarnedBadges(profile.id)).toEqual([]);
+      expect(subject.assessment.deletedFor).toEqual([]);
+    }
+    expect(await shared.getStreak(profile.id)).toBeUndefined();
+    expect(await shared.listSessionLogs(profile.id)).toEqual([]);
+  });
+
+  it("resetProfileData without rewards or subjectData clears the deps' own repositories only", async () => {
+    const progress = makeProgressRepo();
+    const assessment = makeAssessmentRepo();
+    const deps = makeDeps({ progress, assessment, rewards: undefined });
+    const profile = await createProfile(deps, 'Mia', 'panda');
+
+    await resetProfileData(deps, profile.id);
+
+    expect(progress.deletedFor).toEqual([profile.id]);
+    expect(assessment.deletedFor).toEqual([]);
   });
 });

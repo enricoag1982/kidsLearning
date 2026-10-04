@@ -96,8 +96,10 @@ export type {
   ProfileRepository,
   ProgressRepository,
   GameRecordRepository,
+  BadgeRepository,
   RewardsRepository,
   AssessmentRepository,
+  SubjectDataRepositories,
   ParentLockRepository,
   PasswordFileWriter,
   BackupFileWriter,
@@ -113,6 +115,7 @@ export type {
 export type { Random } from './domain/random.ts';
 
 export type { AppDeps } from './app/use-cases.ts';
+export { allSubjectData } from './app/subject-data.ts';
 export {
   loadProgress,
   loadGameRecords,
@@ -187,6 +190,7 @@ export type {
   AnyKind,
   SubjectCore,
   AppConfig,
+  SubjectSettingsSlot,
   ExerciseDefBase,
   ExerciseStateBase,
   HintBase,
@@ -194,6 +198,13 @@ export type {
   MiniGameStateBase,
 } from './domain/subject.ts';
 export { createSubjectRuntime } from './domain/runtime.ts';
+export {
+  SUBJECT_ID_PATTERN,
+  assertSubjectIds,
+  defaultSubjectStoragePrefix,
+  subjectStoragePrefix,
+  composeSettingsSlots,
+} from './domain/subjects.ts';
 
 export type { Resolve, ExerciseFeedbackBase, AnyNoteEntry } from './domain/notes.ts';
 export { exerciseNote } from './domain/notes.ts';

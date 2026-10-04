@@ -6,6 +6,7 @@ import {
 } from '../domain/parent-lock.ts';
 import { newProfile, validateNickname } from '../domain/profile.ts';
 import type { Profile } from '../domain/profile.ts';
+import { allSubjectData } from './subject-data.ts';
 import type { AppDeps } from './use-cases.ts';
 
 export async function isFirstRun(deps: AppDeps): Promise<boolean> {
@@ -134,11 +135,16 @@ export async function changeAvatar(
   return updated;
 }
 
-/** Removes the profile and its saved records; clears `lastProfileId` when it was the last-used profile. */
+/** Removes the profile and its saved records in every registered subject, the shared streak / session logs and the
+ * profile itself; clears `lastProfileId` when it was the last-used profile. */
 export async function deleteProfile(deps: AppDeps, profileId: string): Promise<void> {
-  await deps.progress.deleteProfileData(profileId);
-  await deps.gameRecords.deleteProfileData(profileId);
-  await deps.assessment?.deleteProfileData(profileId);
+  for (const data of allSubjectData(deps)) {
+    await data.progress.deleteProfileData(profileId);
+    await data.gameRecords.deleteProfileData(profileId);
+    await data.assessment?.deleteProfileData(profileId);
+    await data.badges.deleteBadges(profileId);
+  }
+  await deps.rewards?.deleteProfileData(profileId);
   await deps.profiles.delete(profileId);
   const settings = await deps.settings.get();
   if (settings.lastProfileId === profileId) {
@@ -146,12 +152,16 @@ export async function deleteProfile(deps: AppDeps, profileId: string): Promise<v
   }
 }
 
-/** Parent "Reset child": clears progress, attempts, concept stats, mini-game progress, game records, badges, streak and
- * session log; keeps the profile, assessment results and unlocks (the UI confirms with the password). */
+/** Parent "Reset child": clears progress, attempts, concept stats, mini-game progress, game records and badges of every
+ * registered subject, plus the shared streak and session log; keeps the profile, assessment results and unlocks (the UI
+ * confirms with the password). */
 export async function resetProfileData(deps: AppDeps, profileId: string): Promise<void> {
   await requireProfile(deps, profileId);
-  await deps.progress.deleteProfileData(profileId);
-  await deps.gameRecords.deleteProfileData(profileId);
+  for (const data of allSubjectData(deps)) {
+    await data.progress.deleteProfileData(profileId);
+    await data.gameRecords.deleteProfileData(profileId);
+    await data.badges.deleteBadges(profileId);
+  }
   await deps.rewards?.deleteProfileData(profileId);
 }
 

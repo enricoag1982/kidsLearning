@@ -42,10 +42,16 @@ export interface GameRecordRepository {
   deleteProfileData(profileId: string): Promise<void>;
 }
 
-export interface RewardsRepository {
+/** A subject's earned badges (its own store). */
+export interface BadgeRepository {
   addEarnedBadge(badge: EarnedBadge): Promise<void>;
   listEarnedBadges(profileId: string): Promise<EarnedBadge[]>;
   saveEarnedBadge(badge: EarnedBadge): Promise<void>;
+  /** Removes only this subject's badges for the profile. */
+  deleteBadges(profileId: string): Promise<void>;
+}
+
+export interface RewardsRepository extends BadgeRepository {
   getStreak(profileId: string): Promise<Streak | undefined>;
   saveStreak(streak: Streak): Promise<void>;
   getSessionLog(profileId: string, date: string): Promise<SessionLog | undefined>;
@@ -61,6 +67,14 @@ export interface AssessmentRepository {
   addUnlock(unlock: Unlock): Promise<void>;
   listUnlocks(profileId: string): Promise<Unlock[]>;
   deleteProfileData(profileId: string): Promise<void>;
+}
+
+/** One subject's own records: what cross-subject use cases (profile delete / reset; backup and merge from m11.3) iterate. */
+export interface SubjectDataRepositories {
+  readonly progress: ProgressRepository;
+  readonly gameRecords: GameRecordRepository;
+  readonly assessment?: AssessmentRepository;
+  readonly badges: BadgeRepository;
 }
 
 export interface ParentLockRepository {

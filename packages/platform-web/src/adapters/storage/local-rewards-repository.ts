@@ -64,6 +64,10 @@ export class LocalStorageRewardsRepository implements RewardsRepository {
     });
   }
 
+  deleteBadges(profileId: string): Promise<void> {
+    return this.earnedBadges.removeWhere((badge) => badge.profileId === profileId);
+  }
+
   getStreak(profileId: string): Promise<Streak | undefined> {
     return this.streaks.get(profileId);
   }
