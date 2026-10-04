@@ -272,6 +272,7 @@
    "play-tile": "Play",
    "practice-tile": "Practice",
    "start-today": "Start today",
+   "subjects": "Subjects",
    "subtitle-lesson-only": "New lesson",
    "subtitle-warmup": "Warm-up",
    "subtitle-with-minigame": "New lesson · Mini-game",
@@ -589,6 +590,10 @@
    "heading": "Streak",
    "none": "Play today to start a streak!",
    "pill": "{{count}} day streak"
+  },
+  "subjects": {
+   "owl-line": "What would you like to learn today?",
+   "title": "What shall we learn?"
   },
   "tier": {
    "bronze": "Bronze",

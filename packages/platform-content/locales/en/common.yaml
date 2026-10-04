@@ -29,6 +29,10 @@ home:
   journey-tile: Journey
   practice-tile: Practice
   den-tile: My Den
+  subjects: Subjects
+subjects:
+  title: What shall we learn?
+  owl-line: What would you like to learn today?
 avatar:
   fox: Fox
   bear: Bear

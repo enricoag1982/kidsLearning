@@ -23,6 +23,7 @@ import { PracticeRunScreen } from './ui/PracticeRunScreen.tsx';
 import { PracticeScreen } from './ui/PracticeScreen.tsx';
 import { ProfilePickerScreen } from './ui/ProfilePickerScreen.tsx';
 import { SessionSummaryScreen } from './ui/SessionSummaryScreen.tsx';
+import { SubjectsScreen } from './ui/SubjectsScreen.tsx';
 import { TimeLimitScreen } from './ui/TimeLimitScreen.tsx';
 import { TimeTracker } from './ui/TimeTracker.tsx';
 import { WarmUpScreen } from './ui/WarmUpScreen.tsx';
@@ -55,6 +56,7 @@ const PLATFORM_ROUTE_SCREENS: Readonly<Partial<Record<RouteName, ComponentType>>
   'first-run': FirstRunScreen,
   'new-player': NewPlayerScreen,
   picker: ProfilePickerScreen,
+  subjects: SubjectsScreen,
   password: PasswordScreen,
   parent: ParentAreaScreen,
   lesson: LessonScreen,

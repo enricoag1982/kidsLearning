@@ -77,3 +77,34 @@ export function createTestEntry(
     load: load ?? (() => Promise.resolve({ pack, locales })),
   };
 }
+
+/** English texts for the screens a multi-subject test walks (picker, hub, Home header, error screen): what a subject's merged
+ * bundle would carry. `title` is `app.title`, the one text that differs per subject. */
+export function createTestLocales(title: string): LoadedSubject['locales'] {
+  return {
+    en: {
+      common: {
+        app: { title },
+        'app-error': {
+          title: 'Oops, something went wrong',
+          body: 'Try again.',
+          retry: 'Try again',
+        },
+        avatar: { fox: 'Fox', bear: 'Bear' },
+        exercise: { replay: 'Say it again' },
+        home: {
+          'avatar-alt': '{{name}} avatar',
+          subjects: 'Subjects',
+          'switch-player': 'Switch player',
+          'start-today': 'Start today',
+        },
+        picker: { title: 'Who is playing?', 'new-player': 'New player', 'grown-ups': 'Grown-ups' },
+        'stars-count': '{{count}} stars',
+        subjects: {
+          title: 'What shall we learn?',
+          'owl-line': 'What would you like to learn today?',
+        },
+      },
+    },
+  };
+}

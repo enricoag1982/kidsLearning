@@ -11,7 +11,7 @@ import { SpeechBubble } from './ds/SpeechBubble.tsx';
 import { StarsPill } from './StarsPill.tsx';
 import { StreakPill } from './StreakPill.tsx';
 import { useNarratedText } from './ds/useNarratedText.ts';
-import { PlayIcon, Svg, SwitchPlayerIcon } from './ds/icons.tsx';
+import { PlayIcon, SubjectsIcon, Svg, SwitchPlayerIcon } from './ds/icons.tsx';
 import { tapClass } from './ds/tap.ts';
 import { BlankScreen, RoundIconButton } from './ds/Screen.tsx';
 import { AvatarBadge } from './ds/AvatarBadge.tsx';
@@ -106,6 +106,7 @@ export function HomeScreen(): JSX.Element {
   const streak = useAppStore((state) => state.streak);
   const startToday = useAppStore((state) => state.startToday);
   const goToPicker = useAppStore((state) => state.goToPicker);
+  const goToSubjects = useAppStore((state) => state.goToSubjects);
   const goToJourney = useAppStore((state) => state.goToJourney);
   const goToPractice = useAppStore((state) => state.goToPractice);
   const goToDen = useAppStore((state) => state.goToDen);
@@ -220,6 +221,11 @@ export function HomeScreen(): JSX.Element {
           {streak && streak.current >= 2 && <StreakPill days={streak.current} />}
           <RankPill rank={journey.rank} />
           <StarsPill count={stars} />
+          {services.app.subjects.length > 1 && (
+            <RoundIconButton label={t('home.subjects')} onClick={goToSubjects}>
+              <SubjectsIcon />
+            </RoundIconButton>
+          )}
           <RoundIconButton
             label={t('home.switch-player')}
             onClick={() => {
