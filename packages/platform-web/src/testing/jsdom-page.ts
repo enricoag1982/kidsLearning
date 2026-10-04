@@ -1,5 +1,6 @@
-// A Playwright-`Page` look-alike over the jsdom document: the one call the card kit's e2e drivers make,
-// `page.getByRole(role, { name, exact }).click()`, answered with Testing Library. It runs a driver against the real UI in a unit test.
+// A Playwright-`Page` look-alike over the jsdom document: the two calls the e2e drivers make,
+// `page.getByRole(role, { name, exact }).click()` and `.press(key)`, answered with Testing Library. It runs a driver against the real
+// UI in a unit test.
 import { fireEvent, screen } from '@testing-library/react';
 
 interface RoleOptions {
@@ -24,6 +25,8 @@ export interface JsdomPage {
   ): {
     /** Waits (like Playwright) for the element to appear, then clicks it. */
     click(): Promise<void>;
+    /** Waits for the element, focuses it, then presses `key` (a `KeyboardEvent.key`: `Home`, `ArrowRight`, `Enter`): one key down. */
+    press(key: string): Promise<void>;
   };
 }
 
@@ -37,6 +40,13 @@ export function jsdomPage(): JsdomPage {
             name: nameMatcher(options),
           });
           fireEvent.click(element);
+        },
+        async press(key) {
+          const element = await screen.findByRole(role, {
+            name: nameMatcher(options),
+          });
+          element.focus();
+          fireEvent.keyDown(element, { key });
         },
       };
     },

@@ -89,7 +89,21 @@ const withReason: NumberLineDef = {
   reasons: [{ value: 50, reasonKey: 'lessons:bugs.ticks-not-gaps' }],
 };
 
+/** A guided try: 0 to 100 in steps of 10, the target 20. */
+const guided: NumberLineDef = {
+  ...base('fx-nl-guided'),
+  prompt: { big: '20' },
+  type: 'number-line',
+  from: 0,
+  to: 100,
+  step: 10,
+  labels: 'ends',
+  target: 20,
+  tolerance: 0,
+};
+
 export const NUMBER_LINE_SAMPLES = {
+  guided,
   exact100,
   exact10,
   exact50,
@@ -100,6 +114,7 @@ export const NUMBER_LINE_SAMPLES = {
 
 /** The samples' English: instructions and the reason, in the `lessons` namespace. */
 export const NUMBER_LINE_SAMPLE_TEXTS = {
+  'fx-nl-guided': 'Put the marker on 20.',
   'fx-nl-100': 'Put the marker on 300.',
   'fx-nl-10': 'Put the marker on 70.',
   'fx-nl-50': 'Put the marker on 350.',

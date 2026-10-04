@@ -1,5 +1,6 @@
 // The math `SubjectWeb` pack: the card kit's web (card prompt, surfaces) over the compiled math content, with math's kind UI
-// registry in place of the kit's, so the kinds of m13.6-m13.8 (`number-line`, `place-value`, `array`) join `MATH_KIND_UI`.
+// registry in place of the kit's, so math's own kinds (`number-line`; m13.7-m13.8: `place-value`, `array`) join `MATH_KIND_UI`.
+// The dev playground (`/#math`) shows them on fixture exercises.
 import type { BadgeDef, CompiledContent, TracksCatalog } from '@learn/platform-core';
 import { createBundledContentSource } from '@learn/platform-web/adapters/content/bundled-content-source.ts';
 import type { SubjectWeb } from '@learn/platform-web/app/subject.ts';
@@ -25,4 +26,9 @@ export const mathWeb: SubjectWeb = {
     rankGlyphs: { counter: '1', adder: '+' },
   }),
   kinds: MATH_KIND_UI,
+  // Gated on the compile-time DEV flag so Rollup drops the dev-playground subtree: an ungated `dev` field keeps its `import()` as a
+  // live split point.
+  dev: import.meta.env.DEV
+    ? { '#math': () => import('./dev/MathPlayground.tsx').then((m) => m.MathPlayground) }
+    : undefined,
 };
