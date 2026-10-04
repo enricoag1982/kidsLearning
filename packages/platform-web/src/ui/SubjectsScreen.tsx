@@ -42,7 +42,7 @@ function SubjectTile({
       className={tapClass(
         'custom',
         'none',
-        'relative flex min-h-56 w-44 flex-col items-center justify-center gap-3 rounded-[2rem] px-3 py-5 sm:w-60',
+        'relative flex min-h-48 w-40 flex-col items-center justify-center gap-3 rounded-[2rem] px-3 py-5 sm:min-h-56 sm:w-52',
       )}
     >
       {active && (
@@ -50,8 +50,8 @@ function SubjectTile({
           <CheckIcon />
         </span>
       )}
-      <span className="flex h-28 w-28 flex-shrink-0 items-center justify-center rounded-full bg-white sm:h-36 sm:w-36">
-        <img src={manifest.icon} alt="" className="h-24 w-24 object-contain sm:h-28 sm:w-28" />
+      <span className="flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-full bg-white sm:h-32 sm:w-32">
+        <img src={manifest.icon} alt="" className="h-20 w-20 object-contain sm:h-24 sm:w-24" />
       </span>
       <span className="font-display text-xl font-semibold sm:text-2xl">{name}</span>
     </button>
@@ -114,7 +114,8 @@ export function SubjectsScreen(): JSX.Element {
 
       <NarratedBubble text={t('subjects.owl-line')} layout="row" />
 
-      <div className="flex flex-1 flex-wrap content-center items-center justify-center gap-5 sm:gap-8">
+      {/* Two tiles per row on a phone and a portrait tablet, four in one row from 1024 px: four subjects fit without scrolling. */}
+      <div className="grid flex-1 grid-cols-[repeat(2,auto)] content-center justify-center gap-4 sm:gap-6 lg:grid-cols-[repeat(4,auto)]">
         {services.app.subjects.map(({ manifest }) => (
           <SubjectTile
             key={manifest.id}
