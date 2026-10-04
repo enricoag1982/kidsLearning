@@ -9,7 +9,7 @@ import type { GroupDef } from '../domain/exercise/kinds/group/def.ts';
 const row: GroupDef = {
   id: 'gr1',
   concept: 'sorting',
-  textKey: 'lessons:sort-g1',
+  textKey: 'lessons:sort-01',
   type: 'group',
   layout: 'row',
   boxes: [

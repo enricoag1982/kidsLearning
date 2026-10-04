@@ -9,6 +9,9 @@ import {
   SHAPE_SIZES,
 } from '@learn/platform-core/domain/exercise/kinds/cards/prompt';
 import { CARD_NOTES, cardHintText } from '@learn/platform-core/domain/exercise/kinds/cards/notes';
+import type { GroupDef } from '@learn/platform-core/domain/exercise/kinds/group/def';
+import { zoneOf } from '@learn/platform-core/domain/exercise/kinds/group/engine';
+import { GROUP_NOTES, groupHintText } from '@learn/platform-core/domain/exercise/kinds/group/notes';
 import type { CardHint } from '@learn/platform-core/domain/exercise/kinds/cards/def';
 import { parse, stringify } from 'yaml';
 import { compileAll } from '../../compile-all.ts';
@@ -713,8 +716,8 @@ describe('card demo', () => {
 describe('the card fixture subject', () => {
   const compiled = compileAll(content, CARD_FIXTURE_ROOT);
 
-  it('compiles: one lesson using all four kinds (shape tokens in two choices, three exercises generated), a series boss and a duel, tracks, badges', () => {
-    expect(compiled.content.lessons.map((lesson) => lesson.id)).toEqual(['count-up']);
+  it('compiles: a lesson using all four kinds (shape tokens in two choices, three exercises generated), one using the group kind, a series boss and a duel, tracks, badges', () => {
+    expect(compiled.content.lessons.map((lesson) => lesson.id)).toEqual(['count-up', 'sort-up']);
     const [lesson] = compiled.content.lessons;
     expect(
       [...(lesson?.guided ?? []), ...(lesson?.exercises ?? [])].map((def) => def.type),
@@ -751,6 +754,34 @@ describe('the card fixture subject', () => {
     });
     expect(compiled.tracks.tracks).toHaveLength(1);
     expect(compiled.badges).toHaveLength(1);
+  });
+
+  it('the sort-up lesson sorts shapes in each layout of the opt-in group kind, every answer confirmed by its rules', () => {
+    const lesson = compiled.content.lessons.find((entry) => entry.id === 'sort-up');
+    const defs = (lesson?.exercises ?? []) as readonly GroupDef[];
+    expect(defs.map((def) => [def.id, def.type, def.layout])).toEqual([
+      ['sort-01', 'group', 'row'],
+      ['sort-02', 'group', 'carroll'],
+      ['sort-03', 'group', 'venn'],
+    ]);
+    for (const def of defs) {
+      expect(
+        def.items.every((item) => item.shape !== undefined),
+        def.id,
+      ).toBe(true);
+      for (const item of def.items) {
+        expect(zoneOf(def, item), `${def.id} ${item.id}`).toBe(def.answer[item.id]);
+      }
+    }
+    expect(defs[0]?.boxes?.map((box) => box.id)).toEqual(['red', 'blue']);
+    expect(defs[1]?.axes?.map((axis) => axis.textKey)).toEqual([
+      'lessons:sort-red',
+      'lessons:sort-circle',
+    ]);
+    expect(defs[2]?.axes?.map((axis) => axis.textKey)).toEqual([
+      'lessons:sort-square',
+      'lessons:sort-blue',
+    ]);
   });
 
   it('matches its golden content.json', async () => {
@@ -889,6 +920,29 @@ describe('the card fixture subject', () => {
     }
   });
 
+  it('voices the group kind: the exercise texts, the notes each layout can reach, hints and praise; not the box labels', () => {
+    const spoken = new Set(compiled.voiceTexts.entries.map((entry) => entry.text));
+    for (const text of [
+      'Put each shape in its box.',
+      'Sort the shapes into the table.',
+      'Put each shape in the circles where it belongs.',
+      'Not this box. Check what the box wants.',
+      'Not this box. Check what the box wants. This one is tricky. Want an easier one?',
+      'Right column! Now check the row.',
+      'Right row! Now check the column.',
+      'Does it fit both circles, or just one?',
+      'Does it fit either circle?',
+      'Look at what each box wants.',
+      'It does not go here.',
+      'Watch: it goes here.',
+    ]) {
+      expect(spoken.has(text), text).toBe(true);
+    }
+    for (const label of ['Not red', 'Not circle', 'Only Square', 'In both']) {
+      expect(spoken.has(label), label).toBe(false);
+    }
+  });
+
   it('does not voice the shape labels: they are accessible names, not narration', () => {
     const spoken = compiled.voiceTexts.entries.map((entry) => entry.text);
     expect(spoken.filter((text) => /Row of shapes|a gap|red circle/.test(text))).toEqual([]);
@@ -937,8 +991,24 @@ describe('the card fixture subject', () => {
         ctx,
       );
     }
+    // The group kind's notes (every wrong note, every hint level): the keys they read.
+    for (const miss of [undefined, 'row', 'column', 'overlap', 'outside'] as const) {
+      GROUP_NOTES['group-wrong'].text(
+        record,
+        miss === undefined ? { kind: 'group-wrong' } : { kind: 'group-wrong', miss },
+      );
+    }
+    for (const level of [1, 2, 3] as const)
+      groupHintText(record, { kind: 'group', level, itemId: 'a', boxId: 'b' });
     // Keys the card UIs read directly (components in platform-web): the whole `cards` group.
     for (const key of [
+      'cards.group.pool',
+      'cards.group.boxes',
+      'cards.group.holds',
+      'cards.group.zone',
+      'cards.group.venn.both',
+      'cards.group.venn.only',
+      'cards.group.venn.neither',
       'cards.true',
       'cards.false',
       'cards.pad-label',

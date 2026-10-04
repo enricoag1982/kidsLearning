@@ -28,3 +28,18 @@ bugs:
   off-by-one: So close! Count the last jump again.
 templates:
   fixture-add: What is {{a}} plus {{b}}?
+sort-up:
+  title: Sorting with Fox
+  story: Fox has a pile of shapes. Put each one where it belongs.
+  demo: Fox puts the red shapes in the red box.
+sort-01: Put each shape in its box.
+sort-02: Sort the shapes into the table.
+sort-03: Put each shape in the circles where it belongs.
+sort-red: Red
+sort-blue: Blue
+sort-not-red: Not red
+sort-circle: Circle
+sort-not-circle: Not circle
+sort-square: Square
+sort-not-square: Not square
+sort-not-blue: Not blue

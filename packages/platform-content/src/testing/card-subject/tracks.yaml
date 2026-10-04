@@ -4,6 +4,7 @@ tracks:
     title: tracks.numbers
     worlds:
       - { id: counting, order: 1, habitat: meadow, title: worlds.counting }
+      - { id: sorting, order: 2, habitat: savannah, title: worlds.sorting }
 ranks:
   - { id: sprout, after: start }
   - { id: counter, after: world:counting }
