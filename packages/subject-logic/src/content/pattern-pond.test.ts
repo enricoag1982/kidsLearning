@@ -629,9 +629,11 @@ describe('the content review of World 1: exactly one reading leads to the answer
       ).toEqual(row.slice(0, unit).map(keyOf).sort());
       // Counting in whole parts: the part holds `unit` places, the answer is the (n mod unit)-th token (the last when it divides).
       const counted = row[(n - 1) % unit];
-      expect(optionsOf(def).find((option) => option.id === def.answer)?.shape, where).toEqual(
-        counted,
-      );
+      expect(
+        optionsOf(def).find((option) => option.id === ('answer' in def ? def.answer : undefined))
+          ?.shape,
+        where,
+      ).toEqual(counted);
       // The slip `far-off` is the token a place before or after, a wrong card.
       const slips = [row[(n - 2 + unit) % unit], row[n % unit]].map((token) =>
         keyOf(token as CardShape),

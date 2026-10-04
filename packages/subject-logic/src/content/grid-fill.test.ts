@@ -8,7 +8,6 @@ import { makeCompileContext } from '@learn/platform-content/kinds/kind-content';
 import { createExerciseSchema } from '@learn/platform-content/lesson-schema';
 import { resolveText } from '@learn/platform-content/text-resolve';
 import type { CompiledContent, Resolve } from '@learn/platform-core';
-import { contentRoot } from '../../scripts/content-root.ts';
 import { logicCore } from '../core/logic-core.ts';
 import type { GridFillDef } from '../kinds/grid-fill/def.ts';
 import { GRID_FILL_SAMPLES } from '../kinds/grid-fill/samples.ts';
@@ -519,7 +518,7 @@ describe('grid-fill verify: a picture', () => {
 });
 
 describe('grid-fill voice templates', () => {
-  const root = contentRoot(join(dirname(fileURLToPath(import.meta.url)), '..', '..'));
+  const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'content');
   const locales = compileAll(logicContent, root).locales.en ?? {};
   const r: Resolve = (key, vars) => {
     const separator = key.indexOf(':');

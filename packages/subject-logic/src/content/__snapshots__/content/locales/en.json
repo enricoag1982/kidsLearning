@@ -238,7 +238,7 @@
    "den-tile": "My Den",
    "journey-tile": "Journey",
    "owl-all-done": "You finished everything for now. Come back soon for more!",
-   "owl-next": "Today you meet {{character}}!",
+   "owl-next": "Today {{character}} has new puzzles for you!",
    "owl-next-topic": "Hi! I'm Owl. Today: {{topic}}!",
    "owl-resume": "Let's keep going!",
    "owl-warmup-only": "Let's warm up what you know!",

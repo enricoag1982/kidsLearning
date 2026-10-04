@@ -2,7 +2,7 @@
 app:
   title: Logic
 home:
-  owl-next: 'Today you meet {{character}}!'
+  owl-next: 'Today {{character}} has new puzzles for you!'
 den:
   owl-line: Look at all your friends!
   friends-heading: Your friends

@@ -30,11 +30,6 @@
   "source": "home"
  },
  {
-  "key": "190827b92ff9ecf2",
-  "text": "Today you meet Pip!",
-  "source": "home"
- },
- {
   "key": "1b596d78d0a4bc5e",
   "text": "Every carriage follows the pattern. Which one comes next?",
   "source": "minigame-goal"
@@ -63,6 +58,11 @@
   "key": "27dfb80057b25845",
   "text": "Here is the answer.",
   "source": "exercise-note"
+ },
+ {
+  "key": "29e67f0cc6e5b7f4",
+  "text": "Today Pip has new puzzles for you!",
+  "source": "home"
  },
  {
   "key": "2d20f0920daff38d",
