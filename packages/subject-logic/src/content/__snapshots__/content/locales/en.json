@@ -202,6 +202,37 @@
   "friend-play": {
    "guest": "Guest"
   },
+  "grid": {
+   "hint": {
+    "combine": "Use the fills and crosses from the other lines.",
+    "cross-out": "This line has all its filled cells. Cross out the rest.",
+    "full-line": "This clue fills the whole line.",
+    "hidden-single": "Only one cell here can take the number. Find it!",
+    "last-cell": "Only one cell is empty here. Which number is missing?",
+    "look-box": "Look at this box.",
+    "look-cell": "Look at this cell and the row, column and box around it.",
+    "look-column": "Look at this column.",
+    "look-line-column": "Look at this column and its clue.",
+    "look-line-row": "Look at this row and its clue.",
+    "look-row": "Look at this row.",
+    "naked-single": "This cell has only one number left. Cross out the others.",
+    "overlap": "The run is long: the middle cells are filled wherever it starts.",
+    "show": "Watch: here it goes."
+   },
+   "instruction": {
+    "cross": "Fill the cells to match the clues. Find the picture!",
+    "sudoku": "Fill the grid: each row, column and box has every number once."
+   },
+   "wrong": {
+    "box": "That number is already in this box.",
+    "column": "That number is already in this column.",
+    "cross-column": "That does not match this column's clue.",
+    "cross-plain": "Not this one. Check the clues again.",
+    "cross-row": "That does not match this row's clue.",
+    "plain": "Not yet. Which numbers can still go here?",
+    "row": "That number is already in this row."
+   }
+  },
   "home": {
    "avatar-alt": "{{name}} avatar",
    "den-tile": "My Den",
