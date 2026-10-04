@@ -119,4 +119,35 @@ describe('number-entry UI', () => {
     expect(numberEntryUi.clearWrongUi()).toEqual({ wrongValue: undefined });
     expect(numberEntryUi.initUi(def)).toEqual({});
   });
+
+  it('a wrong value with a reason carries that reason; any other wrong value, none', () => {
+    const submit = { type: 'submit-number' } as const;
+    const next = initCardState({
+      ...def,
+      reasons: [
+        { value: 35, reasonKey: 'lessons:why-times' },
+        { value: 2, reasonKey: 'lessons:why-two' },
+      ],
+    });
+    expect(numberEntryUi.toUi({ kind: 'wrong', value: 35 }, submit, next)).toEqual({
+      feedback: { kind: 'number-wrong', reasonKey: 'lessons:why-times' },
+      hint: null,
+      wrongValue: 35,
+    });
+    expect(numberEntryUi.toUi({ kind: 'wrong', value: 2 }, submit, next)).toEqual({
+      feedback: { kind: 'number-wrong', reasonKey: 'lessons:why-two' },
+      hint: null,
+      wrongValue: 2,
+    });
+    expect(numberEntryUi.toUi({ kind: 'wrong', value: 13 }, submit, next)).toEqual({
+      feedback: { kind: 'number-wrong' },
+      hint: null,
+      wrongValue: 13,
+    });
+    expect(numberEntryUi.toUi({ kind: 'solved' }, submit, next)).toEqual({
+      feedback: { kind: 'solved' },
+      hint: null,
+      wrongValue: undefined,
+    });
+  });
 });

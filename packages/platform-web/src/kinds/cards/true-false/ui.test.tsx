@@ -115,4 +115,14 @@ describe('true-false UI', () => {
       hint: null,
     });
   });
+
+  it('a wrong answer on a statement with a reason carries it; the right answer never does', () => {
+    const next = initCardState({ ...def, reasonKey: 'lessons:why-true' });
+    expect(
+      trueFalseUi.toUi({ kind: 'wrong' }, { type: 'answer-true-false', value: false }, next),
+    ).toEqual({ feedback: { kind: 'wrong-answer', reasonKey: 'lessons:why-true' }, hint: null });
+    expect(
+      trueFalseUi.toUi({ kind: 'solved' }, { type: 'answer-true-false', value: true }, next),
+    ).toEqual({ feedback: { kind: 'solved' }, hint: null });
+  });
 });

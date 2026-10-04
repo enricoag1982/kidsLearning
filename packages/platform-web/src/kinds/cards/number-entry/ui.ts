@@ -33,9 +33,18 @@ export const numberEntryUi: ExerciseKindUI<
 
   clearWrongUi: () => ({ wrongValue: undefined }),
 
-  toUi(outcome) {
+  toUi(outcome, _action, next) {
     if (outcome.kind === 'wrong') {
-      return { feedback: { kind: 'number-wrong' }, hint: null, wrongValue: outcome.value };
+      // A typed value with a reason speaks it instead of the default note.
+      const reasonKey = next.def.reasons?.find(
+        (reason) => reason.value === outcome.value,
+      )?.reasonKey;
+      return {
+        feedback:
+          reasonKey === undefined ? { kind: 'number-wrong' } : { kind: 'number-wrong', reasonKey },
+        hint: null,
+        wrongValue: outcome.value,
+      };
     }
     if (outcome.kind === 'solved') {
       return { feedback: { kind: 'solved' }, hint: null, wrongValue: undefined };

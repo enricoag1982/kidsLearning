@@ -5,9 +5,10 @@ import type { CardHint } from './def.ts';
 
 export type CardFeedback =
   | { readonly kind: 'instruction' }
-  /** choice / true-false: a wrong answer. */
-  | { readonly kind: 'wrong-answer' }
-  | { readonly kind: 'number-wrong' }
+  /** choice / true-false: a wrong answer; `reasonKey` = the picked option's / the statement's reason, spoken instead of the default. */
+  | { readonly kind: 'wrong-answer'; readonly reasonKey?: string }
+  /** number-entry: a wrong number; `reasonKey` = the reason of that exact value, spoken instead of the default. */
+  | { readonly kind: 'number-wrong'; readonly reasonKey?: string }
   | { readonly kind: 'order-wrong' }
   | { readonly kind: 'hint'; readonly hint: CardHint }
   | { readonly kind: 'solved' };
@@ -32,8 +33,16 @@ export function cardHintText(r: Resolve, hint: CardHint): string {
 }
 
 export const CARD_NOTES = {
-  'wrong-answer': { tone: 'attention', error: true, text: (r) => r('exercise.answer-wrong') },
-  'number-wrong': { tone: 'attention', error: true, text: (r) => r('cards.number-wrong') },
+  'wrong-answer': {
+    tone: 'attention',
+    error: true,
+    text: (r, f) => r(f.reasonKey ?? 'exercise.answer-wrong'),
+  },
+  'number-wrong': {
+    tone: 'attention',
+    error: true,
+    text: (r, f) => r(f.reasonKey ?? 'cards.number-wrong'),
+  },
   'order-wrong': { tone: 'attention', error: true, text: (r) => r('cards.order-wrong') },
   hint: { tone: 'attention', text: (r, f) => cardHintText(r, f.hint) },
   solved: { tone: 'praise', text: (r, _f, { stars }) => praiseText(r, stars) },
