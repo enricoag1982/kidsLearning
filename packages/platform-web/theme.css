@@ -45,6 +45,18 @@
   --font-body: 'Nunito Variable', system-ui, sans-serif;
 }
 
+/* Shape tokens of the card kit (`ShapeToken`): six fills drawn under a dark `--color-ink` outline, so the outline (not the fill) carries
+   the boundary: 12.4:1 on `cream`, 13.4:1 on `card` (WCAG 2.2 SC 1.4.11 asks 3:1), yellow included. The app has one light theme, so
+   one set. `static`: the fills are set inline from a colour name, so Tailwind's class scan would never see the variables. */
+@theme static {
+  --color-shape-red: #e5484d;
+  --color-shape-blue: #3b7dd8;
+  --color-shape-yellow: #f5c518;
+  --color-shape-green: #3fa66b;
+  --color-shape-purple: #8e5bd0;
+  --color-shape-orange: #f58a1f;
+}
+
 @layer base {
   body {
     @apply bg-cream text-ink font-body;

@@ -1,8 +1,11 @@
 import type { JSX } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { CardPrompt } from '@learn/platform-core/domain/exercise/kinds/cards/prompt';
 import { usePack } from '../../app/subject.ts';
+import { tContent } from '../../content-text.ts';
 import { animalImage } from '../../ui/art/animal-images.ts';
-import { humanize } from './item-label.ts';
+import { humanize, shapeRowLabel } from './item-label.ts';
+import { ShapeRow } from './ShapeToken.tsx';
 
 export interface CardPromptViewProps {
   readonly prompt: CardPrompt;
@@ -10,10 +13,12 @@ export interface CardPromptViewProps {
   readonly compact?: boolean;
 }
 
-/** The card a kid looks at: a big emoji (96 px), a big short text (3 rem) and / or an art image from the pack's `art`, centred in
- * a white card that fills the board square. The question itself is the instruction bubble's text. */
+/** The card a kid looks at: a big emoji (96 px), a row of shape tokens, a big short text (3 rem) and / or an art image from the
+ * pack's `art`, centred in a white card that fills the board square. The row is one image named by `shapeRowLabel`. The question
+ * itself is the instruction bubble's text. */
 export function CardPromptView({ prompt, compact = false }: CardPromptViewProps): JSX.Element {
   const pack = usePack();
+  const { t } = useTranslation();
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-3 overflow-hidden rounded-3xl border-2 border-line bg-card p-3">
       {prompt.image !== undefined && (
@@ -30,6 +35,15 @@ export function CardPromptView({ prompt, compact = false }: CardPromptViewProps)
         >
           {prompt.emoji}
         </p>
+      )}
+      {prompt.shapes !== undefined && (
+        <div
+          role="img"
+          aria-label={shapeRowLabel((key, options) => tContent(t, key, options), prompt.shapes)}
+          className="flex max-w-full justify-center"
+        >
+          <ShapeRow shapes={prompt.shapes} compact={compact} />
+        </div>
       )}
       {prompt.big !== undefined && (
         <p

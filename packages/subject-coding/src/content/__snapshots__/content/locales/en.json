@@ -76,6 +76,40 @@
    "order-slots": "Your order",
    "order-wrong": "Not that one. Try another!",
    "pad-label": "Number pad",
+   "shape": {
+    "colour": {
+     "blue": "blue",
+     "green": "green",
+     "orange": "orange",
+     "purple": "purple",
+     "red": "red",
+     "yellow": "yellow"
+    },
+    "gap": "a gap",
+    "kind": {
+     "circle_one": "circle",
+     "circle_other": "circles",
+     "diamond_one": "diamond",
+     "diamond_other": "diamonds",
+     "heart_one": "heart",
+     "heart_other": "hearts",
+     "square_one": "square",
+     "square_other": "squares",
+     "star_one": "star",
+     "star_other": "stars",
+     "triangle_one": "triangle",
+     "triangle_other": "triangles"
+    },
+    "label": "{{number}} {{size}} {{colour}} {{kind}}",
+    "row": "Row of shapes: {{tokens}}",
+    "size": {
+     "big": "big",
+     "huge": "huge",
+     "medium": "medium",
+     "small": "small",
+     "tiny": "tiny"
+    }
+   },
    "slot-empty": "Place {{n}} of {{total}}, empty",
    "slot-filled": "Place {{n}} of {{total}}: {{item}}",
    "true": "True"

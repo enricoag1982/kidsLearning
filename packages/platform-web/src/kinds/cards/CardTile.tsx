@@ -2,6 +2,7 @@ import type { JSX } from 'react';
 import type { CardItem } from '@learn/platform-core/domain/exercise/kinds/cards/prompt';
 import { usePack } from '../../app/subject.ts';
 import { animalImage } from '../../ui/art/animal-images.ts';
+import { ShapeCluster } from './ShapeToken.tsx';
 
 export interface CardTileProps {
   readonly item: CardItem;
@@ -9,7 +10,7 @@ export interface CardTileProps {
   readonly text?: string;
 }
 
-/** One card's face: its emoji, big text and image over its text. The drawn parts are `aria-hidden`: the host names the tile
+/** One card's face: its emoji, big text, image and shape over its text. The drawn parts are `aria-hidden`: the host names the tile
  * (`cardItemLabel`). */
 export function CardTile({ item, text }: CardTileProps): JSX.Element {
   const pack = usePack();
@@ -34,6 +35,7 @@ export function CardTile({ item, text }: CardTileProps): JSX.Element {
           {item.big}
         </span>
       )}
+      {item.shape !== undefined && <ShapeCluster shape={item.shape} />}
       {text !== undefined && <span className="text-center text-sm font-semibold">{text}</span>}
     </span>
   );

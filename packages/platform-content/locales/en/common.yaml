@@ -287,6 +287,38 @@ cards:
   number-wrong: Not that number. Try again!
   order-hint: Which one comes next?
   order-wrong: Not that one. Try another!
+  # Shape tokens (card items and prompt rows): accessible names only, never narrated. `label` is filled with the number
+  # (empty for one), the size word (empty for the default `big`), the colour and the kind (plural by count).
+  shape:
+    label: '{{number}} {{size}} {{colour}} {{kind}}'
+    row: 'Row of shapes: {{tokens}}'
+    gap: a gap
+    kind:
+      circle_one: circle
+      circle_other: circles
+      square_one: square
+      square_other: squares
+      triangle_one: triangle
+      triangle_other: triangles
+      star_one: star
+      star_other: stars
+      heart_one: heart
+      heart_other: hearts
+      diamond_one: diamond
+      diamond_other: diamonds
+    colour:
+      red: red
+      blue: blue
+      yellow: yellow
+      green: green
+      purple: purple
+      orange: orange
+    size:
+      tiny: tiny
+      small: small
+      medium: medium
+      big: big
+      huge: huge
 boss:
   ended: Good try!
   # The turn-based duel mini-game (`duel` mode): the turn banner and the lines it speaks.

@@ -3,6 +3,11 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import type { CardExerciseDef } from '@learn/platform-core/domain/exercise/kinds/cards/def';
+import {
+  SHAPE_COLOURS,
+  SHAPE_KINDS,
+  SHAPE_SIZES,
+} from '@learn/platform-core/domain/exercise/kinds/cards/prompt';
 import { CARD_NOTES, cardHintText } from '@learn/platform-core/domain/exercise/kinds/cards/notes';
 import type { CardHint } from '@learn/platform-core/domain/exercise/kinds/cards/def';
 import { parse, stringify } from 'yaml';
@@ -884,6 +889,11 @@ describe('the card fixture subject', () => {
     }
   });
 
+  it('does not voice the shape labels: they are accessible names, not narration', () => {
+    const spoken = compiled.voiceTexts.entries.map((entry) => entry.text);
+    expect(spoken.filter((text) => /Row of shapes|a gap|red circle/.test(text))).toEqual([]);
+  });
+
   it("voices the duel's lines: turn, result, the game's own hint and the bot's name from the lesson's character", () => {
     const spoken = new Set(compiled.voiceTexts.entries.map((entry) => entry.text));
     for (const text of [
@@ -938,6 +948,16 @@ describe('the card fixture subject', () => {
       'cards.order-pool',
       'cards.slot-filled',
       'cards.slot-empty',
+      // Shape labels (`shapeLabel` / `shapeRowLabel` in platform-web): the template, the row, the gap, a plural pair per kind.
+      'cards.shape.label',
+      'cards.shape.row',
+      'cards.shape.gap',
+      ...SHAPE_KINDS.flatMap((kind) => [
+        `cards.shape.kind.${kind}_one`,
+        `cards.shape.kind.${kind}_other`,
+      ]),
+      ...SHAPE_COLOURS.map((colour) => `cards.shape.colour.${colour}`),
+      ...SHAPE_SIZES.map((size) => `cards.shape.size.${size}`),
     ]) {
       keys.add(key);
     }

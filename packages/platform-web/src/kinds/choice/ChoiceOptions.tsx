@@ -2,12 +2,13 @@ import type { JSX, ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ChoiceOptionBase } from '@learn/platform-core/domain/exercise/kinds/choice/def';
 import { tContent } from '../../content-text.ts';
+import type { ContentText } from '../../content-text.ts';
 
 /** How a subject draws an option beside its text (chess: a piece icon; math: a numeral). */
 export interface ChoiceLook<O extends ChoiceOptionBase = ChoiceOptionBase> {
   visual?(option: O): ReactNode;
   /** Accessible name of an option without text. */
-  label?(option: O, text: (key: string) => string): string | undefined;
+  label?(option: O, text: ContentText): string | undefined;
   /** The tile's minimum height class, in place of the default `min-h-14` (56 px). */
   readonly tileClass?: string;
 }
@@ -28,7 +29,7 @@ export function ChoiceOptions<O extends ChoiceOptionBase>({
   look,
 }: ChoiceOptionsProps<O>): JSX.Element {
   const { t } = useTranslation();
-  const text = (key: string): string => tContent(t, key);
+  const text: ContentText = (key, options) => tContent(t, key, options);
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
       {options.map((option) => {

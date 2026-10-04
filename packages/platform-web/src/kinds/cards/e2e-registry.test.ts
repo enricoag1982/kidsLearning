@@ -1,3 +1,4 @@
+import type { ResourceLanguage } from 'i18next';
 import { describe, expect, it } from 'vitest';
 import type {
   CardChoiceDef,
@@ -6,6 +7,8 @@ import type {
 import { initCardState } from '@learn/platform-core/domain/exercise/kinds/cards/def';
 import type { NumberEntryDef } from '@learn/platform-core/domain/exercise/kinds/number-entry/def';
 import { CARD_SAMPLES, CARD_TYPES } from '@learn/platform-core/testing';
+import { createE2ETexts } from '../../../e2e/i18n.ts';
+import { cardLocales } from '../../testing/card-test-entry.tsx';
 import { CARD_KIND_E2E, cardKindE2EOf } from './e2e-registry.ts';
 import type { CardKindE2E } from './e2e-registry.ts';
 
@@ -101,6 +104,59 @@ describe('card e2e drivers', () => {
       'button "7" exact',
       'button "<cards.erase>" exact',
       'button "<exercise.check>" exact',
+    ]);
+  });
+
+  it('choice: clicks a shape option by the label the app gives it, the e2e texts resolving the plural and the template', async () => {
+    const { contentText } = createE2ETexts({ en: (cardLocales.en ?? {}) as ResourceLanguage });
+    const def: CardChoiceDef = {
+      ...CARD_SAMPLES.choice,
+      options: [
+        { id: 'a', shape: { kind: 'circle', colour: 'red', size: 'small', count: 3 } },
+        { id: 'b', shape: { kind: 'square', colour: 'blue' } },
+        {
+          id: 'c',
+          textKey: 'lessons:count-01-opt-c',
+          shape: { kind: 'star', colour: 'yellow' },
+        },
+      ],
+    };
+    const { page, clicks } = recordingPage();
+    for (const optionId of ['a', 'b', 'c']) {
+      await CARD_KIND_E2E.choice.perform(
+        page,
+        { type: 'answer-choice', optionId },
+        { ...ctxOf(def), text: contentText },
+      );
+    }
+    expect(clicks).toEqual([
+      'button "3 small red circles" exact',
+      'button "blue square" exact',
+      'button "Five" exact',
+    ]);
+  });
+
+  it('order: clicks a shape card by its shape label', async () => {
+    const { contentText } = createE2ETexts({ en: (cardLocales.en ?? {}) as ResourceLanguage });
+    const def = {
+      ...CARD_SAMPLES.order,
+      items: [
+        { id: 'one', shape: { kind: 'heart', colour: 'purple', count: 2 } },
+        { id: 'two', shape: { kind: 'diamond', colour: 'orange', size: 'tiny' } },
+      ],
+      answer: ['one', 'two'],
+    } satisfies typeof CARD_SAMPLES.order;
+    const { page, clicks } = recordingPage();
+    for (const itemId of ['one', 'two']) {
+      await CARD_KIND_E2E.order.perform(
+        page,
+        { type: 'place-item', itemId },
+        { ...ctxOf(def), text: contentText },
+      );
+    }
+    expect(clicks).toEqual([
+      'button "2 purple hearts" exact',
+      'button "tiny orange diamond" exact',
     ]);
   });
 

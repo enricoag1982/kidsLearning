@@ -10,6 +10,7 @@ import type {
   CardState,
   CardType,
 } from '@learn/platform-core/domain/exercise/kinds/cards/def';
+import type { ContentText } from '../../content-text.ts';
 import { choiceE2E } from './choice/e2e.ts';
 import { numberEntryE2E } from './number-entry/e2e.ts';
 import { orderE2E } from './order/e2e.ts';
@@ -28,7 +29,7 @@ export interface CardKindE2E<
       readonly def: D;
       readonly before: CardState<D>;
       readonly outcome: O;
-      readonly text: (key: string) => string;
+      readonly text: ContentText;
     },
   ): Promise<void>;
 }
