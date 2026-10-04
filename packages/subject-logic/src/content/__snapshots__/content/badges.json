@@ -1,9 +1,9 @@
 [
  {
-  "id": "first-lesson",
+  "id": "pattern-spotter",
   "category": "milestone",
-  "nameKey": "rewards:badges.first-lesson.name",
-  "conditionKey": "rewards:badges.first-lesson.condition",
+  "nameKey": "rewards:badges.pattern-spotter.name",
+  "conditionKey": "rewards:badges.pattern-spotter.condition",
   "condition": {
    "type": "mastered",
    "thresholds": [

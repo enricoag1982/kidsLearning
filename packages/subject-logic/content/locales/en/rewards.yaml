@@ -1,7 +1,7 @@
 badges:
-  first-lesson:
-    name: First Lesson
-    condition: Master your first lesson
+  pattern-spotter:
+    name: Pattern Spotter
+    condition: Master Pattern Pond and beat Pattern Train
   star-collector:
     name: Star Collector
     condition_one: 'Earn {{count}} star'

@@ -2,143 +2,1920 @@
  "version": 1,
  "lessons": [
   {
-   "id": "fx-first",
+   "id": "pat-far",
    "world": "pattern-pond",
-   "order": 1,
-   "concept": "fx-first",
+   "order": 4,
+   "concept": "pat-far",
    "character": "panda",
-   "titleKey": "lessons:fx-first.title",
-   "storyKey": "lessons:fx-first.story",
+   "titleKey": "lessons:pat-far.title",
+   "storyKey": "lessons:pat-far.story",
    "demo": {
-    "textKey": "lessons:fx-first.demo",
+    "textKey": "lessons:pat-far.demo",
     "prompt": {
-     "emoji": "🐸🐟🐸🐟🐸🐟"
+     "shapes": [
+      {
+       "kind": "circle",
+       "colour": "red"
+      },
+      {
+       "kind": "circle",
+       "colour": "blue"
+      },
+      {
+       "kind": "circle",
+       "colour": "red"
+      },
+      {
+       "kind": "circle",
+       "colour": "blue"
+      }
+     ]
     }
    },
    "guided": [
     {
-     "id": "fx-g1",
-     "concept": "fx-first",
-     "textKey": "lessons:fx-g1",
+     "id": "far-g8-1",
+     "concept": "pat-far",
+     "textKey": "lessons:gen.far-g8-1.text",
      "prompt": {
-      "emoji": "🐸🐟🐸🐟🐸"
+      "shapes": [
+       {
+        "kind": "square",
+        "colour": "purple"
+       },
+       {
+        "kind": "square",
+        "colour": "red"
+       },
+       {
+        "kind": "square",
+        "colour": "purple"
+       },
+       {
+        "kind": "square",
+        "colour": "red"
+       }
+      ]
      },
      "type": "choice",
      "options": [
       {
-       "id": "frog",
-       "emoji": "🐸"
+       "id": "p8-a",
+       "shape": {
+        "kind": "square",
+        "colour": "red"
+       }
       },
       {
-       "id": "fish",
-       "emoji": "🐟"
+       "id": "p8-b",
+       "reasonKey": "lessons:bugs.far-off",
+       "shape": {
+        "kind": "square",
+        "colour": "purple"
+       }
       }
      ],
-     "answer": "fish"
+     "answer": "p8-a"
     },
     {
-     "id": "fx-g2",
-     "concept": "fx-first",
-     "textKey": "lessons:fx-g2",
-     "type": "order",
-     "items": [
+     "id": "far-g10-1",
+     "concept": "pat-far",
+     "textKey": "lessons:gen.far-g10-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "circle",
+        "colour": "blue"
+       },
+       {
+        "kind": "circle",
+        "colour": "orange"
+       },
+       {
+        "kind": "circle",
+        "colour": "blue"
+       },
+       {
+        "kind": "circle",
+        "colour": "orange"
+       }
+      ]
+     },
+     "type": "choice",
+     "options": [
       {
-       "id": "two",
-       "emoji": "🐟🐟"
+       "id": "p10-a",
+       "reasonKey": "lessons:bugs.far-off",
+       "shape": {
+        "kind": "circle",
+        "colour": "blue"
+       }
       },
       {
-       "id": "three",
-       "emoji": "🐟🐟🐟"
-      },
-      {
-       "id": "one",
-       "emoji": "🐟"
+       "id": "p10-b",
+       "shape": {
+        "kind": "circle",
+        "colour": "orange"
+       }
       }
      ],
-     "answer": [
-      "one",
-      "two",
-      "three"
-     ]
+     "answer": "p10-b"
     }
    ],
    "exercises": [
     {
-     "id": "fx-01",
-     "concept": "fx-first",
-     "textKey": "lessons:fx-01",
+     "id": "far-ab-1-1",
+     "concept": "pat-far",
+     "textKey": "lessons:gen.far-ab-1-1.text",
      "prompt": {
-      "emoji": "🐸🐸🐟🐸🐸🐟🐸🐸"
+      "shapes": [
+       {
+        "kind": "square",
+        "colour": "red"
+       },
+       {
+        "kind": "square",
+        "colour": "orange"
+       },
+       {
+        "kind": "square",
+        "colour": "red"
+       },
+       {
+        "kind": "square",
+        "colour": "orange"
+       }
+      ]
      },
      "type": "choice",
      "options": [
       {
-       "id": "frog",
-       "emoji": "🐸"
+       "id": "p11-a",
+       "shape": {
+        "kind": "square",
+        "colour": "red"
+       }
       },
       {
-       "id": "fish",
-       "emoji": "🐟"
+       "id": "p11-b",
+       "reasonKey": "lessons:bugs.far-off",
+       "shape": {
+        "kind": "square",
+        "colour": "orange"
+       }
       }
      ],
-     "answer": "fish"
+     "answer": "p11-a"
     },
     {
-     "id": "fx-02",
-     "concept": "fx-first",
-     "textKey": "lessons:fx-02",
-     "type": "order",
-     "items": [
+     "id": "far-ab-2-1",
+     "concept": "pat-far",
+     "textKey": "lessons:gen.far-ab-2-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "star",
+        "colour": "red"
+       },
+       {
+        "kind": "square",
+        "colour": "red"
+       },
+       {
+        "kind": "star",
+        "colour": "red"
+       },
+       {
+        "kind": "square",
+        "colour": "red"
+       }
+      ]
+     },
+     "type": "choice",
+     "options": [
       {
-       "id": "three",
-       "emoji": "🐸🐸🐸"
+       "id": "p15-a",
+       "shape": {
+        "kind": "star",
+        "colour": "red"
+       }
       },
       {
-       "id": "one",
-       "emoji": "🐸"
-      },
-      {
-       "id": "four",
-       "emoji": "🐸🐸🐸🐸"
-      },
-      {
-       "id": "two",
-       "emoji": "🐸🐸"
+       "id": "p15-b",
+       "reasonKey": "lessons:bugs.far-off",
+       "shape": {
+        "kind": "square",
+        "colour": "red"
+       }
       }
      ],
-     "answer": [
-      "one",
-      "two",
-      "three",
-      "four"
+     "answer": "p15-a"
+    },
+    {
+     "id": "far-ab-3-1",
+     "concept": "pat-far",
+     "textKey": "lessons:gen.far-ab-3-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "circle",
+        "colour": "purple"
+       },
+       {
+        "kind": "square",
+        "colour": "orange"
+       },
+       {
+        "kind": "circle",
+        "colour": "purple"
+       },
+       {
+        "kind": "square",
+        "colour": "orange"
+       }
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "p19-a",
+       "reasonKey": "lessons:bugs.far-off",
+       "shape": {
+        "kind": "square",
+        "colour": "orange"
+       }
+      },
+      {
+       "id": "p19-b",
+       "shape": {
+        "kind": "circle",
+        "colour": "purple"
+       }
+      }
+     ],
+     "answer": "p19-b"
+    },
+    {
+     "id": "far-abc-1-1",
+     "concept": "pat-far",
+     "textKey": "lessons:gen.far-abc-1-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "diamond",
+        "colour": "yellow"
+       },
+       {
+        "kind": "diamond",
+        "colour": "blue"
+       },
+       {
+        "kind": "diamond",
+        "colour": "orange"
+       },
+       {
+        "kind": "diamond",
+        "colour": "yellow"
+       },
+       {
+        "kind": "diamond",
+        "colour": "blue"
+       },
+       {
+        "kind": "diamond",
+        "colour": "orange"
+       }
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "p8-a",
+       "reasonKey": "lessons:bugs.far-off",
+       "shape": {
+        "kind": "diamond",
+        "colour": "orange"
+       }
+      },
+      {
+       "id": "p8-b",
+       "reasonKey": "lessons:bugs.far-off",
+       "shape": {
+        "kind": "diamond",
+        "colour": "yellow"
+       }
+      },
+      {
+       "id": "p8-c",
+       "shape": {
+        "kind": "diamond",
+        "colour": "blue"
+       }
+      }
+     ],
+     "answer": "p8-c"
+    },
+    {
+     "id": "far-abc-2-1",
+     "concept": "pat-far",
+     "textKey": "lessons:gen.far-abc-2-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "diamond",
+        "colour": "red"
+       },
+       {
+        "kind": "star",
+        "colour": "red"
+       },
+       {
+        "kind": "circle",
+        "colour": "red"
+       },
+       {
+        "kind": "diamond",
+        "colour": "red"
+       },
+       {
+        "kind": "star",
+        "colour": "red"
+       },
+       {
+        "kind": "circle",
+        "colour": "red"
+       }
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "p12-a",
+       "shape": {
+        "kind": "circle",
+        "colour": "red"
+       }
+      },
+      {
+       "id": "p12-b",
+       "reasonKey": "lessons:bugs.far-off",
+       "shape": {
+        "kind": "diamond",
+        "colour": "red"
+       }
+      },
+      {
+       "id": "p12-c",
+       "reasonKey": "lessons:bugs.far-off",
+       "shape": {
+        "kind": "star",
+        "colour": "red"
+       }
+      }
+     ],
+     "answer": "p12-a"
+    },
+    {
+     "id": "far-abc-3-1",
+     "concept": "pat-far",
+     "textKey": "lessons:gen.far-abc-3-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "diamond",
+        "colour": "purple"
+       },
+       {
+        "kind": "triangle",
+        "colour": "yellow"
+       },
+       {
+        "kind": "circle",
+        "colour": "green"
+       },
+       {
+        "kind": "diamond",
+        "colour": "purple"
+       },
+       {
+        "kind": "triangle",
+        "colour": "yellow"
+       },
+       {
+        "kind": "circle",
+        "colour": "green"
+       }
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "p15-a",
+       "reasonKey": "lessons:bugs.far-off",
+       "shape": {
+        "kind": "diamond",
+        "colour": "purple"
+       }
+      },
+      {
+       "id": "p15-b",
+       "shape": {
+        "kind": "circle",
+        "colour": "green"
+       }
+      },
+      {
+       "id": "p15-c",
+       "reasonKey": "lessons:bugs.far-off",
+       "shape": {
+        "kind": "triangle",
+        "colour": "yellow"
+       }
+      }
+     ],
+     "answer": "p15-b",
+     "easier": "far-easy-1"
+    }
+   ],
+   "variants": [
+    {
+     "id": "far-easy-1",
+     "concept": "pat-far",
+     "textKey": "lessons:gen.far-easy-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "heart",
+        "colour": "red"
+       },
+       {
+        "kind": "heart",
+        "colour": "purple"
+       },
+       {
+        "kind": "heart",
+        "colour": "red"
+       },
+       {
+        "kind": "heart",
+        "colour": "purple"
+       }
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "p6-a",
+       "shape": {
+        "kind": "heart",
+        "colour": "purple"
+       }
+      },
+      {
+       "id": "p6-b",
+       "reasonKey": "lessons:bugs.far-off",
+       "shape": {
+        "kind": "heart",
+        "colour": "red"
+       }
+      }
+     ],
+     "answer": "p6-a"
+    }
+   ]
+  },
+  {
+   "id": "pat-grow",
+   "world": "pattern-pond",
+   "order": 3,
+   "concept": "pat-grow",
+   "character": "panda",
+   "titleKey": "lessons:pat-grow.title",
+   "storyKey": "lessons:pat-grow.story",
+   "demo": {
+    "textKey": "lessons:pat-grow.demo",
+    "prompt": {
+     "shapes": [
+      {
+       "kind": "star",
+       "colour": "yellow",
+       "count": 1
+      },
+      {
+       "kind": "star",
+       "colour": "yellow",
+       "count": 3
+      },
+      {
+       "kind": "star",
+       "colour": "yellow",
+       "count": 5
+      },
+      "gap"
+     ]
+    }
+   },
+   "guided": [
+    {
+     "id": "grow-g1-1",
+     "concept": "pat-grow",
+     "textKey": "lessons:gen.grow-g1-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "circle",
+        "colour": "green",
+        "count": 2
+       },
+       {
+        "kind": "circle",
+        "colour": "green",
+        "count": 3
+       },
+       {
+        "kind": "circle",
+        "colour": "green",
+        "count": 4
+       },
+       "gap"
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "circle",
+        "colour": "green",
+        "count": 5
+       }
+      },
+      {
+       "id": "b",
+       "reasonKey": "lessons:bugs.grow-off",
+       "shape": {
+        "kind": "circle",
+        "colour": "green",
+        "count": 4
+       }
+      },
+      {
+       "id": "c",
+       "reasonKey": "lessons:bugs.grow-off",
+       "shape": {
+        "kind": "circle",
+        "colour": "green",
+        "count": 6
+       }
+      }
+     ],
+     "answer": "a"
+    },
+    {
+     "id": "grow-g2-1",
+     "concept": "pat-grow",
+     "textKey": "lessons:gen.grow-g2-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "heart",
+        "colour": "blue",
+        "count": 1
+       },
+       {
+        "kind": "heart",
+        "colour": "blue",
+        "count": 3
+       },
+       {
+        "kind": "heart",
+        "colour": "blue",
+        "count": 5
+       },
+       "gap"
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "reasonKey": "lessons:bugs.grow-off",
+       "shape": {
+        "kind": "heart",
+        "colour": "blue",
+        "count": 9
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "heart",
+        "colour": "blue",
+        "count": 7
+       }
+      },
+      {
+       "id": "c",
+       "reasonKey": "lessons:bugs.grow-off",
+       "shape": {
+        "kind": "heart",
+        "colour": "blue",
+        "count": 5
+       }
+      }
+     ],
+     "answer": "b"
+    }
+   ],
+   "exercises": [
+    {
+     "id": "grow-plus1-1",
+     "concept": "pat-grow",
+     "textKey": "lessons:gen.grow-plus1-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "square",
+        "colour": "blue",
+        "count": 3
+       },
+       {
+        "kind": "square",
+        "colour": "blue",
+        "count": 4
+       },
+       {
+        "kind": "square",
+        "colour": "blue",
+        "count": 5
+       },
+       "gap"
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "square",
+        "colour": "blue",
+        "count": 6
+       }
+      },
+      {
+       "id": "b",
+       "reasonKey": "lessons:bugs.grow-off",
+       "shape": {
+        "kind": "square",
+        "colour": "blue",
+        "count": 7
+       }
+      },
+      {
+       "id": "c",
+       "reasonKey": "lessons:bugs.grow-off",
+       "shape": {
+        "kind": "square",
+        "colour": "blue",
+        "count": 5
+       }
+      }
+     ],
+     "answer": "a"
+    },
+    {
+     "id": "grow-plus1-2",
+     "concept": "pat-grow",
+     "textKey": "lessons:gen.grow-plus1-2.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "triangle",
+        "colour": "yellow",
+        "count": 2
+       },
+       {
+        "kind": "triangle",
+        "colour": "yellow",
+        "count": 3
+       },
+       {
+        "kind": "triangle",
+        "colour": "yellow",
+        "count": 4
+       },
+       "gap"
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "reasonKey": "lessons:bugs.grow-off",
+       "shape": {
+        "kind": "triangle",
+        "colour": "yellow",
+        "count": 4
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "triangle",
+        "colour": "yellow",
+        "count": 5
+       }
+      },
+      {
+       "id": "c",
+       "reasonKey": "lessons:bugs.grow-off",
+       "shape": {
+        "kind": "triangle",
+        "colour": "yellow",
+        "count": 6
+       }
+      }
+     ],
+     "answer": "b"
+    },
+    {
+     "id": "grow-plus2-1",
+     "concept": "pat-grow",
+     "textKey": "lessons:gen.grow-plus2-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "circle",
+        "colour": "orange",
+        "count": 1
+       },
+       {
+        "kind": "circle",
+        "colour": "orange",
+        "count": 3
+       },
+       {
+        "kind": "circle",
+        "colour": "orange",
+        "count": 5
+       },
+       "gap"
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "circle",
+        "colour": "orange",
+        "count": 7
+       }
+      },
+      {
+       "id": "b",
+       "reasonKey": "lessons:bugs.grow-off",
+       "shape": {
+        "kind": "circle",
+        "colour": "orange",
+        "count": 5
+       }
+      },
+      {
+       "id": "c",
+       "reasonKey": "lessons:bugs.grow-off",
+       "shape": {
+        "kind": "circle",
+        "colour": "orange",
+        "count": 9
+       }
+      }
+     ],
+     "answer": "a"
+    },
+    {
+     "id": "grow-e1-1",
+     "concept": "pat-grow",
+     "textKey": "lessons:gen.grow-e1-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "circle",
+        "colour": "yellow",
+        "count": 3
+       },
+       {
+        "kind": "circle",
+        "colour": "yellow",
+        "count": 4
+       },
+       {
+        "kind": "circle",
+        "colour": "yellow",
+        "count": 5
+       }
+      ]
+     },
+     "type": "number-entry",
+     "answer": 6,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 5,
+       "reasonKey": "lessons:bugs.grow-off"
+      },
+      {
+       "value": 7,
+       "reasonKey": "lessons:bugs.grow-off"
+      }
      ]
     },
     {
-     "id": "fx-03",
-     "concept": "fx-first",
-     "textKey": "lessons:fx-03",
+     "id": "grow-e2-1",
+     "concept": "pat-grow",
+     "textKey": "lessons:gen.grow-e2-1.text",
      "prompt": {
-      "emoji": "🐸🐟🦆🐸🐟🦆🐸🐟"
+      "shapes": [
+       {
+        "kind": "star",
+        "colour": "blue",
+        "count": 1
+       },
+       {
+        "kind": "star",
+        "colour": "blue",
+        "count": 2
+       },
+       {
+        "kind": "star",
+        "colour": "blue",
+        "count": 3
+       }
+      ]
+     },
+     "type": "number-entry",
+     "answer": 5,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 4,
+       "reasonKey": "lessons:bugs.grow-off"
+      },
+      {
+       "value": 6,
+       "reasonKey": "lessons:bugs.grow-off"
+      }
+     ]
+    },
+    {
+     "id": "grow-e3-1",
+     "concept": "pat-grow",
+     "textKey": "lessons:gen.grow-e3-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "diamond",
+        "colour": "red",
+        "count": 1
+       },
+       {
+        "kind": "diamond",
+        "colour": "red",
+        "count": 3
+       },
+       {
+        "kind": "diamond",
+        "colour": "red",
+        "count": 5
+       }
+      ]
+     },
+     "type": "number-entry",
+     "answer": 11,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 9,
+       "reasonKey": "lessons:bugs.grow-off"
+      },
+      {
+       "value": 13,
+       "reasonKey": "lessons:bugs.grow-off"
+      }
+     ],
+     "easier": "grow-easy-1"
+    }
+   ],
+   "variants": [
+    {
+     "id": "grow-easy-1",
+     "concept": "pat-grow",
+     "textKey": "lessons:gen.grow-easy-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "diamond",
+        "colour": "purple",
+        "count": 2
+       },
+       {
+        "kind": "diamond",
+        "colour": "purple",
+        "count": 3
+       },
+       {
+        "kind": "diamond",
+        "colour": "purple",
+        "count": 4
+       }
+      ]
+     },
+     "type": "number-entry",
+     "answer": 5,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 4,
+       "reasonKey": "lessons:bugs.grow-off"
+      },
+      {
+       "value": 6,
+       "reasonKey": "lessons:bugs.grow-off"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pat-repeat",
+   "world": "pattern-pond",
+   "order": 1,
+   "concept": "pat-repeat",
+   "character": "panda",
+   "titleKey": "lessons:pat-repeat.title",
+   "storyKey": "lessons:pat-repeat.story",
+   "demo": {
+    "textKey": "lessons:pat-repeat.demo",
+    "prompt": {
+     "shapes": [
+      {
+       "kind": "circle",
+       "colour": "red"
+      },
+      {
+       "kind": "square",
+       "colour": "blue"
+      },
+      {
+       "kind": "circle",
+       "colour": "red"
+      },
+      {
+       "kind": "square",
+       "colour": "blue"
+      },
+      {
+       "kind": "circle",
+       "colour": "red"
+      },
+      "gap"
+     ]
+    }
+   },
+   "guided": [
+    {
+     "id": "rep-g-colour-1",
+     "concept": "pat-repeat",
+     "textKey": "lessons:gen.rep-g-colour-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "heart",
+        "colour": "orange"
+       },
+       {
+        "kind": "heart",
+        "colour": "yellow"
+       },
+       {
+        "kind": "heart",
+        "colour": "orange"
+       },
+       {
+        "kind": "heart",
+        "colour": "yellow"
+       },
+       "gap"
+      ]
      },
      "type": "choice",
      "options": [
       {
-       "id": "frog",
-       "emoji": "🐸"
+       "id": "a",
+       "shape": {
+        "kind": "heart",
+        "colour": "orange"
+       }
       },
       {
-       "id": "fish",
-       "emoji": "🐟"
+       "id": "b",
+       "shape": {
+        "kind": "heart",
+        "colour": "blue"
+       }
       },
       {
-       "id": "duck",
-       "emoji": "🦆"
+       "id": "c",
+       "reasonKey": "lessons:bugs.unit-break",
+       "shape": {
+        "kind": "heart",
+        "colour": "yellow"
+       }
       }
      ],
-     "answer": "duck"
+     "answer": "a"
+    },
+    {
+     "id": "rep-g-kind-1",
+     "concept": "pat-repeat",
+     "textKey": "lessons:gen.rep-g-kind-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "diamond",
+        "colour": "purple"
+       },
+       {
+        "kind": "triangle",
+        "colour": "purple"
+       },
+       {
+        "kind": "diamond",
+        "colour": "purple"
+       },
+       {
+        "kind": "triangle",
+        "colour": "purple"
+       },
+       {
+        "kind": "diamond",
+        "colour": "purple"
+       },
+       {
+        "kind": "triangle",
+        "colour": "purple"
+       },
+       {
+        "kind": "diamond",
+        "colour": "purple"
+       },
+       "gap"
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "circle",
+        "colour": "purple"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "triangle",
+        "colour": "purple"
+       }
+      },
+      {
+       "id": "c",
+       "reasonKey": "lessons:bugs.unit-break",
+       "shape": {
+        "kind": "diamond",
+        "colour": "purple"
+       }
+      }
+     ],
+     "answer": "b"
+    }
+   ],
+   "exercises": [
+    {
+     "id": "rep-aab-1",
+     "concept": "pat-repeat",
+     "textKey": "lessons:gen.rep-aab-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "star",
+        "colour": "yellow"
+       },
+       {
+        "kind": "star",
+        "colour": "yellow"
+       },
+       {
+        "kind": "star",
+        "colour": "red"
+       },
+       {
+        "kind": "star",
+        "colour": "yellow"
+       },
+       {
+        "kind": "star",
+        "colour": "yellow"
+       },
+       {
+        "kind": "star",
+        "colour": "red"
+       },
+       {
+        "kind": "star",
+        "colour": "yellow"
+       },
+       "gap"
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "star",
+        "colour": "blue"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "star",
+        "colour": "red"
+       }
+      },
+      {
+       "id": "c",
+       "shape": {
+        "kind": "star",
+        "colour": "yellow"
+       }
+      }
+     ],
+     "answer": "c"
+    },
+    {
+     "id": "rep-abb-1",
+     "concept": "pat-repeat",
+     "textKey": "lessons:gen.rep-abb-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "heart",
+        "colour": "purple"
+       },
+       {
+        "kind": "star",
+        "colour": "purple"
+       },
+       {
+        "kind": "star",
+        "colour": "purple"
+       },
+       {
+        "kind": "heart",
+        "colour": "purple"
+       },
+       {
+        "kind": "star",
+        "colour": "purple"
+       },
+       {
+        "kind": "star",
+        "colour": "purple"
+       },
+       "gap"
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "heart",
+        "colour": "purple"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "triangle",
+        "colour": "purple"
+       }
+      },
+      {
+       "id": "c",
+       "reasonKey": "lessons:bugs.unit-break",
+       "shape": {
+        "kind": "star",
+        "colour": "purple"
+       }
+      }
+     ],
+     "answer": "a"
+    },
+    {
+     "id": "rep-gap-ab-1",
+     "concept": "pat-repeat",
+     "textKey": "lessons:gen.rep-gap-ab-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "circle",
+        "colour": "green",
+        "size": "huge"
+       },
+       {
+        "kind": "circle",
+        "colour": "green",
+        "size": "medium"
+       },
+       {
+        "kind": "circle",
+        "colour": "green",
+        "size": "huge"
+       },
+       "gap",
+       {
+        "kind": "circle",
+        "colour": "green",
+        "size": "huge"
+       },
+       {
+        "kind": "circle",
+        "colour": "green",
+        "size": "medium"
+       }
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "circle",
+        "colour": "green",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "circle",
+        "colour": "green",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c",
+       "reasonKey": "lessons:bugs.unit-break",
+       "shape": {
+        "kind": "circle",
+        "colour": "green",
+        "size": "huge"
+       }
+      }
+     ],
+     "answer": "a"
+    },
+    {
+     "id": "rep-gap-abc-1",
+     "concept": "pat-repeat",
+     "textKey": "lessons:gen.rep-gap-abc-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "heart",
+        "colour": "red"
+       },
+       {
+        "kind": "heart",
+        "colour": "yellow"
+       },
+       {
+        "kind": "heart",
+        "colour": "orange"
+       },
+       {
+        "kind": "heart",
+        "colour": "red"
+       },
+       "gap",
+       {
+        "kind": "heart",
+        "colour": "orange"
+       }
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "heart",
+        "colour": "blue"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "heart",
+        "colour": "yellow"
+       }
+      },
+      {
+       "id": "c",
+       "reasonKey": "lessons:bugs.unit-break",
+       "shape": {
+        "kind": "heart",
+        "colour": "red"
+       }
+      }
+     ],
+     "answer": "b"
+    },
+    {
+     "id": "rep-abc-1",
+     "concept": "pat-repeat",
+     "textKey": "lessons:gen.rep-abc-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "circle",
+        "colour": "purple"
+       },
+       {
+        "kind": "star",
+        "colour": "purple"
+       },
+       {
+        "kind": "heart",
+        "colour": "purple"
+       },
+       {
+        "kind": "circle",
+        "colour": "purple"
+       },
+       {
+        "kind": "star",
+        "colour": "purple"
+       },
+       {
+        "kind": "heart",
+        "colour": "purple"
+       },
+       {
+        "kind": "circle",
+        "colour": "purple"
+       },
+       "gap"
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "square",
+        "colour": "purple"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "star",
+        "colour": "purple"
+       }
+      },
+      {
+       "id": "c",
+       "reasonKey": "lessons:bugs.unit-break",
+       "shape": {
+        "kind": "circle",
+        "colour": "purple"
+       }
+      }
+     ],
+     "answer": "b"
+    },
+    {
+     "id": "rep-two-1",
+     "concept": "pat-repeat",
+     "textKey": "lessons:gen.rep-two-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "heart",
+        "colour": "blue"
+       },
+       {
+        "kind": "star",
+        "colour": "red"
+       },
+       {
+        "kind": "circle",
+        "colour": "orange"
+       },
+       {
+        "kind": "heart",
+        "colour": "blue"
+       },
+       {
+        "kind": "star",
+        "colour": "red"
+       },
+       {
+        "kind": "circle",
+        "colour": "orange"
+       },
+       {
+        "kind": "heart",
+        "colour": "blue"
+       },
+       "gap"
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "diamond",
+        "colour": "yellow"
+       }
+      },
+      {
+       "id": "b",
+       "reasonKey": "lessons:bugs.unit-break",
+       "shape": {
+        "kind": "heart",
+        "colour": "blue"
+       }
+      },
+      {
+       "id": "c",
+       "shape": {
+        "kind": "star",
+        "colour": "red"
+       }
+      }
+     ],
+     "answer": "c",
+     "easier": "rep-easy-1"
+    }
+   ],
+   "variants": [
+    {
+     "id": "rep-easy-1",
+     "concept": "pat-repeat",
+     "textKey": "lessons:gen.rep-easy-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "triangle",
+        "colour": "orange"
+       },
+       {
+        "kind": "triangle",
+        "colour": "red"
+       },
+       {
+        "kind": "triangle",
+        "colour": "orange"
+       },
+       {
+        "kind": "triangle",
+        "colour": "red"
+       },
+       {
+        "kind": "triangle",
+        "colour": "orange"
+       },
+       {
+        "kind": "triangle",
+        "colour": "red"
+       },
+       "gap"
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "triangle",
+        "colour": "orange"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "triangle",
+        "colour": "yellow"
+       }
+      },
+      {
+       "id": "c",
+       "reasonKey": "lessons:bugs.unit-break",
+       "shape": {
+        "kind": "triangle",
+        "colour": "red"
+       }
+      }
+     ],
+     "answer": "a"
+    }
+   ]
+  },
+  {
+   "id": "pat-steps",
+   "world": "pattern-pond",
+   "order": 2,
+   "concept": "pat-steps",
+   "character": "panda",
+   "titleKey": "lessons:pat-steps.title",
+   "storyKey": "lessons:pat-steps.story",
+   "demo": {
+    "textKey": "lessons:pat-steps.demo",
+    "prompt": {
+     "big": "3 7 11 15 ?"
+    }
+   },
+   "guided": [
+    {
+     "id": "steps-g3-1",
+     "concept": "pat-steps",
+     "textKey": "lessons:gen.steps-g3-1.text",
+     "prompt": {
+      "big": "1 4 7 10 ?"
+     },
+     "type": "number-entry",
+     "answer": 13,
+     "maxDigits": 2
+    },
+    {
+     "id": "steps-g4-1",
+     "concept": "pat-steps",
+     "textKey": "lessons:gen.steps-g4-1.text",
+     "prompt": {
+      "big": "13 17 21 25 ?"
+     },
+     "type": "number-entry",
+     "answer": 29,
+     "maxDigits": 2
+    }
+   ],
+   "exercises": [
+    {
+     "id": "steps-up-1",
+     "concept": "pat-steps",
+     "textKey": "lessons:gen.steps-up-1.text",
+     "prompt": {
+      "big": "2 10 18 26 ?"
+     },
+     "type": "number-entry",
+     "answer": 34,
+     "maxDigits": 2
+    },
+    {
+     "id": "steps-down-1",
+     "concept": "pat-steps",
+     "textKey": "lessons:gen.steps-down-1.text",
+     "prompt": {
+      "big": "29 22 15 8 ?"
+     },
+     "type": "number-entry",
+     "answer": 1,
+     "maxDigits": 2
+    },
+    {
+     "id": "steps-double-1",
+     "concept": "pat-steps",
+     "textKey": "lessons:gen.steps-double-1.text",
+     "prompt": {
+      "big": "4 8 16 32 ?"
+     },
+     "type": "number-entry",
+     "answer": 64,
+     "maxDigits": 2
+    },
+    {
+     "id": "steps-alt-1",
+     "concept": "pat-steps",
+     "textKey": "lessons:gen.steps-alt-1.text",
+     "prompt": {
+      "big": "16 20 21 25 26 ?"
+     },
+     "type": "number-entry",
+     "answer": 30,
+     "maxDigits": 2
+    },
+    {
+     "id": "steps-grow-1",
+     "concept": "pat-steps",
+     "textKey": "lessons:gen.steps-grow-1.text",
+     "prompt": {
+      "big": "5 8 12 17 23 ?"
+     },
+     "type": "number-entry",
+     "answer": 30,
+     "maxDigits": 2,
+     "reasons": [
+      {
+       "value": 26,
+       "reasonKey": "lessons:bugs.first-jump"
+      }
+     ],
+     "easier": "steps-easy-1"
+    },
+    {
+     "id": "steps-rule-1",
+     "concept": "pat-steps",
+     "textKey": "lessons:gen.steps-rule-1.text",
+     "prompt": {
+      "big": "9 14 16 21 23 ?"
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "alt-5-2",
+       "textKey": "lessons:gen.steps-rule-1.rule-a"
+      },
+      {
+       "id": "alt-5-6",
+       "textKey": "lessons:gen.steps-rule-1.rule-b"
+      },
+      {
+       "id": "step-5",
+       "textKey": "lessons:gen.steps-rule-1.rule-c"
+      }
+     ],
+     "answer": "alt-5-2"
+    }
+   ],
+   "variants": [
+    {
+     "id": "steps-easy-1",
+     "concept": "pat-steps",
+     "textKey": "lessons:gen.steps-easy-1.text",
+     "prompt": {
+      "big": "14 16 18 20 ?"
+     },
+     "type": "number-entry",
+     "answer": 22,
+     "maxDigits": 2
     }
    ]
   }
  ],
- "minigames": []
+ "minigames": [
+  {
+   "mode": "series",
+   "id": "pattern-train",
+   "concept": "pat-far",
+   "rounds": [
+    {
+     "id": "train-next-1",
+     "concept": "pat-far",
+     "textKey": "lessons:gen.train-next-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "star",
+        "colour": "red"
+       },
+       {
+        "kind": "star",
+        "colour": "blue"
+       },
+       {
+        "kind": "star",
+        "colour": "orange"
+       },
+       {
+        "kind": "star",
+        "colour": "red"
+       },
+       {
+        "kind": "star",
+        "colour": "blue"
+       },
+       {
+        "kind": "star",
+        "colour": "orange"
+       },
+       "gap"
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "star",
+        "colour": "red"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "star",
+        "colour": "yellow"
+       }
+      },
+      {
+       "id": "c",
+       "reasonKey": "lessons:bugs.unit-break",
+       "shape": {
+        "kind": "star",
+        "colour": "orange"
+       }
+      }
+     ],
+     "answer": "a"
+    },
+    {
+     "id": "train-gap-1",
+     "concept": "pat-far",
+     "textKey": "lessons:gen.train-gap-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "heart",
+        "colour": "yellow"
+       },
+       {
+        "kind": "heart",
+        "colour": "yellow"
+       },
+       {
+        "kind": "circle",
+        "colour": "yellow"
+       },
+       "gap",
+       {
+        "kind": "heart",
+        "colour": "yellow"
+       },
+       {
+        "kind": "circle",
+        "colour": "yellow"
+       }
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "heart",
+        "colour": "yellow"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "star",
+        "colour": "yellow"
+       }
+      },
+      {
+       "id": "c",
+       "reasonKey": "lessons:bugs.unit-break",
+       "shape": {
+        "kind": "circle",
+        "colour": "yellow"
+       }
+      }
+     ],
+     "answer": "a"
+    },
+    {
+     "id": "train-steps-1",
+     "concept": "pat-far",
+     "textKey": "lessons:gen.train-steps-1.text",
+     "prompt": {
+      "big": "31 39 47 55 ?"
+     },
+     "type": "number-entry",
+     "answer": 63,
+     "maxDigits": 2
+    },
+    {
+     "id": "train-grow-1",
+     "concept": "pat-far",
+     "textKey": "lessons:gen.train-grow-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "star",
+        "colour": "green",
+        "count": 2
+       },
+       {
+        "kind": "star",
+        "colour": "green",
+        "count": 3
+       },
+       {
+        "kind": "star",
+        "colour": "green",
+        "count": 4
+       },
+       "gap"
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "star",
+        "colour": "green",
+        "count": 5
+       }
+      },
+      {
+       "id": "b",
+       "reasonKey": "lessons:bugs.grow-off",
+       "shape": {
+        "kind": "star",
+        "colour": "green",
+        "count": 6
+       }
+      },
+      {
+       "id": "c",
+       "reasonKey": "lessons:bugs.grow-off",
+       "shape": {
+        "kind": "star",
+        "colour": "green",
+        "count": 4
+       }
+      }
+     ],
+     "answer": "a"
+    },
+    {
+     "id": "train-far-1",
+     "concept": "pat-far",
+     "textKey": "lessons:gen.train-far-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "circle",
+        "colour": "green"
+       },
+       {
+        "kind": "circle",
+        "colour": "blue"
+       },
+       {
+        "kind": "circle",
+        "colour": "green"
+       },
+       {
+        "kind": "circle",
+        "colour": "blue"
+       }
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "p17-a",
+       "shape": {
+        "kind": "circle",
+        "colour": "green"
+       }
+      },
+      {
+       "id": "p17-b",
+       "reasonKey": "lessons:bugs.far-off",
+       "shape": {
+        "kind": "circle",
+        "colour": "blue"
+       }
+      }
+     ],
+     "answer": "p17-a"
+    }
+   ],
+   "errors3": 0,
+   "errors2": 2,
+   "titleKey": "lessons:pattern-train.title",
+   "goalKey": "lessons:pattern-train.goal",
+   "unlockAfter": "pat-far"
+  }
+ ]
 }

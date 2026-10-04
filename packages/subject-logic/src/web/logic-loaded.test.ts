@@ -15,16 +15,22 @@ describe('logicEntry.load', () => {
     expect(common?.app?.title).toBe('Logic');
   });
 
-  it('serves the compiled fixture world: the lesson, no mini-game, the track, the catalog and the badges', async () => {
+  it('serves the compiled Pattern Pond: the 4 lessons, the Pattern Train, the track, the catalog and the badges', async () => {
     const { pack } = await logicEntry.load();
     const content = pack.createServices().content;
 
-    expect(content.lessons().map((lesson) => lesson.id)).toEqual(['fx-first']);
+    expect(
+      [...content.lessons()].sort((a, b) => a.order - b.order).map((lesson) => lesson.id),
+    ).toEqual(['pat-repeat', 'pat-steps', 'pat-grow', 'pat-far']);
+    expect(content.minigames().map((game) => game.id)).toEqual(['pattern-train']);
     expect(content.catalog?.().tracks.map((track) => track.id)).toEqual(['puzzles']);
     expect(content.catalog?.().tracks[0]?.worlds.map((world) => world.id)).toEqual([
       'pattern-pond',
     ]);
-    expect(content.badges?.().map((badge) => badge.id)).toEqual(['first-lesson', 'star-collector']);
+    expect(content.badges?.().map((badge) => badge.id)).toEqual([
+      'pattern-spotter',
+      'star-collector',
+    ]);
   });
 
   it('draws the card kit kinds in logic’s own UI registry (the kit UIs, same objects), one UI per core kind', async () => {

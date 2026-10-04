@@ -20,7 +20,7 @@ placement:
   summary-none-body: Every star starts with the first step.
 # What a lesson character teaches (`topicKey` in src/core.ts), shown in My Den and on the Journey.
 topic:
-  puzzle: Puzzle
+  puzzle: Puzzler
 # Grid puzzles (kind `grid-fill`): the instruction under each puzzle and what the Owl says about it. Worded by technique only: no numbers
 # and no coordinates (docs/subjects/logic/plan.md L6).
 grid:

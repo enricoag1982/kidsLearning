@@ -1,0 +1,25 @@
+# Pattern Train: World 1's boss, a `series` of 5 carriages: the next token of a repeating part, the missing one, the next number, the
+# next picture, and a far-away place. Generated like a lesson's exercises; seeds are stored, never change them.
+id: pattern-train
+mode: series
+concept: pat-far
+unlockAfter: pat-far
+errors3: 0
+errors2: 2
+rounds:
+  - id: train-next
+    generate: { template: pat-next, count: 1, seed: 1, params: { unit: ABC, attr: colour } }
+  - id: train-gap
+    generate: { template: pat-gap, count: 1, seed: 14, params: { unit: AAB, attr: kind } }
+  - id: train-steps
+    generate: { template: step-next, count: 1, seed: 5, params: { family: up } }
+  - id: train-grow
+    generate: { template: grow-next, count: 1, seed: 11, params: { mode: choice, step: 1 } }
+  - id: train-far
+    generate:
+      {
+        template: far-term,
+        count: 1,
+        seed: 3,
+        params: { unit: AB, attr: colour, position: [9, 20] },
+      }
