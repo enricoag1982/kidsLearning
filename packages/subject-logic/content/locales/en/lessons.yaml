@@ -9,3 +9,22 @@ fx-g2: Try it with Pip. Put the groups of fish in order. Start with the fewest f
 fx-01: Two frogs, a fish, two frogs, a fish, two frogs. What comes next?
 fx-02: Put the groups of frogs in order. Start with the fewest frogs.
 fx-03: Frog, fish, duck, frog, fish, duck, frog, fish. What comes next?
+# The misconception reasons (docs/subjects/logic/curriculum.md §3): the one sentence spoken when the wrong answer matches.
+bugs:
+  unit-break: Say the pattern from the start. Which part repeats?
+  first-jump: Check every jump, not just the first one.
+  grow-off: Look how many more there are each time.
+  far-off: Count in whole parts, not one by one.
+# The instruction of every generated item (`lessons:gen.<id>.text`) and the rule cards of `step-rule`.
+templates:
+  pat-next: What comes next?
+  pat-gap: What is missing?
+  step-next: What number comes next?
+  step-rule: Which rule makes these numbers?
+  grow-next-choice: Which picture comes next?
+  grow-next-entry: How many in step {{n}}?
+  far-term: Which shape is number {{n}}?
+  rule-step: '+{{d}} each time'
+  rule-double: × 2 each time
+  rule-alt: '+{{a}}, then +{{b}}, again and again'
+  rule-grow: '+{{a}}, +{{b}}, +{{c}} …'

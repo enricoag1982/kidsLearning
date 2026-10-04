@@ -608,6 +608,12 @@
   }
  },
  "lessons": {
+  "bugs": {
+   "far-off": "Count in whole parts, not one by one.",
+   "first-jump": "Check every jump, not just the first one.",
+   "grow-off": "Look how many more there are each time.",
+   "unit-break": "Say the pattern from the start. Which part repeats?"
+  },
   "fx-01": "Two frogs, a fish, two frogs, a fish, two frogs. What comes next?",
   "fx-02": "Put the groups of frogs in order. Start with the fewest frogs.",
   "fx-03": "Frog, fish, duck, frog, fish, duck, frog, fish. What comes next?",
@@ -617,7 +623,20 @@
    "title": "Pond patterns"
   },
   "fx-g1": "Try it with Pip. Frog, fish, frog, fish, frog. What comes next?",
-  "fx-g2": "Try it with Pip. Put the groups of fish in order. Start with the fewest fish."
+  "fx-g2": "Try it with Pip. Put the groups of fish in order. Start with the fewest fish.",
+  "templates": {
+   "far-term": "Which shape is number {{n}}?",
+   "grow-next-choice": "Which picture comes next?",
+   "grow-next-entry": "How many in step {{n}}?",
+   "pat-gap": "What is missing?",
+   "pat-next": "What comes next?",
+   "rule-alt": "+{{a}}, then +{{b}}, again and again",
+   "rule-double": "× 2 each time",
+   "rule-grow": "+{{a}}, +{{b}}, +{{c}} …",
+   "rule-step": "+{{d}} each time",
+   "step-next": "What number comes next?",
+   "step-rule": "Which rule makes these numbers?"
+  }
  },
  "rewards": {
   "badges": {
