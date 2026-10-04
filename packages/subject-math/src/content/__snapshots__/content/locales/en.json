@@ -639,12 +639,18 @@
    "cmp-order": "Put the numbers in order, smallest first.",
    "cmp-sign": "Which sign goes in the gap? The open side faces the bigger number.",
    "cmp-tf": "Is this true?",
+   "nl-estimate": "About where is {{n}}? Put it on the line.",
+   "nl-half": "What number is halfway between {{a}} and {{b}}?",
+   "nl-place": "Put {{n}} on the number line.",
    "pv-build": "Build {{n}} with blocks.",
    "pv-expanded": "Put the parts together. What number is it?",
    "pv-read": "{{h}} hundreds, {{t}} tens and {{o}} ones. What number is it?",
    "pv-read-4": "{{th}} thousands, {{h}} hundreds, {{t}} tens and {{o}} ones. What number is it?",
    "pv-which": "Which number has {{h}} hundreds, {{t}} tens and {{o}} ones?",
-   "pv-which-4": "Which number has {{th}} thousands, {{h}} hundreds, {{t}} tens and {{o}} ones?"
+   "pv-which-4": "Which number has {{th}} thousands, {{h}} hundreds, {{t}} tens and {{o}} ones?",
+   "round-hundred": "Round {{n}} to the nearest hundred.",
+   "round-ten": "Round {{n}} to the nearest ten.",
+   "round-tf": "Is this the nearest {{unit}}?"
   }
  },
  "rewards": {

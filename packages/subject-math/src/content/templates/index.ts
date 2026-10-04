@@ -2,7 +2,9 @@
 // value, comparing, number line and rounding templates of docs/subjects/math/curriculum.md §3.
 import type { AnyExerciseTemplate } from '@learn/platform-content/generate/template';
 import { cmpOrder, cmpSign, cmpTf } from './compare.ts';
+import { nlEstimate, nlHalf, nlPlace } from './number-line.ts';
 import { pvBuild, pvExpanded, pvRead, pvWhich } from './place-value.ts';
+import { roundHundred, roundTen, roundTf } from './rounding.ts';
 
 export const MATH_TEMPLATES: Readonly<Record<string, AnyExerciseTemplate>> = {
   'pv-build': pvBuild,
@@ -12,4 +14,10 @@ export const MATH_TEMPLATES: Readonly<Record<string, AnyExerciseTemplate>> = {
   'cmp-sign': cmpSign,
   'cmp-order': cmpOrder,
   'cmp-tf': cmpTf,
+  'nl-place': nlPlace,
+  'nl-estimate': nlEstimate,
+  'nl-half': nlHalf,
+  'round-ten': roundTen,
+  'round-hundred': roundHundred,
+  'round-tf': roundTf,
 };

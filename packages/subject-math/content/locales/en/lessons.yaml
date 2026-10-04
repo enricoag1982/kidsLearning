@@ -58,3 +58,9 @@ templates:
   cmp-sign: Which sign goes in the gap? The open side faces the bigger number.
   cmp-order: Put the numbers in order, smallest first.
   cmp-tf: Is this true?
+  nl-place: Put {{n}} on the number line.
+  nl-estimate: About where is {{n}}? Put it on the line.
+  nl-half: What number is halfway between {{a}} and {{b}}?
+  round-ten: Round {{n}} to the nearest ten.
+  round-hundred: Round {{n}} to the nearest hundred.
+  round-tf: Is this the nearest {{unit}}?
