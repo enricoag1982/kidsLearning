@@ -41,23 +41,48 @@ The current demo world (add within 5 / 10, take away) is retired: below the age 
 
 ## 4. Generated exercises
 
-Item = template(params) → prompt, answer, distractors tagged by misconception. Generated at content build from a seed (stored), verified by an independent solver: unique answer, distinct distractors. Misconception library → distractors and the spoken reason (e.g. 205 → 2005; 8 + 7 = 14; a × (b ± 1); counts ticks not gaps). Authored: stories, demos, word-problem frames, explanations.
+Item = template(params) → prompt, answer, distractors tagged by misconception. Generated at content build from a seed (stored), verified by an independent solver: unique answer, distinct distractors. Misconception library → distractors and the spoken reason (e.g. 205 → 2005; 8 + 7 = 14; a × (b ± 1); counts ticks not gaps). Authored: stories, demos, word-problem frames, explanations. Lesson-level list: [curriculum.md](curriculum.md).
+
+Decisions (lead 2026-10-04, from a code read of the content pipeline):
+
+| # | Decision | Why |
+|---|---|---|
+| G1 | YAML entry `- id: <stem>` + `generate: { template, count, seed, params }` in any guided / exercises / variants / series rounds slot; expands at build into ordinary defs, then every existing verify rule runs | snapshot, voice inventory, i18n unchanged |
+| G2 | Texts interpolated at build into generated keys `lessons:gen.<id>.<name>` in every language (numbers formatted per language); no runtime `textParams` | generated audio needs every concrete text ahead of time |
+| G3 | Ids `<stem>-1 … -<count>`, independent of the seed; never reseed a released lesson (bump the stem) | stored stars stay attached to the same item |
+| G4 | Variety on retry / review = the build-time pool (variants, review), not new numbers at runtime | audio is pre-generated |
+| G5 | Reason = `reasonKey` on the def (choice option, number-entry `reasons: [{ value, reasonKey }]`, true-false); the card notes speak it instead of the default wrong note; bug ids are authoring names only | smallest generic change; any card subject can use it |
+| G6 | Card-kit notes enter the voice inventory (`cardVoiceTemplates`): number-entry notes have no generated audio today | Coding / Template / Math share it |
+| G7 | Math moves onto the card kit (`createCardCore` like Coding); its demo kinds (problem card, pad 0–99) go | one kit; pad 5 digits for 10 000 |
+| G8 | Retired content is tolerated: warm-up drops concepts with no exercise left (today they starve it), Practice and the parent report list only content concepts; total stars keep retired lessons' stars ("nothing is lost") | the demo world `adding` retires; legacy `math-demo` backups import as before |
 
 ## 5. Platform needs
 
 | Need | Where | Reused by |
 |---|---|---|
-| Generated exercises: YAML `generate: { template, count, seed, params }` → defs at build, solver-checked | platform-content (generic hook; templates per subject) | Logic (puzzles), Coding (levels) |
-| 2-player versus vs a small bot (Race to 20 / Nim) | platform mode (generic `versus` over a subject game) | Logic (Nim, tic-tac-toe) |
+| Generated exercises (G1–G4): `platform-content/src/generate/` (template type, expander, generated texts), subject `templates` registry, seeded `random` helpers | platform-content, platform-core `domain/random.ts` | Logic (puzzles), Coding (levels) |
+| Reasons (G5) + card voice templates (G6) | platform card kit (core, content, web) | all card subjects |
+| Turn-based `duel` mode vs a bot: subject supplies a pure `TurnGame` (`start`, `toMove`, `moves`, `play`, `result`, `bestMoves`); bot = best move unless a level's mistake rate (40 / 20 / 0 %) fires; win = 3 stars; opt-in factories (`createDuelMode`, `createDuelContent`, `createDuelModeUi`); id `duel`, not `versus` (the boss step looks up platform modes first: `versus` would take over chess Pawn Wars) | platform-core / content / web `modes/duel/` | Logic (Nim, tic-tac-toe) |
 | Grid board (arrays) | platform-web `ui/grid` (from M12) | — |
 
 ## 6. Iterations (M13)
 
+Re-cut 2026-10-04 (one concern per iteration, ≤ 4 commits):
+
 | Tag | Scope |
 |---|---|
-| `m13.1` | This plan + `docs/subjects/math/curriculum.md` |
-| `m13.2` | Platform generated-exercise hook (content build) + misconception-tagged distractors |
-| `m13.3` | Math kinds `number-line`, `place-value`, `array` (core, content, web) |
-| `m13.4` | W1 content (generated) + boss; demo world retired |
-| `m13.5` | W2 content + boss |
-| `m13.6` | Generic 2-player game mode + Race to 20; W3 content; release `v1.2.0` |
+| `m13.1` | This plan + `curriculum.md` (lessons, templates, bugs) |
+| `m13.2` | Generated-exercise hook (G1–G4) with a card-fixture template |
+| `m13.3` | Reasons (G5) + card voice templates (G6) |
+| `m13.4` | Retired-content tolerance (G8) + a recorded kids-learning storage fixture with math-demo progress |
+| `m13.5` | Math onto the card kit (G7); demo world kept, same texts; pad 5 digits |
+| `m13.6` | `number-line` kind |
+| `m13.7` | `place-value` kind |
+| `m13.8` | `array` kind (grid board) |
+| `m13.9` | W1 templates + solvers + bugs |
+| `m13.10` | W1 content + Number Train; `adding` retired |
+| `m13.11` | W2 templates + content + Market Orders |
+| `m13.12` | Platform `duel` mode |
+| `m13.13` | Race to 20 + W3 world boss |
+| `m13.14` | W3 templates + content |
+| `m13.15` | Release `v1.2.0` |
