@@ -34,3 +34,5 @@ exercises:
       - { id: one, big: 1 }
       - { id: two, text: count-04-two, big: 2 }
     answer: [one, two, three]
+  - id: fx-add
+    generate: { template: fixture-add, count: 3, seed: 7, params: { max: 10 } }

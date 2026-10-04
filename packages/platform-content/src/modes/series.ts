@@ -1,5 +1,6 @@
 import type { ExerciseDefBase, MiniGameBase, SeriesGameDef } from '@learn/platform-core';
 import { z } from 'zod';
+import { createExerciseEntrySchema } from '../lesson-schema.ts';
 import type { ExerciseYamlBase } from '../subject.ts';
 import { miniGameCommonFields } from './common.ts';
 import type {
@@ -12,14 +13,17 @@ import type {
 export type SeriesMiniGame<E extends ExerciseDefBase = ExerciseDefBase> = MiniGameBase &
   SeriesGameDef<E> & { readonly mode: 'series' };
 
-/** The `series` mode over a subject's exercise schema: `rounds` of any exercise type validated like a lesson's,
- * scored on total mistakes across rounds. */
-export function createSeriesContent<S extends z.ZodType<ExerciseYamlBase>>(exerciseSchema: S) {
+/** The `series` mode over a subject's exercise schema: `rounds` of any exercise type validated like a lesson's (or `generate:`
+ * entries of the subject's `templateIds`), scored on total mistakes across rounds. */
+export function createSeriesContent<S extends z.ZodType<ExerciseYamlBase>>(
+  exerciseSchema: S,
+  templateIds: readonly string[] = [],
+) {
   const schema = z
     .object({
       ...miniGameCommonFields,
       mode: z.literal('series'),
-      rounds: z.array(exerciseSchema).min(1),
+      rounds: z.array(createExerciseEntrySchema(exerciseSchema, templateIds)).min(1),
       errors3: z.number().int().nonnegative(),
       errors2: z.number().int().nonnegative(),
     })

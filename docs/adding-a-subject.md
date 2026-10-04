@@ -76,6 +76,7 @@ Layout: `tracks.yaml` (worlds, ranks), `badges.yaml`, `lessons/<world>/<lesson>.
 | Routes, home tiles, store slice, parent panels, surfaces, `characterArt` | optional `SubjectWeb` fields | `subject-chess/src/web/chess-pack.ts` |
 | Profile settings | own `SubjectSettingsSlot`; field names unique across subjects | chess `computerLevel` |
 | Mix | `createCardCore({ notes })`, `characterColor`; start from `subject-math` for a hand-built pack | `subject-math/` |
+| Items that differ only by numbers | `generate:` entries + a template (§6) | `platform-content/src/testing/card-fixture.ts` (`fixture-add`) |
 
 Layers and boundary lint: [architecture.md](architecture.md) §3 (platform never imports a subject; `src/core`, `src/content` stay React-free).
 
@@ -106,3 +107,61 @@ test('opens from the hub and starts its first lesson', async ({ page }) => {
 ```
 
 - [ ] Docs: `docs/subjects/<id>/` plan + curriculum; row in `architecture.md` §3 package table; log row in `validation.md`
+
+## 6. Generated exercises
+
+Items that differ only by numbers are drawn at build time from a seeded template and stored with the content: no runtime change, audio is generated per concrete sentence. Decisions G1–G4: [subjects/math/plan.md](subjects/math/plan.md) §4.
+
+**YAML**: a `generate:` entry stands for `count` items in a lesson's `guided` / `exercises` / `variants` or a `series` `rounds`.
+
+```yaml
+exercises:
+  - id: sums                 # the stem
+    easier: sums-easy        # optional: copied onto every item
+    generate: { template: add, count: 3, seed: 7, params: { max: 10 } }
+```
+
+| Field | Rule |
+|---|---|
+| `id` | stem, kebab; items are `<stem>-1 … <stem>-<count>` (claimed like authored ids, unique subject-wide; the stem itself is not an id) |
+| `template` | id in the subject's `templates`; unknown = issue `unknown template "x"` |
+| `count` | integer 1–20 |
+| `seed` | integer ≥ 0, stored in the YAML |
+| `params?` | parsed by the template's zod schema; issues at `generate.params.<path>` |
+| `easier?` | copied onto each item (the lesson's variant rules apply to every item) |
+
+**Ids**: independent of the seed (`<stem>-<n>`), so stored stars stay on the same id. Never reseed or recount a released lesson: its ids would show other items. Bump the stem instead (new stem = new ids).
+
+**Template** (registered with `createCardContent({ characters, templates: { add } })`, or `SubjectContent.templates`):
+
+```ts
+const add: ExerciseTemplate<{ max: number }, AddItem> = {
+  params: z.object({ max: z.number().int().min(2).max(20) }).strict(),
+  generate({ max }, ctx) {          // one candidate, written as the author would write the YAML
+    const a = randomInt(ctx.random, 1, max - 1);
+    const b = randomInt(ctx.random, 1, max - a);
+    return { id: ctx.id, type: 'number-entry', text: ctx.text('text', 'templates.add', { a, b }),
+             prompt: { big: `${a} + ${b}` }, answer: a + b };
+  },
+  check(item, params, at) { /* re-parse item.prompt.big, compare with item.answer, at.issues.push(...) */ },
+};
+```
+
+| Rule | Detail |
+|---|---|
+| Seeded | one `seededRandom(seed)` stream per entry (`ctx.random`; `randomInt`, `pick`, `shuffle` from `@learn/platform-core/domain/random`), draws in order: same seed = same items on every machine |
+| Distinct | a draw equal to an earlier item of the entry (id ignored, generated texts compared as English sentences) is redrawn, at most 100 draws per item, then issue `could not generate <count> distinct items` |
+| Check = independent solver | `check` re-derives the answer from what the kid sees (prompt, options), not from the variables `generate` used; pushes an issue on `at` when the answer is not unique or wrong, or options repeat. Runs once per accepted item |
+| Then | each item is parsed by the subject's exercise schema (issues at `<file>: <field>[<entry index>] (generated <id>)`), compiled and verified like an authored one |
+| Id | the item must use `ctx.id` |
+
+**Texts**: `ctx.text(name, templateKey, vars)` takes the `lessons:` text `templateKey`, fills `{{var}}` in every language of the content (numbers per language: `1234`, `10,000` in English; a numeric `count` picks the plural form as everywhere), stores it as `lessons:gen.<item id>.<name>` and returns `gen.<item id>.<name>` for a YAML text field (`text:`, an option or item `text:`).
+
+| Rule | Detail |
+|---|---|
+| Template texts | author them as `templates.<id>…` in `locales/<lang>/lessons.yaml`, in every language; a language without the key = issue naming the language and key |
+| `gen` is reserved | an authored `gen` key in `lessons` = issue `lessons: "gen" is reserved for generated texts` |
+| Where they land | merged into the locales before the text-key checks: `dist/locales/<lang>.json`, the voice inventory (`voice-texts.json`) and `checkTextKey` see them like authored texts |
+| `name` | lowercase kebab-case, once per draw; every `{{var}}` of the text needs a value |
+
+Reference: `packages/platform-content/src/testing/card-fixture.ts` (`fixture-add`, used by one lesson entry and one series round of the card fixture), tests `generate/expand.test.ts`.

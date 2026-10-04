@@ -8,14 +8,14 @@ import {
   mergeLocales,
   type Locales,
 } from './load.ts';
-import { loadContent } from './lesson-load.ts';
+import { loadSubjectContent } from './lesson-load.ts';
 import type { SubjectContent } from './subject.ts';
 import { loadTracks } from './tracks-load.ts';
 import { buildVoiceInventory, type VoiceInventory } from './voice-texts.ts';
 import { PLATFORM_LOCALES_DIR } from './paths.ts';
 
 /** Every value `buildContent` writes to `dist/`, computed once; `C` is the subject's concrete content bundle, inferred like
- * `loadContent`'s. */
+ * `loadSubjectContent`'s; `locales` holds the generated texts too. */
 export interface CompiledAll<C extends CompiledContent = CompiledContent> {
   readonly locales: Locales;
   readonly content: C;
@@ -30,17 +30,22 @@ export function compileAll<C extends CompiledContent = CompiledContent>(
   subject: SubjectContent,
   root: string,
 ): CompiledAll<C> {
-  const locales = mergeLocales(
+  const authoredLocales = mergeLocales(
     loadLocales(PLATFORM_LOCALES_DIR),
     loadLocales(join(root, 'locales')),
   );
 
-  const referenceIssues = compareToReference(locales);
+  const referenceIssues = compareToReference(authoredLocales);
   if (referenceIssues.length > 0) {
     throw new ContentError(referenceIssues);
   }
 
-  const content = loadContent<C>(join(root, 'lessons'), join(root, 'minigames'), locales, subject);
+  const { content, locales } = loadSubjectContent<C>(
+    join(root, 'lessons'),
+    join(root, 'minigames'),
+    authoredLocales,
+    subject,
+  );
   const tracks = loadTracks(join(root, 'tracks.yaml'), locales, content.minigames, content.lessons);
   const extraOutputs = Object.fromEntries(
     Object.entries(subject.extraOutputs ?? {}).map(([name, build]) => [name, build(root)]),

@@ -9,13 +9,20 @@ import { parse, stringify } from 'yaml';
 import { compileAll } from '../../compile-all.ts';
 import { ContentError, hasKeyPath, loadLocales } from '../../load.ts';
 import { PLATFORM_LOCALES_DIR } from '../../paths.ts';
-import { CARD_FIXTURE_CHARACTERS, CARD_FIXTURE_ROOT } from '../../testing/card-fixture.ts';
+import {
+  CARD_FIXTURE_CHARACTERS,
+  CARD_FIXTURE_ROOT,
+  CARD_FIXTURE_TEMPLATES,
+} from '../../testing/card-fixture.ts';
 import type { ExerciseDefBase } from '@learn/platform-core';
 import { makeCompileContext } from '../kind-content.ts';
 import { CARD_KIND_CONTENT, cardExerciseSchema, createCardContent } from './content.ts';
 import { cardStimulus } from './stimulus.ts';
 
-const content = createCardContent({ characters: CARD_FIXTURE_CHARACTERS });
+const content = createCardContent({
+  characters: CARD_FIXTURE_CHARACTERS,
+  templates: CARD_FIXTURE_TEMPLATES,
+});
 
 /** Every issue one raw exercise yields: schema, then compile, then the kind's verify. */
 function issuesOf(raw: Record<string, unknown>): readonly string[] {
@@ -284,12 +291,21 @@ describe('card demo', () => {
 describe('the card fixture subject', () => {
   const compiled = compileAll(content, CARD_FIXTURE_ROOT);
 
-  it('compiles: one lesson using all four kinds, one series boss, tracks, badges', () => {
+  it('compiles: one lesson using all four kinds (three more generated), one series boss, tracks, badges', () => {
     expect(compiled.content.lessons.map((lesson) => lesson.id)).toEqual(['count-up']);
     const [lesson] = compiled.content.lessons;
     expect(
       [...(lesson?.guided ?? []), ...(lesson?.exercises ?? [])].map((def) => def.type),
-    ).toEqual(['true-false', 'choice', 'true-false', 'number-entry', 'order']);
+    ).toEqual([
+      'true-false',
+      'choice',
+      'true-false',
+      'number-entry',
+      'order',
+      'number-entry',
+      'number-entry',
+      'number-entry',
+    ]);
     expect(lesson?.demo).toEqual({
       textKey: 'lessons:count-up.demo',
       prompt: { emoji: '🍎🍎🍎', big: '3' },
@@ -305,6 +321,55 @@ describe('the card fixture subject', () => {
       join('__snapshots__', 'card-fixture-content.json'),
       'pnpm --filter @learn/platform-content exec vitest run src/kinds/cards/content.test.ts -u, then review the diff',
     );
+  });
+
+  it('matches its golden generated texts (lessons.gen.*, English)', async () => {
+    await expect(
+      `${JSON.stringify(compiled.locales.en?.lessons?.gen, null, 1)}\n`,
+    ).toMatchFileSnapshot(
+      join('__snapshots__', 'card-fixture-generated-texts.json'),
+      'pnpm --filter @learn/platform-content exec vitest run src/kinds/cards/content.test.ts -u, then review the diff',
+    );
+  });
+
+  it('expands the generated lesson entry and series round into ordinary items with their own texts', () => {
+    const [lesson] = compiled.content.lessons;
+    const generated = [
+      ...(lesson?.exercises ?? []).filter((def) => def.id.startsWith('fx-add-')),
+      ...compiled.content.minigames.flatMap((game) =>
+        'rounds' in game ? (game.rounds as readonly ExerciseDefBase[]) : [],
+      ),
+    ].filter((def) => def.id.startsWith('fx-'));
+    expect(generated.map((def) => def.id)).toEqual([
+      'fx-add-1',
+      'fx-add-2',
+      'fx-add-3',
+      'fx-round-1',
+      'fx-round-2',
+    ]);
+    const gen = compiled.locales.en?.lessons?.gen as Record<string, { text: string }>;
+    for (const def of generated.map((exercise) => exercise as CardExerciseDef)) {
+      const [a, b] = (def.prompt?.big ?? '').split(' + ');
+      expect(def.textKey).toBe(`lessons:gen.${def.id}.text`);
+      expect(gen[def.id]?.text).toBe(`What is ${String(a)} plus ${String(b)}?`);
+    }
+    // The stem itself is no id.
+    expect(JSON.stringify(compiled.content)).not.toContain('"id":"fx-add"');
+  });
+
+  it('lists every generated text, concrete, in the voice inventory (lesson exercises and series rounds)', () => {
+    const sentences = compiled.voiceTexts.entries.filter((entry) =>
+      /^What is \d+ plus \d+\?$/.test(entry.text),
+    );
+    const bySource = (source: string): readonly string[] =>
+      sentences.filter((entry) => entry.source === source).map((entry) => entry.text);
+    // The authored "What is seven plus five?" has no digits, so these are the generated ones: 3 lesson items, 2 rounds.
+    expect(bySource('lesson-exercise')).toHaveLength(3);
+    expect(bySource('minigame-round')).toHaveLength(2);
+    const gen = compiled.locales.en?.lessons?.gen as Record<string, { text: string }>;
+    for (const { text } of Object.values(gen)) {
+      expect(compiled.voiceTexts.entries.some((entry) => entry.text === text)).toBe(true);
+    }
   });
 
   it('voices the exercise, story and demo texts only', () => {
@@ -392,6 +457,10 @@ describe('a broken card fixture subject', () => {
     }
   }
 
+  /** The issues of the lesson file itself (a skipped lesson also makes the series that unlocks after it report). */
+  const lessonIssues = (issues: readonly string[]): readonly string[] =>
+    issues.filter((issue) => issue.startsWith('lessons/'));
+
   it('is valid as copied', () => {
     expect(issuesAfter(() => undefined)).toEqual([]);
   });
@@ -421,6 +490,99 @@ describe('a broken card fixture subject', () => {
     expect(issues.some((issue) => issue.includes('missing text key "lessons:no-such-item"'))).toBe(
       true,
     );
+  });
+
+  it('reports an unknown template of a lesson `generate:` entry at its schema path', () => {
+    const issues = issuesAfter((lesson) => {
+      const exercises = lesson.exercises as { generate?: { template: string } }[];
+      const generate = exercises[4]?.generate;
+      if (generate === undefined) throw new Error('fixture has no generate entry');
+      generate.template = 'nope';
+    });
+    expect(lessonIssues(issues)).toEqual([
+      'lessons/counting/count-up.yaml: exercises.4.generate.template: unknown template "nope"',
+    ]);
+  });
+
+  it('reports bad params of a `generate:` entry at generate.params.<path>', () => {
+    const issues = issuesAfter((lesson) => {
+      const exercises = lesson.exercises as { generate?: { params: { max: number } } }[];
+      const generate = exercises[4]?.generate;
+      if (generate === undefined) throw new Error('fixture has no generate entry');
+      generate.params.max = 1;
+    });
+    expect(lessonIssues(issues)).toHaveLength(1);
+    expect(issues[0]).toContain(
+      'lessons/counting/count-up.yaml: exercises[4]: generate.params.max: ',
+    );
+  });
+
+  it('reports a generate entry that cannot give distinct items', () => {
+    const issues = issuesAfter((lesson) => {
+      const exercises = lesson.exercises as { generate?: { params: { max: number } } }[];
+      const generate = exercises[4]?.generate;
+      if (generate === undefined) throw new Error('fixture has no generate entry');
+      generate.params.max = 2;
+    });
+    expect(lessonIssues(issues)).toEqual([
+      'lessons/counting/count-up.yaml: exercises[4]: could not generate 3 distinct items',
+    ]);
+  });
+
+  it('claims every generated id: a second entry with the same stem duplicates them', () => {
+    const issues = issuesAfter((lesson) => {
+      const exercises = lesson.exercises as Record<string, unknown>[];
+      exercises.push(structuredClone(exercises[4] ?? {}));
+    });
+    expect(issues.filter((issue) => issue.includes('duplicate id'))).toHaveLength(3);
+    expect(issues.some((issue) => issue.includes('duplicate id "fx-add-1"'))).toBe(true);
+  });
+
+  it('copies `easier` onto the generated items, so the variant rules apply to them', () => {
+    const issues = issuesAfter((lesson) => {
+      const exercises = lesson.exercises as Record<string, unknown>[];
+      Object.assign(exercises[4] ?? {}, { easier: 'no-such-variant' });
+    });
+    expect(issues).toEqual([
+      'lessons/counting/count-up.yaml: fx-add-1: easier references unknown variant "no-such-variant" (must be in this lesson\'s variants)',
+      'lessons/counting/count-up.yaml: fx-add-2: easier references unknown variant "no-such-variant" (must be in this lesson\'s variants)',
+      'lessons/counting/count-up.yaml: fx-add-3: easier references unknown variant "no-such-variant" (must be in this lesson\'s variants)',
+    ]);
+  });
+
+  it('reports an authored `lessons.gen` key as reserved', () => {
+    dir = mkdtempSync(join(tmpdir(), 'card-fixture-'));
+    cpSync(CARD_FIXTURE_ROOT, dir, { recursive: true });
+    const file = join(dir, 'locales', 'en', 'lessons.yaml');
+    const lessons = parse(readFileSync(file, 'utf8')) as Record<string, unknown>;
+    lessons.gen = { mine: 'Not allowed' };
+    writeFileSync(file, stringify(lessons), 'utf8');
+    expect(() => compileAll(content, dir)).toThrow(
+      /lessons: "gen" is reserved for generated texts/,
+    );
+  });
+
+  it('reports an unknown template of a series round at its schema path', () => {
+    dir = mkdtempSync(join(tmpdir(), 'card-fixture-'));
+    cpSync(CARD_FIXTURE_ROOT, dir, { recursive: true });
+    const file = join(dir, 'minigames', 'parade.yaml');
+    const game = parse(readFileSync(file, 'utf8')) as {
+      rounds: { generate?: { template: string } }[];
+    };
+    const generate = game.rounds[3]?.generate;
+    if (generate === undefined) throw new Error('fixture has no generate round');
+    generate.template = 'nope';
+    writeFileSync(file, stringify(game), 'utf8');
+    let issues: readonly string[] = [];
+    try {
+      compileAll(content, dir);
+    } catch (error) {
+      if (error instanceof ContentError) issues = error.issues;
+      else throw error;
+    }
+    expect(issues).toEqual([
+      'minigames/parade.yaml: rounds.3.generate.template: unknown template "nope"',
+    ]);
   });
 
   it('reports a number-entry answer that does not fit its digits, with the lesson path', () => {

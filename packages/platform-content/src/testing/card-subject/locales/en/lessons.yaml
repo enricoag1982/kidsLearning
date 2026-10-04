@@ -15,3 +15,5 @@ parade:
 parade-r1: What is nine minus four?
 parade-r2: Put the letters in order.
 parade-r3: Is this a fox?
+templates:
+  fixture-add: What is {{a}} plus {{b}}?

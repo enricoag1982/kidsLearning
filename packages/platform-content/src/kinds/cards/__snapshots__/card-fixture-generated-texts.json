@@ -1,0 +1,17 @@
+{
+ "fx-add-1": {
+  "text": "What is 1 plus 1?"
+ },
+ "fx-add-2": {
+  "text": "What is 5 plus 4?"
+ },
+ "fx-add-3": {
+  "text": "What is 5 plus 3?"
+ },
+ "fx-round-1": {
+  "text": "What is 2 plus 11?"
+ },
+ "fx-round-2": {
+  "text": "What is 13 plus 4?"
+ }
+}

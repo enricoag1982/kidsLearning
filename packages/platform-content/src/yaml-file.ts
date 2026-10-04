@@ -12,7 +12,7 @@ export function errorMessage(error: unknown): string {
 
 /** One issue, formatted `<file>: <path>: <message>`. A mini-game's `mode` makes its schema a union:
  * `invalid_union` is flattened into every branch's own issues; an unknown discriminator has none. */
-function formatZodIssue(label: string, issue: z.core.$ZodIssue): string[] {
+export function formatZodIssue(label: string, issue: z.core.$ZodIssue): string[] {
   if (issue.code === 'invalid_union') {
     const branchLines = issue.errors.flatMap((branchIssues) =>
       branchIssues.flatMap((branchIssue) => formatZodIssue(label, branchIssue)),

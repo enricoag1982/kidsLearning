@@ -21,3 +21,5 @@ rounds:
     type: true-false
     prompt: { image: fox }
     answer: true
+  - id: fx-round
+    generate: { template: fixture-add, count: 2, seed: 11, params: { max: 20 } }
