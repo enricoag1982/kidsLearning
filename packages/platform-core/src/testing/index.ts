@@ -8,3 +8,4 @@ export * from './cards.ts';
 export * from './deps.ts';
 export * from './fakes.ts';
 export * from './test-subject.ts';
+export * from './take-away-game.ts';
