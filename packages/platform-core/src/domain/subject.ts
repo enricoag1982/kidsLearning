@@ -145,6 +145,8 @@ export interface AppConfig {
   readonly subjectStoragePrefix?: (subjectId: string) => string;
   /** Backup file's `app` field, e.g. `'chess-kids'`. */
   readonly backupAppId: string;
+  /** Backup app ids of older single-subject apps this app imports (schema ≤ 5), mapped to the subject that receives their data, e.g. `{ 'chess-kids': 'chess' }`. */
+  readonly legacyBackupApps?: Readonly<Record<string, string>>;
   readonly backupFilePrefix: string;
   readonly parentCodeFilePrefix: string;
   /** The running build's own version string (web: `__APP_VERSION__`, from `package.json`). */

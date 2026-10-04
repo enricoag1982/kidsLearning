@@ -2,21 +2,26 @@ import { z } from 'zod';
 import { composeDefaultSettings, isValidProfileSettings } from '../domain/profile-settings.ts';
 import { localDayString } from '../domain/streak.ts';
 import type { Profile } from '../domain/profile.ts';
-import type { MergeableProfileData } from '../domain/merge.ts';
+import type { MergeableProfileData, SubjectProfileData } from '../domain/merge.ts';
 import type { AppConfig, SettingsBackupShape } from '../domain/subject.ts';
-import type { BackupFileWriter, BackupImporter } from './ports.ts';
+import type { BackupFileWriter, BackupImporter, SubjectDataRepositories } from './ports.ts';
+import { subjectDataById } from './subject-data.ts';
 import type { AppDeps } from './use-cases.ts';
 
 // No `new Function` fast path: the production CSP (`script-src 'self'`) would report zod's eval
 // probe as a violation. Set before any schema below is built (object schemas read it at init).
 z.config({ jitless: true });
 
-/** Every stored record for a child except its `Profile` row (in `BackupFile.profiles`) and the parent password. */
+/** Every stored record for a child except its `Profile` row (in `BackupFile.profiles`) and the parent password: the shared
+ * part (settings, streak, session logs) and one section per subject (`subjects`, by subject id). */
 export type ProfileBackupData = MergeableProfileData;
+
+/** Files with `schemaVersion` up to this are the old flat single-subject shape (every record list directly under the profile). */
+export const LEGACY_FLAT_MAX_SCHEMA = 5;
 
 /** One JSON file: every profile ("Export") or a single one ("Export per child"), same format. */
 export interface BackupFile {
-  /** `deps.app.backupAppId`: importing into a different subject's app is rejected. */
+  /** `deps.app.backupAppId`: importing a different app's file is rejected (older single-subject apps only via `AppConfig.legacyBackupApps`). */
   readonly app: string;
   readonly schemaVersion: number;
   readonly exportedAt: string;
@@ -134,6 +139,10 @@ const sessionLogSchema = z.object({
   profileId: z.string(),
   date: z.string(),
   minutes: z.number(),
+  extraMinutes: z.number().optional(),
+  hoursOverrideUntil: z.string().optional(),
+  warnedAt: z.string().optional(),
+  deviceId: z.string().optional(),
 });
 
 const assessmentScopeSchema = z.union([
@@ -160,32 +169,54 @@ const unlockSchema = z.object({
   via: z.enum(['test-out', 'placement', 'parent']),
 });
 
+/** One subject's records for one profile. */
+const subjectProfileDataSchema = z.object({
+  lessonProgress: z.array(lessonProgressSchema),
+  attempts: z.array(attemptSchema),
+  miniGameProgress: z.array(miniGameProgressSchema),
+  conceptStats: z.array(conceptStatsSchema),
+  gameRecords: z.array(gameRecordSchema),
+  earnedBadges: z.array(earnedBadgeSchema),
+  assessmentResults: z.array(assessmentResultSchema),
+  unlocks: z.array(unlockSchema),
+});
+
+/** Format v6: the shared part plus `subjects` by subject id. */
 function profileBackupDataSchema(subjectShape: SettingsBackupShape) {
   return z.object({
     settings: profileSettingsSchema(subjectShape),
-    lessonProgress: z.array(lessonProgressSchema),
-    attempts: z.array(attemptSchema),
-    miniGameProgress: z.array(miniGameProgressSchema),
-    conceptStats: z.array(conceptStatsSchema),
-    gameRecords: z.array(gameRecordSchema),
-    earnedBadges: z.array(earnedBadgeSchema),
     streak: streakSchema.optional(),
     sessionLogs: z.array(sessionLogSchema),
-    assessmentResults: z.array(assessmentResultSchema),
-    unlocks: z.array(unlockSchema),
+    subjects: z.record(z.string(), subjectProfileDataSchema),
+  });
+}
+
+/** Schema <= {@link LEGACY_FLAT_MAX_SCHEMA}: one subject's records flat beside the shared part. */
+function legacyProfileBackupDataSchema(subjectShape: SettingsBackupShape) {
+  return z.object({
+    settings: profileSettingsSchema(subjectShape),
+    streak: streakSchema.optional(),
+    sessionLogs: z.array(sessionLogSchema),
+    ...subjectProfileDataSchema.shape,
   });
 }
 
 /** Shape-only validation; field types match the domain interfaces, so a parse is safe to treat as a {@link BackupFile}. */
-function backupFileSchema(subjectShape: SettingsBackupShape) {
+function backupFileSchema<Data extends z.ZodType>(profileData: Data) {
   return z.object({
     app: z.string(),
     schemaVersion: z.number().int().positive(),
     exportedAt: z.string(),
     profiles: z.array(profileSchema),
-    data: z.record(z.string(), profileBackupDataSchema(subjectShape)),
+    data: z.record(z.string(), profileData),
   });
 }
+
+/** Just the fields that pick the format; read before the full shape. */
+const backupHeaderSchema = z.object({
+  app: z.string(),
+  schemaVersion: z.number().int().positive(),
+});
 
 /** Corrupt JSON, wrong shape or newer schema version; the Import UI shows `message` and changes nothing. */
 export class BackupValidationError extends Error {
@@ -214,49 +245,62 @@ function schemaVersion(deps: AppDeps): number {
   return deps.storageSchemaVersion ?? 1;
 }
 
-async function profileBackupData(deps: AppDeps, profileId: string): Promise<ProfileBackupData> {
+async function subjectProfileData(
+  repos: SubjectDataRepositories,
+  profileId: string,
+): Promise<SubjectProfileData> {
   const [
-    settings,
     lessonProgress,
     attempts,
     miniGameProgress,
     conceptStats,
     gameRecords,
     earnedBadges,
-    streak,
-    sessionLogs,
     assessmentResults,
     unlocks,
   ] = await Promise.all([
+    repos.progress.listLessons(profileId),
+    repos.progress.listAttempts(profileId),
+    repos.progress.listMiniGames(profileId),
+    repos.progress.listConceptStats(profileId),
+    repos.gameRecords.listByProfile(profileId),
+    repos.badges.listEarnedBadges(profileId),
+    repos.assessment?.listAssessmentResults(profileId) ?? Promise.resolve([]),
+    repos.assessment?.listUnlocks(profileId) ?? Promise.resolve([]),
+  ]);
+  return {
+    lessonProgress,
+    attempts,
+    miniGameProgress,
+    conceptStats,
+    gameRecords,
+    earnedBadges,
+    assessmentResults,
+    unlocks,
+  };
+}
+
+async function profileBackupData(deps: AppDeps, profileId: string): Promise<ProfileBackupData> {
+  const [settings, streak, sessionLogs, subjectEntries] = await Promise.all([
     deps.settings
       .get()
       .then(
         (all) => all.profileSettings[profileId] ?? composeDefaultSettings(deps.subject.settings),
       ),
-    deps.progress.listLessons(profileId),
-    deps.progress.listAttempts(profileId),
-    deps.progress.listMiniGames(profileId),
-    deps.progress.listConceptStats(profileId),
-    deps.gameRecords.listByProfile(profileId),
-    deps.rewards?.listEarnedBadges(profileId) ?? Promise.resolve([]),
     deps.rewards?.getStreak(profileId),
     deps.rewards?.listSessionLogs(profileId) ?? Promise.resolve([]),
-    deps.assessment?.listAssessmentResults(profileId) ?? Promise.resolve([]),
-    deps.assessment?.listUnlocks(profileId) ?? Promise.resolve([]),
+    Promise.all(
+      Object.entries(subjectDataById(deps)).map(
+        async ([id, repos]) => [id, await subjectProfileData(repos, profileId)] as const,
+      ),
+    ),
   ]);
 
   return {
     settings: { ...settings, ...deps.subject.settings.legacyExport },
-    lessonProgress,
-    attempts,
-    miniGameProgress,
-    conceptStats,
-    gameRecords,
-    earnedBadges,
     ...(streak === undefined ? {} : { streak }),
     sessionLogs,
-    assessmentResults,
-    unlocks,
+    subjects: Object.fromEntries(subjectEntries),
   };
 }
 
@@ -334,8 +378,27 @@ export async function exportBackup(deps: AppDeps, profileIds?: readonly string[]
   await requireBackupFileWriter(deps).write(filename, JSON.stringify(file, null, 2));
 }
 
-/** Corrupt JSON, wrong `app` id, bad shape or newer `schemaVersion` throw {@link BackupValidationError}. No migration at
- * or below the current version: added fields are optional with defaults. */
+function hasOwn(record: object, key: string): boolean {
+  return Object.prototype.hasOwnProperty.call(record, key);
+}
+
+/** The subject that receives a legacy (flat) file's data: the subject `legacyBackupApps` maps `app` to, or (this app's own
+ * older file) the only registered subject; `undefined` when neither names a registered subject. */
+function legacyTargetSubject(deps: AppDeps, app: string): string | undefined {
+  const registered = Object.keys(subjectDataById(deps));
+  const legacyApps = deps.app.legacyBackupApps;
+  const mapped = legacyApps !== undefined && hasOwn(legacyApps, app) ? legacyApps[app] : undefined;
+  const target =
+    mapped ?? (app === deps.app.backupAppId && registered.length === 1 ? registered[0] : undefined);
+  return target !== undefined && registered.includes(target) ? target : undefined;
+}
+
+/** Corrupt JSON, wrong `app` id, bad shape or newer `schemaVersion` throw {@link BackupValidationError}. Accepted `app` ids:
+ * this app's own, or a key of `AppConfig.legacyBackupApps`. A file with `schemaVersion` above
+ * {@link LEGACY_FLAT_MAX_SCHEMA} is the per-subject format (own app id only; sections of subjects this app does not host are
+ * dropped); at or below it, the old flat single-subject format, converted into one subject (`legacyBackupApps[app]`, or the
+ * only registered subject for this app's own older file) and returned as a current file. No migration otherwise: added fields
+ * are optional with defaults. */
 export async function parseBackupFile(deps: AppDeps, raw: string): Promise<BackupFile> {
   let json: unknown;
   try {
@@ -344,26 +407,93 @@ export async function parseBackupFile(deps: AppDeps, raw: string): Promise<Backu
     throw new BackupValidationError('Not a valid backup file (invalid JSON).');
   }
 
-  const subjectShape = await deps.subject.settings.loadBackupShape();
-  const result = backupFileSchema(subjectShape).safeParse(json);
-  if (!result.success || result.data.app !== deps.app.backupAppId) {
+  const header = backupHeaderSchema.safeParse(json);
+  if (!header.success) {
     throw new BackupValidationError('Not a valid backup file.');
   }
-
-  // zod's inferred shape and the hand-written `BackupFile` type are structurally close but not
-  // identical (mutable vs readonly arrays) — safe to assert since the schema mirrors every field.
-  const file = result.data as unknown as BackupFile;
+  const { app, schemaVersion: version } = header.data;
+  const legacyApps = deps.app.legacyBackupApps;
+  if (app !== deps.app.backupAppId && (legacyApps === undefined || !hasOwn(legacyApps, app))) {
+    throw new BackupValidationError('Not a valid backup file.');
+  }
   const current = schemaVersion(deps);
-  if (file.schemaVersion > current) {
+  if (version > current) {
     throw new BackupValidationError(
       'This backup was made with a newer version of the app. Update the app, then try again.',
     );
   }
+
+  const subjectShape = await deps.subject.settings.loadBackupShape();
+  const file =
+    version > LEGACY_FLAT_MAX_SCHEMA
+      ? parseSubjectsFile(deps, json, subjectShape)
+      : parseLegacyFile(deps, json, subjectShape, app, current);
+
   for (const data of Object.values(file.data)) {
     if (!isValidProfileSettings(deps.subject.settings, data.settings)) {
       throw new BackupValidationError('Not a valid backup file.');
     }
   }
-
   return file;
+}
+
+function parseSubjectsFile(
+  deps: AppDeps,
+  json: unknown,
+  subjectShape: SettingsBackupShape,
+): BackupFile {
+  const result = backupFileSchema(profileBackupDataSchema(subjectShape)).safeParse(json);
+  if (!result.success || result.data.app !== deps.app.backupAppId) {
+    throw new BackupValidationError('Not a valid backup file.');
+  }
+  // zod's inferred shape and the hand-written `BackupFile` type are structurally close but not
+  // identical (mutable vs readonly arrays) — safe to assert since the schema mirrors every field.
+  const file = result.data as unknown as BackupFile;
+  const hosted = subjectDataById(deps);
+  return {
+    ...file,
+    data: Object.fromEntries(
+      Object.entries(file.data).map(([profileId, data]) => [
+        profileId,
+        {
+          ...data,
+          subjects: Object.fromEntries(
+            Object.entries(data.subjects).filter(([subjectId]) => hasOwn(hosted, subjectId)),
+          ),
+        },
+      ]),
+    ),
+  };
+}
+
+function parseLegacyFile(
+  deps: AppDeps,
+  json: unknown,
+  subjectShape: SettingsBackupShape,
+  app: string,
+  current: number,
+): BackupFile {
+  const target = legacyTargetSubject(deps, app);
+  const result = backupFileSchema(legacyProfileBackupDataSchema(subjectShape)).safeParse(json);
+  if (!result.success || target === undefined) {
+    throw new BackupValidationError('Not a valid backup file.');
+  }
+  const { data, ...rest } = result.data;
+  return {
+    ...rest,
+    app: deps.app.backupAppId,
+    schemaVersion: current,
+    data: Object.fromEntries(
+      Object.entries(data).map(([profileId, profileData]) => {
+        const { settings, streak, sessionLogs, ...records } = profileData;
+        const converted = {
+          settings,
+          ...(streak === undefined ? {} : { streak }),
+          sessionLogs,
+          subjects: { [target]: records },
+        };
+        return [profileId, converted];
+      }),
+    ),
+  };
 }
