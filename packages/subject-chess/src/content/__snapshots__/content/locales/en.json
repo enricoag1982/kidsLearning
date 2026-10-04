@@ -91,6 +91,15 @@
   },
   "boss": {
    "captured-of": "Captured {{current}} of {{total}}",
+   "duel": {
+    "bot-default": "Owl",
+    "bot-turn": "{{bot}}'s turn",
+    "draw": "A draw! Try again.",
+    "hint": "Look for a move that leaves me stuck.",
+    "lost": "I won this time. Try again!",
+    "won": "You won! Great thinking!",
+    "your-turn": "Your turn"
+   },
    "ended": "Good try!",
    "moves-par": "Moves {{moves}} · Par {{par}}",
    "series": {

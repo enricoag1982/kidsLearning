@@ -168,6 +168,9 @@ export default defineConfig([
       'packages/subject-*/src/web/**/e2e-{registry,actions}.ts',
       // The card kit's own drivers, like a subject's: reachable only from Playwright specs.
       'packages/platform-web/src/kinds/cards/**/e2e{,-registry}.ts',
+      // The duel mode's driver (it types Playwright's `Page`) and the unit test that runs it: reachable otherwise only from
+      // Playwright specs through a subject's e2e registry.
+      'packages/platform-web/src/modes/duel/e2e.{ts,test.tsx}',
     ],
     rules: {
       'no-restricted-imports': [
