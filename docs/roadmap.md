@@ -124,7 +124,7 @@ M5 run order (2026-09-25): `m5.1` ∥ `m5.4` → `m5.2` ∥ `m5.5` → `m5.3` la
 | M8 | v4 learning-platform refactor | `docs/refactor-v4.md`; iterations §3 `m8.x`; released as `v4.0.0` |
 | M9 | Post-v4 owner requests (done) | Real piece names (`m9.1`), release `v4.1.0` (`m9.2`) |
 | M10 | Follow-ups F4–F9 (done) | §3.2: Bear strength + time-cut safety, platform cleanup, check ring in series rounds, README screenshots (`m10.1`–`m10.5`) |
-| M11 | Multi-subject app (`kidsLearning` v1.0) | One app hosting chess + math demo; generic platform kit; `docs/multi-subject.md` §4 (`m11.1`–`m11.8`) |
+| M11 | Multi-subject app (`kidsLearning` v1.0) | One app hosting chess + math demo; generic platform kit (card kinds, template, `pnpm new-subject`); `docs/multi-subject.md` §4 (`m11.1`–`m11.9`), done 2026-10-04 |
 | M12 | Coding (v1.1) | Research + plan in `docs/subjects/coding/`, then iterations |
 | M13 | Math (v1.2) | Full curriculum on the math demo; `docs/subjects/math/` |
 | M14 | Logic (v1.3) | `docs/subjects/logic/` |

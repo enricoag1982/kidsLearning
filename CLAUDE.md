@@ -48,7 +48,8 @@ Offline multi-subject learning app for children aged 8–9 (chess, math; coding 
 
 - Chess history (repo `learningChess`): M0–M10 done, releases up to `v4.1.0` (tags live in `learningChess` only); v4 refactor closed (`docs/refactor-v4.md` §6). Details: `docs/roadmap.md`, `docs/validation.md`.
 - Owner plan (2026-10-04): v1.0 = multi-subject app serving chess + math demo (M11, `docs/multi-subject.md` §4); then v1.1 Coding (M12), v1.2 Math (M13), v1.3 Logic (M14), each researched and planned in `docs/subjects/<id>/` before building; target age 8–9, extendable.
-- Now: M11 (`m11.1` docs + identity).
+- Done: M11 = v1.0 (`m11.1`–`m11.9`, 2026-10-04): one app `apps/kids-learning` (chess + math demo), per-subject storage / backup v6, subjects hub, parent area per subject, card kit, template + `pnpm new-subject`. `v1.0.0` tag after the owner's `docs/release.md` §1 checks.
+- Next: M12 Coding (v1.1): plan in `docs/subjects/coding/plan.md` (from `m12.1`); then M13 Math, M14 Logic. Follow-ups F1–F5: `docs/multi-subject.md` §4.1.
 - Live: https://enricoag1982.github.io/kidsLearning/ (deploy on every push to `master`; owner sets Pages source = GitHub Actions).
 - Local: `pnpm install` (also builds the content JSON) · `pnpm dev` · `pnpm test` (one package: `pnpm --filter @learn/<pkg> test`) · `pnpm test:slow` · `pnpm lint` · `pnpm typecheck` · `pnpm format:check` · `pnpm build && PW_CHROMIUM_PATH=/opt/pw-browsers/chromium pnpm test:e2e` (cloud sandbox browser path) · `pnpm size` · `pnpm compat` · `pnpm voice:check` (every subject's inventory vs the app's audio) · `pnpm voice:generate` (Kokoro; venv with `kokoro-onnx lameenc soundfile`) · `pnpm new-subject <id> "<Name>"` (`docs/adding-a-subject.md`).
 - Dev playgrounds (dev builds only): `/#board`, `/#exercises`, `/#lesson=<id>&view=<story|demo|boss|exercise id>`.

@@ -11,6 +11,10 @@ small idea at a time through animal-themed lessons, mini-games and spoken instru
 | Math | Demo (1 world, 3 lessons); full course planned (v1.2) |
 | Coding, Logic | Planned (v1.1, v1.3) — [`docs/new-subjects.md`](docs/new-subjects.md) |
 
+One install for the whole family: each child picks a subject after choosing their profile; progress, stars and badges are
+kept per subject, while profiles, the parent code, daily time limits and backups are shared. New subjects start from a
+template: `pnpm new-subject <id> "<Name>"` ([`docs/adding-a-subject.md`](docs/adding-a-subject.md)).
+
 Forked from [learningChess](https://github.com/enricoag1982/learningChess) (Chess for Kids v4.1.0);
 multi-subject plan: [`docs/multi-subject.md`](docs/multi-subject.md).
 
@@ -49,13 +53,17 @@ After the Basics, three paths are planned: **Openings**, **Tactics**, and **Chec
 
 ## Screenshots
 
-| Home | Journey map |
+| Pick a subject | Chess Home |
 |---|---|
-| ![Home screen](docs/images/home.png) | ![Journey map](docs/images/journey.png) |
+| ![Subjects](docs/images/hub.png) | ![Chess Home screen](docs/images/home.png) |
 
-| A lesson | Parent area |
+| Journey map | A lesson |
 |---|---|
-| ![Lesson try step](docs/images/lesson.png) | ![Parent area](docs/images/parent-area.png) |
+| ![Journey map](docs/images/journey.png) | ![Lesson try step](docs/images/lesson.png) |
+
+| Parent area |
+|---|
+| ![Parent area: one line per subject](docs/images/parent-area.png) |
 
 ## Run it yourself
 
@@ -66,6 +74,7 @@ pnpm test             # unit + content tests
 pnpm test:slow        # slow unit tests (bot self-play / strength / timing, winnability, deep perft)
 pnpm build             # production build
 pnpm test:e2e         # Playwright, against the production build
+pnpm new-subject music "Music"   # start a new subject from the template
 ```
 
 ## Documentation
@@ -74,6 +83,7 @@ pnpm test:e2e         # Playwright, against the production build
 |---|---|
 | [`docs/multi-subject.md`](docs/multi-subject.md) | Multi-subject app plan (v1.0) |
 | [`docs/new-subjects.md`](docs/new-subjects.md) | Subject ideas, ranking |
+| [`docs/adding-a-subject.md`](docs/adding-a-subject.md) | How to add a subject |
 | [`docs/subjects/chess/teaching-process.md`](docs/subjects/chess/teaching-process.md) | Chess pedagogy: principles, learning loop, phases, mini-games |
 | [`docs/subjects/chess/curriculum.md`](docs/subjects/chess/curriculum.md) | Chess lesson list and mini-game catalogue |
 | [`docs/app-structure.md`](docs/app-structure.md) | Modes, profiles, navigation, progression |

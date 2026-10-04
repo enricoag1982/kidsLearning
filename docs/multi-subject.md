@@ -64,9 +64,19 @@ docs/
 | `m11.6` | `apps/kids-learning` (D1, D2): rename, math joins, `apps/math-demo` removed; manifest, icons, title; e2e via hub; CI / deploy / size / voice paths (D13). Done: `KIDS_APP_CONFIG` (`kids:` + `kids-<id>:`, `legacyBackupApps` chess-kids / math-demo), book + star icon, Home H1 = subject (`Chess` / `Math`), e2e flows through the hub + `subjects.spec.ts` + `e2e/math/`, storage-compat = backup files only, size: entry ≤ 135 KB + each subject chunk ≤ 70 KB, voice = union of subject inventories (+58 files: math + hub line); fixes: i18n store aliased the loaded bundle (Chess → Math → Chess lost texts), parent-code file names the app | Pages deploys the new app; size budget per entry + per subject chunk |
 | `m11.7` | Card kit (D15): platform kinds `true-false`, `number-entry`, `order` + card prompt / item looks; `createCardCore` / `createCardContent` / `createCardWeb` | A card subject runs end to end in an App-flow test. Done: `CardPrompt` (emoji / big / image), `CardItem`, kinds + solutions + notes, content verify (each rule with a failing fixture), `NumberPad` shared (math unchanged), e2e drivers, App-flow test solving each kind through the real UI; entry JS unchanged |
 | `m11.8` | Template subject + `pnpm new-subject <id> <Name>` (copies it, registers it in the app) + `docs/adding-a-subject.md`; Journey wording (D16) | The template builds, typechecks and passes its content tests in CI. Done: `packages/subject-template` (card kit only, not registered), `tools/new-subject` (workspace package, transform + integration tests; a scaffolded subject was built, tested and played end to end, then removed), `createBundledContentSource`, scripts read the app's subjects from its dependencies, "Paths after {{main}}" only with branch tracks, `characterWithTopic`, hub marks the profile's last subject only |
-| `m11.9` | Release `v1.0.0`: README screenshots, validation rows, release checklist | Owner checks (`docs/release.md` §1) |
+| `m11.9` | Release `v1.0.0`: README screenshots, validation rows, release checklist | Owner checks (`docs/release.md` §1). Done: version 1.0.0, README (subjects, hub / Home / Journey / lesson / parent screenshots), release checklist per subject |
 
 Rules: `docs/retrospective.md` §9 (≤ 3–4 commits per agent run, lead decides interfaces, fast checks per commit, full e2e once). Chess invariants every iteration: content snapshot equal, chess e2e green, backup fixtures import.
+
+## 4.1 Follow-ups (not scheduled)
+
+| # | Item | Notes |
+|---|---|---|
+| F1 | Import Chess for Kids progress without a file | Same origin (`enricoag1982.github.io`): read `chess-kids:` localStorage once on first run (not iOS home-screen apps: separate storage) |
+| F2 | Parent overview when a subject pack fails to load | Today an unhandled rejection; show the other subjects and an error line |
+| F3 | Placement decision not stored | Offered again on entering an untouched subject after a restart |
+| F4 | Interim single-store configs | `CHESS_APP_CONFIG` / `MATH_APP_CONFIG` `subjectStoragePrefix` only serve tests; drop when those tests use `KIDS_APP_CONFIG` |
+| F5 | Card-kit Hint button | 56 px like the shared controls; every other card target ≥ 64 px |
 
 ## 5. After v1.0
 
