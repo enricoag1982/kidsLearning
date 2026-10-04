@@ -77,7 +77,7 @@ describe('scaffold', () => {
     expect(JSON.parse(read(`${pkg}/package.json`))).toMatchObject({
       name: '@learn/subject-music-notes',
     });
-    expect(read(`${pkg}/src/core.ts`)).toContain("createCardCore({ id: 'music-notes'");
+    expect(read(`${pkg}/src/core.ts`)).toContain("id: 'music-notes',");
     expect(read(`${pkg}/src/core.ts`)).toContain('export const musicNotesCore');
     expect(read(`${pkg}/src/core.ts`)).toContain('MUSIC_NOTES_CHARACTERS');
     expect(read(`${pkg}/src/content.ts`)).toContain('musicNotesContent');

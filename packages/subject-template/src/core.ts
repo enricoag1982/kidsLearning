@@ -5,4 +5,7 @@ import { createCardCore } from '@learn/platform-core/domain/exercise/kinds/cards
  * add a character here (and its `characters.<id>.name` / `topic.<id>` texts) to introduce a new one. */
 export const TEMPLATE_CHARACTERS = { owl: { topicKey: 'topic.owl' } } as const;
 
-export const templateCore = createCardCore({ id: 'template', characters: TEMPLATE_CHARACTERS });
+export const templateCore = createCardCore({
+  id: 'template',
+  characters: TEMPLATE_CHARACTERS,
+});
