@@ -28,6 +28,7 @@ import type {
   ProgressRepository,
   RewardsRepository,
   SettingsRepository,
+  SubjectDataRepositories,
 } from './ports.ts';
 import type { Random } from '../domain/random.ts';
 import type { Clock } from './ports.ts';
@@ -55,6 +56,9 @@ export interface AppDeps {
   /** Kind + mode registries via `createSubjectRuntime`: the only way platform code reaches an exercise kind or mini-game mode. */
   readonly subject: SubjectRuntime;
   readonly app: AppConfig;
+  /** Every registered subject's own repositories by subject id (this deps' own subject included); absent = single-subject
+   * deps, cross-subject use cases fall back to this deps' own repositories. */
+  readonly subjectData?: Readonly<Record<string, SubjectDataRepositories>>;
 }
 
 function starsFor(subject: SubjectRuntime, state: ExerciseStateBase): 0 | 1 | 2 | 3 {

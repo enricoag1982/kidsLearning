@@ -4,8 +4,14 @@ import type {
   BackupFileWriter,
   BackupImporter,
   Narrator,
+  SubjectDataRepositories,
 } from '@learn/platform-core';
-import { createSubjectRuntime } from '@learn/platform-core';
+import {
+  assertSubjectIds,
+  composeSettingsSlots,
+  createSubjectRuntime,
+  subjectStoragePrefix,
+} from '@learn/platform-core';
 import { createCryptoIds } from '../adapters/ids.ts';
 import { createSystemClock } from '../adapters/clock.ts';
 import { createDownloadPasswordFileWriter } from '../adapters/download-password-file-writer.ts';
@@ -49,9 +55,16 @@ function createLazyBackupImporter(store: LocalStore): BackupImporter {
 }
 
 export interface Services {
+  /** The active subject's deps: the first pack until `m11.4` adds switching. */
   readonly deps: AppDeps;
   readonly narrator: Narrator;
+  /** The active subject's services: the first pack until `m11.4` adds switching. */
   readonly subject: SubjectServices;
+  /** Scoped `AppDeps` per subject id: shared repositories (profiles, settings, …) are the same instances in every one, the
+   * subject's own repositories and content differ. `deps` is one of these. */
+  readonly subjectDeps: Readonly<Record<string, AppDeps>>;
+  /** Each subject's own runtime services per subject id; `subject` is one of these. */
+  readonly subjectServices: Readonly<Record<string, SubjectServices>>;
   /** Gates `narrator` on the active profile's "voice" setting (app-structure.md §11); set at every profile select. */
   setVoiceEnabled(enabled: boolean): void;
   /** Active nickname, stripped from narrated text before the audio lookup (`docs/voice.md`); set with `setVoiceEnabled`. */
@@ -60,36 +73,115 @@ export interface Services {
   testVoice(text: string): Promise<AudioNarratorOutcome>;
 }
 
-/** Composition root: wires `AppDeps` to the web adapters over `pack`'s subject. */
+/** Each subject's own key prefix (`subjectStoragePrefix`), checked before any store is opened. The shared prefix is allowed for
+ * a single-subject app keeping one store. Throws on prefixes that would alias: two subjects on one store, or one prefix nested
+ * inside another (`openLocalStore` would read the other's keys as unversioned data). */
+function checkedSubjectPrefixes(
+  appConfig: Omit<AppConfig, 'version'>,
+  ids: readonly string[],
+): readonly string[] {
+  const shared = appConfig.storagePrefix;
+  const own: string[] = [];
+  return ids.map((id) => {
+    const prefix = subjectStoragePrefix(appConfig, id);
+    if (prefix === shared) {
+      if (ids.length > 1) {
+        throw new Error(
+          `subject "${id}": prefix "${prefix}" is the shared one, two subjects would share one store`,
+        );
+      }
+      return prefix;
+    }
+    if (prefix.startsWith(shared) || shared.startsWith(prefix)) {
+      throw new Error(
+        `subject "${id}": prefix "${prefix}" is nested with the shared prefix "${shared}"`,
+      );
+    }
+    const clash = own.find(
+      (other) => other === prefix || other.startsWith(prefix) || prefix.startsWith(other),
+    );
+    if (clash !== undefined) {
+      throw new Error(
+        clash === prefix
+          ? `subject "${id}": prefix "${prefix}" is already used by another subject, two subjects would share one store`
+          : `subject "${id}": prefix "${prefix}" is nested with the prefix "${clash}" of another subject`,
+      );
+    }
+    own.push(prefix);
+    return prefix;
+  });
+}
+
+/** Composition root: wires one scoped `AppDeps` per subject (`packs`) to the web adapters. Profiles, settings, parent code, the
+ * streak and session logs live in the shared store (`appConfig.storagePrefix`); each subject's progress, attempts, game records,
+ * badges and assessment live in its own (`subjectStoragePrefix`). */
 export function createServices(
-  pack: SubjectWeb,
+  packs: readonly SubjectWeb[],
   appConfig: Omit<AppConfig, 'version'>,
   storage: Storage = window.localStorage,
 ): Services {
-  const store = openLocalStore(storage, {
+  const ids = packs.map((pack) => pack.core.id);
+  assertSubjectIds(ids);
+  const prefixes = checkedSubjectPrefixes(appConfig, ids);
+  const settingsSlot = composeSettingsSlots(packs.map((pack) => pack.core.settings));
+  const sharedStore = openLocalStore(storage, {
     migrations: MIGRATIONS,
     keyPrefix: appConfig.storagePrefix,
   });
-  const { content, subject } = pack.createServices();
-  const deps: AppDeps = {
-    profiles: new LocalStorageProfileRepository(store),
-    progress: new LocalStorageProgressRepository(store),
-    gameRecords: new LocalStorageGameRecordRepository(store),
-    rewards: new LocalStorageRewardsRepository(store),
-    assessment: new LocalStorageAssessmentRepository(store),
+
+  const shared = {
+    profiles: new LocalStorageProfileRepository(sharedStore),
     clock: createSystemClock(),
     ids: createCryptoIds(),
-    content,
-    parentLock: new LocalStorageParentLockRepository(store),
+    parentLock: new LocalStorageParentLockRepository(sharedStore),
     passwordFile: createDownloadPasswordFileWriter(appConfig.parentCodeFilePrefix),
-    settings: new LocalStorageSettingsRepository(store),
+    settings: new LocalStorageSettingsRepository(sharedStore),
     random: createMathRandom(),
     backupFileWriter: createLazyBackupFileWriter(),
-    backupImporter: createLazyBackupImporter(store),
+    // Still over the shared store: m11.3 makes import subject-aware.
+    backupImporter: createLazyBackupImporter(sharedStore),
     storageSchemaVersion: SCHEMA_VERSION,
-    subject: createSubjectRuntime(pack.core),
     app: { ...appConfig, version: __APP_VERSION__ },
   };
+
+  const subjectData: Record<string, SubjectDataRepositories> = {};
+  const subjectDeps: Record<string, AppDeps> = {};
+  const subjectServices: Record<string, SubjectServices> = {};
+  for (const [index, pack] of packs.entries()) {
+    const id = pack.core.id;
+    const prefix = prefixes[index];
+    if (prefix === undefined) {
+      throw new Error(`no storage prefix for subject "${id}"`);
+    }
+    const subjectStore =
+      prefix === appConfig.storagePrefix
+        ? sharedStore
+        : openLocalStore(storage, { migrations: MIGRATIONS, keyPrefix: prefix });
+    const { content, subject } = pack.createServices();
+    const progress = new LocalStorageProgressRepository(subjectStore);
+    const gameRecords = new LocalStorageGameRecordRepository(subjectStore);
+    const assessment = new LocalStorageAssessmentRepository(subjectStore);
+    const rewards = new LocalStorageRewardsRepository(subjectStore, sharedStore);
+    subjectData[id] = { progress, gameRecords, assessment, badges: rewards };
+    subjectServices[id] = subject;
+    subjectDeps[id] = {
+      ...shared,
+      progress,
+      gameRecords,
+      rewards,
+      assessment,
+      content,
+      subject: createSubjectRuntime(pack.core, settingsSlot),
+      subjectData,
+    };
+  }
+
+  const [first] = ids;
+  const deps = first === undefined ? undefined : subjectDeps[first];
+  const activeSubject = first === undefined ? undefined : subjectServices[first];
+  if (deps === undefined || activeSubject === undefined) {
+    throw new Error('no subject registered');
+  }
 
   // Pre-generated Kokoro audio per narrated text (docs/voice.md), Web Speech as the fallback for
   // any text without generated audio — `createGatedNarrator` wraps the combined pair.
@@ -103,7 +195,9 @@ export function createServices(
   return {
     deps,
     narrator,
-    subject,
+    subject: activeSubject,
+    subjectDeps,
+    subjectServices,
     setVoiceEnabled: (enabled) => {
       narrator.setEnabled(enabled);
     },

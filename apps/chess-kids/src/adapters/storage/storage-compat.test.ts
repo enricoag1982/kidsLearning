@@ -81,7 +81,7 @@ describe.each(TAGS)('storage compat: %s', (tag) => {
   it('loads local-storage.json cleanly (no StorageError, current schema version)', async () => {
     fillLocalStorage(JSON.parse(readFixture(tag, 'local-storage.json')) as Record<string, string>);
 
-    const { deps } = createServices(chessWeb, CHESS_APP_CONFIG, localStorage);
+    const { deps } = createServices([chessWeb], CHESS_APP_CONFIG, localStorage);
     const snapshot = await snapshotOf(deps);
 
     expect(localStorage.getItem('chess-kids:schema-version')).toBe(String(SCHEMA_VERSION));
@@ -89,7 +89,7 @@ describe.each(TAGS)('storage compat: %s', (tag) => {
   });
 
   it('merges backup-all.json into an empty device', async () => {
-    const { deps } = createServices(chessWeb, CHESS_APP_CONFIG, localStorage);
+    const { deps } = createServices([chessWeb], CHESS_APP_CONFIG, localStorage);
     const incoming = await parseBackupFile(deps, readFixture(tag, 'backup-all.json'));
 
     const plan = await planImport(deps, incoming);
@@ -110,7 +110,7 @@ describe.each(TAGS)('storage compat: %s', (tag) => {
       JSON.parse(readFixture('v2.0.0', 'local-storage.json')) as Record<string, string>,
     );
 
-    const { deps } = createServices(chessWeb, CHESS_APP_CONFIG, localStorage);
+    const { deps } = createServices([chessWeb], CHESS_APP_CONFIG, localStorage);
     const incoming = await parseBackupFile(deps, readFixture(tag, 'backup-all.json'));
 
     const plan = await planImport(deps, incoming);

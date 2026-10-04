@@ -23,23 +23,25 @@ const isSessionLogShape = shapeGuard<SessionLog>({
   number: ['minutes'],
 });
 
+/** Earned badges live in `store` (one subject's own); streaks and session logs in `sharedStore` (the app-wide one, summed
+ * across subjects by the daily limit). `sharedStore` defaults to `store`: a single-store app. */
 export class LocalStorageRewardsRepository implements RewardsRepository {
   private readonly store: LocalStore;
   private readonly earnedBadges: CappedList<EarnedBadge>;
   private readonly streaks: KeyedCollection<Streak>;
   private readonly sessionLogs: KeyedCollection<SessionLog>;
 
-  constructor(store: LocalStore) {
+  constructor(store: LocalStore, sharedStore: LocalStore = store) {
     this.store = store;
     this.earnedBadges = cappedList(store, STORAGE_KEYS.earnedBadges, undefined, isEarnedBadgeShape);
     this.streaks = keyedCollection(
-      store,
+      sharedStore,
       STORAGE_KEYS.streaks,
       (streak) => streak.profileId,
       isStreakShape,
     );
     this.sessionLogs = keyedCollection(
-      store,
+      sharedStore,
       STORAGE_KEYS.sessionLogs,
       (log) => sessionLogKey(log.profileId, log.date),
       isSessionLogShape,
@@ -64,6 +66,11 @@ export class LocalStorageRewardsRepository implements RewardsRepository {
     });
   }
 
+  /** This subject's badges only; the shared streak and session logs stay. */
+  deleteBadges(profileId: string): Promise<void> {
+    return this.earnedBadges.removeWhere((badge) => badge.profileId === profileId);
+  }
+
   getStreak(profileId: string): Promise<Streak | undefined> {
     return this.streaks.get(profileId);
   }
@@ -86,7 +93,7 @@ export class LocalStorageRewardsRepository implements RewardsRepository {
 
   deleteProfileData(profileId: string): Promise<void> {
     return Promise.all([
-      this.earnedBadges.removeWhere((badge) => badge.profileId === profileId),
+      this.deleteBadges(profileId),
       this.streaks.remove(profileId),
       this.sessionLogs.removeWhere((log) => log.profileId === profileId),
     ]).then(() => undefined);

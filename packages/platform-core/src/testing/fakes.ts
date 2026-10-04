@@ -181,15 +181,22 @@ export interface RewardsRepoSeed {
   readonly sessionLogs?: readonly SessionLog[];
 }
 
-export function makeRewardsRepo(
-  seed: RewardsRepoSeed = {},
-): RewardsRepository & { readonly deletedFor: readonly string[] } {
+export function makeRewardsRepo(seed: RewardsRepoSeed = {}): RewardsRepository & {
+  readonly deletedFor: readonly string[];
+  readonly badgesDeletedFor: readonly string[];
+} {
   const badges: EarnedBadge[] = [...(seed.badges ?? [])];
   const streaks = new Map((seed.streaks ?? []).map((s) => [s.profileId, s]));
   const logs = new Map(
     (seed.sessionLogs ?? []).map((log) => [`${log.profileId}:${log.date}`, log]),
   );
   const deletedFor: string[] = [];
+  const badgesDeletedFor: string[] = [];
+  const removeBadges = (profileId: string): void => {
+    for (let i = badges.length - 1; i >= 0; i -= 1) {
+      if (badges[i]?.profileId === profileId) badges.splice(i, 1);
+    }
+  };
   return {
     addEarnedBadge: (badge) => {
       badges.push(badge);
@@ -201,6 +208,11 @@ export function makeRewardsRepo(
       const index = badges.findIndex((b) => b.id === badge.id);
       if (index >= 0) badges[index] = badge;
       else badges.push(badge);
+      return Promise.resolve();
+    },
+    deleteBadges: (profileId) => {
+      badgesDeletedFor.push(profileId);
+      removeBadges(profileId);
       return Promise.resolve();
     },
     getStreak: (profileId) => Promise.resolve(streaks.get(profileId)),
@@ -217,9 +229,13 @@ export function makeRewardsRepo(
       Promise.resolve([...logs.values()].filter((log) => log.profileId === profileId)),
     deleteProfileData: (profileId) => {
       deletedFor.push(profileId);
+      removeBadges(profileId);
+      streaks.delete(profileId);
+      for (const [k, log] of logs) if (log.profileId === profileId) logs.delete(k);
       return Promise.resolve();
     },
     deletedFor,
+    badgesDeletedFor,
   };
 }
 
