@@ -72,3 +72,4 @@ race:
   bot-adds: "{{bot}} adds {{step}}. Now it's {{total}}."
   you-add: "You add {{step}}. Now it's {{total}}."
   your-turn: Your turn!
+  total-label: 'Total {{total}} of {{target}}'

@@ -628,6 +628,7 @@
   "race": {
    "bot-adds": "{{bot}} adds {{step}}. Now it's {{total}}.",
    "hint": "Try to land on 4, 8, 12 or 16.",
+   "total-label": "Total {{total}} of {{target}}",
    "you-add": "You add {{step}}. Now it's {{total}}.",
    "your-turn": "Your turn!"
   },

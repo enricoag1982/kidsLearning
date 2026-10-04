@@ -13,6 +13,9 @@ export interface DuelBoardProps {
   /** The hint's best moves, shown until the next move. */
   readonly hintMoves?: readonly unknown[];
   readonly lastMove?: { readonly side: DuelSide; readonly move: unknown };
+  /** The bot's name as the step shows it ("Owl's turn": the unlock lesson's character, else the platform's default), for a board
+   * that speaks or labels the bot's moves. */
+  readonly bot: string;
   readonly onMove: (move: unknown) => void;
 }
 

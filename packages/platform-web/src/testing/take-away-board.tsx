@@ -14,11 +14,12 @@ export const TakeAwayBoard: DuelBoard = ({
   disabled,
   hintMoves,
   lastMove,
+  bot,
   onMove,
 }): JSX.Element => {
   const pile = isTakeAwayState(state) ? state.pile : 0;
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-4">
+    <div className="flex h-full flex-col items-center justify-center gap-4" data-bot={bot}>
       <div role="img" aria-label={`${String(pile)} stones`} className="text-4xl">
         {'●'.repeat(pile)}
       </div>
