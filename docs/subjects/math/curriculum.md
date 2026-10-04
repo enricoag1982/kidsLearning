@@ -55,7 +55,14 @@ Market Orders (`series`, 5 rounds): `story` rounds, a customer animal per round,
 | `mt-3-6-9` | Threes, sixes, nines | `fact` ×3, `fact` ×9 | 4 `fact` · 1 `fact-missing` · 1 `fact-tf` | `fact` ×3 ≤ 5 |
 | `mt-7-mixed` | Sevens and mixed | `fact` ×7, `fact` ×0 / ×1 | 4 `fact` (mixed tables) · 1 `fact-missing` · 1 `fact-choice` | `fact` ×7 ≤ 5 |
 
-Race to 20 (`duel`): add 1, 2 or 3 to the total; who says 20 wins. The bot moves first from 0 (a kid moving first from 0 loses to perfect play); world boss at bot level 1 (40 % mistakes); hint: "Leave a number in the 4 times table"; win once.
+Race to 20 (`duel`) — **built in `m13.13`** (`minigames/race-to-20.yaml`; game `race`, params `{ target: 20, maxStep: 3 }`): add 1, 2 or 3 to the total; who says 20 wins. The bot moves first from 0 (a kid moving first from 0 loses to perfect play); bot level 1 (40 % mistakes); win once.
+
+| Plan | As built (`m13.13`) |
+|---|---|
+| World boss of W3 | Not yet: W3 does not exist. `unlockAfter: take-away` (demo world), concept `take-away` (temporary: W3 concepts come in `m13.14`); reached as the Today session's mini-game after Take away (`pickSessionMiniGame`; card-kit subjects have no Play screen). `m13.14` makes it the W3 world boss (id `race-to-20` kept) |
+| Hint "Leave a number in the 4 times table" | "Try to land on 4, 8, 12 or 16." (the best step button also glows) |
+| Bot | Owl (the unlock lesson's character is not in `MATH_CHARACTERS`; the platform default). Board lines are spoken after each move: "Owl adds 2. Now it's 7." / "You add 1. Now it's 4." (every step and total below 20: 54 + 54 clips) and "Your turn!" |
+| Board | number track 0–20 (two rows of 10 on a phone, one row on a tablet), token on the total, last move's stones green (kid) / blue with a paw (bot), +1 +2 +3 buttons (80 px) |
 
 Totals: 16 lessons, 32 guided, 96 scored, ≥ 16 variants, 10 series rounds + 1 duel.
 
