@@ -1,0 +1,23 @@
+id: parade
+mode: series
+concept: counting
+unlockAfter: count-up
+errors3: 0
+errors2: 2
+rounds:
+  - id: parade-r1
+    type: number-entry
+    prompt: { big: 9 - 4 }
+    answer: 5
+    maxDigits: 1
+  - id: parade-r2
+    type: order
+    items:
+      - { id: b, big: B }
+      - { id: a, big: A }
+      - { id: c, big: C }
+    answer: [a, b, c]
+  - id: parade-r3
+    type: true-false
+    prompt: { image: fox }
+    answer: true

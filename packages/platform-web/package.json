@@ -25,6 +25,7 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
+    "@learn/platform-content": "workspace:*",
     "@playwright/test": "~1.63.0",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/dom": "^10.4.2",

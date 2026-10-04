@@ -1,0 +1,20 @@
+app:
+  title: Cards
+home:
+  owl-next: 'Today you meet {{character}}!'
+den:
+  owl-line: Look at all your friends!
+  friend-name: '{{character}}, friend'
+  friend-name-locked: '{{character}}, locked, finish the {{piece}} lesson'
+  friend-condition: 'Finish the {{piece}} lesson'
+session:
+  summary-new-friend: New friend!
+voice-check:
+  sentence: Let's play with cards together!
+time-limit:
+  early-body: 'Cards open at {{time}}. See you soon!'
+placement:
+  offer-question: Already know some of this? Let's find out where to start you!
+  summary-none-body: Every card star starts with the first step.
+topic:
+  fox: Counting

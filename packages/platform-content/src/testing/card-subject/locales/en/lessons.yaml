@@ -1,0 +1,17 @@
+count-up:
+  title: Counting with Fox
+  story: Fox loves counting apples. Count them one by one, and the last number tells you how many.
+  demo: Fox found three apples. One, two, three!
+count-g1: Are there two apples?
+count-01: How many apples are there?
+count-01-opt-c: Five
+count-02: Is this true?
+count-03: What is seven plus five?
+count-04: Put the numbers in order, smallest first.
+count-04-two: Two
+parade:
+  title: Number Parade
+  goal: Get every card right. How few mistakes can you make?
+parade-r1: What is nine minus four?
+parade-r2: Put the letters in order.
+parade-r3: Is this a fox?

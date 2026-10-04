@@ -191,3 +191,23 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* A wrong card in the order game shakes once; reduced motion (above) cuts it to nothing, the orange border and note stay. */
+@keyframes card-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+.card-shake {
+  animation: card-shake 360ms ease-in-out;
+}
