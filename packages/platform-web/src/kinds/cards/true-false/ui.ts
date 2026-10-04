@@ -27,10 +27,18 @@ export const trueFalseUi: ExerciseKindUI<
   clearWrongUi: () => ({}),
 
   // 'ignored' (already solved): the buttons are hidden by then, unreachable in the UI.
-  toUi: (outcome) => ({
-    feedback: { kind: outcome.kind === 'wrong' ? 'wrong-answer' : 'solved' },
-    hint: null,
-  }),
+  toUi(outcome, _action, next) {
+    if (outcome.kind !== 'wrong') {
+      return { feedback: { kind: 'solved' }, hint: null };
+    }
+    // The statement's reason (when it has one) is spoken instead of the default note.
+    const { reasonKey } = next.def;
+    return {
+      feedback:
+        reasonKey === undefined ? { kind: 'wrong-answer' } : { kind: 'wrong-answer', reasonKey },
+      hint: null,
+    };
+  },
 
   PlayArea,
 };

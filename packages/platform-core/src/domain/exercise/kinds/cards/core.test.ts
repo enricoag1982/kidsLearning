@@ -143,6 +143,64 @@ describe('card notes', () => {
     expect(note({ kind: 'solved' }, 2)).toEqual({ text: 'exercise.praise-2', tone: 'praise' });
   });
 
+  it('a wrong answer / wrong number speaks its reason instead of the default note, on the same tone and easier offer', () => {
+    for (const kind of ['wrong-answer', 'number-wrong'] as const) {
+      expect(note({ kind, reasonKey: 'lessons:bugs.off-by-one' })).toEqual({
+        text: 'lessons:bugs.off-by-one',
+        tone: 'attention',
+      });
+      expect(
+        exerciseNote(
+          r,
+          { kind, reasonKey: 'lessons:bugs.off-by-one' },
+          { name: 'Fox', stars: 1, vars: {} },
+          core.notes,
+          true,
+        )?.text,
+      ).toBe('lessons:bugs.off-by-one exercise.easier-offer');
+    }
+    // Without a reason, the default wording is unchanged.
+    expect(note({ kind: 'wrong-answer' })?.text).toBe('exercise.answer-wrong');
+    expect(note({ kind: 'number-wrong' })?.text).toBe('cards.number-wrong');
+  });
+
+  it('the order note takes no reason', () => {
+    expect(note({ kind: 'order-wrong' })?.text).toBe('cards.order-wrong');
+  });
+
+  it('a reason changes neither scoring nor hints: the engines read no reason', () => {
+    const { choice, 'true-false': trueFalse, 'number-entry': numberEntry } = CARD_SAMPLES;
+    const pairs: readonly (readonly [CardExerciseDef, CardExerciseDef])[] = [
+      [
+        choice,
+        {
+          ...choice,
+          options: choice.options.map((option) => ({ ...option, reasonKey: 'lessons:why' })),
+        },
+      ],
+      [trueFalse, { ...trueFalse, reasonKey: 'lessons:why' }],
+      [
+        numberEntry,
+        {
+          ...numberEntry,
+          reasons: [{ value: numberEntry.answer + 1, reasonKey: 'lessons:why' }],
+        },
+      ],
+    ];
+    for (const [plain, withReason] of pairs) {
+      const wrong = cardSolutionOf(withReason).wrongAction?.(withReason, null) ?? [];
+      expect(playCard(withReason, wrong)).toMatchObject({ solved: false, errors: 1 });
+      expect(cardStars(playCardWrongThenSolve(withReason))).toBe(
+        cardStars(playCardWrongThenSolve(plain)),
+      );
+      for (const level of [1, 2, 3] as const) {
+        expect(
+          cardKindOf(withReason).hint(cardKindOf(withReason).init(withReason), level, null).hint,
+        ).toEqual(cardKindOf(plain).hint(cardKindOf(plain).init(plain), level, null).hint);
+      }
+    }
+  });
+
   it('the three error notes offer the easier variant, the hint and solved ones do not', () => {
     const withOffer = (kind: 'wrong-answer' | 'number-wrong' | 'order-wrong'): string | undefined =>
       exerciseNote(r, { kind }, { name: 'Fox', stars: 1, vars: {} }, core.notes, true)?.text;

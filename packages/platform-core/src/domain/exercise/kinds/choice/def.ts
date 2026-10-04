@@ -5,6 +5,8 @@ import type { ExerciseProgress } from '../../kind.ts';
 export interface ChoiceOptionBase {
   readonly id: string;
   readonly textKey?: string;
+  /** Spoken when this wrong option is picked. */
+  readonly reasonKey?: string;
 }
 
 /** Pick the option whose id is `answer`. */

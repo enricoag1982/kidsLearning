@@ -164,4 +164,16 @@ const add: ExerciseTemplate<{ max: number }, AddItem> = {
 | Where they land | merged into the locales before the text-key checks: `dist/locales/<lang>.json`, the voice inventory (`voice-texts.json`) and `checkTextKey` see them like authored texts |
 | `name` | lowercase kebab-case, once per draw; every `{{var}}` of the text needs a value |
 
+**Reasons** (decision G5): a wrong card answer that matches a known misconception speaks its reason instead of the default wrong note. Authored or generated alike (a template writes `reason: bugs.<id>` / `reasons: [{ value, text }]` or a `ctx.text(...)` ref).
+
+| Kind | YAML | Spoken when | Verify |
+|---|---|---|---|
+| `choice` | option `reason: <text ref>` | that option is picked | not on the `answer` option |
+| `true-false` | `reason: <text ref>` | the wrong button is pressed | text key resolves |
+| `number-entry` | `reasons: [{ value, text }]` | exactly `value` is typed | values distinct, not the `answer`, fit `maxDigits`; text keys resolve |
+
+Any other wrong answer keeps the default note; scoring, errors and hints do not change. The reason is spoken alone, plus the easier-offer sentence on an exercise that has an `easier` variant.
+
+**Voice** (decision G6): `createCardContent` puts the card notes of the kinds the content uses into the voice inventory (`cardVoiceTemplates(notes)`, computed through core's `exerciseNote`): the wrong notes (plain and with the easier offer), every reason, every hint by level, the 1–3 star praise. A subject with its own `voiceTemplates` composes it: `cardVoiceTemplates(core.notes)(add, r, all)` (coding does). Run `pnpm voice:generate` after adding reasons.
+
 Reference: `packages/platform-content/src/testing/card-fixture.ts` (`fixture-add`, used by one lesson entry and one series round of the card fixture), tests `generate/expand.test.ts`.

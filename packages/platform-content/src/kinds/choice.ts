@@ -11,9 +11,11 @@ type BaseShape = typeof exerciseBaseFields;
 interface OptionHead {
   readonly id: string;
   readonly text?: string;
+  /** Text ref of the reason spoken when this wrong option is picked (never on the answer option). */
+  readonly reason?: string;
 }
 
-/** An option as authored: `id`, `text` and the subject's own fields. */
+/** An option as authored: `id`, `text`, `reason` and the subject's own fields. */
 export type ChoiceOptionRaw<OF extends ZodShape> = OptionHead & z.output<z.ZodObject<OF>>;
 
 interface ChoiceHead<OF extends ZodShape> extends ExerciseYamlBase {
@@ -44,8 +46,8 @@ export interface ChoiceContentSpec<
     readonly fields: OF;
     /** Cross-field check of one option ("needs text or …"). */
     refine(raw: ChoiceOptionRaw<OF>, ctx: z.RefinementCtx): void;
-    /** The option's own compiled fields; the factory adds `id` and `textKey`. */
-    compile(raw: ChoiceOptionRaw<OF>): Omit<D['options'][number], 'id' | 'textKey'>;
+    /** The option's own compiled fields; the factory adds `id`, `textKey` and `reasonKey`. */
+    compile(raw: ChoiceOptionRaw<OF>): Omit<D['options'][number], 'id' | 'textKey' | 'reasonKey'>;
   };
   /** Def fields after `answer`. */
   body?(raw: ChoiceRaw<F, OF>): object;
@@ -53,8 +55,8 @@ export interface ChoiceContentSpec<
   check?(def: D, raw: ChoiceRaw<F, OF>, ctx: CompileContext): void;
 }
 
-/** The `choice` kind's content: the factory owns `type`, `options` (at least 2), `answer`, the duplicate-id and
- * answer-is-an-option checks, and the option `textKeys`. */
+/** The `choice` kind's content: the factory owns `type`, `options` (at least 2), `answer`, the duplicate-id,
+ * answer-is-an-option and no-reason-on-the-answer checks, and the option `textKeys` (text and reason). */
 export function createChoiceContent<
   D extends ChoiceDefBase,
   F extends ZodShape & BaseShape,
@@ -64,7 +66,12 @@ export function createChoiceContent<
   // the schema and the `ChoiceOptionRaw` the spec's callbacks are typed against.
   const option = (
     z
-      .object({ id: keySchema, text: textRefSchema.optional(), ...spec.option.fields })
+      .object({
+        id: keySchema,
+        text: textRefSchema.optional(),
+        reason: textRefSchema.optional(),
+        ...spec.option.fields,
+      })
       .strict() as z.ZodType<ChoiceOptionRaw<OF>>
   ).superRefine((raw, ctx) => {
     spec.option.refine(raw, ctx);
@@ -99,6 +106,15 @@ export function createChoiceContent<
           message: '"answer" must reference one of "options"',
         });
       }
+      for (const [index, entry] of raw.options.entries()) {
+        if (entry.id === raw.answer && entry.reason !== undefined) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['options', index, 'reason'],
+            message: `option "${entry.id}" is the answer: a reason is for a wrong option`,
+          });
+        }
+      }
     },
     compile(raw: ChoiceRaw<F, OF>, ctx) {
       const def = ctx.build<D>({
@@ -106,6 +122,7 @@ export function createChoiceContent<
         options: raw.options.map((entry) => ({
           id: entry.id,
           ...(entry.text === undefined ? {} : { textKey: `lessons:${entry.text}` }),
+          ...(entry.reason === undefined ? {} : { reasonKey: `lessons:${entry.reason}` }),
           ...spec.option.compile(entry),
         })),
         answer: raw.answer,
@@ -115,8 +132,13 @@ export function createChoiceContent<
       return def;
     },
     textKeys: (def): readonly TextKeyRef[] =>
-      def.options.flatMap((entry) =>
-        entry.textKey === undefined ? [] : [{ key: entry.textKey, label: `option "${entry.id}"` }],
-      ),
+      def.options.flatMap((entry) => [
+        ...(entry.textKey === undefined
+          ? []
+          : [{ key: entry.textKey, label: `option "${entry.id}"` }]),
+        ...(entry.reasonKey === undefined
+          ? []
+          : [{ key: entry.reasonKey, label: `option "${entry.id}" reason` }]),
+      ]),
   };
 }

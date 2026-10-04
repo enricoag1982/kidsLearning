@@ -1,9 +1,9 @@
 // The narrated coding texts that are not an exercise or lesson text: every feedback note under the instruction (the Owl bubble speaks
 // each as its own utterance, `docs/voice.md` §5), expanded over its bounded, content-derived domain. `pnpm voice:check` then covers
 // them. Board names, tile names and button labels are read by a screen reader only, never narrated.
+import { cardVoiceTemplates } from '@learn/platform-content/kinds/cards/voice';
 import type { CompiledContent, ExerciseFeedbackBase, Resolve, Stars } from '@learn/platform-core';
 import { exerciseNote } from '@learn/platform-core';
-import type { CardType } from '@learn/platform-core/domain/exercise/kinds/cards/def';
 import type { InvalidReason } from '../core/notes.ts';
 import { codingCore } from '../core/coding-core.ts';
 import { MAX_REPEAT, MAX_REPEAT_BODY } from '../core/tiles.ts';
@@ -12,11 +12,6 @@ import { allCodingExercises } from './all-exercises.ts';
 
 const INVALID_REASONS: readonly InvalidReason[] = ['empty', 'too-many', 'tray', 'incomplete'];
 const STARS: readonly Stars[] = [1, 2, 3];
-function hintOf(hint: Record<string, unknown>): ExerciseFeedbackBase {
-  return { kind: 'hint', hint };
-}
-
-const DIGITS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
 
 /** The most primitives a program of `cap` tiles can run before it stops: `cap` without a repeat; with one, every repeat runs its
  * body `MAX_REPEAT` times, so the most is over how many repeats (r) share the strip: `r` repeat tiles, their bodies (at most
@@ -32,33 +27,6 @@ export function maxSteps(def: Pick<ProgramDef, 'cap' | 'tray'>): number {
   }
   return most;
 }
-
-/** The card kit's feedback per card kind: its wrong-answer note and every hint wording. A table, not a dispatch: the kinds'
- * registries own what a type does (`dispatch-registries.test.ts`). */
-const CARD_FEEDBACK: Readonly<Record<CardType, readonly ExerciseFeedbackBase[]>> = {
-  choice: [
-    { kind: 'wrong-answer' },
-    hintOf({ kind: 'choice', level: 1, reveal: false }),
-    hintOf({ kind: 'choice', level: 3, reveal: true }),
-  ],
-  'true-false': [
-    { kind: 'wrong-answer' },
-    hintOf({ kind: 'true-false', level: 1, highlight: true, reveal: false }),
-    hintOf({ kind: 'true-false', level: 3, highlight: true, reveal: true }),
-  ],
-  'number-entry': [
-    { kind: 'number-wrong' },
-    hintOf({ kind: 'number-entry', level: 1, reveal: false }),
-    ...DIGITS.map((digit) => hintOf({ kind: 'number-entry', level: 2, reveal: false, digit })),
-    hintOf({ kind: 'number-entry', level: 3, reveal: true }),
-  ],
-  order: [
-    { kind: 'order-wrong' },
-    hintOf({ kind: 'order', level: 1, reveal: false, nextSlot: 0 }),
-    hintOf({ kind: 'order', level: 2, reveal: false, nextSlot: 0, ruledOutId: 'x' }),
-    hintOf({ kind: 'order', level: 3, reveal: true, nextSlot: 0 }),
-  ],
-};
 
 /** The feedback of the three coding kinds: the notes that depend on nothing, the hint ladders, a bump on every step count. */
 function codingFeedback(steps: number): readonly ExerciseFeedbackBase[] {
@@ -88,25 +56,23 @@ function codingFeedback(steps: number): readonly ExerciseFeedbackBase[] {
   ];
 }
 
-/** Every note text (plain, and with the easier-offer sentence on the error kinds) as its own utterance, through the same
- * `exerciseNote` the lesson screen calls. */
+/** Every note text as its own utterance, through the same `exerciseNote` the lesson screen calls: the card kit's notes of the kinds
+ * the content uses (`cardVoiceTemplates`, over the coding note table), and the coding kinds' notes (plain, and with the
+ * easier-offer sentence on the error kinds) when the content has a coding kind. */
 export function codingVoiceTemplates(
   add: (text: string, source: string) => void,
   r: Resolve,
   all: CompiledContent,
 ): void {
+  cardVoiceTemplates(codingCore.notes)(add, r, all);
+
   const exercises = allCodingExercises(all.lessons, all.minigames);
   const programs = exercises.filter(
     (exercise): exercise is ProgramDef => 'cap' in exercise && 'tray' in exercise,
   );
-  // The card kit's kinds the content uses, and the coding kinds' notes when it has a coding kind (any grid exercise).
-  const used = new Set<string>(exercises.map((exercise) => exercise.type));
-  const cardKinds = Object.keys(CARD_FEEDBACK).filter((type) => used.has(type)) as CardType[];
+  // The coding kinds' notes when the content has a coding kind (any grid exercise).
   const usesGrid = exercises.some((exercise) => 'level' in exercise);
-  const feedback = [
-    ...(usesGrid ? codingFeedback(Math.max(0, ...programs.map(maxSteps))) : []),
-    ...cardKinds.flatMap((type) => CARD_FEEDBACK[type]),
-  ];
+  const feedback = usesGrid ? codingFeedback(Math.max(0, ...programs.map(maxSteps))) : [];
 
   const note = (item: ExerciseFeedbackBase, stars: Stars, offer: boolean): string | undefined =>
     exerciseNote(r, item, { name: '', vars: {}, stars }, codingCore.notes, offer)?.text;

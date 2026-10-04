@@ -5,8 +5,11 @@ count-up:
 count-g1: Are there two apples?
 count-01: How many apples are there?
 count-01-opt-c: Five
+count-01-reason-c: A hand is five fingers. Count the apples!
 count-02: Is this true?
+count-02-reason: Two and two make four, not five.
 count-03: What is seven plus five?
+count-03-reason-times: That is seven times five. This one is plus!
 count-04: Put the numbers in order, smallest first.
 count-04-two: Two
 parade:
@@ -15,5 +18,7 @@ parade:
 parade-r1: What is nine minus four?
 parade-r2: Put the letters in order.
 parade-r3: Is this a fox?
+bugs:
+  off-by-one: So close! Count the last jump again.
 templates:
   fixture-add: What is {{a}} plus {{b}}?

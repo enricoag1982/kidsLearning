@@ -177,7 +177,70 @@ describe('card choice', () => {
   });
 });
 
+describe('card choice reasons', () => {
+  const reasoned = (): Record<string, unknown> =>
+    choice({
+      options: [
+        { id: 'a', big: 2, reason: 'why-two' },
+        { id: 'b', emoji: '🍎', text: 'apple' },
+      ],
+    });
+
+  it('takes a reason on a wrong option: compiled as reasonKey after textKey, listed among the text keys', () => {
+    expect(issuesOf(reasoned())).toEqual([]);
+    const def = compile(reasoned()) as CardExerciseDef & { options: readonly object[] };
+    expect(def.options.map((option) => Object.keys(option))).toEqual([
+      ['id', 'reasonKey', 'big'],
+      ['id', 'textKey', 'emoji'],
+    ]);
+    expect(CARD_KIND_CONTENT.choice.textKeys?.(def as never)).toEqual([
+      { key: 'lessons:why-two', label: 'option "a" reason' },
+      { key: 'lessons:apple', label: 'option "b"' },
+    ]);
+  });
+
+  it('rejects a reason on the answer option, and a reason that is no text ref', () => {
+    const onAnswer = choice({
+      options: [
+        { id: 'a', big: 2 },
+        { id: 'b', emoji: '🍎', reason: 'why-apple' },
+      ],
+    });
+    expect(issuesOf(onAnswer)).toEqual([
+      'option "b" is the answer: a reason is for a wrong option',
+    ]);
+    expect(
+      issuesOf(
+        choice({
+          options: [
+            { id: 'a', big: 2, reason: 'Not A Ref' },
+            { id: 'b', emoji: '🍎' },
+          ],
+        }),
+      ),
+    ).toHaveLength(1);
+  });
+});
+
 describe('card true-false', () => {
+  it('takes a reason text ref: compiled as reasonKey after the answer, listed among the text keys', () => {
+    expect(issuesOf(trueFalse({ reason: 'why-true' }))).toEqual([]);
+    const def = compile(trueFalse({ reason: 'why-true' }));
+    expect(Object.keys(def ?? {})).toEqual([
+      'id',
+      'concept',
+      'textKey',
+      'type',
+      'answer',
+      'reasonKey',
+    ]);
+    expect(CARD_KIND_CONTENT['true-false'].textKeys?.(def as never)).toEqual([
+      { key: 'lessons:why-true', label: 'reason' },
+    ]);
+    expect(CARD_KIND_CONTENT['true-false'].textKeys?.(compile(trueFalse()) as never)).toEqual([]);
+    expect(issuesOf(trueFalse({ reason: 'Not A Ref' }))).toHaveLength(1);
+  });
+
   it('needs a boolean answer', () => {
     expect(issuesOf(trueFalse())).toEqual([]);
     expect(issuesOf(trueFalse({ answer: false }))).toEqual([]);
@@ -212,6 +275,63 @@ describe('card number-entry', () => {
       'where: answer 123 has 3 digits but maxDigits is 2',
     ]);
     expect(issuesOf(numberEntry({ answer: 12, maxDigits: 3 }))).toEqual([]);
+  });
+});
+
+describe('card number-entry reasons', () => {
+  const reasons = (...values: readonly number[]): Record<string, unknown> => ({
+    reasons: values.map((value) => ({ value, text: `why-${String(value)}` })),
+  });
+
+  it('takes wrong values with a text ref each: compiled as { value, reasonKey } after maxDigits, listed among the text keys', () => {
+    expect(issuesOf(numberEntry(reasons(35, 13)))).toEqual([]);
+    const def = compile(numberEntry(reasons(35, 13)));
+    expect(Object.keys(def ?? {})).toEqual([
+      'id',
+      'concept',
+      'textKey',
+      'type',
+      'answer',
+      'maxDigits',
+      'reasons',
+    ]);
+    expect((def as { reasons?: unknown }).reasons).toEqual([
+      { value: 35, reasonKey: 'lessons:why-35' },
+      { value: 13, reasonKey: 'lessons:why-13' },
+    ]);
+    expect(CARD_KIND_CONTENT['number-entry'].textKeys?.(def as never)).toEqual([
+      { key: 'lessons:why-35', label: 'reason for 35' },
+      { key: 'lessons:why-13', label: 'reason for 13' },
+    ]);
+    expect(CARD_KIND_CONTENT['number-entry'].textKeys?.(compile(numberEntry()) as never)).toEqual(
+      [],
+    );
+  });
+
+  it('rejects a repeated value, the answer itself, and a value the pad cannot take', () => {
+    expect(issuesOf(numberEntry(reasons(35, 35)))).toEqual(['where: reason for 35 is given twice']);
+    expect(issuesOf(numberEntry(reasons(12)))).toEqual([
+      'where: reason for 12 is the answer: a reason is for a wrong value',
+    ]);
+    expect(issuesOf(numberEntry({ answer: 5, maxDigits: 1, ...reasons(10) }))).toEqual([
+      'where: reason for 10 has 2 digits but maxDigits is 1',
+    ]);
+    // Without maxDigits the pad is the answer's digits, at least 2.
+    expect(issuesOf(numberEntry(reasons(350)))).toEqual([
+      'where: reason for 350 has 3 digits but maxDigits is 2',
+    ]);
+    expect(issuesOf(numberEntry({ answer: 120, ...reasons(350) }))).toEqual([]);
+  });
+
+  it('rejects a value outside 0-9999, an empty list, a bad text ref and an unknown field', () => {
+    expect(issuesOf(numberEntry({ reasons: [{ value: -1, text: 'why' }] }))).toHaveLength(1);
+    expect(issuesOf(numberEntry({ reasons: [{ value: 10000, text: 'why' }] }))).toHaveLength(1);
+    expect(issuesOf(numberEntry({ reasons: [] }))).toHaveLength(1);
+    expect(issuesOf(numberEntry({ reasons: [{ value: 3, text: 'Not A Ref' }] }))).toHaveLength(1);
+    expect(issuesOf(numberEntry({ reasons: [{ value: 3, text: 'why', extra: 1 }] }))).toHaveLength(
+      1,
+    );
+    expect(issuesOf(numberEntry({ reasons: [{ value: 3.5, text: 'why' }] }))).toHaveLength(1);
   });
 });
 
@@ -357,6 +477,36 @@ describe('the card fixture subject', () => {
     expect(JSON.stringify(compiled.content)).not.toContain('"id":"fx-add"');
   });
 
+  it('gives the generated items the off-by-one reason (answer + 1) and the authored ones their own', () => {
+    const [lesson] = compiled.content.lessons;
+    const exercises = (lesson?.exercises ?? []) as readonly CardExerciseDef[];
+    const authored = (id: string): CardExerciseDef | undefined =>
+      exercises.find((def) => def.id === id);
+    expect(authored('count-01')).toMatchObject({
+      options: [{ id: 'a' }, { id: 'b' }, { id: 'c', reasonKey: 'lessons:count-01-reason-c' }],
+    });
+    expect(authored('count-02')).toMatchObject({ reasonKey: 'lessons:count-02-reason' });
+    expect(authored('count-03')).toMatchObject({
+      reasons: [{ value: 35, reasonKey: 'lessons:count-03-reason-times' }],
+    });
+    const generated = [
+      ...exercises.filter((def) => def.id.startsWith('fx-add-')),
+      ...compiled.content.minigames.flatMap((game) =>
+        'rounds' in game ? (game.rounds as readonly CardExerciseDef[]) : [],
+      ),
+    ].filter((def) => def.id.startsWith('fx-'));
+    expect(generated).toHaveLength(5);
+    for (const def of generated) {
+      if (def.type !== 'number-entry') throw new Error(`${def.id} is not a number-entry`);
+      expect(def.reasons).toEqual([
+        { value: def.answer + 1, reasonKey: 'lessons:bugs.off-by-one' },
+      ]);
+    }
+    expect(compiled.locales.en?.lessons?.bugs).toEqual({
+      'off-by-one': 'So close! Count the last jump again.',
+    });
+  });
+
   it('lists every generated text, concrete, in the voice inventory (lesson exercises and series rounds)', () => {
     const sentences = compiled.voiceTexts.entries.filter((entry) =>
       /^What is \d+ plus \d+\?$/.test(entry.text),
@@ -372,15 +522,54 @@ describe('the card fixture subject', () => {
     }
   });
 
-  it('voices the exercise, story and demo texts only', () => {
+  it("voices the content's own texts and the card notes of the kinds it uses", () => {
     const sources = new Set(compiled.voiceTexts.entries.map((entry) => entry.source));
     expect(sources.has('lesson-exercise')).toBe(true);
-    expect(
-      compiled.voiceTexts.entries.some((entry) => entry.text.startsWith('Put the numbers')),
-    ).toBe(true);
-    expect(
-      compiled.voiceTexts.entries.some((entry) => entry.text === 'Not that number. Try again!'),
-    ).toBe(false);
+    const spoken = new Set(compiled.voiceTexts.entries.map((entry) => entry.text));
+    expect(spoken.has('Put the numbers in order, smallest first.')).toBe(true);
+    // The fixture uses all four kinds: their wrong notes (plain and with the easier offer), hints and praise.
+    for (const text of [
+      'Not quite! Try again.',
+      'Not that number. Try again!',
+      'Not that one. Try another!',
+      'Not that number. Try again! This one is tricky. Want an easier one?',
+      'It starts with 7.',
+      'Which one comes next?',
+      'Amazing!',
+    ]) {
+      expect(spoken.has(text), text).toBe(true);
+    }
+  });
+
+  it('voices every reason, authored and generated: nothing a wrong answer can say is left without audio', () => {
+    const spoken = new Set(compiled.voiceTexts.entries.map((entry) => entry.text));
+    const en = compiled.locales.en?.lessons as Record<string, unknown>;
+    const reasons = [
+      'A hand is five fingers. Count the apples!',
+      'Two and two make four, not five.',
+      'That is seven times five. This one is plus!',
+      'So close! Count the last jump again.',
+    ];
+    for (const reason of reasons) {
+      expect(spoken.has(reason), reason).toBe(true);
+    }
+    // Every reasonKey of every compiled def resolves to a voiced text (no easier variant in the fixture: plain only).
+    const defs = [
+      ...compiled.content.lessons.flatMap((lesson) => [...lesson.guided, ...lesson.exercises]),
+      ...compiled.content.minigames.flatMap((game) =>
+        'rounds' in game ? (game.rounds as readonly ExerciseDefBase[]) : [],
+      ),
+    ];
+    const keys = JSON.stringify(defs).match(/"reasonKey":"lessons:([^"]+)"/g) ?? [];
+    expect(keys.length).toBeGreaterThan(5);
+    for (const raw of keys) {
+      const ref = /lessons:([^"]+)/.exec(raw)?.[1] ?? '';
+      const text = ref
+        .split('.')
+        .reduce<unknown>((node, part) => (node as Record<string, unknown> | undefined)?.[part], en);
+      expect(typeof text, ref).toBe('string');
+      expect(spoken.has(text as string), ref).toBe(true);
+    }
   });
 
   it('every text the kit speaks or shows resolves in the merged English bundle', () => {
@@ -583,6 +772,84 @@ describe('a broken card fixture subject', () => {
     expect(issues).toEqual([
       'minigames/parade.yaml: rounds.3.generate.template: unknown template "nope"',
     ]);
+  });
+
+  it('reports a reason on the answer option of a choice, with the lesson path', () => {
+    const issues = issuesAfter((lesson) => {
+      const exercises = lesson.exercises as Record<string, unknown>[];
+      const options = exercises[0]?.options as Record<string, unknown>[];
+      Object.assign(options[1] ?? {}, { reason: 'count-01-reason-c' });
+    });
+    expect(lessonIssues(issues)).toEqual([
+      'lessons/counting/count-up.yaml: exercises.0.options.1.reason: option "b" is the answer: a reason is for a wrong option',
+    ]);
+  });
+
+  it('reports a repeated and an answer-equal number-entry reason value, with the lesson path', () => {
+    const issues = issuesAfter((lesson) => {
+      const exercises = lesson.exercises as Record<string, unknown>[];
+      Object.assign(exercises[2] ?? {}, {
+        reasons: [
+          { value: 35, text: 'count-03-reason-times' },
+          { value: 35, text: 'count-03-reason-times' },
+          { value: 12, text: 'count-03-reason-times' },
+        ],
+      });
+    });
+    expect(issues).toEqual([
+      'lessons/counting/count-up.yaml: count-03: reason for 35 is given twice',
+      'lessons/counting/count-up.yaml: count-03: reason for 12 is the answer: a reason is for a wrong value',
+    ]);
+  });
+
+  it('reports a reason value the pad cannot take', () => {
+    const issues = issuesAfter((lesson) => {
+      const exercises = lesson.exercises as Record<string, unknown>[];
+      Object.assign(exercises[2] ?? {}, {
+        reasons: [{ value: 350, text: 'count-03-reason-times' }],
+      });
+    });
+    expect(issues).toEqual([
+      'lessons/counting/count-up.yaml: count-03: reason for 350 has 3 digits but maxDigits is 2',
+    ]);
+  });
+
+  it('reports an unknown reason text key of a choice option, a true-false and a number-entry value', () => {
+    const issues = issuesAfter((lesson) => {
+      const exercises = lesson.exercises as Record<string, unknown>[];
+      const options = exercises[0]?.options as Record<string, unknown>[];
+      Object.assign(options[0] ?? {}, { reason: 'no-such-choice-reason' });
+      Object.assign(exercises[1] ?? {}, { reason: 'no-such-true-false-reason' });
+      Object.assign(exercises[2] ?? {}, {
+        reasons: [{ value: 35, text: 'no-such-number-reason' }],
+      });
+    });
+    expect(issues).toEqual([
+      'lessons/counting/count-up.yaml: count-01: option "a" reason: missing text key "lessons:no-such-choice-reason" in en locale',
+      'lessons/counting/count-up.yaml: count-02: reason: missing text key "lessons:no-such-true-false-reason" in en locale',
+      'lessons/counting/count-up.yaml: count-03: reason for 35: missing text key "lessons:no-such-number-reason" in en locale',
+    ]);
+  });
+
+  it('reports a generated item whose reason text is missing, at the generated item', () => {
+    dir = mkdtempSync(join(tmpdir(), 'card-fixture-'));
+    cpSync(CARD_FIXTURE_ROOT, dir, { recursive: true });
+    const file = join(dir, 'locales', 'en', 'lessons.yaml');
+    const lessons = parse(readFileSync(file, 'utf8')) as Record<string, unknown>;
+    delete lessons.bugs;
+    writeFileSync(file, stringify(lessons), 'utf8');
+    let issues: readonly string[] = [];
+    try {
+      compileAll(content, dir);
+    } catch (error) {
+      if (error instanceof ContentError) issues = error.issues;
+      else throw error;
+    }
+    expect(issues.length).toBeGreaterThan(0);
+    expect(
+      issues.every((issue) => issue.includes('missing text key "lessons:bugs.off-by-one"')),
+    ).toBe(true);
+    expect(issues.some((issue) => issue.includes('fx-add-1: reason for 3'))).toBe(true);
   });
 
   it('reports a number-entry answer that does not fit its digits, with the lesson path', () => {

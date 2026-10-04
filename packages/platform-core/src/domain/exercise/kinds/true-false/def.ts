@@ -6,6 +6,8 @@ import type { CardDefBase } from '../cards/prompt.ts';
 export interface TrueFalseDef extends CardDefBase {
   readonly type: 'true-false';
   readonly answer: boolean;
+  /** Spoken on the wrong pick (instead of the default wrong note). */
+  readonly reasonKey?: string;
 }
 
 /** `wrongOptions` holds `'true'` / `'false'` once picked wrong; the UI disables that button. */

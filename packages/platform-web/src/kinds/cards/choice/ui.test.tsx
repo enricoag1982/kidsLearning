@@ -111,4 +111,28 @@ describe('card choice UI', () => {
       hint: null,
     });
   });
+
+  it("a wrong pick whose option has a reason carries that option's reason; any other wrong pick, none", () => {
+    const reasoned: CardChoiceDef = {
+      ...def,
+      options: def.options.map((option) =>
+        option.id === 'c' ? { ...option, reasonKey: 'lessons:why-five' } : option,
+      ),
+    };
+    const next = initCardState(reasoned);
+    const pick = (optionId: string) => ({ type: 'answer-choice', optionId }) as const;
+    expect(cardChoiceUi.toUi({ kind: 'wrong' }, pick('c'), next)).toEqual({
+      feedback: { kind: 'wrong-answer', reasonKey: 'lessons:why-five' },
+      hint: null,
+    });
+    expect(cardChoiceUi.toUi({ kind: 'wrong' }, pick('a'), next)).toEqual({
+      feedback: { kind: 'wrong-answer' },
+      hint: null,
+    });
+    // The right answer never speaks a reason, even on a def that has them.
+    expect(cardChoiceUi.toUi({ kind: 'solved' }, pick('b'), next)).toEqual({
+      feedback: { kind: 'solved' },
+      hint: null,
+    });
+  });
 });

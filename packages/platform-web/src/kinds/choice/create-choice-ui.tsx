@@ -40,10 +40,19 @@ export function createChoiceUi<
 
     clearWrongUi: () => spec.clearWrongUi(),
 
-    toUi(outcome) {
+    toUi(outcome, action, next) {
       // 'ignored' (already solved): the tiles are hidden by then, unreachable in the UI.
-      const kind = outcome.kind === 'wrong' ? 'wrong-answer' : 'solved';
-      return { feedback: { kind }, hint: null, ...spec.clearWrongUi() };
+      if (outcome.kind !== 'wrong') {
+        return { feedback: { kind: 'solved' }, hint: null, ...spec.clearWrongUi() };
+      }
+      // A wrong option with a reason speaks it instead of the default note.
+      const reasonKey = next.def.options.find((option) => option.id === action.optionId)?.reasonKey;
+      return {
+        feedback:
+          reasonKey === undefined ? { kind: 'wrong-answer' } : { kind: 'wrong-answer', reasonKey },
+        hint: null,
+        ...spec.clearWrongUi(),
+      };
     },
 
     PlayArea(props) {

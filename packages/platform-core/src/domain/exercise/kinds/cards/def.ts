@@ -1,5 +1,10 @@
 import type { ExerciseStateBase } from '../../../subject.ts';
-import type { AnswerChoiceAction, ChoiceDefBase, ChoiceHint } from '../choice/def.ts';
+import type {
+  AnswerChoiceAction,
+  ChoiceDefBase,
+  ChoiceHint,
+  ChoiceOptionBase,
+} from '../choice/def.ts';
 import type {
   NumberEntryAction,
   NumberEntryDef,
@@ -11,8 +16,11 @@ import type { AnswerTrueFalseAction, TrueFalseDef, TrueFalseHint } from '../true
 import type { AnswerOutcome } from '../../answer.ts';
 import type { CardDefBase, CardItem, CardPrompt } from './prompt.ts';
 
+/** A pickable card that may carry the reason spoken when it is picked wrong. */
+export type CardChoiceOption = CardItem & ChoiceOptionBase;
+
 /** An intersection, not `extends`: `CardDefBase.type` is any string, `ChoiceDefBase.type` is `'choice'`. */
-export type CardChoiceDef = ChoiceDefBase<CardItem> & CardDefBase;
+export type CardChoiceDef = ChoiceDefBase<CardChoiceOption> & CardDefBase;
 
 /** The four exercise kinds of the card kit. */
 export type CardExerciseDef = CardChoiceDef | TrueFalseDef | NumberEntryDef | OrderDef;

@@ -5,6 +5,12 @@ export type Digit = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
 export const DIGITS: readonly Digit[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
+/** The reason spoken when exactly `value` is typed wrong (a known misconception, e.g. `a + b + 1`). */
+export interface NumberEntryReason {
+  readonly value: number;
+  readonly reasonKey: string;
+}
+
 /** Type the answer on a number pad. */
 export interface NumberEntryDef extends CardDefBase {
   readonly type: 'number-entry';
@@ -12,6 +18,8 @@ export interface NumberEntryDef extends CardDefBase {
   readonly answer: number;
   /** Digits the pad accepts (content: at least the answer's own, at most 4). */
   readonly maxDigits: number;
+  /** Wrong values with a spoken reason (instead of the default wrong note). */
+  readonly reasons?: readonly NumberEntryReason[];
 }
 
 /** `entry` is the digits typed so far. */
