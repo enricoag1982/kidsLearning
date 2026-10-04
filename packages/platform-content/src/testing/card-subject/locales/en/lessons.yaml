@@ -3,6 +3,8 @@ count-up:
   story: Fox loves counting apples. Count them one by one, and the last number tells you how many.
   demo: Fox found three apples. One, two, three!
 count-g1: Are there two apples?
+count-g2: Which shape is the odd one out?
+count-g3: Which shape fills the gap?
 count-01: How many apples are there?
 count-01-opt-c: Five
 count-01-reason-c: A hand is five fingers. Count the apples!

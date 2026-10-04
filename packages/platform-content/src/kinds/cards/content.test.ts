@@ -13,6 +13,7 @@ import { CARD_FIXTURE_ROOT, createCardFixtureContent } from '../../testing/card-
 import type { ExerciseDefBase } from '@learn/platform-core';
 import { makeCompileContext } from '../kind-content.ts';
 import { CARD_KIND_CONTENT, cardExerciseSchema } from './content.ts';
+import { CONFUSABLE_COLOUR_PAIRS, confusableColours } from './shape-colours.ts';
 import { cardStimulus } from './stimulus.ts';
 
 const content = createCardFixtureContent();
@@ -24,7 +25,10 @@ function issuesOf(raw: Record<string, unknown>): readonly string[] {
   const issues: string[] = [];
   const def = compile(raw, issues);
   const kind = content.kinds[parsed.data.type];
-  if (def !== null) kind?.verify?.(def, 'where', issues);
+  if (def !== null) {
+    kind?.verify?.(def, 'where', issues);
+    content.stimulus.check?.(def, { where: 'where', issues });
+  }
   return issues;
 }
 
@@ -91,7 +95,9 @@ describe('card prompt', () => {
   });
 
   it('rejects an empty prompt, an unknown field, a non-emoji and a long text', () => {
-    expect(issuesOf(trueFalse({ prompt: {} }))).toEqual(['prompt needs "emoji", "big" or "image"']);
+    expect(issuesOf(trueFalse({ prompt: {} }))).toEqual([
+      'prompt needs "emoji", "big", "image" or "shapes"',
+    ]);
     expect(issuesOf(trueFalse({ prompt: { emoji: '🍎', color: 'red' } }))).toHaveLength(1);
     expect(issuesOf(trueFalse({ prompt: { emoji: 'apple' } }))).toEqual(['not an emoji']);
     expect(issuesOf(trueFalse({ prompt: { big: 'x'.repeat(17) } }))).toHaveLength(1);
@@ -144,7 +150,7 @@ describe('card choice', () => {
 
   it('rejects an option with nothing to show', () => {
     expect(issuesOf(choice({ options: [{ id: 'a' }, { id: 'b', big: 2 }], answer: 'b' }))).toEqual([
-      'option needs "text", "emoji", "big" or "image"',
+      'option needs "text", "emoji", "big", "image" or "shape"',
     ]);
   });
 
@@ -337,7 +343,7 @@ describe('card order', () => {
   it('rejects an item with nothing to show, duplicate ids and fewer than 2 items', () => {
     const bare = [{ id: 'b' }, { id: 'a', big: 'A' }];
     expect(issuesOf(order({ items: bare, answer: ['a', 'b'] }))).toEqual([
-      'item needs "text", "emoji", "big" or "image"',
+      'item needs "text", "emoji", "big", "image" or "shape"',
     ]);
     const dup = [
       { id: 'a', big: 'A' },
@@ -382,6 +388,303 @@ describe('card order', () => {
   });
 });
 
+describe('card shapes', () => {
+  const circleRed = { kind: 'circle', colour: 'red' };
+  const squareBlue = { kind: 'square', colour: 'blue' };
+  const opts = (...shapes: Record<string, unknown>[]): Record<string, unknown>[] =>
+    shapes.map((shape, index) => ({ id: `o${String(index)}`, shape }));
+  const shapeChoice = (
+    shapes: Record<string, unknown>[],
+    overrides: Record<string, unknown> = {},
+  ): Record<string, unknown> => choice({ options: opts(...shapes), answer: 'o0', ...overrides });
+  const row = (...shapes: unknown[]): Record<string, unknown> => trueFalse({ prompt: { shapes } });
+
+  describe('schema', () => {
+    it('takes a shape as the only content of an option and of an order item', () => {
+      expect(issuesOf(shapeChoice([circleRed, squareBlue]))).toEqual([]);
+      expect(issuesOf(order({ items: opts(circleRed, squareBlue), answer: ['o1', 'o0'] }))).toEqual(
+        [],
+      );
+    });
+
+    it('takes a row of shapes as the only content of a prompt, `gap` among the tokens', () => {
+      expect(issuesOf(row(circleRed, squareBlue, circleRed, 'gap'))).toEqual([]);
+      expect(issuesOf(row('gap'))).toEqual([]);
+    });
+
+    it('takes every kind, colour and size, and a count of 1 to 9', () => {
+      for (const kind of ['circle', 'square', 'triangle', 'star', 'heart', 'diamond']) {
+        expect(issuesOf(shapeChoice([{ kind, colour: 'yellow' }, squareBlue]))).toEqual([]);
+      }
+      for (const colour of ['red', 'blue', 'yellow', 'green', 'purple', 'orange']) {
+        expect(
+          issuesOf(
+            shapeChoice([
+              { kind: 'star', colour },
+              { kind: 'heart', colour },
+            ]),
+          ),
+        ).toEqual([]);
+      }
+      for (const size of ['tiny', 'small', 'medium', 'big', 'huge']) {
+        expect(issuesOf(shapeChoice([{ ...circleRed, size }, squareBlue]))).toEqual([]);
+      }
+      for (const count of [1, 9]) {
+        expect(issuesOf(shapeChoice([{ ...circleRed, count }, squareBlue]))).toEqual([]);
+      }
+    });
+
+    it('rejects an unknown kind, colour or size, a count outside 1-9 or not whole, and an unknown field', () => {
+      for (const shape of [
+        { kind: 'hexagon', colour: 'red' },
+        { kind: 'circle', colour: 'pink' },
+        { ...circleRed, size: 'gigantic' },
+        { ...circleRed, count: 0 },
+        { ...circleRed, count: 10 },
+        { ...circleRed, count: 2.5 },
+        { ...circleRed, opacity: 1 },
+        { kind: 'circle' },
+        { colour: 'red' },
+        {},
+      ]) {
+        expect(issuesOf(shapeChoice([shape, squareBlue])), JSON.stringify(shape)).not.toEqual([]);
+      }
+      expect(issuesOf(row(circleRed, 'hole'))).not.toEqual([]);
+      expect(issuesOf(trueFalse({ prompt: { shapes: 'gap' } }))).not.toEqual([]);
+    });
+
+    it('an option / item with only an empty shape object has nothing to show', () => {
+      expect(
+        issuesOf(
+          choice({
+            options: [
+              { id: 'a', shape: {} },
+              { id: 'b', big: 2 },
+            ],
+            answer: 'b',
+          }),
+        ),
+      ).not.toEqual([]);
+    });
+  });
+
+  describe('compile', () => {
+    it('compiles an option shape after emoji, big and image, keys kind, colour, size, count', () => {
+      const def = compile(
+        shapeChoice([{ count: 3, size: 'small', colour: 'red', kind: 'circle' }, squareBlue], {}),
+      ) as CardExerciseDef & { options: readonly object[] };
+      expect(def.options.map((option) => Object.keys(option))).toEqual([
+        ['id', 'shape'],
+        ['id', 'shape'],
+      ]);
+      expect(def.options[0]).toEqual({
+        id: 'o0',
+        shape: { kind: 'circle', colour: 'red', size: 'small', count: 3 },
+      });
+      expect(Object.keys((def.options[0] as { shape: object }).shape)).toEqual([
+        'kind',
+        'colour',
+        'size',
+        'count',
+      ]);
+      expect((def.options[1] as { shape: object }).shape).toEqual(squareBlue);
+    });
+
+    it('keeps a shape beside an emoji in emoji, big, image, shape order', () => {
+      const def = compile(
+        choice({
+          options: [
+            { id: 'a', shape: circleRed, image: 'fox', big: 1, emoji: '🍎' },
+            { id: 'b', big: 2 },
+          ],
+        }),
+      ) as CardExerciseDef & { options: readonly object[] };
+      expect(Object.keys(def.options[0] ?? {})).toEqual(['id', 'emoji', 'big', 'image', 'shape']);
+    });
+
+    it('compiles a prompt row in order with `gap` kept, after emoji, big and image', () => {
+      const def = compile(
+        trueFalse({
+          prompt: { shapes: [circleRed, 'gap', { ...squareBlue, size: 'huge' }], big: 'AB?' },
+        }),
+      ) as CardExerciseDef;
+      expect(def.prompt).toEqual({
+        big: 'AB?',
+        shapes: [circleRed, 'gap', { kind: 'square', colour: 'blue', size: 'huge' }],
+      });
+      expect(Object.keys(def.prompt ?? {})).toEqual(['big', 'shapes']);
+    });
+  });
+
+  describe('verify', () => {
+    it('rejects a row with more than one gap', () => {
+      expect(issuesOf(row(circleRed, 'gap', squareBlue, 'gap'))).toEqual([
+        'where: shapes has 2 "gap" tokens, at most 1',
+      ]);
+    });
+
+    it('rejects an empty row and a row of more than 8 tokens, accepts 1 and 8', () => {
+      expect(issuesOf(row())).toEqual(['where: shapes has 0 tokens, needs 1 to 8']);
+      const nine = Array.from({ length: 9 }, (_, index) => ({
+        kind: 'circle',
+        colour: 'red',
+        count: index + 1,
+      }));
+      expect(issuesOf(row(...nine))).toEqual(['where: shapes has 9 tokens, needs 1 to 8']);
+      expect(issuesOf(row(...nine.slice(0, 8)))).toEqual([]);
+      expect(issuesOf(row(circleRed))).toEqual([]);
+    });
+
+    it('rejects two option shapes that differ only in a confusable colour, each pair, either order', () => {
+      for (const [a, b] of [
+        ['red', 'green'],
+        ['green', 'red'],
+        ['green', 'orange'],
+        ['orange', 'green'],
+        ['blue', 'purple'],
+        ['purple', 'blue'],
+      ] as const) {
+        expect(
+          issuesOf(
+            shapeChoice([
+              { kind: 'star', colour: a },
+              { kind: 'star', colour: b },
+            ]),
+          ),
+          `${a} / ${b}`,
+        ).toEqual([
+          `where: shapes "${a} star" and "${b} star" differ only in colour (${a} / ${b} look alike to many children): change the kind, size or count too`,
+        ]);
+      }
+    });
+
+    it('applies the rule to order items, to the prompt row and between the row and the items', () => {
+      const green = { kind: 'circle', colour: 'green' };
+      expect(issuesOf(order({ items: opts(circleRed, green), answer: ['o1', 'o0'] }))).toHaveLength(
+        1,
+      );
+      expect(issuesOf(row(circleRed, squareBlue, green, 'gap'))).toHaveLength(1);
+      expect(
+        issuesOf(
+          choice({
+            prompt: { shapes: [circleRed, 'gap'] },
+            options: [
+              { id: 'a', shape: green },
+              { id: 'b', shape: squareBlue },
+            ],
+            answer: 'b',
+          }),
+        ),
+      ).toHaveLength(1);
+    });
+
+    it('reports size and count in the message when they are not the defaults', () => {
+      expect(
+        issuesOf(
+          shapeChoice([
+            { kind: 'heart', colour: 'red', size: 'small', count: 3 },
+            { kind: 'heart', colour: 'green', size: 'small', count: 3 },
+          ]),
+        ),
+      ).toEqual([
+        'where: shapes "red heart, small, ×3" and "green heart, small, ×3" differ only in colour (red / green look alike to many children): change the kind, size or count too',
+      ]);
+    });
+
+    it('accepts confusable colours when the kind, the size or the count differs too', () => {
+      for (const other of [
+        { kind: 'square', colour: 'green' },
+        { kind: 'circle', colour: 'green', size: 'small' },
+        { kind: 'circle', colour: 'green', count: 2 },
+      ]) {
+        expect(issuesOf(shapeChoice([circleRed, other])), JSON.stringify(other)).toEqual([]);
+      }
+    });
+
+    it('accepts colours that are not a confusable pair, and the same colour twice', () => {
+      for (const [a, b] of [
+        ['red', 'blue'],
+        ['red', 'yellow'],
+        ['red', 'orange'],
+        ['green', 'blue'],
+        ['green', 'purple'],
+        ['yellow', 'orange'],
+        ['blue', 'blue'],
+      ] as const) {
+        expect(
+          issuesOf(
+            shapeChoice([
+              { kind: 'star', colour: a },
+              { kind: 'star', colour: b },
+            ]),
+          ),
+          `${a} / ${b}`,
+        ).toEqual([]);
+      }
+    });
+
+    it('treats an explicit default size and count as the default', () => {
+      expect(
+        issuesOf(
+          shapeChoice([
+            { kind: 'star', colour: 'red', size: 'big', count: 1 },
+            { kind: 'star', colour: 'green' },
+          ]),
+        ),
+      ).toHaveLength(1);
+    });
+  });
+
+  describe('demo', () => {
+    const demo = content.demo;
+    const at = (): { where: string; issues: string[] } => ({ where: 'demo', issues: [] });
+
+    it('takes a row of shapes as its prompt and compiles it', () => {
+      const prompt = { shapes: [circleRed, 'gap'] };
+      expect(demo.schema.safeParse({ prompt }).success).toBe(true);
+      expect(demo.compile({ prompt }, 'lessons:l.demo', at())).toEqual({
+        textKey: 'lessons:l.demo',
+        prompt: { shapes: [circleRed, 'gap'] },
+      });
+    });
+
+    it('checks the row: one gap at most, 1-8 tokens, no confusable colours', () => {
+      const issues = at();
+      const check = (shapes: unknown[]): string[] => {
+        const found = at();
+        const compiledDemo = demo.compile({ prompt: { shapes } }, 'lessons:l.demo', found);
+        if (compiledDemo !== null) demo.check?.(compiledDemo, found);
+        return found.issues;
+      };
+      expect(issues.issues).toEqual([]);
+      expect(check([circleRed, 'gap'])).toEqual([]);
+      expect(check(['gap', 'gap'])).toEqual(['demo: shapes has 2 "gap" tokens, at most 1']);
+      expect(check([])).toEqual(['demo: shapes has 0 tokens, needs 1 to 8']);
+      expect(check([circleRed, { kind: 'circle', colour: 'green' }])).toHaveLength(1);
+    });
+  });
+
+  describe('colour table', () => {
+    it('lists red-green, green-orange and blue-purple', () => {
+      expect(CONFUSABLE_COLOUR_PAIRS).toEqual([
+        ['red', 'green'],
+        ['green', 'orange'],
+        ['blue', 'purple'],
+      ]);
+    });
+
+    it('is symmetric and false for equal or unrelated colours', () => {
+      for (const [a, b] of CONFUSABLE_COLOUR_PAIRS) {
+        expect(confusableColours(a, b)).toBe(true);
+        expect(confusableColours(b, a)).toBe(true);
+      }
+      expect(confusableColours('red', 'red')).toBe(false);
+      expect(confusableColours('red', 'orange')).toBe(false);
+      expect(confusableColours('yellow', 'green')).toBe(false);
+    });
+  });
+});
+
 describe('card demo', () => {
   const demo = content.demo;
 
@@ -405,13 +708,15 @@ describe('card demo', () => {
 describe('the card fixture subject', () => {
   const compiled = compileAll(content, CARD_FIXTURE_ROOT);
 
-  it('compiles: one lesson using all four kinds (three more generated), a series boss and a duel, tracks, badges', () => {
+  it('compiles: one lesson using all four kinds (shape tokens in two choices, three exercises generated), a series boss and a duel, tracks, badges', () => {
     expect(compiled.content.lessons.map((lesson) => lesson.id)).toEqual(['count-up']);
     const [lesson] = compiled.content.lessons;
     expect(
       [...(lesson?.guided ?? []), ...(lesson?.exercises ?? [])].map((def) => def.type),
     ).toEqual([
       'true-false',
+      'choice',
+      'choice',
       'choice',
       'true-false',
       'number-entry',

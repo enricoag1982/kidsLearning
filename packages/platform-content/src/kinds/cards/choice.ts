@@ -2,7 +2,7 @@ import type { CardChoiceDef } from '@learn/platform-core/domain/exercise/kinds/c
 import { createChoiceContent } from '../choice.ts';
 import {
   cardExerciseFields,
-  cardVisualFields,
+  cardItemVisualFields,
   CARD_ITEM_NEEDS,
   compileCardVisual,
 } from './prompt.ts';
@@ -11,17 +11,18 @@ import {
 export const cardChoice = createChoiceContent<
   CardChoiceDef,
   typeof cardExerciseFields,
-  typeof cardVisualFields
+  typeof cardItemVisualFields
 >({
   fields: cardExerciseFields,
   option: {
-    fields: cardVisualFields,
+    fields: cardItemVisualFields,
     refine(raw, ctx) {
       if (
         raw.text === undefined &&
         raw.emoji === undefined &&
         raw.big === undefined &&
-        raw.image === undefined
+        raw.image === undefined &&
+        raw.shape === undefined
       ) {
         ctx.addIssue({ code: 'custom', message: `option ${CARD_ITEM_NEEDS}` });
       }

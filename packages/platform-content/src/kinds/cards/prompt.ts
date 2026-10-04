@@ -1,6 +1,16 @@
 // The card kit's shared YAML shapes: the `prompt` every exercise may carry and the card items (choice options, order
-// items) — a text, an emoji, a big text, an art image id, at least one.
-import type { CardItem, CardPrompt } from '@learn/platform-core/domain/exercise/kinds/cards/prompt';
+// items) — a text, an emoji, a big text, an art image id, a shape token (a row of them for a prompt), at least one.
+import type {
+  CardItem,
+  CardPrompt,
+  CardShape,
+} from '@learn/platform-core/domain/exercise/kinds/cards/prompt';
+import {
+  MAX_SHAPE_COUNT,
+  SHAPE_COLOURS,
+  SHAPE_KINDS,
+  SHAPE_SIZES,
+} from '@learn/platform-core/domain/exercise/kinds/cards/prompt';
 import { z } from 'zod';
 import { exerciseBaseFields, keySchema, textRefSchema } from '../../schema.ts';
 
@@ -20,19 +30,55 @@ const bigSchema = z
 /** An id of the subject's art (`SubjectWeb.art`). */
 const imageSchema = keySchema;
 
-/** The visual fields of a prompt and of a card item. */
+/** The visual fields a prompt and a card item share. */
 export const cardVisualFields = {
   emoji: emojiSchema.optional(),
   big: bigSchema.optional(),
   image: imageSchema.optional(),
 };
 
-const visualSchema = z.object(cardVisualFields).strict();
+/** A drawn shape token: strict enums for `kind`, `colour`, `size` (default `big`), `count` 1–9 (default 1). */
+export const shapeSchema = z
+  .object({
+    kind: z.enum(SHAPE_KINDS),
+    colour: z.enum(SHAPE_COLOURS),
+    size: z.enum(SHAPE_SIZES).optional(),
+    count: z.number().int().min(1).max(MAX_SHAPE_COUNT).optional(),
+  })
+  .strict();
 
-/** `{ emoji?, big?, image? }`, at least one. */
+export type ShapeRaw = z.output<typeof shapeSchema>;
+
+/** The compiled token, keys in `kind`, `colour`, `size`, `count` order. */
+export function compileShape(raw: ShapeRaw): CardShape {
+  return {
+    kind: raw.kind,
+    colour: raw.colour,
+    ...(raw.size === undefined ? {} : { size: raw.size }),
+    ...(raw.count === undefined ? {} : { count: raw.count }),
+  };
+}
+
+/** A prompt's visual fields: the shared ones and `shapes` (tokens and `gap`; their number and the single gap are verify rules,
+ * `shape-verify.ts`). */
+const promptVisualFields = {
+  ...cardVisualFields,
+  shapes: z.array(z.union([z.literal('gap'), shapeSchema])).optional(),
+};
+
+/** A card item's visual fields: the shared ones and one `shape`. */
+export const cardItemVisualFields = { ...cardVisualFields, shape: shapeSchema.optional() };
+
+const visualSchema = z.object(promptVisualFields).strict();
+
+/** `{ emoji?, big?, image?, shapes? }`, at least one. */
 export const promptSchema = visualSchema.refine(
-  (prompt) => prompt.emoji !== undefined || prompt.big !== undefined || prompt.image !== undefined,
-  { message: 'prompt needs "emoji", "big" or "image"' },
+  (prompt) =>
+    prompt.emoji !== undefined ||
+    prompt.big !== undefined ||
+    prompt.image !== undefined ||
+    prompt.shapes !== undefined,
+  { message: 'prompt needs "emoji", "big", "image" or "shapes"' },
 );
 
 /** What every card exercise's YAML has besides its kind's own fields. */
@@ -40,8 +86,12 @@ export const cardExerciseFields = { ...exerciseBaseFields, prompt: promptSchema.
 
 type PromptRaw = z.output<typeof visualSchema>;
 
-/** The compiled prompt, keys in `emoji`, `big`, `image` order. */
-export function compilePrompt(raw: PromptRaw): CardPrompt {
+/** The `emoji`, `big`, `image` part of a compiled prompt or item, in that order. */
+function compileCommonVisual(raw: {
+  readonly emoji?: string;
+  readonly big?: string;
+  readonly image?: string;
+}): Pick<CardItem, 'emoji' | 'big' | 'image'> {
   return {
     ...(raw.emoji === undefined ? {} : { emoji: raw.emoji }),
     ...(raw.big === undefined ? {} : { big: raw.big }),
@@ -49,9 +99,19 @@ export function compilePrompt(raw: PromptRaw): CardPrompt {
   };
 }
 
+/** The compiled prompt, keys in `emoji`, `big`, `image`, `shapes` order. */
+export function compilePrompt(raw: PromptRaw): CardPrompt {
+  return {
+    ...compileCommonVisual(raw),
+    ...(raw.shapes === undefined
+      ? {}
+      : { shapes: raw.shapes.map((token) => (token === 'gap' ? token : compileShape(token))) }),
+  };
+}
+
 /** An item as authored (`id`, `text` and the visual fields). */
 export const cardItemSchema = z
-  .object({ id: keySchema, text: textRefSchema.optional(), ...cardVisualFields })
+  .object({ id: keySchema, text: textRefSchema.optional(), ...cardItemVisualFields })
   .strict();
 
 export type CardItemRaw = z.output<typeof cardItemSchema>;
@@ -62,15 +122,21 @@ export function hasCardContent(raw: CardItemRaw): boolean {
     raw.text !== undefined ||
     raw.emoji !== undefined ||
     raw.big !== undefined ||
-    raw.image !== undefined
+    raw.image !== undefined ||
+    raw.shape !== undefined
   );
 }
 
-export const CARD_ITEM_NEEDS = 'needs "text", "emoji", "big" or "image"';
+export const CARD_ITEM_NEEDS = 'needs "text", "emoji", "big", "image" or "shape"';
 
-/** The item's compiled visual fields, keys in `emoji`, `big`, `image` order. */
-export function compileCardVisual(raw: PromptRaw): Omit<CardItem, 'id' | 'textKey'> {
-  return compilePrompt(raw);
+type ItemVisualRaw = z.output<z.ZodObject<typeof cardItemVisualFields>>;
+
+/** The item's compiled visual fields, keys in `emoji`, `big`, `image`, `shape` order. */
+export function compileCardVisual(raw: ItemVisualRaw): Omit<CardItem, 'id' | 'textKey'> {
+  return {
+    ...compileCommonVisual(raw),
+    ...(raw.shape === undefined ? {} : { shape: compileShape(raw.shape) }),
+  };
 }
 
 /** A compiled item: `id`, `textKey` (the text ref in the `lessons` namespace), then the visual fields. */

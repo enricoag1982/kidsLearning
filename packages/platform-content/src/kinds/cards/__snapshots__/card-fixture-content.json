@@ -26,6 +26,85 @@
      },
      "type": "true-false",
      "answer": true
+    },
+    {
+     "id": "count-g2",
+     "concept": "counting",
+     "textKey": "lessons:count-g2",
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "circle",
+        "colour": "blue"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "circle",
+        "colour": "blue"
+       }
+      },
+      {
+       "id": "c",
+       "shape": {
+        "kind": "square",
+        "colour": "blue"
+       }
+      }
+     ],
+     "answer": "c"
+    },
+    {
+     "id": "count-g3",
+     "concept": "counting",
+     "textKey": "lessons:count-g3",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "circle",
+        "colour": "red"
+       },
+       {
+        "kind": "square",
+        "colour": "blue"
+       },
+       {
+        "kind": "circle",
+        "colour": "red"
+       },
+       "gap"
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "square",
+        "colour": "blue"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "circle",
+        "colour": "red"
+       }
+      },
+      {
+       "id": "c",
+       "shape": {
+        "kind": "triangle",
+        "colour": "yellow",
+        "size": "small",
+        "count": 3
+       }
+      }
+     ],
+     "answer": "a"
     }
    ],
    "exercises": [
