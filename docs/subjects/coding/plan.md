@@ -74,7 +74,7 @@ Tiles: W1 `up` `down` `left` `right` `pick` · W2 `repeat(n){…}` · W3 `forwar
 | Tag | Scope |
 |---|---|
 | `m12.1` | This plan + research notes (`research.md`) |
-| `m12.2` | Platform grid board (`ui/grid`) + core grid types; chess untouched |
+| `m12.2` | Platform grid board (`ui/grid`) + core grid types; chess untouched. Done: `GridBoard` + `domain/grid.ts` + dev `#grid` playground (dev builds only) |
 | `m12.3` | `packages/subject-coding` (scaffold, not yet registered in the app); core: tiles, simulator, solver; kinds `program`, `predict`, `find-bug` (engine, solution, content, verify) |
 | `m12.4` | Web: program editor + run animation, kind UIs, pack; e2e drivers |
 | `m12.5` | W1 content (4 lessons) + Bug Squash; registered in the app (hub tile); voice; e2e lesson spec; `curriculum.md` (lesson / exercise list) |
