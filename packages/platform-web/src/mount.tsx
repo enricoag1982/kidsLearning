@@ -20,14 +20,26 @@ export interface MountAppOptions {
   readonly registerSW: RegisterSW;
 }
 
-/** `pack.dev[hash]`; a key ending in `=` matches as a prefix (`#lesson=<id>`). */
+type DevScreens = NonNullable<SubjectWeb['dev']>;
+
+/** The platform's own playgrounds (`/#grid`), checked before the pack's. Gated on the compile-time DEV flag like `pack.dev`:
+ * an ungated map would keep its `import()` calls as live split points of the production bundle. */
+const PLATFORM_DEV_SCREENS: DevScreens | undefined = import.meta.env.DEV
+  ? { '#grid': () => import('./dev/GridPlayground.tsx').then((m) => m.GridPlayground) }
+  : undefined;
+
+/** The first source that has `hash` (`pack.dev` shape); a key ending in `=` matches as a prefix (`#lesson=<id>`). */
 function findDevScreen(
-  dev: NonNullable<SubjectWeb['dev']>,
+  sources: readonly (DevScreens | undefined)[],
   hash: string,
 ): (() => Promise<ComponentType>) | undefined {
-  return Object.entries(dev).find(
-    ([key]) => key === hash || (key.endsWith('=') && hash.startsWith(key)),
-  )?.[1];
+  for (const dev of sources) {
+    const screen = Object.entries(dev ?? {}).find(
+      ([key]) => key === hash || (key.endsWith('=') && hash.startsWith(key)),
+    )?.[1];
+    if (screen) return screen;
+  }
+  return undefined;
 }
 
 /** English texts of the error screen for a start that fails before any subject bundle is loaded (a missing pack chunk): the
@@ -45,7 +57,7 @@ export const START_FAILED_RESOURCES = {
 };
 
 /** The app's composition root: error boundary, update wiring, the first subject's pack and texts (the last one used, else the
- * first) and, in dev builds only, the pack's playgrounds. A start that fails (missing root element, pack chunk that cannot load,
+ * first) and, in dev builds only, the platform's and the pack's playgrounds. A start that fails (missing root element, pack chunk that cannot load,
  * unreadable storage) shows the error screen instead of a blank page; a missing root element rejects. */
 export async function mountApp({ subjects, app, registerSW }: MountAppOptions): Promise<void> {
   const rootElement = document.getElementById('root');
@@ -61,8 +73,9 @@ export async function mountApp({ subjects, app, registerSW }: MountAppOptions): 
     initI18n(services.locales as InitOptions['resources']);
 
     const { pack } = services;
-    const devScreen =
-      import.meta.env.DEV && pack.dev ? findDevScreen(pack.dev, location.hash) : undefined;
+    const devScreen = import.meta.env.DEV
+      ? findDevScreen([PLATFORM_DEV_SCREENS, pack.dev], location.hash)
+      : undefined;
     if (devScreen) {
       const Screen = await devScreen();
       root.render(

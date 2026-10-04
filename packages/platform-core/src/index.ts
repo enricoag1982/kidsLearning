@@ -114,6 +114,20 @@ export type {
 } from './app/ports.ts';
 export type { Random } from './domain/random.ts';
 
+export type { GridSize, Cell, Heading } from './domain/grid.ts';
+export {
+  HEADINGS,
+  cellKey,
+  parseCellKey,
+  inGrid,
+  step,
+  turnLeft,
+  turnRight,
+  sameCell,
+  cellPosition,
+  parseGridMap,
+} from './domain/grid.ts';
+
 export type { AppDeps } from './app/use-cases.ts';
 export { allSubjectData, DEFAULT_SUBJECT_ID, subjectDataById } from './app/subject-data.ts';
 export {

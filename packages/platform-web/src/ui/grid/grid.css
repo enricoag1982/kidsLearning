@@ -1,0 +1,46 @@
+/*
+ * GridBoard-local motion. The global `prefers-reduced-motion` rule in theme.css already cuts every
+ * animation and transition to ~0; `GridBoard` also leaves the classes off then (the actor jumps, no shake).
+ */
+
+.grid-actor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+/* The actor slides between cells: a transform from `translate(x * 100%, y * 100%)` to the next cell. */
+.grid-actor-move {
+  transition: transform 600ms ease;
+}
+
+@keyframes grid-actor-bump {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-9%);
+  }
+  40%,
+  80% {
+    transform: translateX(9%);
+  }
+}
+
+.grid-actor-bump {
+  animation: grid-actor-bump 360ms ease-in-out;
+}
+
+/* Tap mode: a pressed cell darkens a little; the focus ring sits inside the cell so neighbours never cover it. */
+.grid-cell-button:active {
+  filter: brightness(0.93);
+}
+
+.grid-cell-button:focus-visible {
+  outline: 3px solid var(--color-info);
+  outline-offset: -3px;
+  z-index: 1;
+}

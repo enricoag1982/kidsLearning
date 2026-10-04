@@ -26,6 +26,12 @@ describe('mountApp', () => {
     await screen.findByRole('heading', { name: 'Board playground (dev only)' });
   });
 
+  it('renders a platform playground, which no pack has to provide', async () => {
+    await mountAt('#grid');
+    await screen.findByRole('heading', { name: 'Grid playground (dev only)' });
+    expect(screen.getByRole('group', { name: 'Meadow, 5 by 5' })).toBeTruthy();
+  });
+
   it('matches a dev key ending in "=" as a prefix', async () => {
     await mountAt('#lesson=rook&view=story');
     await screen.findByText('Lesson preview (dev only):');
