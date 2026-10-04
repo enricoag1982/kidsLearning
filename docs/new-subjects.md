@@ -15,7 +15,7 @@ Owner request (2026-10-04): ideas for new versions of the app on the v4 platform
 | Kind `number-entry` | in `subject-math` (move to platform if reused) |
 | Grid board (walls, stars, select squares), bot in a worker, `versus` mode, game records | in `subject-chess`; generalisable |
 
-New subject = `packages/subject-<x>` (kinds, content YAML, web pack) + `apps/<x>` shell (as `math-demo`).
+New subject = `packages/subject-<x>` (kinds, content YAML, web pack) registered in the one app `apps/kids-learning` (`multi-subject.md` D1; quick path: `pnpm new-subject`, `m11.8`).
 
 ## 2. Candidates
 
@@ -51,7 +51,7 @@ Offline limits: no speech or pitch recognition → no speaking / singing exercis
 
 | Option | Pros | Cons |
 |---|---|---|
-| A. One app per subject (today: `chess-kids`, `math-demo`) | No platform change; separate store listings | Profiles, daily limit, parent code per app; limit not shared across apps |
+| A. One app per subject (until `m11.5`: `chess-kids`, `math-demo`) | No platform change; separate store listings | Profiles, daily limit, parent code per app; limit not shared across apps |
 | B. One "learning kids" app with a subject picker | Shared profiles, one daily limit, rewards across subjects, one install | Platform hosts N packs (today 1 `SubjectWeb`); lazy-load packs to keep the size budget |
 | C. Add-on inside chess (e.g. strategy games in Play) | Cheapest for #4 | Chess app grows; no fit for other subjects |
 
@@ -70,8 +70,8 @@ Offline limits: no speech or pitch recognition → no speaking / singing exercis
 
 | # | Question | Recommendation | Status |
 |---|---|---|---|
-| 1 | Next subject(s) | Coding (unique, highest reuse of the grid), then Math (demo → real curriculum) | Open |
-| 2 | Product shape | Pilot as its own app (A); move to one app (B) once 2 subjects are real | Open |
+| 1 | Next subject(s) | Coding (unique, highest reuse of the grid), then Math (demo → real curriculum) | Decided: Coding v1.1, Math v1.2, Logic v1.3 (owner 2026-10-04) |
+| 2 | Product shape | Pilot as its own app (A); move to one app (B) once 2 subjects are real | Decided: B, one app (owner 2026-10-04, `multi-subject.md` D1) |
 | 3 | Content language | English first, as chess; Italian as 2nd locale | Open |
 
 Next step after a pick: research + curriculum doc (as `teaching-process.md` / `curriculum.md`), then 1-world vertical slice + playtest (`retrospective.md` §6).

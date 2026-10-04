@@ -12,9 +12,9 @@ is never narrated. Size budget: ≤ 25 MB English (`non-functional.md` §1's ≤
 
 | Output | Path |
 |---|---|
-| Inventory (build input) | `packages/subject-chess/dist/voice-texts.json` (gitignored) |
-| Audio | `apps/chess-kids/public/audio/en/<key>.mp3` (committed) |
-| Manifest | `apps/chess-kids/public/audio/en/manifest.json` (`{ config, entries: { <key>: { text, ms } } }`, committed) |
+| Inventory (build input) | `packages/subject-*/dist/voice-texts.json`, one per subject, each including the platform texts (gitignored); the app's audio = their union (`m11.6`) |
+| Audio | `apps/kids-learning/public/audio/en/<key>.mp3` (committed) |
+| Manifest | `apps/kids-learning/public/audio/en/manifest.json` (`{ config, entries: { <key>: { text, ms } } }`, committed) |
 
 `key` = first 16 hex of `sha256(normalizeVoiceText(text))` (`packages/platform-core/src/domain/voice-text.ts`).
 
@@ -39,8 +39,8 @@ a key already generated under the same config, prunes files no longer inventorie
 to 2 (`--threads`); full run, 4-core machine: roughly 1–2 h. `voice:check` fails (names the missing
 texts) on any inventory key without audio, warns (does not fail) on an orphan manifest entry.
 
-**Adding a language:** `packages/subject-chess/content/locales/<lang>/` (same keys as `en`) + that language's
-Kokoro voice/`lang` in `config.json` → commands above, output to `apps/chess-kids/public/audio/<lang>/`
+**Adding a language:** every `packages/subject-*/content/locales/<lang>/` + `packages/platform-content/locales/<lang>/` (same keys as `en`) + that language's
+Kokoro voice/`lang` in `config.json` → commands above, output to `apps/kids-learning/public/audio/<lang>/`
 (`createAudioNarrator` takes `baseUrl` per language).
 
 ## 4. Fallback rules
@@ -73,7 +73,7 @@ sentence, showing "Recorded voice ✓" or the fallback reason (`ChildSettings.ts
 
 ## 7. Offline size
 
-`apps/chess-kids/scripts/check-size.ts` (`pnpm size`) also sums every file the built service worker
+`apps/kids-learning/scripts/check-size.ts` (`pnpm size`) also sums every file the built service worker
 precaches (parsed from `dist/sw.js`'s `precacheAndRoute([...])`), fails above 50 MB
 (`non-functional.md` §1); the `audio/en/*` slice is reported separately.
 
