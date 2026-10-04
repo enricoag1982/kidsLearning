@@ -1,0 +1,32 @@
+# W3 lesson 2: an array is rows of dots with the same number in every row (3 rows of 4 is 3 × 4). Generated; seeds are stored,
+# never change them. Scored order (CPA): the arrays to build first, then the true / false statements and the fact as symbols only.
+id: mt-arrays
+order: 2
+concept: mt-arrays
+character: hedgehog
+demo:
+  prompt: { big: '3 × 4' }
+guided:
+  - id: ar-g
+    generate: { template: array-build, count: 2, seed: 2, params: { maxRows: 3, maxCols: 3 } }
+exercises:
+  - id: ar-build
+    generate: { template: array-build, count: 1, seed: 5, params: { maxRows: 4, maxCols: 5 } }
+  - id: ar-free
+    generate:
+      {
+        template: array-build,
+        count: 1,
+        seed: 2,
+        params: { maxRows: 5, maxCols: 5, fixedRows: false },
+      }
+  - id: ar-big
+    easier: ar-easy-1
+    generate: { template: array-build, count: 1, seed: 31, params: { maxRows: 6, maxCols: 6 } }
+  - id: ar-commute
+    generate: { template: array-commute, count: 2, seed: 1, params: { max: 6 } }
+  - id: ar-fact
+    generate: { template: fact, count: 1, seed: 4, params: { tables: [3, 4], b: [3, 6] } }
+variants:
+  - id: ar-easy
+    generate: { template: array-build, count: 1, seed: 5, params: { maxRows: 3, maxCols: 4 } }

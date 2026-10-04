@@ -45,6 +45,11 @@
   "source": "owl-line"
  },
  {
+  "key": "0765d217efd1be88",
+  "text": "What is 4 times 4?",
+  "source": "lesson-variant"
+ },
+ {
   "key": "082c1205ad7d720d",
   "text": "Bear sold 17 loaves in the morning and 53 in the afternoon. How many loaves did Bear sell?",
   "source": "lesson-guided"
@@ -75,6 +80,11 @@
   "source": "race-you-add"
  },
  {
+  "key": "0bb4063e44507b4d",
+  "text": "What is 4 times 5?",
+  "source": "lesson-guided"
+ },
+ {
   "key": "0c3936af810cceb7",
   "text": "About where is 625? Put it on the line.",
   "source": "lesson-exercise"
@@ -85,6 +95,11 @@
   "source": "exercise-note"
  },
  {
+  "key": "0fbc87b917e163b9",
+  "text": "What is 3 times 3?",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "10f7da5df39c54d0",
   "text": "You add 3. Now it's 11.",
   "source": "race-you-add"
@@ -93,6 +108,11 @@
   "key": "12854dc48d118f2a",
   "text": "Check the tens.",
   "source": "exercise-note"
+ },
+ {
+  "key": "12c3c5c8c6b2fd27",
+  "text": "What is 7 times 9?",
+  "source": "lesson-exercise"
  },
  {
   "key": "1319e1d7ccd9104f",
@@ -130,6 +150,16 @@
   "source": "lesson-demo"
  },
  {
+  "key": "18c7037d4c916de9",
+  "text": "What is 5 times 6? Count by 5, six times: 5, 10, 15, 20, 25, 30. So 5 times 6 is 30!",
+  "source": "lesson-demo"
+ },
+ {
+  "key": "191367b6765e1f13",
+  "text": "What is 4 times 3? Double 3 makes 6, and double 6 makes 12. So 4 times 3 is 12!",
+  "source": "lesson-demo"
+ },
+ {
   "key": "198d22a4fd3d9094",
   "text": "You add 3. Now it's 13.",
   "source": "race-you-add"
@@ -148,6 +178,11 @@
   "key": "1a3815a5556c46cd",
   "text": "Hedgie adds 2. Now it's 3.",
   "source": "race-bot-adds"
+ },
+ {
+  "key": "1a67179222a1edd0",
+  "text": "So close, just one off! Count again.",
+  "source": "exercise-note"
  },
  {
   "key": "1bbe1997a90792f7",
@@ -225,6 +260,11 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "263aff7e0f722c94",
+  "text": "Make an array for 4 times 3. Tap the bottom-right dot.",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "26b85e2e79dd5a03",
   "text": "Right in the middle? It goes up to the bigger number. This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
@@ -295,6 +335,11 @@
   "source": "race-you-add"
  },
  {
+  "key": "2bed32bf1ad4b3a0",
+  "text": "Check the digits' order.",
+  "source": "exercise-note"
+ },
+ {
   "key": "2cfeb69fe3fe419d",
   "text": "I won this time. Try again!",
   "source": "duel"
@@ -350,6 +395,16 @@
   "source": "race-bot-adds"
  },
  {
+  "key": "3881d42a930c6875",
+  "text": "What is 6 times 5?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "3960df81cc3e637f",
+  "text": "What is 10 times 7?",
+  "source": "lesson-guided"
+ },
+ {
   "key": "396adb0d3249bc26",
   "text": "Owl says: adding 10 changes only the tens digit, and adding 100 only the hundreds digit. Hedgie uses round numbers for the nearly ones, because 99 is 100 less 1. Add the round number, then fix the 1!",
   "source": "lesson-story"
@@ -395,8 +450,18 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "3d9037e393bce080",
+  "text": "Times means groups: 3 groups of 4. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "3f40b73ab1bf8627",
   "text": "Build 9321 with blocks.",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "3f5e6ecfa0652ff6",
+  "text": "What is 8 times 6?",
   "source": "lesson-exercise"
  },
  {
@@ -440,6 +505,11 @@
   "source": "owl-line"
  },
  {
+  "key": "4838183caa8de033",
+  "text": "What is 4 times 6?",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "4986e2154c9333d3",
   "text": "You add 3. Now it's 19.",
   "source": "race-you-add"
@@ -475,9 +545,19 @@
   "source": "lesson-guided"
  },
  {
+  "key": "4c36363e633953a6",
+  "text": "World boss time: Race to 20!",
+  "source": "home"
+ },
+ {
   "key": "4e5bfdc212d2776b",
   "text": "Count the jumps between the marks, not the marks. This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "4ef8b06aa522ab8b",
+  "text": "Owl says: the 7s are the trickiest, and you already know most of them! Hedgie has two tricks: anything times 0 is 0, and anything times 1 stays the same.",
+  "source": "lesson-story"
  },
  {
   "key": "505c71eccfcc70b2",
@@ -510,6 +590,11 @@
   "source": "lesson-variant"
  },
  {
+  "key": "5230fa0503d527b1",
+  "text": "You earned the Times Ranger badge!",
+  "source": "celebration"
+ },
+ {
   "key": "52503b25436f925e",
   "text": "Hedgie's turn",
   "source": "duel"
@@ -528,6 +613,21 @@
   "key": "53b53605e2329c62",
   "text": "Round 698 to the nearest ten.",
   "source": "lesson-exercise"
+ },
+ {
+  "key": "54017e2d7de4e0df",
+  "text": "Times means groups: 3 groups of 4.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "5569c5a3f2d72918",
+  "text": "What is 4 times 2?",
+  "source": "lesson-guided"
+ },
+ {
+  "key": "55ac6f0e016728d5",
+  "text": "Each row has 2.",
+  "source": "exercise-note"
  },
  {
   "key": "5975daf7cd7cef89",
@@ -583,6 +683,11 @@
   "key": "5eeb75a57ea8ca64",
   "text": "Hedgie adds 1. Now it's 6.",
   "source": "race-bot-adds"
+ },
+ {
+  "key": "5fa1744a3380484c",
+  "text": "What is 5 times 5?",
+  "source": "lesson-exercise"
  },
  {
   "key": "5fde40d71e9f4ea2",
@@ -645,6 +750,11 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "69858f54ac1263cf",
+  "text": "Which sum shows 4 groups of 4?",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "6b2352d3fb67886a",
   "text": "You add 3. Now it's 15.",
   "source": "race-you-add"
@@ -675,6 +785,11 @@
   "source": "lesson-demo"
  },
  {
+  "key": "6dca83834ba459f1",
+  "text": "This array has 3 rows of 4 dots. 4 plus 4 plus 4 makes 12, so 3 times 4 is 12. Turn it round, and 4 times 3 is 12 too!",
+  "source": "lesson-demo"
+ },
+ {
   "key": "6f752ca2de41d910",
   "text": "Hedgie adds 2. Now it's 7.",
   "source": "race-bot-adds"
@@ -700,6 +815,11 @@
   "source": "race-bot-adds"
  },
  {
+  "key": "74e666b4ab2b3b88",
+  "text": "Each row has 4.",
+  "source": "exercise-note"
+ },
+ {
   "key": "75136f0e09d71546",
   "text": "Here are the thousands. Now finish!",
   "source": "exercise-note"
@@ -720,9 +840,19 @@
   "source": "home"
  },
  {
+  "key": "77c33868fda2c572",
+  "text": "What is 9 times 3?",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "780b662233c0cafb",
   "text": "You already know Hedgie!",
   "source": "assessment"
+ },
+ {
+  "key": "787526bab9fea92b",
+  "text": "Owl says: an array is dots in rows, with the same number of dots in every row. Hedgie counts the rows, then the dots in one row. Rows go across!",
+  "source": "lesson-story"
  },
  {
   "key": "79f5f2bc342b2dfa",
@@ -730,9 +860,34 @@
   "source": "owl-line"
  },
  {
+  "key": "7b6e769083533048",
+  "text": "Make 3 rows of 4 dots. Tap the bottom-right dot.",
+  "source": "lesson-variant"
+ },
+ {
+  "key": "7b7edc175dec0432",
+  "text": "Want to show me you already know World 3 · Times-Table Forest?",
+  "source": "journey"
+ },
+ {
   "key": "7cb30e40b3c960e6",
   "text": "Finish Hedgie first!",
   "source": "journey"
+ },
+ {
+  "key": "7d4b8b70cfcee6de",
+  "text": "Each row has 6.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "7d8ad38a712ffc99",
+  "text": "What is 9 times 4? 10 times 4 is 40, and one 4 less is 36. So 9 times 4 is 36!",
+  "source": "lesson-demo"
+ },
+ {
+  "key": "8077267471e85985",
+  "text": "Make 2 rows of 3 dots. Tap the bottom-right dot.",
+  "source": "lesson-guided"
  },
  {
   "key": "8146b5611a937245",
@@ -785,6 +940,11 @@
   "source": "race-you-add"
  },
  {
+  "key": "89841f3b821a70c4",
+  "text": "What is 7 times 7?",
+  "source": "lesson-guided"
+ },
+ {
   "key": "89a93a72a6d07fcc",
   "text": "Hedgie adds 3. Now it's 16.",
   "source": "race-bot-adds"
@@ -793,6 +953,11 @@
   "key": "89e281cb61e277a2",
   "text": "About where is 428? Put it on the line.",
   "source": "minigame-round"
+ },
+ {
+  "key": "89e93e5d8ceb3993",
+  "text": "Same number, but count the rows again.",
+  "source": "exercise-note"
  },
  {
   "key": "8ac504fbd6caf0a2",
@@ -815,9 +980,24 @@
   "source": "exercise-note"
  },
  {
+  "key": "8c37c7052268b271",
+  "text": "Owl says: some times tables are easy to skip count. Hedgie counts by 2s, by 5s and by 10s. Count along, and the answer appears!",
+  "source": "lesson-story"
+ },
+ {
   "key": "8c5ad44c27c2b9d3",
   "text": "Put 60 on the number line.",
   "source": "lesson-guided"
+ },
+ {
+  "key": "8d413e95027485af",
+  "text": "What is 8 times 2?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "8d97b2633e479dda",
+  "text": "Owl says: times is a short way to talk about equal groups. Hedgie has 3 groups with 4 berries in each. Add 4 three times, and the berries are easy to count!",
+  "source": "lesson-story"
  },
  {
   "key": "8e009314f3aa18ec",
@@ -865,6 +1045,21 @@
   "source": "minigame-round"
  },
  {
+  "key": "909df10274aca3ff",
+  "text": "Times Ranger",
+  "source": "badge-earned"
+ },
+ {
+  "key": "91bd317a8f9f1010",
+  "text": "Each row has 5.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "927d7f388785c121",
+  "text": "What is 3 times 4?",
+  "source": "lesson-variant"
+ },
+ {
   "key": "9396b12b12df91f1",
   "text": "Hedgie adds 1. Now it's 13.",
   "source": "race-bot-adds"
@@ -905,6 +1100,11 @@
   "source": "lesson-demo"
  },
  {
+  "key": "965476da6c8f4dca",
+  "text": "How many in all?",
+  "source": "lesson-variant"
+ },
+ {
   "key": "96812a855d0850fe",
   "text": "Find the middle: 50.",
   "source": "exercise-note"
@@ -920,9 +1120,29 @@
   "source": "race-bot-adds"
  },
  {
+  "key": "98e54726b3956b92",
+  "text": "What is 9 times 9?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "99ecc04e3c5eb269",
+  "text": "What is 4 times 7?",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "99f417eab914233c",
   "text": "Hedgie adds 2. Now it's 16.",
   "source": "race-bot-adds"
+ },
+ {
+  "key": "9b8c274b5812a21c",
+  "text": "What is 7 times 8?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "9c399bfeb4cb5026",
+  "text": "Which sum shows 4 groups of 2?",
+  "source": "lesson-exercise"
  },
  {
   "key": "9dcafd86a6aefed4",
@@ -940,9 +1160,19 @@
   "source": "home"
  },
  {
+  "key": "a01b0056fb40efbb",
+  "text": "What is 2 times 6?",
+  "source": "lesson-guided"
+ },
+ {
   "key": "a0217010724c94e5",
   "text": "Add 10, then take 1 away. What is it?",
   "source": "lesson-variant"
+ },
+ {
+  "key": "a0f7527c7b4449bb",
+  "text": "Make 4 rows of 5 dots. Tap the bottom-right dot.",
+  "source": "lesson-exercise"
  },
  {
   "key": "a1b5484c6340d3d5",
@@ -980,9 +1210,19 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "a3c148a6c8b40554",
+  "text": "What is 2 times 7?",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "a4a00559aa6ccb7c",
   "text": "It starts with 8.",
   "source": "exercise-note"
+ },
+ {
+  "key": "a5777710955492ca",
+  "text": "What is 7 times 4?",
+  "source": "lesson-variant"
  },
  {
   "key": "a58aba8195011222",
@@ -1065,6 +1305,11 @@
   "source": "race-bot-adds"
  },
  {
+  "key": "ad97373f0c8fb8a8",
+  "text": "What is 10 times 9?",
+  "source": "lesson-variant"
+ },
+ {
   "key": "ad999c537fd1becc",
   "text": "You add 1. Now it's 2.",
   "source": "race-you-add"
@@ -1110,6 +1355,21 @@
   "source": "race-bot-adds"
  },
  {
+  "key": "b494fd973a695d74",
+  "text": "What is 0 times 3?",
+  "source": "lesson-guided"
+ },
+ {
+  "key": "b49aa6c6832055f9",
+  "text": "Owl says: 6 is double 3, and 9 is one less than 10. Hedgie counts by 3s, doubles them for the 6s, and takes one group away from the 10s for the 9s!",
+  "source": "lesson-story"
+ },
+ {
+  "key": "b52511571c42b1c2",
+  "text": "What is 9 times 7?",
+  "source": "lesson-guided"
+ },
+ {
   "key": "b6170b945d9402ef",
   "text": "8 hundreds, 0 tens and 5 ones. What number is it?",
   "source": "lesson-exercise"
@@ -1123,6 +1383,11 @@
   "key": "b82c95fedfc96450",
   "text": "Hedgie adds 2. Now it's 18.",
   "source": "race-bot-adds"
+ },
+ {
+  "key": "b91ef87857a4e4b6",
+  "text": "What number is missing?",
+  "source": "lesson-exercise"
  },
  {
   "key": "b95ef6e6dbddbf22",
@@ -1145,6 +1410,16 @@
   "source": "race-you-add"
  },
  {
+  "key": "bca184177c8c929e",
+  "text": "Count the rows and the dots in each row.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "bd0bb9ad6cbf2075",
+  "text": "Which sum shows 2 groups of 3?",
+  "source": "lesson-guided"
+ },
+ {
   "key": "bd2d37691b9849c5",
   "text": "Owl says: a ten is a bridge. Hedgie makes a ten first, then adds what is left. To count up, jump to the next ten and then on!",
   "source": "lesson-story"
@@ -1158,6 +1433,11 @@
   "key": "bdf155532b630c66",
   "text": "Frog has 25 stickers. A friend gives Frog 32 more. How many stickers does Frog have now?",
   "source": "lesson-guided"
+ },
+ {
+  "key": "be019721a7303173",
+  "text": "So close, just one off! Count again. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "be3f2288a9204073",
@@ -1175,6 +1455,16 @@
   "source": "exercise-note"
  },
  {
+  "key": "c015671ad89d6b52",
+  "text": "Same number, but count the rows again. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "c07eca8c3e89438b",
+  "text": "What is 3 times 7?",
+  "source": "lesson-guided"
+ },
+ {
   "key": "c0b2306945840f24",
   "text": "Math opens at 07:00. See you soon!",
   "source": "owl-line"
@@ -1185,9 +1475,19 @@
   "source": "race-bot-adds"
  },
  {
+  "key": "c1a0ec9e21e1f9e8",
+  "text": "What is 10 times 3?",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "c233a223a913bea3",
   "text": "Hedgie adds 2. Now it's 11.",
   "source": "race-bot-adds"
+ },
+ {
+  "key": "c2b973c852d691ee",
+  "text": "What is 8 times 8?",
+  "source": "lesson-exercise"
  },
  {
   "key": "c3a5fe94f9fd2264",
@@ -1205,6 +1505,16 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "c53b95e8f117daab",
+  "text": "Rows go across, like lines in a book.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "c57efb21cf822a27",
+  "text": "Each row has 3.",
+  "source": "exercise-note"
+ },
+ {
   "key": "c59d7bf15dd97102",
   "text": "Hedgie adds 2. Now it's 13.",
   "source": "race-bot-adds"
@@ -1218,6 +1528,11 @@
   "key": "c6eada1aee95a131",
   "text": "Hedgie adds 3. Now it's 10.",
   "source": "race-bot-adds"
+ },
+ {
+  "key": "c77327be0979937f",
+  "text": "Check the digits' order. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "c916003b70ea4f4b",
@@ -1290,6 +1605,11 @@
   "source": "exercise-note"
  },
  {
+  "key": "d18513e39b012798",
+  "text": "You already know 2 worlds! Off you go!",
+  "source": "placement"
+ },
+ {
   "key": "d31d36fd7746c990",
   "text": "You add 3. Now it's 14.",
   "source": "race-you-add"
@@ -1350,9 +1670,24 @@
   "source": "exercise-note"
  },
  {
+  "key": "da02480e32d8e79f",
+  "text": "Look: 3 groups of 4 berries. 4 plus 4 plus 4 makes 12. So 3 times 4 is 12!",
+  "source": "lesson-demo"
+ },
+ {
   "key": "da33bd9fbb37459d",
   "text": "Hedgie adds 2. Now it's 12.",
   "source": "race-bot-adds"
+ },
+ {
+  "key": "daa7607030a5296c",
+  "text": "Times Ranger. Master Times-Table Forest and beat Race to 20",
+  "source": "badge-locked"
+ },
+ {
+  "key": "daa81d68cfea911f",
+  "text": "Count the rows and the dots in each row. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "dad9535645e6f516",
@@ -1410,6 +1745,11 @@
   "source": "exercise-note-easier-offer"
  },
  {
+  "key": "e29a85c71abdc97b",
+  "text": "Make 5 rows of 6 dots. Tap the bottom-right dot.",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "e52750feae9515f1",
   "text": "Hedgie adds 3. Now it's 19.",
   "source": "race-bot-adds"
@@ -1450,14 +1790,34 @@
   "source": "race-you-add"
  },
  {
+  "key": "ea84ac0ce99132c7",
+  "text": "What is 5 times 8?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "eb32157eec149332",
+  "text": "What is 2 times 3?",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "eb34c8b42b309aa6",
   "text": "Look: 2 hundreds, 0 tens and 5 ones. The zero holds the tens place, so the number is 205!",
   "source": "lesson-demo"
  },
  {
+  "key": "eb38c824f5e02ab2",
+  "text": "Make 3 rows of 2 dots. Tap the bottom-right dot.",
+  "source": "lesson-guided"
+ },
+ {
   "key": "ecd4fe369e2640df",
   "text": "Not quite! Try again.",
   "source": "exercise-note"
+ },
+ {
+  "key": "edad47c41e024917",
+  "text": "What is 7 times 6? 5 times 7 is 35, and one more 7 makes 42. So 7 times 6 is 42!",
+  "source": "lesson-demo"
  },
  {
   "key": "edc2fb378ffb2159",
@@ -1510,6 +1870,11 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "f487d4b4b1fb49c4",
+  "text": "You already know Times-Table Forest — 6 lessons are yours!",
+  "source": "assessment"
+ },
+ {
   "key": "f4f8438175b5bd11",
   "text": "Find the middle: 250.",
   "source": "exercise-note"
@@ -1535,6 +1900,11 @@
   "source": "race-you-add"
  },
  {
+  "key": "f89a68d2a4f38591",
+  "text": "What is 1 times 3?",
+  "source": "lesson-exercise"
+ },
+ {
   "key": "f8a8d6765088815f",
   "text": "Every math whiz starts with the first step.",
   "source": "placement"
@@ -1555,6 +1925,11 @@
   "source": "exercise-note"
  },
  {
+  "key": "fef7f4fb8ac12912",
+  "text": "Owl says: to times by 4, double the number, then double it again. Hedgie knows that 8 is double 4, so for eights double one more time!",
+  "source": "lesson-story"
+ },
+ {
   "key": "ff0ec01eabaf8fd3",
   "text": "You add 3. Now it's 17.",
   "source": "race-you-add"
@@ -1563,5 +1938,10 @@
   "key": "ff9e1b1facd7d976",
   "text": "It starts with 1.",
   "source": "exercise-note"
+ },
+ {
+  "key": "ffebb8e81721c93a",
+  "text": "Which is the answer?",
+  "source": "lesson-exercise"
  }
 ]

@@ -1,0 +1,27 @@
+# W3 lesson 3: the 2, 5 and 10 times tables (skip counting). Generated; seeds are stored, never change them. `t2-five` is the hardest
+# item (5 times a big number); its easier variant is a times-10 fact.
+id: mt-2-5-10
+order: 3
+concept: mt-2-5-10
+character: hedgehog
+demo:
+  prompt: { big: '5 × 6' }
+guided:
+  - id: t2-g2
+    generate: { template: fact, count: 1, seed: 6, params: { tables: [2], b: [3, 9] } }
+  - id: t2-g10
+    generate: { template: fact, count: 1, seed: 1, params: { tables: [10], b: [3, 9] } }
+exercises:
+  - id: t2-fact
+    generate: { template: fact, count: 3, seed: 3, params: { tables: [2, 5, 10], b: [2, 10] } }
+  - id: t2-five
+    easier: t2-easy-1
+    generate: { template: fact, count: 1, seed: 1, params: { tables: [5], b: [6, 9] } }
+  - id: t2-missing
+    generate:
+      { template: fact-missing, count: 1, seed: 1, params: { tables: [2, 5, 10], b: [2, 10] } }
+  - id: t2-true
+    generate: { template: fact-tf, count: 1, seed: 5, params: { tables: [2, 5, 10], b: [4, 10] } }
+variants:
+  - id: t2-easy
+    generate: { template: fact, count: 1, seed: 4, params: { tables: [10], b: [2, 9] } }

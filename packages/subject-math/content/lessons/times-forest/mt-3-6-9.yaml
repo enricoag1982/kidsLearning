@@ -1,0 +1,27 @@
+# W3 lesson 5: the 3, 6 and 9 times tables (6 is double 3; 9 is 10 less one group). Generated; seeds are stored, never change them.
+# `t3-hard` is the hardest item (6 or 9 times a big number); its easier variant is a times-3 fact up to 5.
+id: mt-3-6-9
+order: 5
+concept: mt-3-6-9
+character: hedgehog
+demo:
+  prompt: { big: '9 × 4' }
+guided:
+  - id: t3-g3
+    generate: { template: fact, count: 1, seed: 1, params: { tables: [3], b: [3, 9] } }
+  - id: t3-g9
+    generate: { template: fact, count: 1, seed: 1, params: { tables: [9], b: [3, 9] } }
+exercises:
+  - id: t3-fact
+    generate: { template: fact, count: 3, seed: 3, params: { tables: [3, 6, 9], b: [2, 10] } }
+  - id: t3-hard
+    easier: t3-easy-1
+    generate: { template: fact, count: 1, seed: 4, params: { tables: [6, 9], b: [6, 9] } }
+  - id: t3-missing
+    generate:
+      { template: fact-missing, count: 1, seed: 1, params: { tables: [3, 6, 9], b: [2, 10] } }
+  - id: t3-true
+    generate: { template: fact-tf, count: 1, seed: 4, params: { tables: [3, 6, 9], b: [2, 10] } }
+variants:
+  - id: t3-easy
+    generate: { template: fact, count: 1, seed: 1, params: { tables: [3], b: [2, 5] } }

@@ -1,6 +1,6 @@
-// Placement, test-out and the parent unlock over the shipped Worlds 1 and 2 (m13.10, m13.11): the platform's assessment planners and use
-// cases run on the real compiled math content (10 generated lessons, Number Train, Market Orders), each task solved by its own kind (the
-// child's first try right or wrong).
+// Placement, test-out and the parent unlock over the shipped Worlds 1, 2 and 3 (m13.10, m13.11, m13.14): the platform's assessment
+// planners and use cases run on the real compiled math content (16 generated lessons, Number Train, Market Orders, Race to 20), each task
+// solved by its own kind (the child's first try right or wrong).
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
@@ -35,7 +35,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'content'
 const { content, tracks, badges } = compileAll<MathContent>(mathContent, root);
 const PROFILE = 'p1';
 
-/** The two worlds of the main track, each with its lessons, boss and badge. */
+/** The worlds of the main track, each with its lessons, boss and badge. */
 const WORLDS = [
   {
     id: 'number-meadow',
@@ -52,6 +52,14 @@ const WORLDS = [
     boss: 'market-orders',
     badge: 'mountain-climber',
     testOutLesson: 'mm-bridge',
+  },
+  {
+    id: 'times-forest',
+    name: 'World 3',
+    lessons: ['mt-groups', 'mt-arrays', 'mt-2-5-10', 'mt-4-8', 'mt-3-6-9', 'mt-7-mixed'],
+    boss: 'race-to-20',
+    badge: 'times-ranger',
+    testOutLesson: 'mt-3-6-9',
   },
 ] as const;
 
@@ -89,7 +97,7 @@ function answer(tasks: readonly ConceptTask<MathExerciseDef>[], right: number): 
 describe('placement over the worlds', () => {
   const lessons = content.lessons as unknown as readonly Lesson<MathExerciseDef>[];
 
-  it('offers one run per world, in order: 4 different scored exercises each, drawn from the world’s five lessons (never a guided try or a variant)', () => {
+  it('offers one run per world, in order: 4 different scored exercises each, drawn from the world’s lessons (never a guided try or a variant)', () => {
     const scored = new Set(
       lessons.flatMap((lesson) => lesson.exercises.map((exercise) => exercise.id)),
     );
@@ -179,11 +187,12 @@ describe('placement over the worlds', () => {
       ]);
       expect(await deps.assessment?.listUnlocks(PROFILE)).toEqual([]);
       const journey = await loadJourney(deps, PROFILE);
-      // World 1 is the open world of a fresh profile; World 2 waits behind it whatever the placement said.
+      // World 1 is the open world of a fresh profile; the later worlds wait behind it whatever the placement said.
       expect(journey.worlds[0]?.status).toBe('available');
       expect(journey.statuses.get('pv-hto')).toBe('available');
       expect(journey.statuses.get('pv-compare')).toBe('locked');
       expect(journey.statuses.get('mm-bonds')).toBe('locked');
+      expect(journey.statuses.get('mt-groups')).toBe('locked');
     });
   });
 });

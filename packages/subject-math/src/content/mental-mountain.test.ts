@@ -211,7 +211,8 @@ describe('the 5 lessons of World 2', () => {
       ['mm-problems', 'mm-problems', 5, 'hedgehog', 2, 6, 1],
     ]);
     expect(worldTwo).toHaveLength(5);
-    expect(content.lessons).toHaveLength(10);
+    // Worlds 1 and 2 (5 + 5) and the 6 lessons of World 3.
+    expect(content.lessons).toHaveLength(16);
     expect(byOrder.map((lesson) => english(lesson.titleKey))).toEqual([
       'Number bonds',
       'Doubles and halves',
