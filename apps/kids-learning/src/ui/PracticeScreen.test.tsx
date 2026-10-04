@@ -117,4 +117,90 @@ describe('PracticeScreen', () => {
     const stats = await services.deps.progress.getConceptStats(profile.id, lesson.concept);
     expect(stats?.box).toBe(2);
   });
+  describe('retired content (G8): stored stats of a concept the content no longer has', () => {
+    const dueStats = (
+      services: ReturnType<typeof createTestServices>,
+      profileId: string,
+      id: string,
+      conceptId: string,
+    ) => {
+      const now = services.deps.clock.now().toISOString();
+      return {
+        id,
+        profileId,
+        conceptId,
+        recent: [false, false, false],
+        box: 1 as const,
+        dueAt: '2020-01-01T00:00:00.000Z',
+        createdAt: now,
+        updatedAt: now,
+      };
+    };
+
+    it('a due retired concept alone offers no warm-up: "All done for today!", button disabled', async () => {
+      const lesson = fixtureLesson();
+      const services = createTestServices(fixtureContentSource(lesson));
+      const { store } = await renderWithStore(<PracticeScreen />, services);
+      const profileId = store.getState().profile?.id ?? '';
+
+      await services.deps.progress.saveConceptStats(
+        dueStats(services, profileId, 'cs-old', 'retired-concept'),
+      );
+      await act(async () => {
+        await store.getState().refreshProgress();
+      });
+
+      await screen.findByText('All done for today!');
+      expect(screen.queryByText(/due today/)).toBeNull();
+      expect(screen.getByRole('button', { name: /Daily warm-up/ }).hasAttribute('disabled')).toBe(
+        true,
+      );
+    });
+
+    it('counts only the concepts the content has: 1 live + 2 retired due = "1 due today"; topics unaffected', async () => {
+      const lesson = fixtureLesson();
+      const services = createTestServices(fixtureContentSource(lesson));
+      const { store } = await renderWithStore(<PracticeScreen />, services);
+      const profileId = store.getState().profile?.id ?? '';
+      const now = services.deps.clock.now().toISOString();
+
+      await services.deps.progress.saveLesson({
+        id: 'lp1',
+        profileId,
+        lessonId: lesson.id,
+        bestStars: { [lesson.exercises[0]?.id ?? '']: 3 },
+        bossStars: 0,
+        resumeStep: 5,
+        completedAt: now,
+        createdAt: now,
+        updatedAt: now,
+      });
+      // The retired lesson's own progress stays stored, too.
+      await services.deps.progress.saveLesson({
+        id: 'lp-old',
+        profileId,
+        lessonId: 'retired-lesson',
+        bestStars: { 'retired-01': 3 },
+        bossStars: 0,
+        resumeStep: 5,
+        completedAt: now,
+        createdAt: now,
+        updatedAt: now,
+      });
+      for (const [id, conceptId] of [
+        ['cs-live', lesson.concept],
+        ['cs-old-1', 'retired-concept-1'],
+        ['cs-old-2', 'retired-concept-2'],
+      ] as const) {
+        await services.deps.progress.saveConceptStats(dueStats(services, profileId, id, conceptId));
+      }
+      await act(async () => {
+        await store.getState().refreshProgress();
+      });
+
+      await screen.findByText('1 due today');
+      // One topic: the live lesson's; the retired concepts and lesson list nothing.
+      expect(screen.getAllByRole('listitem')).toHaveLength(1);
+    });
+  });
 });

@@ -138,6 +138,42 @@ describe('loadWarmUp', () => {
   });
 });
 
+describe('retired content (G8): stored progress of concepts the content no longer has', () => {
+  const RETIRED = ['old-a', 'old-b', 'old-c'].map((conceptId) =>
+    dueStats(conceptId, { dueAt: '2025-06-01T00:00:00.000Z' }),
+  );
+
+  it('loadWarmUp: 3 retired oldest-due concepts do not take the slots of 2 live ones', async () => {
+    const deps = makeDeps({
+      progress: makeProgressRepo(
+        [],
+        [],
+        [...RETIRED, dueStats('l1-concept'), dueStats('l2-concept')],
+      ),
+    });
+
+    const tasks = await loadWarmUp(deps, 'profile-1');
+
+    expect(tasks.map((task) => task.conceptId).sort()).toEqual(['l1-concept', 'l2-concept']);
+  });
+
+  it('loadWarmUp: only retired concepts in review give no warm-up', async () => {
+    const deps = makeDeps({ progress: makeProgressRepo([], [], RETIRED) });
+    expect(await loadWarmUp(deps, 'profile-1')).toEqual([]);
+  });
+
+  it('loadTodaySession: only retired concepts due plans no warm-up activity', async () => {
+    const deps = makeDeps({ progress: makeProgressRepo([], [], RETIRED) });
+    const plan = await loadTodaySession(deps, 'profile-1');
+    expect(plan.activities.map((activity) => activity.kind)).toEqual(['lesson']);
+  });
+
+  it('loadPracticeTasks: a retired concept has no tasks (no throw)', async () => {
+    const deps = makeDeps({ progress: makeProgressRepo([], [], RETIRED) });
+    expect(await loadPracticeTasks(deps, 'profile-1', 'old-a')).toEqual([]);
+  });
+});
+
 describe('loadPracticeTasks', () => {
   it("defaults to 5 tasks for the concept, from stored stats' pool", async () => {
     const deps = makeDeps({

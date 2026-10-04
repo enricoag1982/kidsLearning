@@ -18,6 +18,7 @@ import {
   makeAssessmentRepo,
   makeExercise as buildExercise,
   makeLesson as buildLesson,
+  makeMiniGame as buildMiniGame,
   makeContentSource,
   makeDeps as buildDeps,
 } from '../testing/index.ts';
@@ -238,6 +239,74 @@ describe('buildChildReport', () => {
       { conceptId: 'concept-b', accuracy: 1, attempts: 4, weak: false },
     ]);
     expect(report.weakConcepts).toEqual(['concept-a']);
+  });
+
+  it('lists no concept the content no longer has (retired), keeps the retired lesson stars in the total (G8)', async () => {
+    const profile = newProfile('p1', 'Mia', 'fox', NOW);
+    // Stored progress of a lesson that left the content: 2 stars on one of its exercises, 3 on its boss.
+    const retiredLesson: LessonProgress = {
+      ...newLessonProgress('lp-old', 'p1', 'retired-lesson', NOW),
+      bestStars: { 'retired-01': 2 },
+      bossStars: 3,
+    };
+    const liveProgress = recordExerciseStars(
+      newLessonProgress('lp1', 'p1', 'l1', NOW),
+      'l1-01',
+      3,
+      L1,
+      NOW,
+    );
+    const retired = makeConceptStats('p1', 'retired-concept', [false, false, false]); // would be weak
+    const live = makeConceptStats('p1', 'concept-a', [true, true]);
+    const deps = makeDeps({
+      profiles: makeProfileRepo([profile]),
+      progress: makeProgressRepo([retiredLesson, liveProgress], [retired, live]),
+    });
+
+    const report = await buildChildReport(deps, 'p1');
+
+    expect(report.conceptAccuracy.map((entry) => entry.conceptId)).toEqual(['concept-a']);
+    expect(report.weakConcepts).toEqual([]);
+    expect(report.totalStars).toBe(2 + 3 + 3);
+    expect(report.worlds[0]?.starsEarned).toBe(3); // the world row counts content lessons only
+  });
+
+  it('a concept only a variant, a guided try or a mini-game round mentions still counts as content', async () => {
+    const profile = newProfile('p1', 'Mia', 'fox', NOW);
+    const lesson = buildLesson({
+      id: 'l9',
+      world: 'w1',
+      order: 3,
+      concept: 'concept-l9',
+      guided: [buildExercise({ id: 'l9-g1', concept: 'guided-c' })],
+      exercises: [buildExercise({ id: 'l9-01', concept: 'concept-l9' })],
+      variants: [buildExercise({ id: 'l9-v1', concept: 'variant-c' })],
+    });
+    const game = {
+      ...buildMiniGame({ id: 'mg-rounds', concept: 'game-c', unlockAfter: 'l9' }),
+      rounds: [buildExercise({ id: 'r1', concept: 'round-c' })],
+    };
+    const stats = ['guided-c', 'variant-c', 'game-c', 'round-c', 'gone-c'].map((conceptId) =>
+      makeConceptStats('p1', conceptId, [true]),
+    );
+    const deps = makeDeps({
+      profiles: makeProfileRepo([profile]),
+      progress: makeProgressRepo([], stats),
+      content: makeContentSource({
+        lessons: [...LESSONS, lesson],
+        minigames: [game],
+        catalog: CATALOG,
+      }),
+    });
+
+    const report = await buildChildReport(deps, 'p1');
+
+    expect(report.conceptAccuracy.map((entry) => entry.conceptId)).toEqual([
+      'game-c',
+      'guided-c',
+      'round-c',
+      'variant-c',
+    ]);
   });
 
   it('reports minutes per day over the last 14 days', async () => {

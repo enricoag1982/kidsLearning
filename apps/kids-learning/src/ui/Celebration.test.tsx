@@ -98,6 +98,27 @@ describe('Celebration', () => {
   });
 });
 
+describe('Celebration with a badge the content no longer has (G8)', () => {
+  it('an unseen retired badge never becomes the active celebration, nor blocks the next one', async () => {
+    const services = createTestServices('bundled');
+    const { store } = await renderWithStore(<Celebration />, services);
+    const profileId = store.getState().profile?.id;
+    if (!profileId) throw new Error('no profile');
+
+    await services.deps.rewards?.addEarnedBadge(
+      makeEarnedBadge({ id: 'eb-old', profileId, badgeId: 'retired-badge' }),
+    );
+    await services.deps.rewards?.addEarnedBadge(
+      makeEarnedBadge({ id: 'eb-live', profileId, badgeId: 'first-win' }),
+    );
+    await store.getState().checkForCelebrations();
+
+    await screen.findByRole('alertdialog', { name: 'New badge!' });
+    expect(store.getState().activeCelebration?.id).toBe('eb-live');
+    expect(screen.getByText('First Win')).toBeTruthy();
+  });
+});
+
 describe('Celebration (no active celebration in a plain StoreProvider render)', () => {
   it('renders null without throwing when used outside renderWithStore helpers', async () => {
     const services = createTestServices('bundled');

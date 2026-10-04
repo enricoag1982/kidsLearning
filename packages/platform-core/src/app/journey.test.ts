@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
+import { newUnlock } from '../domain/assessment.ts';
 import type { Track, TracksCatalog, World } from '../domain/journey.ts';
 import type { Lesson } from '../domain/lesson.ts';
 import { newLessonProgress, recordExerciseStars } from '../domain/progress.ts';
@@ -9,6 +10,7 @@ import {
   makeExercise,
   makeLesson as buildLesson,
   makeMiniGame as buildMiniGame,
+  makeAssessmentRepo,
   makeContentSource,
   makeDeps as buildDeps,
 } from '../testing/index.ts';
@@ -124,6 +126,37 @@ describe('loadJourney', () => {
 
     expect(journey.statuses.get('l1')).toBe('available');
     expect(journey.totalStars).toBe(0);
+  });
+
+  it('retired content (G8): progress of a lesson, a mini-game and an unlock the content no longer has is ignored, its stars still count', async () => {
+    const retiredLesson = makeLesson('retired-lesson', 'w-old', 1);
+    const retired = recordExerciseStars(
+      newLessonProgress('p-old', 'profile-1', 'retired-lesson', NOW),
+      'retired-lesson-01',
+      3,
+      retiredLesson,
+      NOW,
+    );
+    const retiredGame: MiniGameProgress = {
+      ...bossMiniGameProgress(1),
+      id: 'mg-old',
+      miniGameId: 'retired-game',
+    };
+    const assessment = makeAssessmentRepo(
+      [],
+      [newUnlock('u1', 'profile-1', 'world', 'retired-world', 'parent', NOW)],
+    );
+    const deps = makeDeps({
+      progress: makeProgressRepo([retired, masteredProgress(L1)], [retiredGame]),
+      assessment,
+    });
+
+    const journey = await loadJourney(deps, 'profile-1');
+
+    expect([...journey.statuses.keys()].sort()).toEqual(['l1', 'l2']);
+    expect(journey.statuses.get('l1')).toBe('mastered');
+    expect(journey.next?.id).toBe('l2');
+    expect(journey.totalStars).toBe(3 + 3);
   });
 
   it('throws a clear error when the content source has no catalog()', async () => {

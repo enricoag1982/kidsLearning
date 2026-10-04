@@ -41,7 +41,7 @@ export {
 } from './domain/profile-settings.ts';
 
 export type { ConceptStats, ConceptTask } from './domain/review.ts';
-export { isWeak, isDue } from './domain/review.ts';
+export { isWeak, isDue, dueWarmUpStats } from './domain/review.ts';
 
 export { unlockedMiniGames } from './domain/play.ts';
 

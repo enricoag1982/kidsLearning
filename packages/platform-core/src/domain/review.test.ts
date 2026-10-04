@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { makeExercise as buildExercise, makeLesson } from '../testing/index.ts';
+import { makeExercise as buildExercise, makeLesson, makeMiniGame } from '../testing/index.ts';
 import { seededRandom } from './random.ts';
 import type { ConceptPoolEntry, ConceptStats } from './review.ts';
 import {
@@ -8,12 +8,15 @@ import {
   applyReviewResult,
   appendResult,
   conceptPool,
+  contentConceptIds,
+  dueWarmUpStats,
   enterReview,
   isDue,
   isWeak,
   newConceptStats,
   pickPracticeTasks,
   pickWarmUp,
+  warmUpConcepts,
 } from './review.ts';
 
 function makeExercise(id: string, concept: string) {
@@ -273,6 +276,52 @@ describe('pickWarmUp', () => {
     expect(tasks[0]?.exercise.id).toBe('bishop-01');
   });
 
+  it('retired concepts (no pool entry) never take a slot: 3 oldest-due retired + 3 live give 3 live tasks', () => {
+    const retired = ['old-a', 'old-b', 'old-c'].map((conceptId) =>
+      stats({ conceptId, box: 1, dueAt: '2025-06-01T00:00:00.000Z' }),
+    );
+    const live = ['rook-move', 'bishop-move', 'queen-move'].map((conceptId) =>
+      stats({ conceptId, box: 1, dueAt: '2026-01-01T00:00:00.000Z' }),
+    );
+
+    const tasks = pickWarmUp([...retired, ...live], poolMap(), NOW, seededRandom(1));
+
+    expect(tasks).toHaveLength(3);
+    expect(tasks.map((t) => t.conceptId).sort()).toEqual([
+      'bishop-move',
+      'queen-move',
+      'rook-move',
+    ]);
+  });
+
+  it('retired concepts do not take the weakest-fill slots either (an empty pool entry counts as retired)', () => {
+    const due = stats({ conceptId: 'rook-move', box: 1, dueAt: '2026-01-01T00:00:00.000Z' });
+    const later = (conceptId: string, recent: readonly boolean[]) =>
+      stats({ conceptId, box: 2, dueAt: '2026-06-01T00:00:00.000Z', recent });
+    const retired = [later('old-a', [false, false, false]), later('old-b', [false, false, false])];
+    const live = [
+      later('bishop-move', [true, true, true]),
+      later('queen-move', [true, true, true]),
+    ];
+    const pool = new Map([...poolMap(), ['old-a', [] as readonly ConceptPoolEntry[]]]);
+
+    const tasks = pickWarmUp([due, ...retired, ...live], pool, NOW, seededRandom(1));
+
+    expect(tasks).toHaveLength(3);
+    expect(tasks.map((t) => t.conceptId).sort()).toEqual([
+      'bishop-move',
+      'queen-move',
+      'rook-move',
+    ]);
+  });
+
+  it('is empty when every concept in review is retired', () => {
+    const retired = ['old-a', 'old-b'].map((conceptId) =>
+      stats({ conceptId, box: 1, dueAt: '2025-06-01T00:00:00.000Z' }),
+    );
+    expect(pickWarmUp(retired, poolMap(), NOW, seededRandom(1))).toEqual([]);
+  });
+
   it('is deterministic for a fixed seed', () => {
     const rook = stats({ conceptId: 'rook-move', box: 1, dueAt: '2026-01-01T00:00:00.000Z' });
     const a = pickWarmUp([rook], poolMap(), NOW, seededRandom(7));
@@ -309,5 +358,62 @@ describe('pickPracticeTasks', () => {
     const a = pickPracticeTasks('rook-move', ROOK_POOL, 'rook-01', 5, seededRandom(3));
     const b = pickPracticeTasks('rook-move', ROOK_POOL, 'rook-01', 5, seededRandom(3));
     expect(a).toEqual(b);
+  });
+});
+
+describe('warmUpConcepts / dueWarmUpStats', () => {
+  const lessons = [
+    makeLesson({
+      id: 'rook',
+      concept: 'rook-move',
+      guided: [makeExercise('rook-g1', 'guided-only')],
+      exercises: [makeExercise('rook-01', 'rook-move')],
+    }),
+  ];
+
+  it('warmUpConcepts holds the concepts of scored exercises only (not guided tries, not the lesson concept)', () => {
+    expect([...warmUpConcepts(lessons)]).toEqual(['rook-move']);
+  });
+
+  it('dueWarmUpStats keeps due stats of a concept the content has, drops retired and not-yet-due ones', () => {
+    const live = stats({ conceptId: 'rook-move', box: 1, dueAt: '2026-01-01T00:00:00.000Z' });
+    const retired = stats({ conceptId: 'old-a', box: 1, dueAt: '2026-01-01T00:00:00.000Z' });
+    const later = stats({ conceptId: 'rook-move', box: 1, dueAt: '2026-06-01T00:00:00.000Z' });
+
+    expect(dueWarmUpStats([retired, live], lessons, NOW)).toEqual([live]);
+    expect(dueWarmUpStats([retired, later], lessons, NOW)).toEqual([]);
+  });
+});
+
+describe('contentConceptIds', () => {
+  it('lists lesson concepts and every exercise concept (guided, scored, variants), plus mini-game and round concepts', () => {
+    const lesson = makeLesson({
+      id: 'rook',
+      concept: 'lesson-c',
+      guided: [makeExercise('g1', 'guided-c')],
+      exercises: [makeExercise('e1', 'scored-c')],
+      variants: [makeExercise('v1', 'variant-c')],
+    });
+    const plain = makeMiniGame({ id: 'plain', concept: 'game-c' });
+    const rounds = {
+      ...makeMiniGame({ id: 'rounds', concept: 'series-c' }),
+      rounds: [makeExercise('r1', 'round-c'), { id: 'r2' }, null],
+    };
+
+    const concepts = contentConceptIds([lesson], [plain, rounds]);
+
+    expect([...concepts].sort()).toEqual([
+      'game-c',
+      'guided-c',
+      'lesson-c',
+      'round-c',
+      'scored-c',
+      'series-c',
+      'variant-c',
+    ]);
+  });
+
+  it('is empty without content', () => {
+    expect(contentConceptIds([]).size).toBe(0);
   });
 });

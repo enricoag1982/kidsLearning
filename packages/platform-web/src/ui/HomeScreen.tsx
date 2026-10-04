@@ -1,6 +1,6 @@
 import type { CSSProperties, JSX } from 'react';
 import { useTranslation } from 'react-i18next';
-import { isDue, lessonStatus, totalStars } from '@learn/platform-core';
+import { dueWarmUpStats, lessonStatus, totalStars } from '@learn/platform-core';
 import { useAppStore, useServices } from '../app/store.ts';
 import { usePack } from '../app/subject.ts';
 import { avatarName, characterName, tContent } from '../content-text.ts';
@@ -132,7 +132,9 @@ export function HomeScreen(): JSX.Element {
       : undefined;
   // Today's warm-up (domain-model.md §3.1): shown even once every lesson is done, so the
   // "Start today" button still has something to offer (review-only sessions).
-  const hasWarmUp = conceptStats.some((entry) => isDue(entry, services.deps.clock.now()));
+  const hasWarmUp =
+    dueWarmUpStats(conceptStats, services.deps.content.lessons(), services.deps.clock.now())
+      .length > 0;
 
   const bubbleText = !journey
     ? ''

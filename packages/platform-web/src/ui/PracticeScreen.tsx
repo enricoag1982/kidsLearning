@@ -1,7 +1,7 @@
 import type { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { ConceptStats, Lesson } from '@learn/platform-core';
-import { isDue, isWeak, lessonStatus, worldOrderById } from '@learn/platform-core';
+import { dueWarmUpStats, isWeak, lessonStatus, worldOrderById } from '@learn/platform-core';
 import { useAppStore, useServices } from '../app/store.ts';
 import { avatarName, tContent } from '../content-text.ts';
 import { NarratedBubble } from './ds/NarratedBubble.tsx';
@@ -77,7 +77,8 @@ export function PracticeScreen(): JSX.Element {
   }
 
   const now = services.deps.clock.now();
-  const dueCount = conceptStats.filter((stats) => isDue(stats, now)).length;
+  // Only concepts the content still has: stored stats of a retired one must not offer a warm-up with nothing to ask.
+  const dueCount = dueWarmUpStats(conceptStats, journey.lessons, now).length;
 
   const progressByLesson = new Map(progress.map((entry) => [entry.lessonId, entry]));
   const statsByConcept = new Map(conceptStats.map((stats) => [stats.conceptId, stats]));
