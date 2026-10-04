@@ -79,6 +79,10 @@ function hasGenerate(raw: unknown): boolean {
  * member per mode) file schemas of `subject`. */
 export function createLessonSchemas(subject: SubjectContent) {
   const exerciseSchema = createExerciseSchema(subject.kinds, subject.stimulus);
+  const entrySchema = createExerciseEntrySchema(
+    exerciseSchema,
+    Object.keys(subject.templates ?? {}),
+  );
   const lessonSchema = z
     .object({
       id: keySchema,
@@ -92,9 +96,9 @@ export function createLessonSchemas(subject: SubjectContent) {
       /** Defaults to `<id>.story` when absent. */
       story: textRefSchema.optional(),
       demo: subject.demo.schema,
-      guided: z.array(exerciseSchema),
-      exercises: z.array(exerciseSchema).min(1),
-      variants: z.array(exerciseSchema).optional(),
+      guided: z.array(entrySchema),
+      exercises: z.array(entrySchema).min(1),
+      variants: z.array(entrySchema).optional(),
       boss: keySchema.optional(),
     })
     .strict();

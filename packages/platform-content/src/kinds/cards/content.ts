@@ -39,7 +39,7 @@ export interface CardContentOptions {
 export function createCardContent({ characters, templates }: CardContentOptions): SubjectContent {
   return {
     kinds: CARD_KIND_CONTENT,
-    modes: { series: createSeriesContent(cardExerciseSchema) },
+    modes: { series: createSeriesContent(cardExerciseSchema, Object.keys(templates ?? {})) },
     ...(templates === undefined ? {} : { templates }),
     stimulus: cardStimulus,
     demo: cardDemo,

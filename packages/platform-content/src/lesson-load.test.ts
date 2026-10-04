@@ -1,7 +1,7 @@
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { stringify } from 'yaml';
-import { loadContent } from './lesson-load.ts';
+import { loadContent, loadSubjectContent } from './lesson-load.ts';
 import { loadLocales } from './load.ts';
 import {
   dir,
@@ -237,6 +237,57 @@ describe('loadContent', () => {
       expect(loaded().minigames[0]?.titleKey).toBe('lessons:mg1.title');
       expect(loaded().minigames[0]?.goalKey).toBe('lessons:mg1.goal');
     });
+  });
+});
+
+describe('loadSubjectContent', () => {
+  it('returns the bundle `loadContent` returns and, with nothing generated, the very locales it was given', () => {
+    writeLesson();
+    writeMiniGame();
+    writeDefaultLocales();
+    const locales = loadLocales(join(dir, 'locales'));
+
+    const result = loadSubjectContent(
+      join(dir, 'lessons'),
+      join(dir, 'minigames'),
+      locales,
+      fixtureSubject,
+    );
+
+    expect(result.locales).toBe(locales);
+    expect(result.content).toEqual(loaded());
+  });
+
+  it('reports a `generate:` entry of a subject without templates as an unknown template, at its own path', () => {
+    writeLesson({
+      exercises: [{ id: 'sums', generate: { template: 'add', count: 2, seed: 1 } }],
+    });
+    writeMiniGame();
+    writeDefaultLocales();
+
+    expect(issuesOf()).toContain(
+      'lessons/w1/demo-lesson.yaml: exercises.0.generate.template: unknown template "add"',
+    );
+  });
+
+  it('reports an authored `lessons.gen` key as reserved', () => {
+    writeLesson();
+    writeMiniGame();
+    writeDefaultLocales();
+    write(
+      'locales/en/lessons.yaml',
+      stringify({
+        'demo-lesson': { title: 'Title', story: 'Story' },
+        'demo-demo': 'Demo',
+        'demo-01': 'Exercise',
+        'opt-a': 'Option A',
+        'opt-b': 'Option B',
+        mg1: { title: 'Title', goal: 'Goal' },
+        gen: { mine: 'Not allowed' },
+      }),
+    );
+
+    expect(issuesOf()).toEqual(['lessons: "gen" is reserved for generated texts']);
   });
 });
 

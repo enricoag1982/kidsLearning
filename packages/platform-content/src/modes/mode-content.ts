@@ -2,33 +2,30 @@
 // (`modes/index.ts`), the content counterpart of core's `MiniGameMode`.
 import type { ExerciseDefBase, MiniGameBase } from '@learn/platform-core';
 import type { z } from 'zod';
-import { compileExercises } from '../kinds/compile-exercise.ts';
-import type { AnyExerciseKindContent } from '../kinds/kind-content.ts';
-import type { ExerciseYamlBase, StimulusContent } from '../subject.ts';
+import type { ExerciseEntryYaml } from '../generate/template.ts';
+import { compileExercises, type CompileEnv } from '../kinds/compile-exercise.ts';
 
-/** `relPath` for a mode's own position field (chess: `static`, `versus`, compiled directly); `exercises` compiles an
- * exercise array like a lesson's (`series`' `rounds`). */
+/** `relPath` for a mode's own position field (chess: `static`, `versus`, compiled directly); `exercises` expands and compiles an
+ * entry array like a lesson's (`series`' `rounds`: authored items and `generate:` entries). */
 export interface MiniGameCompileContext {
   readonly relPath: string;
   readonly issues: string[];
   exercises(
     field: string,
-    raw: readonly ExerciseYamlBase[],
+    raw: readonly ExerciseEntryYaml[],
     concept: string,
   ): readonly ExerciseDefBase[] | null;
 }
 
 export function makeMiniGameCompileContext(
   relPath: string,
-  kinds: Readonly<Record<string, AnyExerciseKindContent>>,
-  stimulus: StimulusContent,
-  issues: string[],
+  env: CompileEnv,
 ): MiniGameCompileContext {
   return {
     relPath,
-    issues,
+    issues: env.issues,
     exercises(field, raw, concept) {
-      return compileExercises(relPath, field, raw, concept, stimulus, kinds, issues);
+      return compileExercises(relPath, field, raw, concept, env);
     },
   };
 }

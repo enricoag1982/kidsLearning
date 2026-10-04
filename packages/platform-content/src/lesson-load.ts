@@ -1,7 +1,8 @@
 import { statSync } from 'node:fs';
 import { join } from 'node:path';
 import type { CompiledContent, ExerciseDefBase, Lesson, MiniGame } from '@learn/platform-core';
-import { compileExercises } from './kinds/compile-exercise.ts';
+import { createGeneratedTexts, mergeGeneratedTexts } from './generate/texts.ts';
+import { compileExercises, type CompileEnv } from './kinds/compile-exercise.ts';
 import { createLessonSchemas } from './lesson-schema.ts';
 import { checkTextKey, ContentError, type Locales } from './load.ts';
 import { makeMiniGameCompileContext, type ModeVerifyContext } from './modes/mode-content.ts';
@@ -16,46 +17,22 @@ function compileLessonFile(
   worldName: string,
   content: SubjectContent,
   schemas: LessonSchemas,
-  issues: string[],
+  env: CompileEnv,
 ): Lesson | null {
   const loaded = loadYaml(filePath, relPath, schemas.lessonSchema);
   if ('issues' in loaded) {
-    issues.push(...loaded.issues);
+    env.issues.push(...loaded.issues);
     return null;
   }
   const data = loaded.data;
 
   const demo = content.demo.compile(data.demo, `lessons:${data.demo.text ?? `${data.id}.demo`}`, {
     where: `${relPath}: demo`,
-    issues,
+    issues: env.issues,
   });
-  const guided = compileExercises(
-    relPath,
-    'guided',
-    data.guided,
-    data.concept,
-    content.stimulus,
-    content.kinds,
-    issues,
-  );
-  const exercises = compileExercises(
-    relPath,
-    'exercises',
-    data.exercises,
-    data.concept,
-    content.stimulus,
-    content.kinds,
-    issues,
-  );
-  const variants = compileExercises(
-    relPath,
-    'variants',
-    data.variants ?? [],
-    data.concept,
-    content.stimulus,
-    content.kinds,
-    issues,
-  );
+  const guided = compileExercises(relPath, 'guided', data.guided, data.concept, env);
+  const exercises = compileExercises(relPath, 'exercises', data.exercises, data.concept, env);
+  const variants = compileExercises(relPath, 'variants', data.variants ?? [], data.concept, env);
   if (demo === null || guided === null || exercises === null || variants === null) {
     return null;
   }
@@ -81,19 +58,19 @@ function compileMiniGameFile(
   relPath: string,
   content: SubjectContent,
   schemas: LessonSchemas,
-  issues: string[],
+  env: CompileEnv,
 ): MiniGame | null {
   const loaded = loadYaml(filePath, relPath, schemas.miniGameSchema);
   if ('issues' in loaded) {
-    issues.push(...loaded.issues);
+    env.issues.push(...loaded.issues);
     return null;
   }
   const data = loaded.data;
 
-  const ctx = makeMiniGameCompileContext(relPath, content.kinds, content.stimulus, issues);
+  const ctx = makeMiniGameCompileContext(relPath, env);
   const mode = data.mode ?? content.defaultMode;
   if (mode === undefined) {
-    issues.push(`${relPath}: mode: required (the subject has no default mode)`);
+    env.issues.push(`${relPath}: mode: required (the subject has no default mode)`);
     return null;
   }
   return content.modes[mode]?.compile(data, ctx) ?? null;
@@ -220,19 +197,36 @@ function validateSemantics(
   }
 }
 
+/** What {@link loadSubjectContent} returns: the compiled bundle and the locales to build with (the authored ones plus the
+ * generated `lessons.gen.*` texts). */
+export interface LoadedSubjectContent<C extends CompiledContent = CompiledContent> {
+  readonly content: C;
+  readonly locales: Locales;
+}
+
 /** Loads and validates every lesson and mini-game file into `C` (the caller's concrete bundle, inferred); collects every
- * issue before throwing one `ContentError`. */
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- see above.
-export function loadContent<C extends CompiledContent = CompiledContent>(
+ * issue before throwing one `ContentError`. `generate:` entries expand first (`generate/expand.ts`); their texts are merged
+ * into the returned locales BEFORE the semantic checks, so every text-key check sees them like authored texts. */
+export function loadSubjectContent<C extends CompiledContent = CompiledContent>(
   lessonsDir: string,
   minigamesDir: string,
   locales: Locales,
   content: SubjectContent,
-): C {
+): LoadedSubjectContent<C> {
   const issues: string[] = [];
   const lessons: Lesson[] = [];
   const minigames: MiniGame[] = [];
   const schemas = createLessonSchemas(content);
+  const generatedTexts = createGeneratedTexts();
+  const env: CompileEnv = {
+    stimulus: content.stimulus,
+    kinds: content.kinds,
+    templates: content.templates ?? {},
+    exerciseSchema: schemas.exerciseSchema,
+    texts: generatedTexts,
+    locales,
+    issues,
+  };
 
   for (const worldName of readEntries(lessonsDir, issues, 'lessons directory')) {
     const worldPath = join(lessonsDir, worldName);
@@ -254,7 +248,7 @@ export function loadContent<C extends CompiledContent = CompiledContent>(
         worldName,
         content,
         schemas,
-        issues,
+        env,
       );
       if (lesson !== null) {
         lessons.push(lesson);
@@ -273,19 +267,31 @@ export function loadContent<C extends CompiledContent = CompiledContent>(
       relPath,
       content,
       schemas,
-      issues,
+      env,
     );
     if (minigame !== null) {
       minigames.push(minigame);
     }
   }
 
-  validateSemantics(lessons, minigames, locales, content, issues);
+  const allLocales = mergeGeneratedTexts(locales, generatedTexts, issues);
+  validateSemantics(lessons, minigames, allLocales, content, issues);
 
   if (issues.length > 0) {
     throw new ContentError(issues);
   }
 
   // Single trust boundary from the generic bundle to the subject's own concrete content shape.
-  return { version: 1, lessons, minigames } as unknown as C;
+  return { content: { version: 1, lessons, minigames } as unknown as C, locales: allLocales };
+}
+
+/** {@link loadSubjectContent}'s bundle alone, for callers that already hold the locales. */
+// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters -- see above.
+export function loadContent<C extends CompiledContent = CompiledContent>(
+  lessonsDir: string,
+  minigamesDir: string,
+  locales: Locales,
+  content: SubjectContent,
+): C {
+  return loadSubjectContent<C>(lessonsDir, minigamesDir, locales, content).content;
 }
