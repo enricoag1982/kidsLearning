@@ -49,6 +49,8 @@ const CHOICE = exerciseOf('count-01');
 const TRUE_FALSE = exerciseOf('count-02');
 const NUMBER_ENTRY = exerciseOf('count-03');
 const ORDER = exerciseOf('count-04');
+/** The `generate:` entry's items (`fixture-add`, number-entry) that follow the four authored exercises. */
+const GENERATED = EXERCISES.filter((def) => def.id.startsWith('fx-add-'));
 
 beforeAll(() => {
   initI18n(cardLocales as Parameters<typeof initI18n>[0]);
@@ -122,6 +124,15 @@ async function next(): Promise<void> {
 
 const instruction = (def: CardExerciseDef): string => text(def.textKey);
 
+/** The generated exercises, each solved on its first try. */
+async function solveGenerated(): Promise<void> {
+  for (const def of GENERATED) {
+    await screen.findByText(instruction(def));
+    await solve(def);
+    await next();
+  }
+}
+
 /** The note inside the Owl bubble under the instruction. */
 async function expectNote(note: string): Promise<void> {
   expect(await screen.findByText(note)).toBeTruthy();
@@ -146,7 +157,7 @@ describe('a card subject end to end', () => {
     }
 
     await screen.findByText('Lesson complete!');
-    expect(screen.getByText('+12 stars')).toBeTruthy();
+    expect(screen.getByText(`+${String(EXERCISES.length * 3)} stars`)).toBeTruthy();
     expect(screen.getByTestId('stars-row').querySelectorAll('.reward-star-pop')).toHaveLength(3);
     const saved = await loadProgress(services.deps, profileId);
     const progress = saved.find((entry) => entry.lessonId === lesson.id);
@@ -179,13 +190,18 @@ describe('a card subject end to end', () => {
       await expectNote('Well done!');
       await next();
     }
+    await solveGenerated();
 
     await screen.findByText('Lesson complete!');
-    expect(screen.getByText('+8 stars')).toBeTruthy();
+    expect(
+      screen.getByText(`+${String(notes.length * 2 + GENERATED.length * 3)} stars`),
+    ).toBeTruthy();
     const progress = (await loadProgress(services.deps, profileId)).find(
       (entry) => entry.lessonId === lesson.id,
     );
-    expect(progress?.bestStars).toEqual(Object.fromEntries(EXERCISES.map((def) => [def.id, 2])));
+    expect(progress?.bestStars).toEqual(
+      Object.fromEntries(EXERCISES.map((def) => [def.id, GENERATED.includes(def) ? 3 : 2])),
+    );
   });
 
   it("speaks each kind's hints and shows what they do on the cards", async () => {
@@ -250,6 +266,7 @@ describe('a card subject end to end', () => {
       { type: 'place-item', itemId: 'three' },
     ]);
     await next();
+    await solveGenerated();
 
     await screen.findByText('Lesson complete!');
   });

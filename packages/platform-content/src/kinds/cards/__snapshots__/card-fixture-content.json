@@ -103,6 +103,39 @@
       "two",
       "three"
      ]
+    },
+    {
+     "id": "fx-add-1",
+     "concept": "counting",
+     "textKey": "lessons:gen.fx-add-1.text",
+     "prompt": {
+      "big": "1 + 1"
+     },
+     "type": "number-entry",
+     "answer": 2,
+     "maxDigits": 2
+    },
+    {
+     "id": "fx-add-2",
+     "concept": "counting",
+     "textKey": "lessons:gen.fx-add-2.text",
+     "prompt": {
+      "big": "5 + 4"
+     },
+     "type": "number-entry",
+     "answer": 9,
+     "maxDigits": 2
+    },
+    {
+     "id": "fx-add-3",
+     "concept": "counting",
+     "textKey": "lessons:gen.fx-add-3.text",
+     "prompt": {
+      "big": "5 + 3"
+     },
+     "type": "number-entry",
+     "answer": 8,
+     "maxDigits": 2
     }
    ]
   }
@@ -158,6 +191,28 @@
      },
      "type": "true-false",
      "answer": true
+    },
+    {
+     "id": "fx-round-1",
+     "concept": "counting",
+     "textKey": "lessons:gen.fx-round-1.text",
+     "prompt": {
+      "big": "2 + 11"
+     },
+     "type": "number-entry",
+     "answer": 13,
+     "maxDigits": 2
+    },
+    {
+     "id": "fx-round-2",
+     "concept": "counting",
+     "textKey": "lessons:gen.fx-round-2.text",
+     "prompt": {
+      "big": "13 + 4"
+     },
+     "type": "number-entry",
+     "answer": 17,
+     "maxDigits": 2
     }
    ],
    "errors3": 0,

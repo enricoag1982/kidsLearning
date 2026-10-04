@@ -18,6 +18,7 @@ import { createCardContent } from '@learn/platform-content/kinds/cards/content';
 import {
   CARD_FIXTURE_CHARACTERS,
   CARD_FIXTURE_ROOT,
+  CARD_FIXTURE_TEMPLATES,
 } from '@learn/platform-content/testing/card-fixture';
 import { PackProvider } from '../app/subject.ts';
 import type { LoadedSubject, SubjectEntry, SubjectWeb } from '../app/subject.ts';
@@ -27,7 +28,7 @@ import { createTestEntry } from './test-pack.ts';
 
 /** The fixture subject compiled once per test file (YAML → JSON, in memory). */
 export const cardFixture = compileAll(
-  createCardContent({ characters: CARD_FIXTURE_CHARACTERS }),
+  createCardContent({ characters: CARD_FIXTURE_CHARACTERS, templates: CARD_FIXTURE_TEMPLATES }),
   CARD_FIXTURE_ROOT,
 );
 
