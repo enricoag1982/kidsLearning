@@ -1,6 +1,7 @@
-// `pnpm test:slow`: the exhaustive claim behind the naked-single generator sets (M14.6). 288 solutions × 2^16 clue sets ≈ 19 M states.
+// `pnpm test:slow`: the reason techniques are allowed sets, not levels (M14.6): strictly cheapest-first, a 4 × 4 puzzle never needs a
+// naked single. 288 solutions × 2^16 clue sets ≈ 19 M states.
 import { describe, expect, it } from 'vitest';
-import { candidates, nextSudokuStep } from './sudoku.ts';
+import { LESSON_TECHNIQUES, SUDOKU_ORDER, candidates, nextSudokuStep } from './sudoku.ts';
 
 // Every full 4 × 4 grid (288 of them).
 function allSolutions(): number[][] {
@@ -29,13 +30,14 @@ describe('4 × 4 sudoku and naked singles', () => {
     for (const solution of solutions) {
       for (let keep = 0; keep < 1 << 16; keep += 1) {
         const grid = solution.map((digit, cell) => (keep & (1 << cell) ? digit : 0));
-        if (nextSudokuStep(4, grid, 3, 'naked-single')?.technique !== 'naked-single') {
+        if (nextSudokuStep(4, grid, SUDOKU_ORDER, 'naked-single')?.technique !== 'naked-single') {
           continue;
         }
         withNaked += 1;
-        // Strictly lowest-first, a 4 × 4 puzzle never needs `naked-single`: the level-2 scan always finds something first.
-        if (nextSudokuStep(4, grid, 2) === undefined) {
-          expect.fail(`no level-1/2 step but a naked single: ${grid.join('')}`);
+        // Strictly cheapest-first, a 4 × 4 puzzle never needs `naked-single`: last-cell / hidden-single always find a step first.
+        // So the "Only number" lessons allow `naked-single` without `hidden-single` (`LESSON_TECHNIQUES`).
+        if (nextSudokuStep(4, grid, LESSON_TECHNIQUES['hidden-single']) === undefined) {
+          expect.fail(`no last-cell / hidden-single step but a naked single: ${grid.join('')}`);
         }
       }
     }

@@ -1,11 +1,12 @@
 // Build-time sudoku generator for the `generate:` templates: a random full grid, then clues removed in a random order while the
-// puzzle stays unique and solvable with the lesson's technique level. Deterministic for a seed. Not part of the app bundle.
+// puzzle stays unique and solvable with the lesson's allowed techniques. Deterministic for a seed. Not part of the app bundle.
 import { shuffle, type Random } from '@learn/platform-core/domain/random';
 import {
-  SUDOKU_LEVEL,
+  LESSON_TECHNIQUES,
   candidates,
   formatSudoku,
   humanSolveSudoku,
+  type SudokuFocus,
   type SudokuGrid,
   type SudokuSize,
   type SudokuTechnique,
@@ -16,16 +17,18 @@ export interface SudokuSpec {
   readonly size: SudokuSize;
   /** Empty cells of the puzzle (exactly). */
   readonly empty: number;
-  /** The puzzle is solvable with the techniques up to this one's level, and needs this one at least `minCount` times. */
-  readonly technique: SudokuTechnique;
-  /** Default 1. */
+  /** The puzzle is solvable with `LESSON_TECHNIQUES[focus]`. */
+  readonly focus: SudokuFocus;
+  /** The puzzle needs this technique at least `minCount` times (strictly cheapest-first, so `counts` say what it needs). */
+  readonly require?: SudokuTechnique;
+  /** Default 1 when `require` is set. */
   readonly minCount?: number;
 }
 
 export interface GeneratedSudoku {
   readonly givens: readonly string[];
   readonly solution: readonly string[];
-  /** What the puzzle needs (lowest technique first). */
+  /** What the puzzle needs (cheapest allowed technique first). */
   readonly counts: Readonly<Record<SudokuTechnique, number>>;
   /** The tries it took (1 = the first). */
   readonly tries: number;
@@ -51,15 +54,15 @@ function randomSolution(size: SudokuSize, random: Random): SudokuGrid {
   return grid;
 }
 
-/** A puzzle for the spec, or `undefined` when no try within `maxTries` ends with exactly `spec.empty` empty cells and the technique. */
+/** A puzzle for the spec, or `undefined` when no try within `maxTries` ends with exactly `spec.empty` empty cells (and `require` when set). */
 export function generateSudoku(
   spec: SudokuSpec,
   random: Random,
   maxTries = 200,
 ): GeneratedSudoku | undefined {
-  const { size, empty, technique } = spec;
+  const { size, empty, require } = spec;
   const minCount = spec.minCount ?? 1;
-  const level = SUDOKU_LEVEL[technique];
+  const allowed = LESSON_TECHNIQUES[spec.focus];
   const cellCount = size * size;
   if (!Number.isInteger(empty) || empty < 0 || empty > cellCount) {
     throw new RangeError(
@@ -80,7 +83,7 @@ export function generateSudoku(
       puzzle[cell] = 0;
       if (
         countSudokuSolutions(size, puzzle) === 1 &&
-        humanSolveSudoku(size, puzzle, level).solved
+        humanSolveSudoku(size, puzzle, allowed).solved
       ) {
         empties += 1;
       } else {
@@ -90,8 +93,8 @@ export function generateSudoku(
     if (empties !== empty) {
       continue;
     }
-    const { counts } = humanSolveSudoku(size, puzzle, level);
-    if (counts[technique] >= minCount) {
+    const { counts } = humanSolveSudoku(size, puzzle, allowed);
+    if (require === undefined || counts[require] >= minCount) {
       return {
         givens: formatSudoku(size, puzzle),
         solution: formatSudoku(size, solution),

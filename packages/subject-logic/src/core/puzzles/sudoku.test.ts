@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
-  SUDOKU_LEVEL,
+  LESSON_TECHNIQUES,
+  SUDOKU_ORDER,
   boxShape,
   candidates,
   conflictUnit,
@@ -154,9 +155,9 @@ const NAKED_SINGLE = {
 };
 
 describe('human solver', () => {
-  it('last-cell: solves at level 1 with last-cell steps only', () => {
+  it('last-cell: solves with last-cell steps only', () => {
     const { size, grid } = parseSudoku(LAST_CELL.givens);
-    const result = humanSolveSudoku(size, grid, 1);
+    const result = humanSolveSudoku(size, grid, LESSON_TECHNIQUES['last-cell']);
     expect(result.solved).toBe(true);
     expect(formatSudoku(size, result.grid)).toEqual(LAST_CELL.solution);
     expect(result.counts).toEqual({ 'last-cell': 4, 'hidden-single': 0, 'naked-single': 0 });
@@ -175,14 +176,14 @@ describe('human solver', () => {
     });
   });
 
-  it('hidden-single: level 1 is stuck, level 2 solves', () => {
+  it('hidden-single: last-cell alone is stuck, the hidden-single set solves', () => {
     const { size, grid } = parseSudoku(HIDDEN_SINGLE.givens);
-    const stuck = humanSolveSudoku(size, grid, 1);
+    const stuck = humanSolveSudoku(size, grid, LESSON_TECHNIQUES['last-cell']);
     expect(stuck.solved).toBe(false);
     expect(stuck.steps).toHaveLength(0);
     expect(stuck.grid).toEqual(grid);
 
-    const result = humanSolveSudoku(size, grid, 2);
+    const result = humanSolveSudoku(size, grid, LESSON_TECHNIQUES['hidden-single']);
     expect(result.solved).toBe(true);
     expect(formatSudoku(size, result.grid)).toEqual(HIDDEN_SINGLE.solution);
     expect(result.counts).toEqual({ 'last-cell': 4, 'hidden-single': 2, 'naked-single': 0 });
@@ -191,14 +192,29 @@ describe('human solver', () => {
     expect(first?.units).toHaveLength(1);
   });
 
-  it('naked-single: level 2 is stuck, level 3 solves (6 × 6)', () => {
+  it('naked-single: the naked-single set (no hidden-single) solves the same 4 × 4 puzzle', () => {
+    const { size, grid } = parseSudoku(HIDDEN_SINGLE.givens);
+    const result = humanSolveSudoku(size, grid, LESSON_TECHNIQUES['naked-single']);
+    expect(result.solved).toBe(true);
+    expect(formatSudoku(size, result.grid)).toEqual(HIDDEN_SINGLE.solution);
+    expect(result.counts).toEqual({ 'last-cell': 4, 'hidden-single': 0, 'naked-single': 2 });
+    const first = result.steps[0];
+    expect(first?.technique).toBe('naked-single');
+    expect(first?.units.map((unit) => unit.kind)).toEqual(['row', 'column', 'box']);
+  });
+
+  it('all techniques: the hidden-single set is stuck, the full set solves (6 × 6)', () => {
     const { size, grid } = parseSudoku(NAKED_SINGLE.givens);
-    const stuck = humanSolveSudoku(size, grid, 2);
+    const stuck = humanSolveSudoku(size, grid, LESSON_TECHNIQUES['hidden-single']);
     expect(stuck.solved).toBe(false);
     expect(stuck.counts['naked-single']).toBe(0);
     expect(stuck.steps.length).toBeGreaterThan(0);
+    // The naked-single set solves it too, with more naked singles (it has no hidden-single step to use).
+    const nakedOnly = humanSolveSudoku(size, grid, LESSON_TECHNIQUES['naked-single']);
+    expect(nakedOnly.solved).toBe(true);
+    expect(nakedOnly.counts).toEqual({ 'last-cell': 13, 'hidden-single': 0, 'naked-single': 7 });
 
-    const result = humanSolveSudoku(size, grid, 3);
+    const result = humanSolveSudoku(size, grid, LESSON_TECHNIQUES.all);
     expect(result.solved).toBe(true);
     expect(formatSudoku(size, result.grid)).toEqual(NAKED_SINGLE.solution);
     expect(result.counts).toEqual({ 'last-cell': 13, 'hidden-single': 6, 'naked-single': 1 });
@@ -208,14 +224,16 @@ describe('human solver', () => {
   });
 
   it('every step of every puzzle puts the solution value in an empty cell', () => {
-    for (const [puzzle, level] of [
-      [LAST_CELL, 1],
-      [HIDDEN_SINGLE, 2],
-      [NAKED_SINGLE, 3],
+    for (const [puzzle, allowed] of [
+      [LAST_CELL, LESSON_TECHNIQUES['last-cell']],
+      [HIDDEN_SINGLE, LESSON_TECHNIQUES['hidden-single']],
+      [HIDDEN_SINGLE, LESSON_TECHNIQUES['naked-single']],
+      [NAKED_SINGLE, LESSON_TECHNIQUES['naked-single']],
+      [NAKED_SINGLE, LESSON_TECHNIQUES.all],
     ] as const) {
       const { size, grid } = parseSudoku(puzzle.givens);
       const solution = parseSudoku(puzzle.solution).grid;
-      const result = humanSolveSudoku(size, grid, level);
+      const result = humanSolveSudoku(size, grid, allowed);
       const current = [...grid];
       for (const step of result.steps) {
         expect(current[step.cell]).toBe(0);
@@ -230,26 +248,38 @@ describe('human solver', () => {
   it('does not change the input grid', () => {
     const { size, grid } = parseSudoku(HIDDEN_SINGLE.givens);
     const copy = [...grid];
-    humanSolveSudoku(size, grid, 3);
+    humanSolveSudoku(size, grid, SUDOKU_ORDER);
     expect(grid).toEqual(copy);
   });
 
   it('a solved grid has no step; an empty grid is stuck', () => {
     const solved = parseSudoku(SOLVED_4);
-    expect(nextSudokuStep(4, solved.grid, 3)).toBeUndefined();
-    expect(humanSolveSudoku(4, solved.grid, 3)).toMatchObject({ solved: true, steps: [] });
+    expect(nextSudokuStep(4, solved.grid, SUDOKU_ORDER)).toBeUndefined();
+    expect(humanSolveSudoku(4, solved.grid, SUDOKU_ORDER)).toMatchObject({
+      solved: true,
+      steps: [],
+    });
     const empty = parseSudoku(['....', '....', '....', '....']);
-    expect(humanSolveSudoku(4, empty.grid, 3)).toMatchObject({ solved: false, steps: [] });
+    expect(humanSolveSudoku(4, empty.grid, SUDOKU_ORDER)).toMatchObject({
+      solved: false,
+      steps: [],
+    });
   });
 
   it('a contradictory grid is never reported solved', () => {
     // A full grid with a repeated digit in a row.
     const { size, grid } = parseSudoku(['1134', '3412', '2143', '4321']);
-    expect(humanSolveSudoku(size, grid, 3).solved).toBe(false);
+    expect(humanSolveSudoku(size, grid, SUDOKU_ORDER).solved).toBe(false);
   });
 
-  it('levels: last-cell 1, hidden-single 2, naked-single 3', () => {
-    expect(SUDOKU_LEVEL).toEqual({ 'last-cell': 1, 'hidden-single': 2, 'naked-single': 3 });
+  it('the order and the lesson sets', () => {
+    expect(SUDOKU_ORDER).toEqual(['last-cell', 'hidden-single', 'naked-single']);
+    expect(LESSON_TECHNIQUES).toEqual({
+      'last-cell': ['last-cell'],
+      'hidden-single': ['last-cell', 'hidden-single'],
+      'naked-single': ['last-cell', 'naked-single'],
+      all: ['last-cell', 'hidden-single', 'naked-single'],
+    });
   });
 });
 
@@ -258,40 +288,60 @@ describe('nextSudokuStep', () => {
   const { size, grid } = parseSudoku(NAKED_SINGLE.givens);
   const solution = parseSudoku(NAKED_SINGLE.solution).grid;
 
-  it('lowest level first: last-cell while one exists', () => {
-    expect(nextSudokuStep(size, grid, 3)?.technique).toBe('last-cell');
-    expect(nextSudokuStep(size, grid, 1)?.technique).toBe('last-cell');
+  it('cheapest allowed technique first: last-cell while one exists', () => {
+    expect(nextSudokuStep(size, grid, SUDOKU_ORDER)?.technique).toBe('last-cell');
+    expect(nextSudokuStep(size, grid, ['naked-single', 'last-cell'])?.technique).toBe('last-cell');
+  });
+
+  it('only allowed techniques are used', () => {
+    expect(nextSudokuStep(size, grid, ['hidden-single'])?.technique).toBe('hidden-single');
+    expect(nextSudokuStep(size, grid, ['naked-single'])?.technique).toBe('naked-single');
+    expect(nextSudokuStep(size, grid, [])).toBeUndefined();
+    // Without last-cell the hidden single comes first (SUDOKU_ORDER), whatever the order of `allowed`.
+    expect(nextSudokuStep(size, grid, ['naked-single', 'hidden-single'])?.technique).toBe(
+      'hidden-single',
+    );
   });
 
   it('`prefer` returns the preferred technique when it is available and allowed', () => {
-    for (const prefer of ['last-cell', 'hidden-single', 'naked-single'] as const) {
-      expect(nextSudokuStep(size, grid, 3, prefer)?.technique).toBe(prefer);
+    for (const prefer of SUDOKU_ORDER) {
+      expect(nextSudokuStep(size, grid, SUDOKU_ORDER, prefer)?.technique).toBe(prefer);
     }
-    expect(nextSudokuStep(size, grid, 2, 'hidden-single')?.technique).toBe('hidden-single');
+    expect(
+      nextSudokuStep(size, grid, LESSON_TECHNIQUES['hidden-single'], 'hidden-single')?.technique,
+    ).toBe('hidden-single');
   });
 
   it('every preferred step is a correct deduction in an empty cell', () => {
-    for (const prefer of ['last-cell', 'hidden-single', 'naked-single'] as const) {
-      const step = nextSudokuStep(size, grid, 3, prefer);
+    for (const prefer of SUDOKU_ORDER) {
+      const step = nextSudokuStep(size, grid, SUDOKU_ORDER, prefer);
       expect(grid[step?.cell ?? 0]).toBe(0);
       expect(step?.value).toBe(solution[step?.cell ?? 0]);
     }
   });
 
-  it('`prefer` above maxLevel is ignored', () => {
-    expect(nextSudokuStep(size, grid, 1, 'naked-single')?.technique).toBe('last-cell');
-    expect(nextSudokuStep(size, grid, 2, 'naked-single')?.technique).toBe('last-cell');
+  it('`prefer` outside `allowed` is ignored', () => {
+    expect(
+      nextSudokuStep(size, grid, LESSON_TECHNIQUES['last-cell'], 'naked-single')?.technique,
+    ).toBe('last-cell');
+    expect(
+      nextSudokuStep(size, grid, LESSON_TECHNIQUES['hidden-single'], 'naked-single')?.technique,
+    ).toBe('last-cell');
   });
 
-  it('an unavailable `prefer` falls back to the lowest level', () => {
+  it('an unavailable `prefer` falls back to the cheapest allowed technique', () => {
     // No unit of this 4 × 4 puzzle has one empty cell yet.
     const hidden = parseSudoku(HIDDEN_SINGLE.givens);
-    expect(nextSudokuStep(4, hidden.grid, 3, 'last-cell')?.technique).toBe('hidden-single');
-    expect(nextSudokuStep(4, hidden.grid, 1, 'hidden-single')).toBeUndefined();
+    expect(nextSudokuStep(4, hidden.grid, SUDOKU_ORDER, 'last-cell')?.technique).toBe(
+      'hidden-single',
+    );
+    expect(
+      nextSudokuStep(4, hidden.grid, LESSON_TECHNIQUES['last-cell'], 'hidden-single'),
+    ).toBeUndefined();
   });
 
   it('a hidden single: a unit, a digit missing from it, its only place', () => {
-    const step = nextSudokuStep(size, grid, 3, 'hidden-single');
+    const step = nextSudokuStep(size, grid, SUDOKU_ORDER, 'hidden-single');
     expect(step?.units).toHaveLength(1);
     const [unit] = step?.units ?? [];
     if (!step || !unit) {
@@ -306,7 +356,7 @@ describe('nextSudokuStep', () => {
   });
 
   it('a naked single: the only candidate of its cell, with the cell’s row, column and box', () => {
-    const step = nextSudokuStep(size, grid, 3, 'naked-single');
+    const step = nextSudokuStep(size, grid, SUDOKU_ORDER, 'naked-single');
     if (!step) {
       throw new Error('no naked single');
     }

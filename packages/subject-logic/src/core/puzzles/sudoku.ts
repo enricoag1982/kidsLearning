@@ -13,12 +13,24 @@ export interface Unit {
 }
 export type SudokuTechnique = 'last-cell' | 'hidden-single' | 'naked-single';
 
-/** The level a technique belongs to: a lesson allows the techniques up to its level. */
-export const SUDOKU_LEVEL: Readonly<Record<SudokuTechnique, 1 | 2 | 3>> = {
-  'last-cell': 1,
-  'hidden-single': 2,
-  'naked-single': 3,
-};
+/** The order techniques are tried in: cheapest to spot first. */
+export const SUDOKU_ORDER: readonly SudokuTechnique[] = [
+  'last-cell',
+  'hidden-single',
+  'naked-single',
+];
+
+/**
+ * The techniques a lesson allows, by what it teaches (its focus). Sets, not levels: strictly lowest-first, a 4 × 4 puzzle never needs
+ * `naked-single` once `hidden-single` is allowed, so the "Only number" lessons leave `hidden-single` out.
+ */
+export const LESSON_TECHNIQUES = {
+  'last-cell': ['last-cell'],
+  'hidden-single': ['last-cell', 'hidden-single'],
+  'naked-single': ['last-cell', 'naked-single'],
+  all: ['last-cell', 'hidden-single', 'naked-single'],
+} as const satisfies Record<string, readonly SudokuTechnique[]>;
+export type SudokuFocus = keyof typeof LESSON_TECHNIQUES;
 
 export interface SudokuStep {
   readonly technique: SudokuTechnique;
@@ -34,8 +46,6 @@ export interface SudokuSolveResult {
   readonly steps: readonly SudokuStep[];
   readonly counts: Readonly<Record<SudokuTechnique, number>>;
 }
-
-const TECHNIQUES: readonly SudokuTechnique[] = ['last-cell', 'hidden-single', 'naked-single'];
 
 /** Box size (cells per box row × box column) of a grid size. */
 export function boxShape(size: SudokuSize): { readonly rows: number; readonly cols: number } {
@@ -299,19 +309,20 @@ const FINDERS: Readonly<Record<SudokuTechnique, Finder>> = {
 };
 
 /**
- * The next deducible step up to `maxLevel`: `prefer` first (when its level allows), then the lowest level first; within a technique the
- * scan is fixed (units: rows, columns, boxes, digits ascending; cells ascending). `undefined` = none (solved or stuck).
+ * The next deducible step with one of the `allowed` techniques: `prefer` first (when allowed), then the allowed ones in
+ * {@link SUDOKU_ORDER}; within a technique the scan is fixed (units: rows, columns, boxes, digits ascending; cells ascending).
+ * `undefined` = none (solved or stuck).
  */
 export function nextSudokuStep(
   size: SudokuSize,
   grid: SudokuGrid,
-  maxLevel: 1 | 2 | 3,
+  allowed: readonly SudokuTechnique[],
   prefer?: SudokuTechnique,
 ): SudokuStep | undefined {
   checkGrid(size, grid);
   const layout = layoutOf(size);
-  const order = TECHNIQUES.filter((technique) => SUDOKU_LEVEL[technique] <= maxLevel);
-  if (prefer !== undefined && SUDOKU_LEVEL[prefer] <= maxLevel) {
+  const order = SUDOKU_ORDER.filter((technique) => allowed.includes(technique));
+  if (prefer !== undefined && allowed.includes(prefer)) {
     order.unshift(prefer);
   }
   for (const technique of order) {
@@ -334,11 +345,11 @@ function isSolved(layout: Layout, grid: SudokuGrid): boolean {
   });
 }
 
-/** Applies {@link nextSudokuStep} (lowest level first, no preference) until solved or stuck: `counts` say what the puzzle needs. */
+/** Applies {@link nextSudokuStep} (cheapest allowed technique first, no preference) until solved or stuck: `counts` say what the puzzle needs. */
 export function humanSolveSudoku(
   size: SudokuSize,
   grid: SudokuGrid,
-  maxLevel: 1 | 2 | 3,
+  allowed: readonly SudokuTechnique[],
 ): SudokuSolveResult {
   checkGrid(size, grid);
   const current = [...grid];
@@ -349,7 +360,7 @@ export function humanSolveSudoku(
     'naked-single': 0,
   };
   for (;;) {
-    const step = nextSudokuStep(size, current, maxLevel);
+    const step = nextSudokuStep(size, current, allowed);
     if (!step) {
       break;
     }

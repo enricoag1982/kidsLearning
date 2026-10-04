@@ -1,5 +1,6 @@
 // The runtime puzzle API (hints in `grid-fill`). Build-time counters and generators live in `src/content/puzzles/`.
 export type {
+  SudokuFocus,
   SudokuGrid,
   SudokuSize,
   SudokuSolveResult,
@@ -9,7 +10,8 @@ export type {
   UnitKind,
 } from './sudoku.ts';
 export {
-  SUDOKU_LEVEL,
+  LESSON_TECHNIQUES,
+  SUDOKU_ORDER,
   boxShape,
   candidates,
   conflictUnit,
