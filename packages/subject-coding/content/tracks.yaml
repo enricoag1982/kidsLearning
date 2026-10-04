@@ -1,0 +1,18 @@
+# One main track with one world: a fixture proving the content pipeline. Real worlds (W1-W3) come with m12.5 / m12.6.
+# `title` / habitat names are texts in locales/en/journey.yaml.
+tracks:
+  - id: basics
+    kind: main
+    title: tracks.basics
+    worlds:
+      - {
+          id: meadow-steps,
+          order: 1,
+          habitat: meadow,
+          title: worlds.meadow-steps,
+          boss: fixture-boss,
+        }
+# A rank is earned `after` a world (`world:<id>`) or at the `start`; its name is in locales/en/journey.yaml.
+ranks:
+  - { id: starter, after: start }
+  - { id: explorer, after: world:meadow-steps }

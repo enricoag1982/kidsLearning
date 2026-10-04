@@ -1,0 +1,8 @@
+# Name / condition texts live in locales/en/rewards.yaml under `badges.<id>.name` / `.condition`.
+badges:
+  - id: first-lesson
+    category: milestone
+    condition: { type: mastered, scope: 'world:meadow-steps', thresholds: [1] }
+  - id: star-collector
+    category: skill
+    condition: { type: stars-total, thresholds: [10, 30] }

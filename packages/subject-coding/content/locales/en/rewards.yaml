@@ -1,0 +1,8 @@
+badges:
+  first-lesson:
+    name: First Lesson
+    condition: Master your first lesson
+  star-collector:
+    name: Star Collector
+    condition_one: 'Earn {{count}} star'
+    condition_other: 'Earn {{count}} stars'

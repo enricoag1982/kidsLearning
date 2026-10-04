@@ -1,0 +1,18 @@
+# Lesson and mini-game texts: `<id>.title`, `<id>.story`, `<id>.demo` for a lesson, `<id>.title` / `<id>.goal` for a mini-game,
+# and one text per exercise `id` (the question the child hears and reads). Fixture texts: the real W1 words come with m12.5.
+seq-arrows:
+  title: Arrow steps
+  story: Fox wants to reach the flag. Give Fox the steps, one arrow at a time!
+  demo: Watch Fox follow the arrows. One arrow is one step. Now you try!
+arrows-g1: Help Fox reach the flag. Tap the arrows, then press Run.
+arrows-g2: Where does Fox stop? Tap the square.
+arrows-01: Help Fox reach the flag.
+arrows-02: Help Fox reach the flag. Pick up the star on the way!
+arrows-03: Fill the empty steps. Help Fox reach the flag.
+arrows-04: Read the arrows. Where does Fox stop? Tap the square.
+arrows-05: Fox does not reach the flag. Tap the step that is wrong.
+fixture-boss:
+  title: Fixture boss
+  goal: Fix the bug, then help Fox reach the flag with a repeat. Get every round right!
+fixture-r1: Fox does not reach the flag. Tap the step that is wrong.
+fixture-r2: Help Fox reach the flag with just three tiles. Use a repeat!
