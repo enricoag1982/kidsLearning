@@ -4,6 +4,7 @@
  * bundle (see `package.json`'s `exports`).
  */
 export * from './builders.ts';
+export * from './cards.ts';
 export * from './deps.ts';
 export * from './fakes.ts';
 export * from './test-subject.ts';
