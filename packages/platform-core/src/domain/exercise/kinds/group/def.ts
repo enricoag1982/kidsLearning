@@ -37,6 +37,9 @@ export const CARROLL_ZONES = ['a-b', 'a-not-b', 'not-a-b', 'not-a-not-b'] as con
 /** The four Venn regions (box ids): inside both circles, only the first, only the second, outside both. */
 export const VENN_ZONES = ['both', 'only-a', 'only-b', 'neither'] as const;
 
+export type CarrollZone = (typeof CARROLL_ZONES)[number];
+export type VennZone = (typeof VENN_ZONES)[number];
+
 /** Sort the cards into the boxes: tap a card, then the box it belongs in. */
 export interface GroupDef extends CardDefBase {
   readonly type: 'group';

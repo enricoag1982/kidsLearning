@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { GROUP_SAMPLES } from '../../../../testing/group.ts';
 import type { GroupDef, GroupItem } from './def.ts';
 import { CARROLL_ZONES, VENN_ZONES } from './def.ts';
-import { groupZones, itemFacts, zoneOf } from './engine.ts';
+import { carrollSides, groupZones, itemFacts, zoneOf } from './engine.ts';
 
 const { row, carroll, venn } = GROUP_SAMPLES;
 const redCircle: GroupItem = { id: 'x', shape: { kind: 'circle', colour: 'red' } };
@@ -18,6 +18,18 @@ describe('groupZones', () => {
 
   it('a row without boxes has no zone', () => {
     expect(groupZones({ ...row, boxes: undefined })).toEqual([]);
+  });
+});
+
+describe('carrollSides', () => {
+  it('names the side of each axis of the four cells; an id that is no cell has none', () => {
+    expect(CARROLL_ZONES.map((zone) => carrollSides(zone))).toEqual([
+      { a: true, b: true },
+      { a: true, b: false },
+      { a: false, b: true },
+      { a: false, b: false },
+    ]);
+    expect(carrollSides('both')).toBeUndefined();
   });
 });
 

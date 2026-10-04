@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { GROUP_SAMPLES } from '../../../../testing/group.ts';
+import { CARD_KINDS } from '../cards/kinds.ts';
+import { CARD_SOLUTIONS } from '../cards/solutions.ts';
 import type { GroupDef, GroupHint, GroupOutcome, GroupState, PutItemAction } from './def.ts';
 import { GROUP_KIND } from './kind.ts';
 import { GROUP_SOLUTION } from './solution.ts';
@@ -242,5 +244,14 @@ describe('group solution', () => {
 
   it('a def without an answer for a card throws', () => {
     expect(() => GROUP_SOLUTION.solution({ ...row, answer: {} }, null)).toThrow(/no answer/);
+  });
+});
+
+describe('group is opt-in', () => {
+  it('is not one of the card kit kinds or solutions: a subject registers it itself', () => {
+    expect(Object.keys(CARD_KINDS)).not.toContain('group');
+    expect(Object.keys(CARD_SOLUTIONS)).not.toContain('group');
+    expect(kind.type).toBe('group');
+    expect(kind.input).toBe('place');
   });
 });

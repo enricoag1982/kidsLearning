@@ -238,3 +238,25 @@
 .card-shake {
   animation: card-shake 360ms ease-in-out;
 }
+
+/* A card put in its box by a level-3 hint lands with a short pop; reduced motion shows it in place. */
+@keyframes group-drop {
+  0% {
+    transform: scale(1.7);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.group-drop {
+  animation: group-drop 420ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .group-drop {
+    animation: none;
+  }
+}

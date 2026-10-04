@@ -5,6 +5,7 @@ import { CARD_FIXTURE_KIND_CONTENT } from '../../testing/card-fixture.ts';
 import { createExerciseSchema } from '../../lesson-schema.ts';
 import { makeCompileContext } from '../kind-content.ts';
 import { cardStimulus } from '../cards/stimulus.ts';
+import { CARD_KIND_CONTENT } from '../cards/content.ts';
 import { GROUP_KIND_CONTENT } from './content.ts';
 
 const schema = createExerciseSchema(CARD_FIXTURE_KIND_CONTENT, cardStimulus);
@@ -490,5 +491,15 @@ describe('group verify', () => {
     expect(
       issuesOf(venn({ items, answer: { a: 'both', b: 'only-a', c: 'only-b' }, allowEmpty: true })),
     ).toEqual([]);
+  });
+});
+
+describe('group is opt-in', () => {
+  it('is not one of the card kit kinds: a subject adds it to its own kinds', () => {
+    expect(Object.keys(CARD_KIND_CONTENT)).not.toContain('group');
+    expect(Object.keys(CARD_FIXTURE_KIND_CONTENT).sort()).toEqual(
+      [...Object.keys(CARD_KIND_CONTENT), 'group'].sort(),
+    );
+    expect(GROUP_KIND_CONTENT.type).toBe('group');
   });
 });

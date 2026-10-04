@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { screen } from '@testing-library/react';
+import { cleanup, screen } from '@testing-library/react';
 import type { ContentText } from '../../content-text.ts';
 import { tContent } from '../../content-text.ts';
 import { createCardI18n, renderCardUi } from '../../testing/card-test-entry.tsx';
@@ -118,6 +118,31 @@ describe('CardTile', () => {
   it('draws no text unless given one', async () => {
     const { container } = await renderCardUi(<CardTile item={{ id: 'a', big: '3' }} />);
     expect(container.textContent).toBe('3');
+  });
+
+  it('draws a smaller face when compact (a card placed in a box), the full one by default', async () => {
+    const item = {
+      id: 'a',
+      emoji: '🍎',
+      big: '3',
+      image: 'fox',
+      shape: { kind: 'star', colour: 'yellow' },
+    } as const;
+    const full = await renderCardUi(<CardTile item={item} text="Apples" />, ART);
+    expect(full.container.firstElementChild?.getAttribute('data-compact')).toBeNull();
+    expect(screen.getByText('🍎').className).toContain('text-5xl');
+    expect(screen.getByText('3').className).toContain('text-4xl');
+    expect(full.container.querySelector('img')?.className).toContain('h-12');
+    expect(full.container.querySelector('[data-count]')?.className).toContain('h-14');
+    expect(screen.getByText('Apples').className).toContain('text-sm');
+    cleanup();
+    const small = await renderCardUi(<CardTile item={item} text="Apples" compact />, ART);
+    expect(small.container.firstElementChild?.getAttribute('data-compact')).toBe('true');
+    expect(screen.getByText('🍎').className).toContain('text-3xl');
+    expect(screen.getByText('3').className).toContain('text-2xl');
+    expect(small.container.querySelector('img')?.className).toContain('h-8');
+    expect(small.container.querySelector('[data-count]')?.className).toContain('h-8');
+    expect(screen.getByText('Apples').className).toContain('text-xs');
   });
 });
 

@@ -221,6 +221,7 @@ export { createDuelMode, isDuelMode } from './domain/exercise/modes/duel/mode.ts
 // The opt-in `group` exercise kind (sort cards into boxes: a row, a Carroll table, a Venn): not in `CARD_KINDS`; a subject adds
 // `group: GROUP_KIND` to its core's kinds, `GROUP_NOTES` to its notes and `GROUP_SOLUTION` to its test / e2e solutions itself.
 export type {
+  CarrollZone,
   GroupAxis,
   GroupBox,
   GroupDef,
@@ -231,10 +232,12 @@ export type {
   GroupOutcome,
   GroupState,
   PutItemAction,
+  VennZone,
   ZoneRule,
 } from './domain/exercise/kinds/group/def.ts';
 export { CARROLL_ZONES, VENN_ZONES } from './domain/exercise/kinds/group/def.ts';
 export {
+  carrollSides,
   groupHint,
   groupZones,
   itemFacts,

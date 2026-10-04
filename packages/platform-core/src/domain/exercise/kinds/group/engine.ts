@@ -45,7 +45,6 @@ export function zoneOf(def: GroupDef, item: GroupItem): string | undefined {
   return inB ? 'only-b' : 'neither';
 }
 
-/** Which side of each axis a Carroll cell is on. */
 const CARROLL_SIDES: Readonly<Record<string, { readonly a: boolean; readonly b: boolean }>> = {
   'a-b': { a: true, b: true },
   'a-not-b': { a: true, b: false },
@@ -53,11 +52,18 @@ const CARROLL_SIDES: Readonly<Record<string, { readonly a: boolean; readonly b: 
   'not-a-not-b': { a: false, b: false },
 };
 
+/** Which side of each axis a Carroll cell is on (`a` = the column's yes side, `b` = the row's); `undefined` for an id that is no cell. */
+export function carrollSides(
+  zone: string,
+): { readonly a: boolean; readonly b: boolean } | undefined {
+  return CARROLL_SIDES[zone];
+}
+
 /** What a wrong put (`put` instead of `right`) got half right, for the note; `undefined` = nothing to say beyond "not this box". */
 function missOf(def: GroupDef, right: string, put: string): GroupMiss | undefined {
   if (def.layout === 'carroll') {
-    const wanted = CARROLL_SIDES[right];
-    const given = CARROLL_SIDES[put];
+    const wanted = carrollSides(right);
+    const given = carrollSides(put);
     if (wanted === undefined || given === undefined) return undefined;
     const column = wanted.a === given.a;
     const row = wanted.b === given.b;
