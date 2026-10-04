@@ -6,7 +6,7 @@ import type { Profile } from '../domain/profile.ts';
 import type { GameRecord } from '../domain/progress.ts';
 import { lessonStars, totalStars } from '../domain/progress.ts';
 import type { ConceptStats } from '../domain/review.ts';
-import { accuracy, isWeak } from '../domain/review.ts';
+import { accuracy, contentConceptIds, isWeak } from '../domain/review.ts';
 import type { DayMinutes } from './rewards.ts';
 import { minutesByDay } from './rewards.ts';
 import type { Journey } from './journey.ts';
@@ -154,7 +154,10 @@ export async function buildChildReport(deps: AppDeps, profileId: string): Promis
   const progressByLesson = new Map(progresses.map((progress) => [progress.lessonId, progress]));
   const worlds = journey.worlds.map(({ world }) => worldProgress(journey, world, progressByLesson));
 
+  // Stats of a concept a later version removed stay stored but are not reported (retired content, G8).
+  const concepts = contentConceptIds(journey.lessons, deps.content.minigames());
   const conceptAccuracy: ConceptAccuracySummary[] = conceptStats
+    .filter((stats: ConceptStats) => concepts.has(stats.conceptId))
     .map((stats: ConceptStats) => ({
       conceptId: stats.conceptId,
       accuracy: accuracy(stats),

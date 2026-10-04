@@ -2,7 +2,7 @@ import type { Lesson } from './lesson.ts';
 import type { StoredRecord } from './profile.ts';
 import type { Random } from './random.ts';
 import { shuffle } from './random.ts';
-import type { ExerciseDefBase } from './subject.ts';
+import type { ExerciseDefBase, MiniGameBase } from './subject.ts';
 
 /** Review box 1–5 (Leitner), or absent = the concept has not entered review yet. */
 export type ReviewBox = 1 | 2 | 3 | 4 | 5;
@@ -107,6 +107,61 @@ export function conceptPool<E extends ExerciseDefBase>(
   );
 }
 
+/** Concepts a warm-up or Practice task can be drawn for: those with at least one scored exercise in `lessons`.
+ * Stored stats of a concept a later version removed fall outside it (retired content, G8). */
+export function warmUpConcepts(lessons: readonly Lesson[]): ReadonlySet<string> {
+  const concepts = new Set<string>();
+  for (const lesson of lessons) {
+    for (const exercise of lesson.exercises) {
+      concepts.add(exercise.concept);
+    }
+  }
+  return concepts;
+}
+
+/** `stats` that are due now and whose concept the content still has: the count Home and Practice offer as a warm-up. */
+export function dueWarmUpStats(
+  stats: readonly ConceptStats[],
+  lessons: readonly Lesson[],
+  now: Date,
+): readonly ConceptStats[] {
+  const concepts = warmUpConcepts(lessons);
+  return stats.filter((entry) => concepts.has(entry.conceptId) && isDue(entry, now));
+}
+
+function roundsOf(game: object): readonly unknown[] {
+  const rounds = (game as { readonly rounds?: unknown }).rounds;
+  return Array.isArray(rounds) ? (rounds as readonly unknown[]) : [];
+}
+
+function conceptOf(value: unknown): string | undefined {
+  const concept = (value as { readonly concept?: unknown } | null)?.concept;
+  return typeof concept === 'string' ? concept : undefined;
+}
+
+/** Every concept id the content mentions: each lesson's own concept and each of its exercises' (guided, scored, variants),
+ * each mini-game's concept and, for a round-based mini-game, each round's. What the parent report lists accuracy for. */
+export function contentConceptIds(
+  lessons: readonly Lesson[],
+  minigames: readonly MiniGameBase[] = [],
+): ReadonlySet<string> {
+  const concepts = new Set<string>();
+  for (const lesson of lessons) {
+    concepts.add(lesson.concept);
+    for (const exercise of [...lesson.guided, ...lesson.exercises, ...(lesson.variants ?? [])]) {
+      concepts.add(exercise.concept);
+    }
+  }
+  for (const game of minigames) {
+    concepts.add(game.concept);
+    for (const round of roundsOf(game)) {
+      const concept = conceptOf(round);
+      if (concept !== undefined) concepts.add(concept);
+    }
+  }
+  return concepts;
+}
+
 export interface ConceptTask<E extends ExerciseDefBase = ExerciseDefBase> {
   readonly conceptId: string;
   readonly lessonId: string;
@@ -132,14 +187,17 @@ function pickOne<E extends ExerciseDefBase>(
 }
 
 /** Picks the warm-up's tasks: concepts in review due oldest-`dueAt`-first, max 1 per concept, up to
- * {@link WARM_UP_SIZE}; short of that, fills with the weakest concepts still in review. */
+ * {@link WARM_UP_SIZE}; short of that, fills with the weakest concepts still in review. Only concepts with a non-empty
+ * `pool` entry are considered: a concept the content no longer has (retired) can neither take a slot nor starve the rest. */
 export function pickWarmUp<E extends ExerciseDefBase>(
   stats: readonly ConceptStats[],
   pool: ReadonlyMap<string, readonly ConceptPoolEntry<E>[]>,
   now: Date,
   random: Random,
 ): readonly ConceptTask<E>[] {
-  const inReview = stats.filter((entry) => entry.box !== undefined);
+  const inReview = stats.filter(
+    (entry) => entry.box !== undefined && (pool.get(entry.conceptId)?.length ?? 0) > 0,
+  );
   if (inReview.length === 0) {
     return [];
   }

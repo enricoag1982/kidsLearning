@@ -405,4 +405,54 @@ describe('checkRewards', () => {
     const again = await checkRewards(deps, 'p1');
     expect(again.newBadges).toEqual([]);
   });
+
+  it('retired content (G8): an earned badge, lesson progress and attempts the content no longer has are ignored, not thrown on', async () => {
+    const badge: BadgeDef = {
+      id: 'star-collector',
+      category: 'skill',
+      nameKey: 'rewards:badges.star-collector.name',
+      conditionKey: 'rewards:badges.star-collector.condition',
+      condition: { type: 'stars-total', thresholds: [4] },
+    };
+    const exercise = makeExercise('l1-01');
+    const lesson = makeLesson('l1', 'w1', [exercise]);
+    const live = recordExerciseStars(
+      newLessonProgress('lp1', 'p1', 'l1', NOW),
+      'l1-01',
+      3,
+      lesson,
+      NOW,
+    );
+    // A lesson the content dropped, with its stars, an attempt on its concept, and a badge earned for it.
+    const retiredLesson = makeLesson('gone', 'w-gone', [makeExercise('gone-01', 'gone-concept')]);
+    const retired = recordExerciseStars(
+      newLessonProgress('lp-gone', 'p1', 'gone', NOW),
+      'gone-01',
+      3,
+      retiredLesson,
+      NOW,
+    );
+    const goneBadge: EarnedBadge = {
+      id: 'eb-gone',
+      profileId: 'p1',
+      badgeId: 'retired-badge',
+      at: NOW.toISOString(),
+      seen: true,
+      createdAt: NOW.toISOString(),
+      updatedAt: NOW.toISOString(),
+    };
+    const deps = baseDeps({
+      content: makeContent([lesson], [badge]),
+      progress: makeProgressRepo(
+        [live, retired],
+        [makeAttempt({ lessonId: 'gone', exerciseId: 'gone-01', conceptId: 'gone-concept' })],
+      ),
+      rewards: makeRewardsRepo([goneBadge]),
+    });
+
+    const result = await checkRewards(deps, 'p1');
+
+    // The retired lesson's 3 stars still count towards the badge threshold (3 + 3 >= 4); nothing is lost or thrown.
+    expect(result.newBadges.map((b) => b.badgeId)).toEqual(['star-collector']);
+  });
 });

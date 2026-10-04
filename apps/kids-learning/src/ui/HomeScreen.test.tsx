@@ -77,6 +77,34 @@ describe('HomeScreen', () => {
     expect(screen.queryByRole('button', { name: /Continue/ })).toBeNull();
   });
 
+  it('every lesson done and only a retired concept due: no warm-up to offer, Owl says all done, no primary button (G8)', async () => {
+    const services = createTestServices('bundled');
+    const profile = await seedReturningProfile(services, 'Mia');
+    for (const lesson of services.deps.content.lessons()) {
+      const saved = await getLessonProgress(services.deps, profile.id, lesson.id);
+      const bestStars = Object.fromEntries(
+        lesson.exercises.map((exercise) => [exercise.id, 3 as const]),
+      );
+      await services.deps.progress.saveLesson({ ...saved, bestStars });
+    }
+    const nowIso = services.deps.clock.now().toISOString();
+    await services.deps.progress.saveConceptStats({
+      id: 'cs-old',
+      profileId: profile.id,
+      conceptId: 'retired-concept',
+      recent: [false],
+      box: 1,
+      dueAt: '2020-01-01T00:00:00.000Z',
+      createdAt: nowIso,
+      updatedAt: nowIso,
+    });
+
+    await renderApp(services, { at: 'home' });
+
+    await screen.findByText('You finished everything for now. Come back soon for more!');
+    expect(screen.queryByRole('button', { name: /Start today/ })).toBeNull();
+  });
+
   it('switch-player button returns to the picker', async () => {
     const services = createTestServices('bundled');
     await seedReturningProfile(services, 'Mia');

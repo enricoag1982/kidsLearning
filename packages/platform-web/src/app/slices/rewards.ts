@@ -35,9 +35,11 @@ export async function loadRewards(
 
 export const createRewardsSlice: SliceCreator<RewardsSlice> = (set, get) => {
   function queueNextCelebration(): void {
-    const { activeCelebration, celebrationsShownThisSession, earnedBadges } = get();
+    const { activeCelebration, celebrationsShownThisSession, earnedBadges, services } = get();
     if (activeCelebration || celebrationsShownThisSession >= MAX_CELEBRATIONS_PER_SESSION) return;
-    const next = earnedBadges.find((badge) => !badge.seen);
+    // A badge the content no longer has (retired) cannot be shown, and would never be dismissed: skip it.
+    const known = new Set((services.deps.content.badges?.() ?? []).map((def) => def.id));
+    const next = earnedBadges.find((badge) => !badge.seen && known.has(badge.badgeId));
     if (next) set({ activeCelebration: next });
   }
 
