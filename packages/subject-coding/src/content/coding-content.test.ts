@@ -29,7 +29,15 @@ const realLocalesDir = join(
   'content',
   'locales',
 );
-const locales = mergeLocales(loadLocales(PLATFORM_LOCALES_DIR), loadLocales(realLocalesDir));
+/** The scratch lessons name their exercises `arrows-01` ... and read their texts from the exercise ids: these stand-ins keep the real
+ * `lessons.yaml` free of fixture texts. */
+const scratchTexts = {
+  en: { lessons: { 'arrows-01': 'A', 'arrows-02': 'B', 'arrows-03': 'C' } },
+};
+const locales = mergeLocales(
+  mergeLocales(loadLocales(PLATFORM_LOCALES_DIR), loadLocales(realLocalesDir)),
+  scratchTexts,
+);
 
 let dir = '';
 
@@ -44,7 +52,7 @@ afterEach(() => {
 
 const MAP = ['S..*', '.#..', '...F'];
 
-/** Text keys come from the real `lessons.yaml`: the exercise ids used here (`arrows-01` ...) have texts. */
+/** Text keys come from `scratchTexts` above: the exercise ids used here (`arrows-01` ...) have texts. */
 function programYaml(overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
     id: 'arrows-01',
@@ -147,14 +155,17 @@ describe('program: compile', () => {
         heading: 'right',
         tray: ['forward', 'turn-right', 'repeat'],
         cap: 4,
-        solution: [{ repeat: 5, do: ['forward'] }],
+        solution: [{ repeat: 5, do: ['forward'] }, 'turn-right'],
         prefilled: [{ repeat: 5, do: ['forward'] }, null],
         locked: [0],
         'must-loop': true,
       }),
     ) as ProgramDef;
     expect(def.level.heading).toBe('right');
-    expect(def.solution).toEqual([{ kind: 'repeat', times: 5, body: [{ kind: 'forward' }] }]);
+    expect(def.solution).toEqual([
+      { kind: 'repeat', times: 5, body: [{ kind: 'forward' }] },
+      { kind: 'turn-right' },
+    ]);
     expect(def.prefilled).toEqual([
       { kind: 'repeat', times: 5, body: [{ kind: 'forward' }] },
       null,
@@ -334,6 +345,26 @@ describe('program: verify', () => {
     expect(
       issuesOf(programYaml({ solution: ['down', 'down', 'right', 'right', 'right'] })),
     ).toContain('solution does not reach the goal (unfinished)');
+  });
+
+  it('rejects an exercise where no wrong try can be made: the tray holds only the solution tile and nothing can be swapped', () => {
+    expect(
+      issuesOf(programYaml({ map: ['SF'], tray: ['right'], cap: 2, solution: ['right'] })),
+    ).toContain('no runnable program fails');
+    // A second tile in the tray gives the wrong try; so does an open slot next to a locked one.
+    expect(
+      issuesOf(programYaml({ map: ['SF'], tray: ['right', 'up'], cap: 2, solution: ['right'] })),
+    ).toBe('');
+    expect(
+      issuesOf(
+        programYaml({
+          map: ['S.F'],
+          tray: ['right'],
+          cap: 3,
+          solution: ['right', 'right'],
+        }),
+      ),
+    ).toBe('');
   });
 
   it('rejects a prefilled strip longer than the cap', () => {

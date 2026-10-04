@@ -1,18 +1,64 @@
-# Lesson and mini-game texts: `<id>.title`, `<id>.story`, `<id>.demo` for a lesson, `<id>.title` / `<id>.goal` for a mini-game,
-# and one text per exercise `id` (the question the child hears and reads). Fixture texts: the real W1 words come with m12.5.
+# Lesson and mini-game texts: `<id>.title`, `<id>.story`, `<id>.demo` for a lesson, `<id>.title` / `<id>.goal` for a mini-game, and the
+# texts exercises name with `text:` (the question the child hears and reads; one sentence is shared by every exercise that asks it).
+# Card labels (`card-*`) are shown under a picture card's emoji and are not narrated.
+seq-order:
+  title: Steps in order
+  story: >-
+    Owl says: a program is a list of steps. The steps must be in the right order.
+    Fox puts on socks first, then shoes!
+  demo: 'Look: first the socks, then the shoes. Shoes first would be silly!'
 seq-arrows:
-  title: Arrow steps
-  story: Fox wants to reach the flag. Give Fox the steps, one arrow at a time!
-  demo: Watch Fox follow the arrows. One arrow is one step. Now you try!
-arrows-g1: Help Fox reach the flag. Tap the arrows, then press Run.
-arrows-g2: Where does Fox stop? Tap the square.
-arrows-01: Help Fox reach the flag.
-arrows-02: Help Fox reach the flag. Pick up the star on the way!
-arrows-03: Fill the empty steps. Help Fox reach the flag.
-arrows-04: Read the arrows. Where does Fox stop? Tap the square.
-arrows-05: Fox does not reach the flag. Tap the step that is wrong.
-fixture-boss:
-  title: Fixture boss
-  goal: Fix the bug, then help Fox reach the flag with a repeat. Get every round right!
-fixture-r1: Fox does not reach the flag. Tap the step that is wrong.
-fixture-r2: Help Fox reach the flag with just three tiles. Use a repeat!
+  title: Walk the path
+  story: >-
+    Owl says: Fox follows arrows, one arrow for each step. Read them from left to right.
+    Up goes towards the top of the screen!
+  demo: 'Read the arrows from left to right: right, right, down. One arrow is one step.'
+seq-collect:
+  title: Collect the stars
+  story: >-
+    Owl says: rocks block Fox's way, so plan a path around them. Fox picks up a star by
+    stepping on it. Collect every star, then reach the flag!
+  demo: Fox steps on the star to pick it up. Then Fox goes to the flag.
+seq-debug:
+  title: Bug hunt
+  story: >-
+    Owl says: a bug is one wrong step in a program. Watch Fox, find the wrong step and fix it.
+    Even Fox makes bugs, and that is okay!
+  demo: A bug is one wrong step. Find it, fix it, and the program works!
+ask-order: Put the pictures in order.
+ask-order-guided: Put the pictures in order. Tap the first step first.
+ask-first: Which step comes first?
+ask-reach: Help Fox reach the flag.
+ask-reach-guided: Help Fox reach the flag. Tap the arrows, then press Run.
+ask-star: Collect the star, then go to the flag.
+ask-stars: Collect the stars, then go to the flag.
+ask-predict: Where will Fox stop? Tap the square.
+ask-bug: One arrow is wrong. Tap it!
+ask-bug-guided: Press Watch. One arrow is wrong. Tap it!
+ask-fix: Swap the wrong arrow for the right one, then Run.
+bug-squash:
+  title: Bug Squash
+  goal: Find the wrong arrow in every program. How few mistakes can you make?
+card-hole: Dig a hole
+card-seed: Plant the seed
+card-water: Water it
+card-write: Write the letter
+card-envelope: Put it in an envelope
+card-post: Post it in the mailbox
+card-bread: Lay out the bread
+card-cheese: Add cheese
+card-eat-sandwich: Eat it
+card-socks: Put on socks
+card-shoes: Put on shoes
+card-laces: Tie the laces
+card-run: Run outside
+card-paste: Add toothpaste
+card-brush: Brush your teeth
+card-rinse: Rinse your mouth
+card-mix: Mix the dough
+card-tray: Shape cookies on a tray
+card-bake: Bake them
+card-eat-cookie: Eat a cookie
+card-ball: Roll a big snowball
+card-nose: Add the nose
+card-hat: Put on the hat

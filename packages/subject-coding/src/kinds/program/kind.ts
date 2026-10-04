@@ -12,7 +12,7 @@ export interface ProgramAction {
   readonly program: readonly Tile[];
 }
 
-/** `invalid`: the program breaks a rule of the exercise, nothing ran and no error counts. `solved` / `failed`: it ran; the UI
+/** `invalid`: the program breaks a rule of the exercise (an empty strip included), nothing ran and no error counts. `solved` / `failed`: it ran; the UI
  * animates `run.steps`. `ignored`: any action once solved. */
 export type ProgramOutcome =
   | { readonly kind: 'invalid' | 'ignored' }
@@ -39,9 +39,13 @@ export function firstPrimitive(program: readonly Tile[]): PrimitiveKind | undefi
   return undefined;
 }
 
-/** Why `program` cannot be run for `def`, or `null` when it can: a valid program (`isValidProgram`), at most `cap` tiles
- * (`tileCount`), only tray kinds, every locked slot still holding its prefilled tile. */
+/** Why `program` cannot be run for `def`, or `null` when it can: at least one tile (the empty strip: "Add some tiles first"), a valid
+ * program (`isValidProgram`), at most `cap` tiles (`tileCount`), only tray kinds, every locked slot still holding its prefilled
+ * tile. */
 export function programProblem(def: ProgramDef, program: readonly Tile[]): string | null {
+  if (program.length === 0) {
+    return 'no tiles';
+  }
   if (!isValidProgram(program)) {
     return 'not a valid program';
   }

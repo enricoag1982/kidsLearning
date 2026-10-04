@@ -7,14 +7,14 @@ import { KindHarness } from '../../web/testing/KindHarness.tsx';
 import { renderCodingUi } from '../../web/testing/render-coding-ui.tsx';
 import { findBugUi } from './ui.ts';
 
-/** `arrows-05`: right, right, right, up, down on S . . * / . # . . / . . . F; "up" (tile 4) walks off the grid. */
-const def = fixtureExercise('arrows-05', 'find-bug');
+/** `fx-05`: right, right, right, up, down on S . . * / . # . . / . . . F; "up" (tile 4) walks off the grid. */
+const def = fixtureExercise('fx-05', 'find-bug');
 
 /** The loop's own count is the bug: 4 times on a row that needs 5. */
 const loopBug: FindBugDef = {
   id: 'loop-bug',
   concept: 'repeat',
-  textKey: 'lessons:arrows-05',
+  textKey: 'lessons:ask-bug',
   type: 'find-bug',
   level: parseLevel(['S....F']),
   program: [{ kind: 'repeat', times: 4, body: [{ kind: 'right' }] }],
@@ -47,9 +47,7 @@ function mount(exercise: FindBugDef = def, props: { guided?: boolean } = {}) {
 describe('find-bug UI', () => {
   it('shows the instruction, every tile of the program as a button, Watch and Hint', () => {
     mount();
-    expect(screen.getByTestId('instruction').textContent).toBe(
-      'Fox does not reach the flag. Tap the step that is wrong.',
-    );
+    expect(screen.getByTestId('instruction').textContent).toBe('One arrow is wrong. Tap it!');
     expect(
       screen
         .getAllByRole('button', { name: /^Tile \d: / })

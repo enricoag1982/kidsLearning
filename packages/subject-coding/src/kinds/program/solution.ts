@@ -14,10 +14,12 @@ function failsCleanly(def: ProgramDef, program: readonly Tile[]): boolean {
   return programProblem(def, program) === null && run(def.level, program).outcome !== 'success';
 }
 
-/** A runnable program that does not succeed: the solution without its last tile, else without more of its tail (every prefix
- * that keeps the locked slots), else the solution with one open top-level slot swapped for another primitive of the tray. */
-function wrongProgram(def: ProgramDef): readonly Tile[] {
-  for (let length = def.solution.length - 1; length >= 0; length -= 1) {
+/** A runnable, non-empty program that does not succeed: the solution without its last tile, else without more of its tail (every
+ * non-empty prefix that keeps the locked slots), else the solution with one open top-level slot swapped for another primitive of the
+ * tray. `null` when there is none (a degenerate exercise: the content build rejects it). An empty program is never one: it cannot
+ * be run. */
+export function failingProgram(def: ProgramDef): readonly Tile[] | null {
+  for (let length = def.solution.length - 1; length >= 1; length -= 1) {
     const prefix = def.solution.slice(0, length);
     if (failsCleanly(def, prefix)) {
       return prefix;
@@ -36,10 +38,14 @@ function wrongProgram(def: ProgramDef): readonly Tile[] {
       }
     }
   }
-  throw new Error(`program "${def.id}": no runnable program fails`);
+  return null;
 }
 
 /** A program that runs and fails: exactly 1 error, still answerable. */
 export function programWrongAction(def: ProgramDef): readonly ProgramAction[] {
-  return [{ type: 'run-program', program: wrongProgram(def) }];
+  const program = failingProgram(def);
+  if (program === null) {
+    throw new Error(`program "${def.id}": no runnable program fails`);
+  }
+  return [{ type: 'run-program', program }];
 }

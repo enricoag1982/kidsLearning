@@ -1,8 +1,13 @@
-# Name / condition texts live in locales/en/rewards.yaml under `badges.<id>.name` / `.condition`.
+# Generic conditions only. Name / condition texts live in locales/en/rewards.yaml under `badges.<id>.name` / `.condition`.
+# A mini-game win has no generic condition (and Bug Squash plays unscored outside its lesson), so "Bug squasher" counts the
+# clean bug hunts of the debugging lesson instead.
 badges:
-  - id: first-lesson
+  - id: first-program
+    category: milestone
+    condition: { type: concept-correct, concept: seq-arrows, thresholds: [1] }
+  - id: bug-squasher
+    category: skill
+    condition: { type: concept-correct, concept: seq-debug, thresholds: [5] }
+  - id: meadow-walker
     category: milestone
     condition: { type: mastered, scope: 'world:meadow-steps', thresholds: [1] }
-  - id: star-collector
-    category: skill
-    condition: { type: stars-total, thresholds: [10, 30] }

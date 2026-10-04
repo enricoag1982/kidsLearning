@@ -1,0 +1,78 @@
+# W1 lesson 1: a program is steps in the right order. Picture cards (emoji + a short label, texts `card-*`), no grid yet.
+id: seq-order
+order: 1
+concept: seq-order
+character: fox
+demo:
+  prompt: { emoji: 🧦👟 }
+guided:
+  - id: order-g1
+    type: order
+    text: ask-order-guided
+    items:
+      - { id: water, text: card-water, emoji: 💧 }
+      - { id: seed, text: card-seed, emoji: 🌰 }
+      - { id: hole, text: card-hole, emoji: 🕳️ }
+    answer: [hole, seed, water]
+  - id: order-g2
+    type: order
+    text: ask-order
+    items:
+      - { id: post, text: card-post, emoji: 📮 }
+      - { id: write, text: card-write, emoji: ✍️ }
+      - { id: envelope, text: card-envelope, emoji: ✉️ }
+    answer: [write, envelope, post]
+exercises:
+  - id: order-01
+    type: order
+    text: ask-order
+    items:
+      - { id: eat, text: card-eat-sandwich, emoji: 😋 }
+      - { id: bread, text: card-bread, emoji: 🍞 }
+      - { id: cheese, text: card-cheese, emoji: 🧀 }
+    answer: [bread, cheese, eat]
+  - id: order-02
+    type: order
+    text: ask-order
+    items:
+      - { id: laces, text: card-laces, emoji: 🎀 }
+      - { id: run, text: card-run, emoji: 🏃 }
+      - { id: socks, text: card-socks, emoji: 🧦 }
+      - { id: shoes, text: card-shoes, emoji: 👟 }
+    answer: [socks, shoes, laces, run]
+  - id: order-03
+    type: order
+    text: ask-order
+    items:
+      - { id: rinse, text: card-rinse, emoji: 🚰 }
+      - { id: paste, text: card-paste, emoji: 🧴 }
+      - { id: brush, text: card-brush, emoji: 🦷 }
+    answer: [paste, brush, rinse]
+  - id: order-04
+    type: order
+    text: ask-order
+    easier: order-e1
+    items:
+      - { id: eat, text: card-eat-cookie, emoji: 😋 }
+      - { id: tray, text: card-tray, emoji: 🍪 }
+      - { id: mix, text: card-mix, emoji: 🥣 }
+      - { id: bake, text: card-bake, emoji: 🔥 }
+    answer: [mix, tray, bake, eat]
+  - id: order-05
+    type: choice
+    text: ask-first
+    prompt: { emoji: ⛄, big: Build a snowman }
+    options:
+      - { id: nose, text: card-nose, emoji: 🥕 }
+      - { id: hat, text: card-hat, emoji: 🎩 }
+      - { id: ball, text: card-ball, emoji: ⚪ }
+    answer: ball
+variants:
+  - id: order-e1
+    type: order
+    text: ask-order
+    items:
+      - { id: eat, text: card-eat-cookie, emoji: 😋 }
+      - { id: bake, text: card-bake, emoji: 🔥 }
+      - { id: mix, text: card-mix, emoji: 🥣 }
+    answer: [mix, bake, eat]

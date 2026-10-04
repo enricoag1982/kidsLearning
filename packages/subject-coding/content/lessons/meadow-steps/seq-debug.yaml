@@ -1,0 +1,81 @@
+# W1 lesson 4: a bug is one wrong step: watch, find, fix. Every board is a path of rocks with exactly one program of its length that
+# reaches the flag, so exactly one arrow can be the bug. `bug` = the first arrow where Fox leaves the right path; `fix` = the arrow
+# that goes in its place. A fix-it exercise is a `program` whose strip starts as the buggy program, every slot locked but the bug's.
+# Texts: `ask-*` in locales/en/lessons.yaml.
+id: seq-debug
+order: 4
+concept: seq-debug
+character: fox
+demo:
+  prompt: { emoji: 🐞 }
+guided:
+  - id: debug-g1
+    type: find-bug
+    text: ask-bug-guided
+    map: ['S..', '.##', '.F#']
+    program: [up, down, right]
+    bug: [0]
+    fix: down
+  - id: debug-g2
+    type: find-bug
+    text: ask-bug-guided
+    map: ['#.S', '#.#', '.F.']
+    program: [left, down, up]
+    bug: [2]
+    fix: down
+exercises:
+  - id: debug-01
+    type: find-bug
+    text: ask-bug
+    map: ['S##.', '...F', '.#.#']
+    program: [down, right, right, down]
+    bug: [3]
+    fix: right
+  - id: debug-02
+    type: find-bug
+    text: ask-bug
+    map: ['S...', '.##F', '#..#']
+    program: [left, right, right, down]
+    bug: [0]
+    fix: right
+  - id: debug-03
+    type: find-bug
+    text: ask-bug
+    map: ['.S##', '....', '.#.#', '.#.F']
+    program: [down, right, up, down, right]
+    bug: [2]
+    fix: down
+  - id: debug-04
+    type: find-bug
+    text: ask-bug
+    easier: debug-e1
+    map: ['S..#', '##..', 'F..#', '##..']
+    program: [right, right, down, left, left, left]
+    bug: [3]
+    fix: down
+  - id: debug-05
+    type: program
+    text: ask-fix
+    map: ['F.#.', '.#.#', '..S#']
+    tray: [up, down, left, right]
+    cap: 4
+    solution: [left, left, up, up]
+    prefilled: [left, up, up, up]
+    locked: [0, 2, 3]
+  - id: debug-06
+    type: program
+    text: ask-fix
+    map: ['....F', '...#.', '#.##.', '##S..']
+    tray: [up, down, left, right]
+    cap: 5
+    solution: [right, right, up, up, up]
+    prefilled: [right, right, up, down, up]
+    locked: [0, 1, 2, 4]
+variants:
+  - id: debug-e1
+    type: find-bug
+    text: ask-bug
+    map: ['#S.', '#..', 'F.#']
+    program: [down, left, left]
+    bug: [1]
+    fix: down

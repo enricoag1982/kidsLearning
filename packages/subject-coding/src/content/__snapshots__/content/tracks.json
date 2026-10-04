@@ -10,8 +10,21 @@
      "track": "basics",
      "order": 1,
      "habitat": "meadow",
-     "titleKey": "journey:worlds.meadow-steps",
-     "boss": "fixture-boss"
+     "titleKey": "journey:worlds.meadow-steps"
+    },
+    {
+     "id": "looping-hills",
+     "track": "basics",
+     "order": 2,
+     "habitat": "river",
+     "titleKey": "journey:worlds.looping-hills"
+    },
+    {
+     "id": "turning-woods",
+     "track": "basics",
+     "order": 3,
+     "habitat": "forest",
+     "titleKey": "journey:worlds.turning-woods"
     }
    ]
   }
@@ -22,7 +35,7 @@
    "after": "start"
   },
   {
-   "id": "explorer",
+   "id": "stepper",
    "after": "world:meadow-steps"
   }
  ]

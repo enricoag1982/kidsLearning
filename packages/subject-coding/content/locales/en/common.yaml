@@ -75,6 +75,7 @@ coding:
     bumped: 'Oops, bumped into a rock at step {{step}}!'
     bumped-edge: 'Oops, Fox hit the edge at step {{step}}!'
     unfinished: Not there yet — try again!
+    empty: Add some tiles first
     too-many: Too many tiles
     not-in-tray: Use the tiles in the box
     incomplete: Fill the empty steps first

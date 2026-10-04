@@ -6,7 +6,7 @@ import { CODING_SAMPLES } from '../../testing/samples.ts';
 import { play, playSolution, playWrongThenSolve, starsFor } from '../../testing/play.ts';
 import { firstPrimitive, programKind as kind, programProblem } from './kind.ts';
 import type { ProgramAction } from './kind.ts';
-import { programSolution, programWrongAction } from './solution.ts';
+import { failingProgram, programSolution, programWrongAction } from './solution.ts';
 
 const def = CODING_SAMPLES.program;
 const tiles = (...kinds: readonly Tile['kind'][]): Tile[] =>
@@ -34,12 +34,6 @@ describe('program: a run', () => {
     const bump = kind.act(short.state, runIt(tiles('down', 'right')), null);
     expect(bump.outcome).toMatchObject({ kind: 'failed', run: { outcome: 'bumped' } });
     expect(bump.state).toMatchObject({ errors: 2, moves: 2 });
-  });
-
-  it('an empty program is runnable and fails (the UI keeps Run off until a tile is placed)', () => {
-    const step = kind.act(kind.init(def), runIt([]), null);
-    expect(step.outcome).toMatchObject({ kind: 'failed', run: { steps: [] } });
-    expect(step.state.errors).toBe(1);
   });
 
   it('solves after failures and keeps their errors', () => {
@@ -116,6 +110,12 @@ describe('program: a program that cannot run is invalid, counts no error and cha
     ).toMatchObject({ kind: 'solved' });
   });
 
+  it('with no tile at all: Run on an empty strip counts no error and no move', () => {
+    invalid([]);
+    const step = kind.act(kind.init(def), runIt([]), null);
+    expect(step.state).toMatchObject({ errors: 0, moves: 0, solved: false });
+  });
+
   it('never counts a move', () => {
     const step = kind.act(kind.init(def), runIt(tiles('forward')), null);
     expect(step.state.moves).toBe(0);
@@ -125,7 +125,7 @@ describe('program: a program that cannot run is invalid, counts no error and cha
 describe('programProblem', () => {
   it('is null for a runnable program and says why otherwise', () => {
     expect(programProblem(def, def.solution)).toBeNull();
-    expect(programProblem(def, [])).toBeNull();
+    expect(programProblem(def, [])).toBe('no tiles');
     expect(programProblem(def, tiles('forward'))).toBe('"forward" is not in the tray');
     expect(programProblem(def, tiles('up', 'up', 'up', 'up', 'up', 'up', 'up'))).toBe(
       '7 tiles is over the cap of 6',
@@ -251,7 +251,7 @@ describe('program: solution and wrong action', () => {
     expect(play(open, programWrongAction(open)).errors).toBe(1);
   });
 
-  it('a solution made of a repeat is shortened to an empty program', () => {
+  it('a solution made of a repeat is swapped for a single tile: the wrong action is never an empty program', () => {
     const loop: ProgramDef = {
       ...def,
       level: parseLevel(['S....F']),
@@ -259,7 +259,23 @@ describe('program: solution and wrong action', () => {
       cap: 3,
       solution: [repeat(5, 'right')],
     };
-    expect(programWrongAction(loop)).toEqual([runIt([])]);
+    expect(programWrongAction(loop)).toEqual([runIt(tiles('right'))]);
     expect(playWrongThenSolve(loop)).toMatchObject({ errors: 1, solved: true });
+  });
+
+  it('failingProgram is never empty, and is null when no runnable program fails', () => {
+    expect(failingProgram(def)).toEqual(def.solution.slice(0, -1));
+    const one: ProgramDef = {
+      ...def,
+      level: parseLevel(['SF']),
+      tray: ['right'],
+      solution: tiles('right'),
+    };
+    // The only prefix is the empty program (not runnable) and the tray has no other tile to swap in.
+    expect(failingProgram(one)).toBeNull();
+    expect(() => programWrongAction(one)).toThrow('no runnable program fails');
+    for (const sample of [def, { ...def, cap: 8 }]) {
+      expect(failingProgram(sample)?.length).toBeGreaterThan(0);
+    }
   });
 });

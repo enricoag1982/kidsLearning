@@ -35,6 +35,7 @@ describe('coding notes', () => {
   });
 
   it('a program that cannot run says why: too many tiles, not in the tray, unfinished', () => {
+    expect(noteOf({ kind: 'program-invalid', reason: 'empty' })?.text).toBe('coding.notes.empty');
     expect(noteOf({ kind: 'program-invalid', reason: 'too-many' })?.text).toBe(
       'coding.notes.too-many',
     );

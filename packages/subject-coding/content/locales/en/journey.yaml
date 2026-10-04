@@ -1,7 +1,9 @@
 tracks:
-  basics: Basics
+  basics: Coding Basics
 worlds:
   meadow-steps: Meadow Steps
+  looping-hills: Looping Hills
+  turning-woods: Turning Woods
 ranks:
   starter: Starter
-  explorer: Explorer
+  stepper: Stepper

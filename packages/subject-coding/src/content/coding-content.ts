@@ -13,6 +13,7 @@ import type { DefOf, ExerciseType } from '../kinds/index.ts';
 import { findBug } from './find-bug.ts';
 import { predict } from './predict.ts';
 import { program } from './program.ts';
+import { codingVoiceTemplates } from './voice-templates.ts';
 
 /** The seven kinds, by `type`. */
 export const CODING_KIND_CONTENT = {
@@ -37,5 +38,5 @@ export const codingContent: SubjectContent = {
   demo: cardDemo,
   badges: codingBadges,
   characters: CODING_CHARACTERS,
-  voiceTemplates: () => undefined,
+  voiceTemplates: codingVoiceTemplates,
 };

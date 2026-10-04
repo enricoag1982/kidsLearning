@@ -1,0 +1,69 @@
+# W1 lesson 3: plan a path around rocks and step on every star on the way. `cap` = the shortest program's length + 2 (the solver's
+# own number). Texts: `ask-*` in locales/en/lessons.yaml.
+id: seq-collect
+order: 3
+concept: seq-collect
+character: fox
+demo:
+  prompt: { emoji: 🦊⭐🚩 }
+guided:
+  - id: collect-g1
+    type: program
+    text: ask-star
+    map: ['S.*', '.#.', '..F']
+    tray: [up, down, left, right]
+    cap: 6
+    solution: [right, right, down, down]
+  - id: collect-g2
+    type: predict
+    text: ask-predict
+    map: ['S#.', '.*.', '..F']
+    program: [down, right, right]
+exercises:
+  - id: collect-01
+    type: program
+    text: ask-star
+    map: ['S.#', '.*.', '..F']
+    tray: [up, down, left, right]
+    cap: 6
+    solution: [right, down, right, down]
+  - id: collect-02
+    type: program
+    text: ask-stars
+    map: ['S.#.', '.*#.', '....', '..*F']
+    tray: [up, down, left, right]
+    cap: 8
+    solution: [down, right, down, down, right, right]
+  - id: collect-03
+    type: program
+    text: ask-stars
+    map: ['S..#', '.#*.', '..#*', '...F']
+    tray: [up, down, left, right]
+    cap: 8
+    solution: [right, right, down, right, down, down]
+  - id: collect-04
+    type: program
+    text: ask-stars
+    easier: collect-e1
+    map: ['S..#.', '.*#..', '..*#.', '#..*.', '....F']
+    tray: [up, down, left, right]
+    cap: 10
+    solution: [down, right, down, right, down, right, down, right]
+  - id: collect-05
+    type: predict
+    text: ask-predict
+    map: ['S...', '.*#.', '....', '...F']
+    program: [down, right, down, right]
+  - id: collect-06
+    type: predict
+    text: ask-predict
+    map: ['S.*.', '.#..', '..*#', '...F']
+    program: [right, right, down, down, down]
+variants:
+  - id: collect-e1
+    type: program
+    text: ask-star
+    map: ['S..*', '.#..', '...F']
+    tray: [up, down, left, right]
+    cap: 7
+    solution: [right, right, right, down, down]
