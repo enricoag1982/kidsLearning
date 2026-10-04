@@ -1,7 +1,7 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildContent, exitOnContentError } from '@learn/platform-content/build';
-import { codingContent } from '../src/content.ts';
+import { codingContent } from '../src/content/coding-content.ts';
 
 const packageDir = dirname(dirname(fileURLToPath(import.meta.url)));
 

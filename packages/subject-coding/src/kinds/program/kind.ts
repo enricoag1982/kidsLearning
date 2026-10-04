@@ -19,7 +19,7 @@ export type ProgramOutcome =
   | { readonly kind: 'solved' | 'failed'; readonly run: RunResult };
 
 /** Every tile kind a program uses, a repeat and the tiles inside it included. */
-function kindsUsed(program: readonly Tile[]): readonly TileKind[] {
+export function kindsUsed(program: readonly Tile[]): readonly TileKind[] {
   return program.flatMap((tile): TileKind[] =>
     tile.kind === 'repeat' ? ['repeat', ...kindsUsed(tile.body)] : [tile.kind],
   );

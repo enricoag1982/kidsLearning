@@ -18,6 +18,6 @@ time-limit:
 placement:
   offer-question: Already know some of this? Let's find out where to start you!
   summary-none-body: Every star starts with the first step.
-# What a lesson character teaches (`topicKey` in src/core.ts), shown in My Den and on the Journey.
+# What a lesson character teaches (`topicKey` in src/core/coding-core.ts), shown in My Den and on the Journey.
 topic:
   owl: Owl

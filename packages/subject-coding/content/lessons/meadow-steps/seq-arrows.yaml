@@ -1,0 +1,51 @@
+# Fixture lesson (m12.3): one lesson of each kind of coding exercise, enough to prove the pipeline. The real W1 lessons come with m12.5.
+# Maps: S start, F flag, * star, # rock, . empty. Tiles: a primitive name, or { repeat: 3, do: [right, down] }.
+# Texts for every exercise live in locales/en/lessons.yaml under the exercise `id`.
+id: seq-arrows
+order: 1
+concept: seq-arrows
+character: owl
+demo:
+  prompt: { emoji: 🦊🚩 }
+guided:
+  - id: arrows-g1
+    type: program
+    map: ['S.F']
+    tray: [left, right]
+    cap: 2
+    solution: [right, right]
+  - id: arrows-g2
+    type: predict
+    map: ['S..', '.#.', '..F']
+    program: [right, right, down]
+exercises:
+  - id: arrows-01
+    type: program
+    map: ['S..', '..F']
+    tray: [right, down]
+    cap: 3
+    solution: [right, right, down]
+  - id: arrows-02
+    type: program
+    map: ['S..*', '.#..', '...F']
+    tray: [up, down, left, right]
+    cap: 6
+    solution: [right, right, right, down, down]
+  - id: arrows-03
+    type: program
+    map: ['S..', '##.', '..F']
+    tray: [up, down, left, right]
+    cap: 4
+    solution: [right, right, down, down]
+    prefilled: [right, null, null, down]
+    locked: [0, 3]
+  - id: arrows-04
+    type: predict
+    map: ['S..*', '.#..', '...F']
+    program: [down, down, right, right, up]
+  - id: arrows-05
+    type: find-bug
+    map: ['S..*', '.#..', '...F']
+    program: [right, right, right, up, down]
+    bug: [3]
+    fix: down

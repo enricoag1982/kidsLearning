@@ -17,11 +17,8 @@ describe('codingEntry.load', () => {
     const { pack } = await codingEntry.load();
     const content = pack.createServices().content;
 
-    expect(content.lessons().map((lesson) => lesson.id)).toEqual([
-      'sample-lesson-1',
-      'sample-lesson-2',
-    ]);
-    expect(content.minigame('sample-boss')?.id).toBe('sample-boss');
+    expect(content.lessons().map((lesson) => lesson.id)).toEqual(['seq-arrows']);
+    expect(content.minigame('fixture-boss')?.id).toBe('fixture-boss');
     expect(content.catalog?.().tracks.map((track) => track.id)).toEqual(['basics']);
     expect(content.badges?.().map((badge) => badge.id)).toEqual(['first-lesson', 'star-collector']);
   });

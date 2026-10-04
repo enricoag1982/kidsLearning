@@ -509,46 +509,27 @@
    "world-stars": "{{earned}} of {{max}} stars"
   },
   "worlds": {
-   "first-steps": "First steps"
+   "meadow-steps": "Meadow Steps"
   }
  },
  "lessons": {
-  "boss-r1": "What is five plus four?",
-  "boss-r2": "How many apples are there?",
-  "boss-r3": "Put the numbers in order, smallest first.",
-  "boss-r4": "Is this true?",
-  "s1-01": "Sample question 1. How many apples are there? Replace it with yours!",
-  "s1-01-easy": "Easier sample question. How many apples are there?",
-  "s1-02": "Sample question 2. Is this true? Replace it with yours!",
-  "s1-03": "Sample question 3. What is four plus three? Type the answer. Replace it with yours!",
-  "s1-04": "Sample question 4. Put the numbers in order, smallest first. Replace it with yours!",
-  "s1-05": "Sample question 5. Which animal says meow? Replace it with yours!",
-  "s1-05-cat": "Cat",
-  "s1-05-dog": "Dog",
-  "s1-05-fish": "Fish",
-  "s1-g1": "Sample try. How many apples? Replace it with yours!",
-  "s1-g2": "Sample try. Are there three apples? Replace it with yours!",
-  "s2-01": "Sample question 1. Are there two trees? Replace it with yours!",
-  "s2-02": "Sample question 2. What is nine minus four? Type the answer. Replace it with yours!",
-  "s2-03": "Sample question 3. What is three plus three? Replace it with yours!",
-  "s2-03-easy": "Easier sample question. What is two plus one?",
-  "s2-04": "Sample question 4. Put the letters in order. Replace it with yours!",
-  "s2-05": "Sample question 5. Are there four apples? Replace it with yours!",
-  "s2-g1": "Sample try. What is two plus one? Replace it with yours!",
-  "s2-g2": "Sample try. Put the letters in order. Replace it with yours!",
-  "sample-boss": {
-   "goal": "This is a sample boss. Get every card right! Replace it with yours.",
-   "title": "Sample boss"
+  "arrows-01": "Help Fox reach the flag.",
+  "arrows-02": "Help Fox reach the flag. Pick up the star on the way!",
+  "arrows-03": "Fill the empty steps. Help Fox reach the flag.",
+  "arrows-04": "Read the arrows. Where does Fox stop? Tap the square.",
+  "arrows-05": "Fox does not reach the flag. Tap the step that is wrong.",
+  "arrows-g1": "Help Fox reach the flag. Tap the arrows, then press Run.",
+  "arrows-g2": "Where does Fox stop? Tap the square.",
+  "fixture-boss": {
+   "goal": "Fix the bug, then help Fox reach the flag with a repeat. Get every round right!",
+   "title": "Fixture boss"
   },
-  "sample-lesson-1": {
-   "demo": "This is a sample demo. Owl shows three apples. Replace it with your own demo!",
-   "story": "This is a sample lesson. Open the content folder and replace these words, the questions and the pictures with your own!",
-   "title": "Sample lesson 1"
-  },
-  "sample-lesson-2": {
-   "demo": "Owl sees two trees. Replace this demo with your own!",
-   "story": "This is another sample lesson. A lesson has a few tries with help, then questions that give stars.",
-   "title": "Sample lesson 2"
+  "fixture-r1": "Fox does not reach the flag. Tap the step that is wrong.",
+  "fixture-r2": "Help Fox reach the flag with just three tiles. Use a repeat!",
+  "seq-arrows": {
+   "demo": "Watch Fox follow the arrows. One arrow is one step. Now you try!",
+   "story": "Fox wants to reach the flag. Give Fox the steps, one arrow at a time!",
+   "title": "Arrow steps"
   }
  },
  "rewards": {

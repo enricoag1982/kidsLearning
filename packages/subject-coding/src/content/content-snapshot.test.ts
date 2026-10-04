@@ -3,14 +3,14 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { codingContent } from './content.ts';
+import { codingContent } from './coding-content.ts';
 import { compileAll } from '@learn/platform-content/compile-all';
 
-const packageDir = join(dirname(fileURLToPath(import.meta.url)), '..', 'content');
+const packageDir = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'content');
 const compiled = compileAll(codingContent, packageDir);
 
 const UPDATE_HINT =
-  'pnpm --filter @learn/subject-coding exec vitest run src/content-snapshot.test.ts -u, then review the diff';
+  'pnpm --filter @learn/subject-coding exec vitest run src/content/content-snapshot.test.ts -u, then review the diff';
 
 /** Pretty-printed (`JSON.stringify(v, null, 1)`, one-space indent) so a content diff stays reviewable. */
 function pretty(value: unknown): string {

@@ -12,7 +12,7 @@ export type Tile =
 export type TileKind = Tile['kind'];
 
 /** Every primitive, in tray order. */
-export const PRIMITIVE_KINDS: readonly PrimitiveKind[] = [
+export const PRIMITIVE_KINDS = [
   'up',
   'down',
   'left',
@@ -21,7 +21,7 @@ export const PRIMITIVE_KINDS: readonly PrimitiveKind[] = [
   'turn-left',
   'turn-right',
   'jump',
-];
+] as const satisfies readonly PrimitiveKind[];
 
 /** Most tiles inside one repeat. */
 export const MAX_REPEAT_BODY = 4;
