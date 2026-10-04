@@ -1,0 +1,23 @@
+# The few app texts every subject supplies; the rest come from the platform. `Coding` is the display name.
+app:
+  title: Coding
+home:
+  owl-next: 'Today you meet {{character}}!'
+den:
+  owl-line: Look at all your friends!
+  friends-heading: Your friends
+  friend-name: '{{character}}, friend'
+  friend-name-locked: '{{character}}, locked, finish the {{piece}} lesson'
+  friend-condition: 'Finish the {{piece}} lesson'
+session:
+  summary-new-friend: New friend!
+voice-check:
+  sentence: Let's try Coding together!
+time-limit:
+  early-body: 'Coding opens at {{time}}. See you soon!'
+placement:
+  offer-question: Already know some of this? Let's find out where to start you!
+  summary-none-body: Every star starts with the first step.
+# What a lesson character teaches (`topicKey` in src/core.ts), shown in My Den and on the Journey.
+topic:
+  owl: Owl

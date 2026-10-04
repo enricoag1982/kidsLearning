@@ -1,0 +1,297 @@
+[
+ {
+  "key": "04a83fcf89fa37d0",
+  "text": "See you tomorrow!",
+  "source": "owl-line"
+ },
+ {
+  "key": "06d629e3a048bb75",
+  "text": "You earned the First Lesson badge!",
+  "source": "celebration"
+ },
+ {
+  "key": "089f030dce660968",
+  "text": "Star Collector, Silver",
+  "source": "badge-earned"
+ },
+ {
+  "key": "0f88565349c9dcfa",
+  "text": "Owl sees two trees. Replace this demo with your own!",
+  "source": "lesson-demo"
+ },
+ {
+  "key": "1a3a236a0e50c1c9",
+  "text": "Today you meet Owl!",
+  "source": "home"
+ },
+ {
+  "key": "1bfe5140ae95a758",
+  "text": "What is five plus four?",
+  "source": "minigame-round"
+ },
+ {
+  "key": "1ca0f8469d85aaa7",
+  "text": "Star Collector. Earn 30 stars",
+  "source": "badge-locked"
+ },
+ {
+  "key": "1ced475ed6c9b1da",
+  "text": "Sample question 1. Are there two trees? Replace it with yours!",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "2416a7322ac657df",
+  "text": "Every star starts with the first step.",
+  "source": "placement"
+ },
+ {
+  "key": "267c64cb8fc6186d",
+  "text": "Coding opens at 07:00. See you soon!",
+  "source": "owl-line"
+ },
+ {
+  "key": "30f4cc047f1675bc",
+  "text": "Want to show me you already know World 1 · First steps?",
+  "source": "journey"
+ },
+ {
+  "key": "33cacbfd0bfeadc3",
+  "text": "A grown-up helps set things up first.",
+  "source": "owl-line"
+ },
+ {
+  "key": "356635f1532dfbd8",
+  "text": "Coding opens at 09:00. See you soon!",
+  "source": "owl-line"
+ },
+ {
+  "key": "44ee1e157e7f833d",
+  "text": "What would you like to learn today?",
+  "source": "owl-line"
+ },
+ {
+  "key": "454f5ac9d54b1b17",
+  "text": "Want to show me you already know Owl?",
+  "source": "journey"
+ },
+ {
+  "key": "4805eee9fb3cd71d",
+  "text": "Look at all your friends!",
+  "source": "owl-line"
+ },
+ {
+  "key": "5975daf7cd7cef89",
+  "text": "Pick a topic, or start your warm-up!",
+  "source": "owl-line"
+ },
+ {
+  "key": "5a3404d16008058d",
+  "text": "Is this true?",
+  "source": "minigame-round"
+ },
+ {
+  "key": "5b1f538e8108589f",
+  "text": "You've used up all your play time for today. Come back tomorrow!",
+  "source": "owl-line"
+ },
+ {
+  "key": "5dd5e6286fbf6833",
+  "text": "Let's try Coding together!",
+  "source": "voice-check"
+ },
+ {
+  "key": "62f897c4502712bc",
+  "text": "Star Collector, Bronze",
+  "source": "badge-earned"
+ },
+ {
+  "key": "68b4994e3b8aac6f",
+  "text": "Finish Owl first!",
+  "source": "journey"
+ },
+ {
+  "key": "6c96c4ece076eb05",
+  "text": "This is a sample demo. Owl shows three apples. Replace it with your own demo!",
+  "source": "lesson-demo"
+ },
+ {
+  "key": "6d4c96d551ddd6be",
+  "text": "Sample question 2. Is this true? Replace it with yours!",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "6f4d7aedd06083c1",
+  "text": "Sample question 5. Are there four apples? Replace it with yours!",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "77ae1eddf4305d9a",
+  "text": "Let's warm up what you know!",
+  "source": "home"
+ },
+ {
+  "key": "7c645983e7de82a2",
+  "text": "You already know Owl!",
+  "source": "assessment"
+ },
+ {
+  "key": "7df1b52546c683d6",
+  "text": "Sample try. Put the letters in order. Replace it with yours!",
+  "source": "lesson-guided"
+ },
+ {
+  "key": "82dccc099d5a210e",
+  "text": "Coding opens at 08:00. See you soon!",
+  "source": "owl-line"
+ },
+ {
+  "key": "8b89769909ec6247",
+  "text": "You're ready to explore every path.",
+  "source": "placement"
+ },
+ {
+  "key": "8ca943cc133b3f03",
+  "text": "Sample try. What is two plus one? Replace it with yours!",
+  "source": "lesson-guided"
+ },
+ {
+  "key": "8f94a90b93df22e1",
+  "text": "Sample try. How many apples? Replace it with yours!",
+  "source": "lesson-guided"
+ },
+ {
+  "key": "957f278d66fde401",
+  "text": "No worries — nothing is lost. Keep practising on your path!",
+  "source": "assessment"
+ },
+ {
+  "key": "95a8585fbd546cdf",
+  "text": "First Lesson",
+  "source": "badge-earned"
+ },
+ {
+  "key": "9a3f3779c7e50deb",
+  "text": "This is another sample lesson. A lesson has a few tries with help, then questions that give stars.",
+  "source": "lesson-story"
+ },
+ {
+  "key": "9e77d7d9339d2719",
+  "text": "Sample question 2. What is nine minus four? Type the answer. Replace it with yours!",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "9fd4624030447a7a",
+  "text": "You finished everything for now. Come back soon for more!",
+  "source": "home"
+ },
+ {
+  "key": "a2fc675265b9b0fa",
+  "text": "First Lesson. Master your first lesson",
+  "source": "badge-locked"
+ },
+ {
+  "key": "a8842a4abc22c2e0",
+  "text": "Easier sample question. How many apples are there?",
+  "source": "lesson-variant"
+ },
+ {
+  "key": "a96caea44a81e8e8",
+  "text": "Put the numbers in order, smallest first.",
+  "source": "minigame-round"
+ },
+ {
+  "key": "aa7371487a8e2faa",
+  "text": "This is a sample lesson. Open the content folder and replace these words, the questions and the pictures with your own!",
+  "source": "lesson-story"
+ },
+ {
+  "key": "b15b7a520254835a",
+  "text": "How many apples are there?",
+  "source": "minigame-round"
+ },
+ {
+  "key": "bac073bb21b21de1",
+  "text": "Star Collector. Earn 10 stars",
+  "source": "badge-locked"
+ },
+ {
+  "key": "bd09bbb7e9ebb05f",
+  "text": "Already know some of this? Let's find out where to start you!",
+  "source": "placement"
+ },
+ {
+  "key": "c3a5fe94f9fd2264",
+  "text": "It's getting late. See you tomorrow!",
+  "source": "owl-line"
+ },
+ {
+  "key": "c7734ff323510472",
+  "text": "Sample question 4. Put the numbers in order, smallest first. Replace it with yours!",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "d26d35c2d86ed712",
+  "text": "Sample question 5. Which animal says meow? Replace it with yours!",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "d72e0772a57b8e3c",
+  "text": "Sample question 1. How many apples are there? Replace it with yours!",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "d8e13de5a65fd2bf",
+  "text": "You already know First steps — 2 lessons are yours!",
+  "source": "assessment"
+ },
+ {
+  "key": "d981280686c4f897",
+  "text": "World boss time: Sample boss!",
+  "source": "home"
+ },
+ {
+  "key": "dfa3de465772d747",
+  "text": "Easier sample question. What is two plus one?",
+  "source": "lesson-variant"
+ },
+ {
+  "key": "e6dd3db7d2a21a07",
+  "text": "Let's keep going!",
+  "source": "home"
+ },
+ {
+  "key": "e7c0878a15db2d00",
+  "text": "5 minutes left — pick something short!",
+  "source": "owl-line"
+ },
+ {
+  "key": "f0d1aa771541305f",
+  "text": "This is a sample boss. Get every card right! Replace it with yours.",
+  "source": "minigame-goal"
+ },
+ {
+  "key": "f1365a396f93e992",
+  "text": "Sample question 3. What is three plus three? Replace it with yours!",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "f17364e6baf97a98",
+  "text": "Sample question 3. What is four plus three? Type the answer. Replace it with yours!",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "f192f577987925a7",
+  "text": "You earned the Star Collector badge!",
+  "source": "celebration"
+ },
+ {
+  "key": "f516e0f836c72a4d",
+  "text": "Sample question 4. Put the letters in order. Replace it with yours!",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "f78033ebdad13ecd",
+  "text": "Sample try. Are there three apples? Replace it with yours!",
+  "source": "lesson-guided"
+ }
+]
