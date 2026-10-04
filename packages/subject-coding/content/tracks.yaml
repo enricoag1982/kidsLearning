@@ -1,5 +1,6 @@
-# One main track, "Coding Basics". Worlds without a lesson show as "Coming soon" on the Journey: Looping Hills and Turning Woods
-# get their lessons in m12.6. `title` / habitat names are texts in locales/en/journey.yaml.
+# One main track, "Coding Basics": three worlds in order, each ending in a world boss (`boss`: a mini-game of that world, opened by the
+# world's debugging lesson; the world counts as mastered once its lessons are mastered and its boss is won). `title` / habitat names
+# are texts in locales/en/journey.yaml.
 tracks:
   - id: basics
     kind: main
@@ -12,9 +13,23 @@ tracks:
           title: worlds.meadow-steps,
           boss: bug-squash,
         }
-      - { id: looping-hills, order: 2, habitat: river, title: worlds.looping-hills }
-      - { id: turning-woods, order: 3, habitat: forest, title: worlds.turning-woods }
+      - {
+          id: looping-hills,
+          order: 2,
+          habitat: river,
+          title: worlds.looping-hills,
+          boss: fence-builder,
+        }
+      - {
+          id: turning-woods,
+          order: 3,
+          habitat: forest,
+          title: worlds.turning-woods,
+          boss: left-right-rescue,
+        }
 # A rank is earned `after` a world (`world:<id>`) or at the `start`; its name is in locales/en/journey.yaml.
 ranks:
   - { id: starter, after: start }
   - { id: stepper, after: world:meadow-steps }
+  - { id: looper, after: world:looping-hills }
+  - { id: turner, after: world:turning-woods }

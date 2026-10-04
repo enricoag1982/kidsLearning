@@ -1,0 +1,87 @@
+# W3 lesson 1: a turn spins Fox on the spot; the heading stays until the next turn. No program to build: the question is the way Fox
+# faces after the turns the instruction names ("Fox faces up. Turn right, turn right."): the card on the board shows Fox and the way
+# it faces now, the four answers are big arrows. Every instruction says the start and the turns, so one way is right (checked
+# against the simulator in the content tests). Two predictions follow: forward and turns, the child taps the square, not the heading.
+# Texts: `ask-facing-*` in locales/en/lessons.yaml.
+id: turn-facing
+order: 1
+concept: turn-facing
+character: fox
+demo:
+  prompt: { emoji: 🦊, big: '↑ → ↓' }
+guided:
+  - id: facing-g1
+    type: choice
+    text: ask-facing-g1
+    prompt: { emoji: 🦊, big: '↑' }
+    options:
+      - { id: up, big: '↑' }
+      - { id: right, big: '→' }
+      - { id: down, big: '↓' }
+      - { id: left, big: '←' }
+    answer: right
+  - id: facing-g2
+    type: choice
+    text: ask-facing-g2
+    prompt: { emoji: 🦊, big: '↑' }
+    options:
+      - { id: up, big: '↑' }
+      - { id: right, big: '→' }
+      - { id: down, big: '↓' }
+      - { id: left, big: '←' }
+    answer: down
+exercises:
+  - id: facing-01
+    type: choice
+    text: ask-facing-01
+    prompt: { emoji: 🦊, big: '→' }
+    options:
+      - { id: up, big: '↑' }
+      - { id: right, big: '→' }
+      - { id: down, big: '↓' }
+      - { id: left, big: '←' }
+    answer: up
+  - id: facing-02
+    type: choice
+    text: ask-facing-02
+    prompt: { emoji: 🦊, big: '↓' }
+    options:
+      - { id: up, big: '↑' }
+      - { id: right, big: '→' }
+      - { id: down, big: '↓' }
+      - { id: left, big: '←' }
+    answer: right
+  - id: facing-03
+    type: choice
+    text: ask-facing-03
+    easier: facing-e1
+    prompt: { emoji: 🦊, big: '←' }
+    options:
+      - { id: up, big: '↑' }
+      - { id: right, big: '→' }
+      - { id: down, big: '↓' }
+      - { id: left, big: '←' }
+    answer: down
+  - id: facing-04
+    type: predict
+    text: ask-predict
+    map: ['....', 'F...', '..S.', '....']
+    heading: up
+    program: [forward, turn-left, forward, forward]
+  - id: facing-05
+    type: predict
+    text: ask-predict
+    map: ['F...', '....', '....', '...S']
+    heading: left
+    program: [forward, forward, turn-right, forward, forward]
+variants:
+  - id: facing-e1
+    type: choice
+    text: ask-facing-e1
+    prompt: { emoji: 🦊, big: '←' }
+    options:
+      - { id: up, big: '↑' }
+      - { id: right, big: '→' }
+      - { id: down, big: '↓' }
+      - { id: left, big: '←' }
+    answer: up

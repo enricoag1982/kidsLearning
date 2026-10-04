@@ -1,0 +1,79 @@
+# W3 lesson 2: build with forward and turns from Fox's own view. Every level sets `heading`; the four scored programs start facing
+# up, left, down and right (down and left are the ones where Fox's left is not the screen's left). `cap` = the solver's shortest
+# length + 2 (every solution here is a shortest one). Texts: `ask-*` in locales/en/lessons.yaml.
+id: turn-build
+order: 2
+concept: turn-build
+character: fox
+demo:
+  prompt: { emoji: 🦊, big: '↑ ↑ → →' }
+guided:
+  - id: build-g1
+    type: program
+    text: ask-turn-guided
+    map: ['S..', '...', 'F..']
+    heading: right
+    tray: [forward, turn-left, turn-right]
+    cap: 5
+    solution: [turn-right, forward, forward]
+  - id: build-g2
+    type: predict
+    text: ask-predict
+    map: ['..F', '...', 'S..']
+    heading: up
+    program: [forward, forward, turn-right, forward]
+exercises:
+  - id: build-01
+    type: program
+    text: ask-reach
+    map: ['...', 'F..', '..S']
+    heading: up
+    tray: [forward, turn-left, turn-right]
+    cap: 6
+    solution: [forward, turn-left, forward, forward]
+  - id: build-02
+    type: program
+    text: ask-reach
+    map: ['..S', '...', 'F..']
+    heading: left
+    tray: [forward, turn-left, turn-right]
+    cap: 7
+    solution: [forward, forward, turn-left, forward, forward]
+  - id: build-03
+    type: program
+    text: ask-reach
+    map: ['S..', '...', '...', '..F']
+    heading: down
+    tray: [forward, turn-left, turn-right]
+    cap: 8
+    solution: [forward, forward, forward, turn-left, forward, forward]
+  - id: build-04
+    type: program
+    text: ask-reach
+    easier: build-e1
+    map: ['S.#.', '..#.', '...F']
+    heading: right
+    tray: [forward, turn-left, turn-right]
+    cap: 9
+    solution: [forward, turn-right, forward, forward, turn-left, forward, forward]
+  - id: build-05
+    type: predict
+    text: ask-predict
+    map: ['....', 'F...', '..S.', '....']
+    heading: up
+    program: [forward, turn-left, forward, forward]
+  - id: build-06
+    type: predict
+    text: ask-predict
+    map: ['F...', '....', '....', '...S']
+    heading: left
+    program: [forward, forward, turn-right, forward, forward]
+variants:
+  - id: build-e1
+    type: program
+    text: ask-reach
+    map: ['S..', '...', '.F.']
+    heading: right
+    tray: [forward, turn-left, turn-right]
+    cap: 6
+    solution: [forward, turn-right, forward, forward]

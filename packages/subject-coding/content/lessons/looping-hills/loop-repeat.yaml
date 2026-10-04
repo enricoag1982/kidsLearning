@@ -1,0 +1,76 @@
+# W2 lesson 2: one tile, N times in all. Count the squares Fox crosses; that number goes on the Repeat. Straight runs of 4-5 steps
+# (a 6 x 6 grid holds 5 steps in a row) and at most one corner, done by a second tile after the repeat. Every program is `must-loop`:
+# `cap` = the loop solution's tile count (+ 1 on the last one). Texts: `ask-*` in locales/en/lessons.yaml.
+id: loop-repeat
+order: 2
+concept: loop-repeat
+character: fox
+demo:
+  prompt: { big: '🔁 5 × →' }
+guided:
+  - id: repeat-g1
+    type: program
+    text: ask-reach-loop
+    map: ['.....', 'S...F', '.....']
+    tray: [up, down, left, right, repeat]
+    cap: 2
+    must-loop: true
+    solution: [{ repeat: 4, do: [right] }]
+  - id: repeat-g2
+    type: predict
+    text: ask-predict
+    map: ['S...', '....', '...F']
+    program: [{ repeat: 3, do: [right] }]
+exercises:
+  - id: repeat-01
+    type: program
+    text: ask-reach-loop
+    map: ['.S.', '...', '...', '...', '.F.']
+    tray: [up, down, left, right, repeat]
+    cap: 2
+    must-loop: true
+    solution: [{ repeat: 4, do: [down] }]
+  - id: repeat-02
+    type: program
+    text: ask-reach-loop
+    map: ['S....', '....F', '.....']
+    tray: [up, down, left, right, repeat]
+    cap: 3
+    must-loop: true
+    solution: [{ repeat: 4, do: [right] }, down]
+  - id: repeat-03
+    type: program
+    text: ask-reach-loop
+    map: ['...S', '....', '....', '....', '....', '..F.']
+    tray: [up, down, left, right, repeat]
+    cap: 3
+    must-loop: true
+    solution: [{ repeat: 5, do: [down] }, left]
+  - id: repeat-04
+    type: program
+    text: ask-reach-loop
+    easier: repeat-e1
+    map: ['......', '.....F', 'S.....']
+    tray: [up, down, left, right, repeat]
+    cap: 4
+    must-loop: true
+    solution: [{ repeat: 5, do: [right] }, up]
+  - id: repeat-05
+    type: predict
+    text: ask-predict
+    map: ['S...', '....', '....', '...F']
+    program: [{ repeat: 3, do: [down] }, right]
+  - id: repeat-06
+    type: predict
+    text: ask-predict
+    map: ['......', '.....F', 'S.....']
+    program: [{ repeat: 5, do: [right] }, up]
+variants:
+  - id: repeat-e1
+    type: program
+    text: ask-reach-loop
+    map: ['....', '....', '...F', 'S...']
+    tray: [up, down, left, right, repeat]
+    cap: 3
+    must-loop: true
+    solution: [{ repeat: 3, do: [right] }, up]

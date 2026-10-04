@@ -5,6 +5,7 @@ import {
   contentText,
   findLesson,
   findMiniGame,
+  openJourneyWorld,
   playLesson,
   playRounds,
   playWrongTry,
@@ -91,6 +92,8 @@ test.describe('World 1 boss', () => {
     await page.getByRole('button', { name: worldBossNodeName(boss, 'available') }).click();
     await playRounds(page, boss, boss.rounds.length);
     await page.getByRole('button', { name: contentText('play.back-to-journey') }).click();
+    // World 1 is finished, so the Journey moves on to World 2: its boss node is on World 1's own tab.
+    await openJourneyWorld(page, 1, 'meadow-steps');
     await expect(page.getByRole('button', { name: worldBossNodeName(boss, 'won') })).toBeVisible();
   });
 });

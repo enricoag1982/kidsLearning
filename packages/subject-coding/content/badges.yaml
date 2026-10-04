@@ -11,3 +11,9 @@ badges:
   - id: meadow-walker
     category: milestone
     condition: { type: mastered, scope: 'world:meadow-steps', thresholds: [1] }
+  - id: hill-climber
+    category: milestone
+    condition: { type: mastered, scope: 'world:looping-hills', thresholds: [1] }
+  - id: woods-ranger
+    category: milestone
+    condition: { type: mastered, scope: 'world:turning-woods', thresholds: [1] }

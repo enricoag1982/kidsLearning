@@ -17,6 +17,9 @@ export default defineConfig({
           // Content solvers (boss par = optimal solve) are CPU-bound; `pnpm -r test` runs every package at once, so on a CI
           // runner a 1–2 s check can pass 5 s (hungry-queen, 2026-10-04). The timeout only guards a hang.
           testTimeout: 20_000,
+          // `build.test.ts` runs the content build in `beforeAll` (≈ 4 s alone, over 10 s while the coding package's jsdom suite
+          // shares the CPUs): the same guard as `testTimeout`, for hooks.
+          hookTimeout: 60_000,
         },
       },
       {

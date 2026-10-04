@@ -14,16 +14,16 @@ describe('the #coding playground', () => {
   it('has a button for every shipped exercise (guided tries, exercises, easier variants, boss rounds) and shows each in its lesson step', async () => {
     render(<CodingPlayground />);
     const buttons = screen.getAllByRole('button', {
-      name: /^(order|arrows|collect|debug|bug-squash)-/,
+      name: /^(order|arrows|collect|debug|bug-squash|pattern|repeat|chunk|loopbug|fence-builder|facing|build|tloop|jump|tbug|rescue)-/,
     });
-    expect(buttons).toHaveLength(40);
+    expect(buttons).toHaveLength(127);
     expect(buttons.slice(0, 4).map((button) => button.textContent)).toEqual([
       'order-g1 (guided)',
       'order-g2 (guided)',
       'order-01',
       'order-02',
     ]);
-    expect(buttons.at(-1)?.textContent).toBe('bug-squash-r5 (boss)');
+    expect(buttons.at(-1)?.textContent).toBe('rescue-r4 (boss)');
 
     const shipped = codingWeb.createServices().content;
     const defs = allCodingExercises(shipped.lessons(), shipped.minigames());
@@ -41,7 +41,8 @@ describe('the #coding playground', () => {
       ).toBeGreaterThan(0);
       expect(screen.getByRole('button', { name: 'Hint' })).toBeTruthy();
     }
-  });
+    // One click per shipped exercise: the loop grows with the content, so it gets its own, longer limit.
+  }, 120_000);
 
   it('a guided try shows Skip and starts with its first hint; a scored exercise has no Skip', async () => {
     render(<CodingPlayground />);

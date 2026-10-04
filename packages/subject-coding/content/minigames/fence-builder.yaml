@@ -1,0 +1,50 @@
+# Fence Builder: World 2's boss, a `series` of 4 programs to build with a Repeat, each with fewer slots (cap 6, 4, 3, 3). The stars
+# are the fence posts: they make every board too long for a program without a repeat (`must-loop`, proved by the build). It also
+# opens after the loop-debugging lesson as a Today session mini-game.
+id: fence-builder
+mode: series
+concept: loop-chunk
+unlockAfter: loop-debug
+errors3: 0
+errors2: 2
+rounds:
+  - id: fence-builder-r1
+    type: program
+    text: ask-fence
+    map: ['S...*', '.....', '.....', '..F.*']
+    tray: [up, down, left, right, repeat]
+    cap: 6
+    must-loop: true
+    solution:
+      - { repeat: 4, do: [right] }
+      - { repeat: 3, do: [down] }
+      - { repeat: 2, do: [left] }
+  - id: fence-builder-r2
+    type: program
+    text: ask-fence
+    map: ['.....F', '.....*', '......', '......', 'S....*']
+    tray: [up, down, left, right, repeat]
+    cap: 4
+    must-loop: true
+    solution:
+      - { repeat: 5, do: [right] }
+      - { repeat: 4, do: [up] }
+  - id: fence-builder-r3
+    type: program
+    text: ask-fence
+    map: ['S.*.*.', '.....F']
+    tray: [up, down, left, right, repeat]
+    cap: 3
+    must-loop: true
+    solution:
+      - { repeat: 5, do: [right] }
+      - down
+  - id: fence-builder-r4
+    type: program
+    text: ask-fence
+    map: ['....F', '...*.', '..*..', '.*...', 'S....']
+    tray: [up, down, left, right, repeat]
+    cap: 3
+    must-loop: true
+    solution:
+      - { repeat: 4, do: [right, up] }

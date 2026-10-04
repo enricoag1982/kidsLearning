@@ -1,0 +1,85 @@
+# W3 lesson 3: repeat [forward, turn] draws a square (turn right: clockwise; turn left: the other way), and a zigzag when the body
+# turns both ways. Stars sit at the corners. Every program is `must-loop` (`cap` = the loop solution's tile count): a program without
+# a repeat is longer than the cap. Every level sets `heading`. Texts: `ask-*` in locales/en/lessons.yaml.
+id: turn-loop
+order: 3
+concept: turn-loop
+character: fox
+demo:
+  prompt: { emoji: 🦊, big: '→ ↓ ← ↑' }
+guided:
+  - id: tloop-g1
+    type: program
+    text: ask-stars-loop
+    map: ['S*.', 'F*.', '...']
+    heading: right
+    tray: [forward, turn-left, turn-right, repeat]
+    cap: 3
+    must-loop: true
+    solution: [{ repeat: 3, do: [forward, turn-right] }]
+  - id: tloop-g2
+    type: predict
+    text: ask-predict
+    map: ['S..', '..F', '...']
+    heading: right
+    program: [{ repeat: 2, do: [forward, turn-right] }]
+exercises:
+  - id: tloop-01
+    type: program
+    text: ask-stars-loop
+    map: ['S.*', '...', 'F.*']
+    heading: right
+    tray: [forward, turn-left, turn-right, repeat]
+    cap: 4
+    must-loop: true
+    solution: [{ repeat: 3, do: [forward, forward, turn-right] }]
+  - id: tloop-02
+    type: program
+    text: ask-stars-loop
+    map: ['S...', '.*..', '..*.', '...F']
+    heading: right
+    tray: [forward, turn-left, turn-right, repeat]
+    cap: 5
+    must-loop: true
+    solution: [{ repeat: 3, do: [forward, turn-right, forward, turn-left] }]
+  - id: tloop-03
+    type: program
+    text: ask-stars-loop
+    map: ['S..*', '....', '....', 'F..*']
+    heading: right
+    tray: [forward, turn-left, turn-right, repeat]
+    cap: 5
+    must-loop: true
+    solution: [{ repeat: 3, do: [forward, forward, forward, turn-right] }]
+  - id: tloop-04
+    type: program
+    text: ask-stars-loop
+    easier: tloop-e1
+    map: ['*..*', '....', '....', 'F..S']
+    heading: up
+    tray: [forward, turn-left, turn-right, repeat]
+    cap: 5
+    must-loop: true
+    solution: [{ repeat: 3, do: [forward, forward, forward, turn-left] }]
+  - id: tloop-05
+    type: predict
+    text: ask-predict
+    map: ['S...', '....', '....', '...F']
+    heading: right
+    program: [{ repeat: 2, do: [forward, turn-right, forward, turn-left] }]
+  - id: tloop-06
+    type: predict
+    text: ask-predict
+    map: ['....', '..F.', '....', 'S...']
+    heading: up
+    program: [{ repeat: 2, do: [forward, forward, turn-right] }]
+variants:
+  - id: tloop-e1
+    type: program
+    text: ask-stars-loop
+    map: ['SF', '**']
+    heading: down
+    tray: [forward, turn-left, turn-right, repeat]
+    cap: 3
+    must-loop: true
+    solution: [{ repeat: 3, do: [forward, turn-left] }]

@@ -1,0 +1,80 @@
+# W3 lesson 4: Jump = two cells along the heading, over one rock (the cell jumped over is not visited; the landing cell must be free).
+# Every board has a wall of rocks no walk can go round, so the jump is the only way to the flag (checked in the content tests: the
+# solver finds no program without Jump). `cap` = the solver's shortest length + 2. Every level sets `heading`.
+# Texts: `ask-*` in locales/en/lessons.yaml.
+id: turn-jump
+order: 4
+concept: turn-jump
+character: fox
+demo:
+  prompt: { emoji: 🦊⬛🚩 }
+guided:
+  - id: jump-g1
+    type: program
+    text: ask-jump-guided
+    map: ['..#..', 'S.#.F', '..#..']
+    heading: right
+    tray: [forward, turn-left, turn-right, jump]
+    cap: 5
+    solution: [forward, jump, forward]
+  - id: jump-g2
+    type: predict
+    text: ask-predict
+    map: ['.....', 'S.#.F', '.....']
+    heading: right
+    program: [forward, jump]
+exercises:
+  - id: jump-01
+    type: program
+    text: ask-reach
+    map: ['.S.', '...', '###', '.F.']
+    heading: down
+    tray: [forward, turn-left, turn-right, jump]
+    cap: 4
+    solution: [forward, jump]
+  - id: jump-02
+    type: program
+    text: ask-reach
+    map: ['....F', '#####', 'S....']
+    heading: up
+    tray: [forward, turn-left, turn-right, jump]
+    cap: 6
+    solution: [jump, turn-right, jump, jump]
+  - id: jump-03
+    type: program
+    text: ask-reach
+    map: ['..#S.', '..#..', '..#..', '.F#..']
+    heading: left
+    tray: [forward, turn-left, turn-right, jump]
+    cap: 6
+    solution: [jump, turn-left, forward, jump]
+  - id: jump-04
+    type: program
+    text: ask-reach
+    easier: jump-e1
+    map: ['S.#..', '..#..', '..#..', '..###', '..#.F']
+    heading: right
+    tray: [forward, turn-left, turn-right, jump]
+    cap: 8
+    solution: [forward, jump, forward, turn-right, jump, jump]
+  - id: jump-05
+    type: predict
+    text: ask-predict
+    map: ['.....', 'S.#..', '....F']
+    heading: right
+    program: [forward, jump, forward]
+  - id: jump-06
+    type: predict
+    text: ask-predict
+    map: ['.....', 'S*..F', '.....']
+    heading: right
+    program: [jump, forward]
+variants:
+  - id: jump-e1
+    type: program
+    text: ask-reach
+    map: ['..#..', 'S.#..', '..#F.']
+    heading: right
+    tray: [forward, turn-left, turn-right, jump]
+    cap: 6
+    solution: [forward, jump, turn-right, forward]

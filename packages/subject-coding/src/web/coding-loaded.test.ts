@@ -13,7 +13,7 @@ describe('codingEntry.load', () => {
     expect(common?.app?.title).toBe('Coding');
   });
 
-  it('serves the compiled lessons, Bug Squash, the catalog and the badges', async () => {
+  it('serves the compiled lessons, the two bosses, the catalog and the badges', async () => {
     const { pack } = await codingEntry.load();
     const content = pack.createServices().content;
 
@@ -22,13 +22,31 @@ describe('codingEntry.load', () => {
         .lessons()
         .map((lesson) => lesson.id)
         .sort(),
-    ).toEqual(['seq-arrows', 'seq-collect', 'seq-debug', 'seq-order']);
+    ).toEqual([
+      'loop-chunk',
+      'loop-debug',
+      'loop-pattern',
+      'loop-repeat',
+      'seq-arrows',
+      'seq-collect',
+      'seq-debug',
+      'seq-order',
+      'turn-build',
+      'turn-debug',
+      'turn-facing',
+      'turn-jump',
+      'turn-loop',
+    ]);
     expect(content.minigame('bug-squash')?.id).toBe('bug-squash');
+    expect(content.minigame('fence-builder')?.id).toBe('fence-builder');
+    expect(content.minigame('left-right-rescue')?.id).toBe('left-right-rescue');
     expect(content.catalog?.().tracks.map((track) => track.id)).toEqual(['basics']);
     expect(content.badges?.().map((badge) => badge.id)).toEqual([
       'first-program',
       'bug-squasher',
       'meadow-walker',
+      'hill-climber',
+      'woods-ranger',
     ]);
   });
 });

@@ -1,0 +1,76 @@
+# W2 lesson 3: a Repeat holds a chunk of 2-3 tiles (a staircase, a long-step staircase, a wave). Stars sit on the steps. Every program
+# is `must-loop` (`cap` = the loop solution's tile count): a program without a repeat is longer than the cap. Texts: `ask-*` in
+# locales/en/lessons.yaml.
+id: loop-chunk
+order: 3
+concept: loop-chunk
+character: fox
+demo:
+  prompt: { big: '🔁 3 × → ↑' }
+guided:
+  - id: chunk-g1
+    type: program
+    text: ask-star-loop
+    map: ['S..', '.*.', '..F']
+    tray: [up, down, left, right, repeat]
+    cap: 3
+    must-loop: true
+    solution: [{ repeat: 2, do: [right, down] }]
+  - id: chunk-g2
+    type: predict
+    text: ask-predict
+    map: ['S...', '....', '....', '...F']
+    program: [{ repeat: 2, do: [down, right] }]
+exercises:
+  - id: chunk-01
+    type: program
+    text: ask-stars-loop
+    map: ['...F', '..*.', '.*..', 'S...']
+    tray: [up, down, left, right, repeat]
+    cap: 3
+    must-loop: true
+    solution: [{ repeat: 3, do: [right, up] }]
+  - id: chunk-02
+    type: program
+    text: ask-stars-loop
+    map: ['...S', '..*.', '.*..', 'F...']
+    tray: [up, down, left, right, repeat]
+    cap: 3
+    must-loop: true
+    solution: [{ repeat: 3, do: [down, left] }]
+  - id: chunk-03
+    type: program
+    text: ask-stars-loop
+    map: ['S.*..', '...*.', '....F']
+    tray: [up, down, left, right, repeat]
+    cap: 4
+    must-loop: true
+    solution: [{ repeat: 2, do: [right, right, down] }]
+  - id: chunk-04
+    type: program
+    text: ask-stars-loop
+    easier: chunk-e1
+    map: ['S..F', '*.*.', '....']
+    tray: [up, down, left, right, repeat]
+    cap: 4
+    must-loop: true
+    solution: [{ repeat: 3, do: [down, right, up] }]
+  - id: chunk-05
+    type: predict
+    text: ask-predict
+    map: ['....', '....', '.F..', 'S...']
+    program: [{ repeat: 2, do: [right, up] }]
+  - id: chunk-06
+    type: predict
+    text: ask-predict
+    map: ['...F', '....', '....', 'S...']
+    program: [{ repeat: 3, do: [right, up] }]
+variants:
+  - id: chunk-e1
+    type: program
+    text: ask-star-loop
+    map: ['S..', '...', '.*F']
+    tray: [up, down, left, right, repeat]
+    cap: 3
+    must-loop: true
+    solution: [{ repeat: 2, do: [down, right] }]

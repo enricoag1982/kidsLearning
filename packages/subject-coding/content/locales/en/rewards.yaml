@@ -8,3 +8,9 @@ badges:
   meadow-walker:
     name: Meadow Walker
     condition: Master Meadow Steps and beat Bug Squash
+  hill-climber:
+    name: Hill Climber
+    condition: Master Looping Hills and beat Fence Builder
+  woods-ranger:
+    name: Woods Ranger
+    condition: Master Turning Woods and beat Left-Right Rescue
