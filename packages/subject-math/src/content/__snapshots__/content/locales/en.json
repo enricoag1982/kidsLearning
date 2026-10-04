@@ -625,6 +625,16 @@
   "number-parade-r4": "What is 8 minus 2?",
   "number-parade-r5": "What is 6 plus 2?",
   "number-parade-r6": "What is 7 minus 4?",
+  "race": {
+   "bot-adds": "{{bot}} adds {{step}}. Now it's {{total}}.",
+   "hint": "Try to land on 4, 8, 12 or 16.",
+   "you-add": "You add {{step}}. Now it's {{total}}.",
+   "your-turn": "Your turn!"
+  },
+  "race-to-20": {
+   "goal": "Take turns adding 1, 2 or 3. Whoever says 20 wins!",
+   "title": "Race to 20"
+  },
   "take-away": {
    "demo": "Owl has 5 apples and eats 2. Cross out 2 dots, and 3 are left. 5 minus 2 makes 3!",
    "story": "Taking away means some go away, and we count what is left. If Owl has 5 apples and eats 2, there are 3 left.",

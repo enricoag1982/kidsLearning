@@ -394,6 +394,22 @@
    "titleKey": "lessons:number-parade.title",
    "goalKey": "lessons:number-parade.goal",
    "unlockAfter": "take-away"
+  },
+  {
+   "mode": "duel",
+   "id": "race-to-20",
+   "concept": "take-away",
+   "game": "race",
+   "params": {
+    "target": 20,
+    "maxStep": 3
+   },
+   "level": 1,
+   "first": "bot",
+   "hintKey": "lessons:race.hint",
+   "titleKey": "lessons:race-to-20.title",
+   "goalKey": "lessons:race-to-20.goal",
+   "unlockAfter": "take-away"
   }
  ]
 }

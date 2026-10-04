@@ -1,0 +1,9 @@
+id: race-to-20
+mode: duel
+concept: take-away
+unlockAfter: take-away
+game: race
+params: { target: 20, maxStep: 3 }
+level: 1
+first: bot
+hint: race.hint

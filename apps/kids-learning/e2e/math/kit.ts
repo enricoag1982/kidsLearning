@@ -8,6 +8,7 @@ import { createPages } from '@learn/platform-web/e2e/pages.ts';
 import type {
   MathAction,
   MathContent,
+  MathDuelGame,
   MathExerciseDef,
   MathLesson,
   MathSeriesGame,
@@ -47,6 +48,15 @@ export function findLesson(id: string): MathLesson {
 export function findMiniGame(id: string): MathSeriesGame {
   const game = content.minigames.find((entry) => entry.id === id);
   if (!game) throw new Error(`math content is missing mini-game "${id}"`);
+  if (game.mode !== 'series')
+    throw new Error(`math mini-game "${id}" is a ${game.mode}, not a series`);
+  return game;
+}
+
+export function findDuel(id: string): MathDuelGame {
+  const game = content.minigames.find((entry) => entry.id === id);
+  if (!game) throw new Error(`math content is missing mini-game "${id}"`);
+  if (game.mode !== 'duel') throw new Error(`math mini-game "${id}" is a ${game.mode}, not a duel`);
   return game;
 }
 
@@ -128,5 +138,10 @@ export async function playLesson(page: Page, lesson: MathLesson): Promise<void> 
 
 /** Plays a series mini-game round by round with the mode's own e2e driver, leaving its result showing. */
 export async function playSeries(page: Page, game: MathSeriesGame): Promise<void> {
+  await modeE2EOf(game.mode).play(page, game, { text: contentText, solve: solveExercise });
+}
+
+/** Plays a duel mini-game to its end with the mode's own e2e driver (a best move every kid turn), leaving its result panel showing. */
+export async function playDuel(page: Page, game: MathDuelGame): Promise<void> {
   await modeE2EOf(game.mode).play(page, game, { text: contentText, solve: solveExercise });
 }

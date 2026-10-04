@@ -26,6 +26,7 @@ function allExercises(): readonly { readonly where: string; readonly exercise: M
     }
   }
   for (const minigame of content.minigames) {
+    if (minigame.mode !== 'series') continue;
     for (const round of minigame.rounds) {
       all.push({ where: `${minigame.id}/${round.id}`, exercise: round });
     }
@@ -103,7 +104,7 @@ describe('the authored world', () => {
       content.minigames.map((game) => [
         game.id,
         game.concept,
-        game.rounds.map((round) => round.id),
+        game.mode === 'series' ? game.rounds.map((round) => round.id) : game.mode,
       ]),
     ).toEqual([
       [
@@ -118,6 +119,7 @@ describe('the authored world', () => {
           'number-parade-r6',
         ],
       ],
+      ['race-to-20', 'take-away', 'duel'],
     ]);
     for (const { where, exercise } of allExercises()) {
       expect(exercise.textKey, where).toBe(`lessons:${exercise.id}`);
@@ -169,7 +171,7 @@ describe('the authored world', () => {
     expect(main?.worlds).toEqual([
       expect.objectContaining({ id: 'adding', habitat: 'meadow', boss: 'number-parade' }),
     ]);
-    const [boss] = content.minigames;
+    const boss = content.minigames.find((game) => game.mode === 'series');
     expect(boss).toMatchObject({
       id: 'number-parade',
       mode: 'series',
@@ -177,8 +179,9 @@ describe('the authored world', () => {
       errors3: 0,
       errors2: 2,
     });
-    expect(boss?.rounds).toHaveLength(6);
-    expect(boss?.rounds.map((round) => round.type)).toEqual([
+    const rounds = boss?.mode === 'series' ? boss.rounds : [];
+    expect(rounds).toHaveLength(6);
+    expect(rounds.map((round) => round.type)).toEqual([
       'number-entry',
       'choice',
       'number-entry',

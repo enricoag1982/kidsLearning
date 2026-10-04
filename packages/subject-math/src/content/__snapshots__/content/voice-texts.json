@@ -5,6 +5,16 @@
   "source": "lesson-guided"
  },
  {
+  "key": "035fab1c1f095fe6",
+  "text": "You add 2. Now it's 6.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "039df935ac031c53",
+  "text": "Owl adds 3. Now it's 9.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "04a83fcf89fa37d0",
   "text": "See you tomorrow!",
   "source": "owl-line"
@@ -15,9 +25,34 @@
   "source": "badge-locked"
  },
  {
+  "key": "07ae375f957172a8",
+  "text": "Owl adds 2. Now it's 14.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "085525cbe75aa54e",
+  "text": "Owl adds 1. Now it's 10.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "09d0d86ca82c29e8",
   "text": "It starts with 7.",
   "source": "exercise-note"
+ },
+ {
+  "key": "0adfa5ef877f3ded",
+  "text": "You add 3. Now it's 6.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "0b7223b2cfbf1508",
+  "text": "You add 1. Now it's 3.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "0c68b04a6ede726c",
+  "text": "Owl adds 1. Now it's 8.",
+  "source": "race-bot-adds"
  },
  {
   "key": "0f5e967b7bc3cb26",
@@ -25,14 +60,44 @@
   "source": "minigame-round"
  },
  {
+  "key": "10f7da5df39c54d0",
+  "text": "You add 3. Now it's 11.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "1319e1d7ccd9104f",
+  "text": "You add 1. Now it's 9.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "159b3dec13ee4d7b",
+  "text": "You add 1. Now it's 18.",
+  "source": "race-you-add"
+ },
+ {
   "key": "161fdcce3e2e7cdb",
   "text": "Amazing!",
   "source": "exercise-note"
  },
  {
+  "key": "198d22a4fd3d9094",
+  "text": "You add 3. Now it's 13.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "19b85125fba56f53",
+  "text": "Owl adds 3. Now it's 17.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "1b96d247671c85ff",
   "text": "What is 3 plus 1?",
   "source": "lesson-exercise"
+ },
+ {
+  "key": "1ec4b2139e011da8",
+  "text": "Owl adds 3. Now it's 14.",
+  "source": "race-bot-adds"
  },
  {
   "key": "220b955b268d8b6a",
@@ -45,6 +110,16 @@
   "source": "celebration"
  },
  {
+  "key": "247f6795ec932652",
+  "text": "You add 2. Now it's 17.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "2561bc35075cd0af",
+  "text": "You add 2. Now it's 14.",
+  "source": "race-you-add"
+ },
+ {
   "key": "25aca7d5b3f708b3",
   "text": "Finish Taking away first!",
   "source": "journey"
@@ -55,9 +130,59 @@
   "source": "exercise-note"
  },
  {
+  "key": "280c2d37ebfe4677",
+  "text": "Owl adds 1. Now it's 16.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "288f59e63e21f805",
+  "text": "Owl adds 3. Now it's 4.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "28f3b8cef6394a7c",
+  "text": "Owl adds 2. Now it's 11.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "295d1293c6cb3154",
+  "text": "You add 3. Now it's 8.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "29d005805e5ecbca",
+  "text": "Owl adds 2. Now it's 3.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "2a5c3beb2d8a6b2b",
   "text": "Hedgie loves collecting berries! When she finds some more, she counts them all together. Adding means putting groups together to see how many there are.",
   "source": "lesson-story"
+ },
+ {
+  "key": "2a9f634563e775ce",
+  "text": "You add 2. Now it's 5.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "2bc8ac486893a8fb",
+  "text": "You add 2. Now it's 16.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "2cfeb69fe3fe419d",
+  "text": "I won this time. Try again!",
+  "source": "duel"
+ },
+ {
+  "key": "2dabedd1bc55ef5c",
+  "text": "You add 1. Now it's 14.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "2ed0900af2b3d778",
+  "text": "Owl adds 1. Now it's 15.",
+  "source": "race-bot-adds"
  },
  {
   "key": "323fde12bb24ff58",
@@ -70,6 +195,11 @@
   "source": "home"
  },
  {
+  "key": "32813fb993cc7953",
+  "text": "You add 3. Now it's 12.",
+  "source": "race-you-add"
+ },
+ {
   "key": "33cacbfd0bfeadc3",
   "text": "A grown-up helps set things up first.",
   "source": "owl-line"
@@ -80,14 +210,34 @@
   "source": "lesson-demo"
  },
  {
+  "key": "3b199d66b044403d",
+  "text": "You add 3. Now it's 4.",
+  "source": "race-you-add"
+ },
+ {
   "key": "4129d23b91085b79",
   "text": "What is 6 minus 4?",
   "source": "lesson-exercise"
  },
  {
+  "key": "419fd80e4bd45b9b",
+  "text": "Owl adds 1. Now it's 5.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "420ff7d75ff86884",
+  "text": "Owl adds 2. Now it's 2.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "42395b2cf6a958b5",
   "text": "Look closely.",
   "source": "exercise-note"
+ },
+ {
+  "key": "42f092e3666a484a",
+  "text": "You add 2. Now it's 15.",
+  "source": "race-you-add"
  },
  {
   "key": "440d9ca4a28987df",
@@ -105,6 +255,11 @@
   "source": "assessment"
  },
  {
+  "key": "45fb0b129686c1bd",
+  "text": "You add 2. Now it's 12.",
+  "source": "race-you-add"
+ },
+ {
   "key": "462164a0645e1ed2",
   "text": "Well done!",
   "source": "exercise-note"
@@ -120,9 +275,24 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "48a379853b5c40ab",
+  "text": "Owl adds 2. Now it's 7.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "4986e2154c9333d3",
+  "text": "You add 3. Now it's 19.",
+  "source": "race-you-add"
+ },
+ {
   "key": "49d56d80cb7af153",
   "text": "Hedgie has 2 berries and finds 1 more. Count all the dots. 2 plus 1 makes 3!",
   "source": "lesson-demo"
+ },
+ {
+  "key": "4a4f8a1a3a9463d4",
+  "text": "Owl adds 2. Now it's 8.",
+  "source": "race-bot-adds"
  },
  {
   "key": "4a61f482035c8a48",
@@ -130,9 +300,49 @@
   "source": "exercise-note"
  },
  {
+  "key": "505c71eccfcc70b2",
+  "text": "You add 2. Now it's 8.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "50bf363dae1e648e",
+  "text": "You add 1. Now it's 4.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "50f350cf6b05ea56",
+  "text": "Owl adds 1. Now it's 14.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "51b7170470966958",
+  "text": "Owl adds 1. Now it's 1.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "530abb19f63d5293",
   "text": "It starts with 9.",
   "source": "exercise-note"
+ },
+ {
+  "key": "5343b5e521734e5c",
+  "text": "Owl adds 1. Now it's 9.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "53451240d554b2dc",
+  "text": "Owl adds 3. Now it's 19.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "535a165cf2cfaa5f",
+  "text": "Your turn!",
+  "source": "race-your-turn"
+ },
+ {
+  "key": "54ad63532c04fbb2",
+  "text": "Owl adds 1. Now it's 19.",
+  "source": "race-bot-adds"
  },
  {
   "key": "560280972f061d0e",
@@ -140,9 +350,29 @@
   "source": "minigame-goal"
  },
  {
+  "key": "565e1fc8376bb2d1",
+  "text": "Owl adds 1. Now it's 4.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "56e85cf96ff301dc",
+  "text": "Owl adds 3. Now it's 8.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "59422f49670509e9",
+  "text": "Owl adds 1. Now it's 11.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "5975daf7cd7cef89",
   "text": "Pick a topic, or start your warm-up!",
   "source": "owl-line"
+ },
+ {
+  "key": "59ba818dd156b37e",
+  "text": "You add 1. Now it's 7.",
+  "source": "race-you-add"
  },
  {
   "key": "59e1802c5217a382",
@@ -155,9 +385,29 @@
   "source": "owl-line"
  },
  {
+  "key": "5be5c16320737975",
+  "text": "You add 3. Now it's 7.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "5c5d295965e37ad3",
+  "text": "You add 3. Now it's 3.",
+  "source": "race-you-add"
+ },
+ {
   "key": "5d32ce569ba159e9",
   "text": "Want to show me you already know Hedgie?",
   "source": "journey"
+ },
+ {
+  "key": "5f4b81c58fef0037",
+  "text": "Owl adds 2. Now it's 18.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "5fde40d71e9f4ea2",
+  "text": "You add 2. Now it's 7.",
+  "source": "race-you-add"
  },
  {
   "key": "616e3105145292c8",
@@ -175,9 +425,44 @@
   "source": "minigame-round"
  },
  {
+  "key": "6842a59d60e89216",
+  "text": "You add 1. Now it's 15.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "6b2352d3fb67886a",
+  "text": "You add 3. Now it's 15.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "6bd3c9207e1d6e62",
+  "text": "A draw! Try again.",
+  "source": "duel"
+ },
+ {
+  "key": "6cb1704089a27819",
+  "text": "Owl adds 3. Now it's 12.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "6df9f9603133084d",
   "text": "What is 2 plus 2?",
   "source": "lesson-exercise"
+ },
+ {
+  "key": "73467fceb66c0ef0",
+  "text": "You add 1. Now it's 16.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "74c0ecdcac0218fd",
+  "text": "Owl adds 1. Now it's 3.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "765fdaa8564df64e",
+  "text": "You add 2. Now it's 9.",
+  "source": "race-you-add"
  },
  {
   "key": "76702295a72ac1c7",
@@ -210,9 +495,19 @@
   "source": "journey"
  },
  {
+  "key": "79857121b6ff2bff",
+  "text": "Owl adds 1. Now it's 6.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "79f5f2bc342b2dfa",
   "text": "Math opens at 08:00. See you soon!",
   "source": "owl-line"
+ },
+ {
+  "key": "7aa92a690438bbee",
+  "text": "Owl adds 2. Now it's 9.",
+  "source": "race-bot-adds"
  },
  {
   "key": "7acec55bbfc58d8d",
@@ -230,6 +525,16 @@
   "source": "minigame-round"
  },
  {
+  "key": "7eb640bf08bd4c4f",
+  "text": "Owl adds 2. Now it's 6.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "8146b5611a937245",
+  "text": "You add 1. Now it's 12.",
+  "source": "race-you-add"
+ },
+ {
   "key": "87f01985eb893207",
   "text": "Star Counter. Earn 30 stars",
   "source": "badge-locked"
@@ -240,9 +545,19 @@
   "source": "journey"
  },
  {
+  "key": "896e35f21442804c",
+  "text": "You add 3. Now it's 16.",
+  "source": "race-you-add"
+ },
+ {
   "key": "8a58d909942c0b34",
   "text": "First Sums",
   "source": "badge-earned"
+ },
+ {
+  "key": "8b1855c296a9476b",
+  "text": "Owl adds 3. Now it's 10.",
+  "source": "race-bot-adds"
  },
  {
   "key": "8b89769909ec6247",
@@ -255,6 +570,21 @@
   "source": "exercise-note"
  },
  {
+  "key": "8d71ba6b435f59c1",
+  "text": "Owl adds 1. Now it's 12.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "8ddc97f1e2d90aec",
+  "text": "Owl adds 2. Now it's 10.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "8ec9fa4151757d65",
+  "text": "Owl adds 1. Now it's 2.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "8f81bb9992b8ae08",
   "text": "What is 9 minus 5?",
   "source": "lesson-exercise"
@@ -263,6 +593,11 @@
   "key": "910c2ea026165cb2",
   "text": "What is 1 plus 1?",
   "source": "lesson-guided"
+ },
+ {
+  "key": "914cc3119aa15571",
+  "text": "Owl adds 3. Now it's 6.",
+  "source": "race-bot-adds"
  },
  {
   "key": "94f516a7b14c3876",
@@ -280,9 +615,19 @@
   "source": "journey"
  },
  {
+  "key": "990078a832412bba",
+  "text": "Owl adds 3. Now it's 3.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "9dcafd86a6aefed4",
   "text": "Star Counter. Earn 10 stars",
   "source": "badge-locked"
+ },
+ {
+  "key": "9f2580d4c5676db4",
+  "text": "Owl adds 2. Now it's 17.",
+  "source": "race-bot-adds"
  },
  {
   "key": "9fd4624030447a7a",
@@ -290,9 +635,39 @@
   "source": "home"
  },
  {
+  "key": "a11c312630eead4b",
+  "text": "Owl adds 2. Now it's 19.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "a234472404a252d1",
+  "text": "You add 3. Now it's 18.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "a284c033c5951325",
+  "text": "You add 1. Now it's 13.",
+  "source": "race-you-add"
+ },
+ {
   "key": "a4a00559aa6ccb7c",
   "text": "It starts with 8.",
   "source": "exercise-note"
+ },
+ {
+  "key": "a761e4513181d22c",
+  "text": "You won! Great thinking!",
+  "source": "duel"
+ },
+ {
+  "key": "a79b66c213d04a3a",
+  "text": "Owl adds 2. Now it's 12.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "a7f8fb6b3947dc00",
+  "text": "Owl adds 3. Now it's 18.",
+  "source": "race-bot-adds"
  },
  {
   "key": "a84b5a79bcc60791",
@@ -305,9 +680,59 @@
   "source": "celebration"
  },
  {
+  "key": "ac4163f850ed9535",
+  "text": "You add 2. Now it's 19.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "ad999c537fd1becc",
+  "text": "You add 1. Now it's 2.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "af2c175085a0231c",
+  "text": "Owl's turn",
+  "source": "duel"
+ },
+ {
+  "key": "af8c99d5f9bbdbbf",
+  "text": "Owl adds 1. Now it's 17.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "afedea340ddd7bd6",
+  "text": "You add 1. Now it's 6.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "b160d99191a39000",
+  "text": "You add 2. Now it's 18.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "b178f77da63da475",
+  "text": "Owl adds 1. Now it's 18.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "b238d122e83fb3d7",
+  "text": "You add 1. Now it's 10.",
+  "source": "race-you-add"
+ },
+ {
   "key": "b2b378a89ea654b0",
   "text": "What is 2 plus 3?",
   "source": "lesson-exercise"
+ },
+ {
+  "key": "b54ad250b0af2db8",
+  "text": "Owl adds 3. Now it's 11.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "b8c2a640d8b216af",
+  "text": "Owl adds 3. Now it's 16.",
+  "source": "race-bot-adds"
  },
  {
   "key": "b95ef6e6dbddbf22",
@@ -320,9 +745,24 @@
   "source": "lesson-guided"
  },
  {
+  "key": "bbcd9411182b5a21",
+  "text": "You add 2. Now it's 2.",
+  "source": "race-you-add"
+ },
+ {
   "key": "bbf1c8ba7d0c49ac",
   "text": "Owl has bigger numbers to add today. Start at the bigger number and count on. It is quicker than counting everything again!",
   "source": "lesson-story"
+ },
+ {
+  "key": "bc5fa5e5c7bd474b",
+  "text": "Owl adds 3. Now it's 13.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "bd4393ba39bfaa77",
+  "text": "Try to land on 4, 8, 12 or 16.",
+  "source": "duel-hint"
  },
  {
   "key": "be96f81d5e60d899",
@@ -350,6 +790,21 @@
   "source": "owl-line"
  },
  {
+  "key": "c48102f5eb16f6aa",
+  "text": "Owl adds 3. Now it's 15.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "c63f6dc6adabc830",
+  "text": "You add 3. Now it's 5.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "c916003b70ea4f4b",
+  "text": "You add 2. Now it's 13.",
+  "source": "race-you-add"
+ },
+ {
   "key": "ca33ee48f74c6cc7",
   "text": "Today you meet Hedgie!",
   "source": "home"
@@ -360,9 +815,29 @@
   "source": "home"
  },
  {
+  "key": "cb70b23f2da8b321",
+  "text": "You add 1. Now it's 19.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "cd853c712fa53163",
+  "text": "Owl adds 2. Now it's 16.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "cf6c812a5c934ed7",
+  "text": "Owl adds 1. Now it's 7.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "d1ae996f53a64249",
   "text": "Hi! I'm Owl. Today: Adding up to 10!",
   "source": "home"
+ },
+ {
+  "key": "d31d36fd7746c990",
+  "text": "You add 3. Now it's 14.",
+  "source": "race-you-add"
  },
  {
   "key": "d37e4ebeb11a9603",
@@ -375,14 +850,69 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "d48d4d8696007a73",
+  "text": "Owl adds 2. Now it's 4.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "d566676799134a64",
+  "text": "Take turns adding 1, 2 or 3. Whoever says 20 wins!",
+  "source": "minigame-goal"
+ },
+ {
+  "key": "d75754ab245a594d",
+  "text": "You add 1. Now it's 1.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "d9b56b8f7a7f5646",
+  "text": "Owl adds 2. Now it's 5.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "d9dd9bde2ed22057",
   "text": "It starts with 2.",
   "source": "exercise-note"
  },
  {
+  "key": "da5cc8fa6c313e69",
+  "text": "Owl adds 2. Now it's 13.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "dad9535645e6f516",
+  "text": "You add 3. Now it's 10.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "dc7817cf955c3205",
+  "text": "You add 1. Now it's 8.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "df17c06e4d249ee5",
+  "text": "Owl adds 2. Now it's 15.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "df5c251a2ff318c5",
+  "text": "Owl adds 3. Now it's 7.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "dfe3e013f29e8780",
   "text": "Star Counter, Silver",
   "source": "badge-earned"
+ },
+ {
+  "key": "e0edbe07995e3f02",
+  "text": "You add 1. Now it's 17.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "e173ccd43e93cb3d",
+  "text": "You add 3. Now it's 9.",
+  "source": "race-you-add"
  },
  {
   "key": "e259a020f02b6c7b",
@@ -410,14 +940,39 @@
   "source": "owl-line"
  },
  {
+  "key": "e9385dbcd47a07e8",
+  "text": "You add 2. Now it's 11.",
+  "source": "race-you-add"
+ },
+ {
   "key": "ecd4fe369e2640df",
   "text": "Not quite! Try again.",
   "source": "exercise-note"
  },
  {
+  "key": "edc2fb378ffb2159",
+  "text": "You add 2. Now it's 4.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "ee2e5d32fb3f2f0d",
+  "text": "Owl adds 1. Now it's 13.",
+  "source": "race-bot-adds"
+ },
+ {
+  "key": "eebff3ba0c1422a6",
+  "text": "Owl adds 3. Now it's 5.",
+  "source": "race-bot-adds"
+ },
+ {
   "key": "eee0c307c1b06c9a",
   "text": "You already know Adding — 3 lessons are yours!",
   "source": "assessment"
+ },
+ {
+  "key": "f00eed6db8aa147e",
+  "text": "You add 2. Now it's 10.",
+  "source": "race-you-add"
  },
  {
   "key": "f04de88ae98dc1d1",
@@ -430,6 +985,21 @@
   "source": "minigame-round"
  },
  {
+  "key": "f2d1457382e5d95b",
+  "text": "Your turn",
+  "source": "duel"
+ },
+ {
+  "key": "f808c122a4ca0ec7",
+  "text": "You add 1. Now it's 5.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "f86e11534ab08fc5",
+  "text": "You add 1. Now it's 11.",
+  "source": "race-you-add"
+ },
+ {
   "key": "f8a8d6765088815f",
   "text": "Every math whiz starts with the first step.",
   "source": "placement"
@@ -438,6 +1008,16 @@
   "key": "fadb0a787446c172",
   "text": "Already know some math? Let's find out where to start you!",
   "source": "placement"
+ },
+ {
+  "key": "fd54e9d950e62f0f",
+  "text": "You add 2. Now it's 3.",
+  "source": "race-you-add"
+ },
+ {
+  "key": "ff0ec01eabaf8fd3",
+  "text": "You add 3. Now it's 17.",
+  "source": "race-you-add"
  },
  {
   "key": "ff9e1b1facd7d976",

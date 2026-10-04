@@ -64,3 +64,11 @@ templates:
   round-ten: Round {{n}} to the nearest ten.
   round-hundred: Round {{n}} to the nearest hundred.
   round-tf: Is this the nearest {{unit}}?
+race-to-20:
+  title: Race to 20
+  goal: Take turns adding 1, 2 or 3. Whoever says 20 wins!
+race:
+  hint: Try to land on 4, 8, 12 or 16.
+  bot-adds: "{{bot}} adds {{step}}. Now it's {{total}}."
+  you-add: "You add {{step}}. Now it's {{total}}."
+  your-turn: Your turn!
