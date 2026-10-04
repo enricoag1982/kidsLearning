@@ -4,14 +4,22 @@ import {
   appendPlaces,
   BUG_IDS,
   bugRef,
+  digitTensPartner,
+  doubleTensOnly,
   dropZero,
   floorTo,
+  forgotAdjust,
+  halveTensOnly,
   nearestTo,
   onesFirstSign,
   roundDownBug,
   swapHundredsTens,
   swapTensOnes,
   valueOf,
+  W1_BUG_IDS,
+  W2_BUG_IDS,
+  wrongOperation,
+  wrongPlace,
 } from './bugs.ts';
 import { AUTHORED_LOCALES } from './testing.ts';
 
@@ -27,6 +35,13 @@ describe('bug texts', () => {
         14,
       );
     }
+  });
+
+  it('lists the W1 and the W2 bugs once each', () => {
+    expect(W1_BUG_IDS).toHaveLength(7);
+    expect(W2_BUG_IDS).toHaveLength(9);
+    expect(new Set(BUG_IDS).size).toBe(BUG_IDS.length);
+    expect(BUG_IDS).toHaveLength(W1_BUG_IDS.length + W2_BUG_IDS.length);
   });
 
   it('refs are bugs.<id>', () => {
@@ -78,5 +93,48 @@ describe('bug models', () => {
     expect(roundDownBug(45, 10)).toBe('five-down');
     expect(roundDownBug(350, 100)).toBe('five-down');
     expect(roundDownBug(367, 100)).toBe('truncate');
+  });
+});
+
+describe('W2 bug models', () => {
+  it('digit-tens takes each digit to 10 (64 → 46, not 36); it needs a tens digit and a ones digit, neither 0', () => {
+    expect(digitTensPartner(64)).toBe(46);
+    expect(digitTensPartner(11)).toBe(99);
+    expect(digitTensPartner(99)).toBe(11);
+    expect(digitTensPartner(38)).toBe(72);
+    expect(digitTensPartner(50)).toBeNull();
+    expect(digitTensPartner(5)).toBeNull();
+    expect(digitTensPartner(100)).toBeNull();
+  });
+
+  it('tens-only doubles the tens and keeps the ones (34 → 64, not 68); halve-tens-only halves the tens and keeps the ones (74 → 39, not 37)', () => {
+    expect(doubleTensOnly(34)).toBe(64);
+    expect(doubleTensOnly(30)).toBe(60);
+    expect(doubleTensOnly(47)).toBe(87);
+    expect(doubleTensOnly(7)).toBe(7);
+    expect(halveTensOnly(74)).toBe(39);
+    expect(halveTensOnly(68)).toBe(38);
+    expect(halveTensOnly(40)).toBe(20);
+    expect(halveTensOnly(100)).toBe(50);
+  });
+
+  it('wrong-place changes the place below the one that should change', () => {
+    expect(wrongPlace(347, 10, '+')).toBe(348);
+    expect(wrongPlace(347, 100, '+')).toBe(357);
+    expect(wrongPlace(347, 10, '-')).toBe(346);
+    expect(wrongPlace(347, 100, '-')).toBe(337);
+  });
+
+  it('forgot-adjust uses the round number and never puts the 1 back', () => {
+    expect(forgotAdjust(46, 99, '+')).toBe(146);
+    expect(forgotAdjust(146, 99, '-')).toBe(46);
+    expect(forgotAdjust(46, 9, '+')).toBe(56);
+    expect(forgotAdjust(46, 9, '-')).toBe(36);
+  });
+
+  it('wrong-op takes the larger from the smaller in an addition story and adds in a subtraction story', () => {
+    expect(wrongOperation(9, 5, true)).toBe(4);
+    expect(wrongOperation(5, 9, true)).toBe(4);
+    expect(wrongOperation(17, 12, false)).toBe(29);
   });
 });

@@ -587,13 +587,22 @@
  },
  "lessons": {
   "bugs": {
+   "answer-next": "The equals sign means both sides are the same.",
    "append": "Each place holds one digit: 2 hundreds is 200, not 2000.",
+   "digit-tens": "The tens make 90, then the ones make 10 more.",
    "drop-zero": "An empty place still needs a zero to hold its spot.",
    "five-down": "Right in the middle? It goes up to the bigger number.",
+   "forgot-adjust": "You used the round number. Now fix the answer by 1.",
+   "halve-tens-only": "Halve the tens and the ones.",
+   "off-by-one": "So close! Count the last jump again.",
+   "off-by-ten": "Check the tens.",
    "ones-first": "Compare the biggest place first.",
    "swap": "Look at the order: hundreds, then tens, then ones.",
+   "tens-only": "Double the tens and the ones.",
    "ticks-not-gaps": "Count the jumps between the marks, not the marks.",
-   "truncate": "Rounding down every time? Check which number is nearer."
+   "truncate": "Rounding down every time? Check which number is nearer.",
+   "wrong-op": "Read it again: does the number get bigger or smaller?",
+   "wrong-place": "Ten changes the tens digit. A hundred changes the hundreds digit."
   },
   "gen": {
    "cmp-close-1": {
@@ -787,10 +796,38 @@
    "goal": "Take turns adding 1, 2 or 3. Whoever says 20 wins!",
    "title": "Race to 20"
   },
+  "stories": {
+   "change-add-1": "Penguin had {{a}} fish. Then Penguin caught {{b}} more. How many fish does Penguin have now?",
+   "change-add-2": "Frog has {{a}} stickers. A friend gives Frog {{b}} more. How many stickers does Frog have now?",
+   "change-add-3": "Elephant had {{a}} peanuts in a bag. Elephant puts in {{b}} more. How many peanuts are in the bag now?",
+   "change-add-4": "Cat has {{a}} coins. Cat finds {{b}} more coins. How many coins does Cat have now?",
+   "change-take-1": "Rabbit had {{a}} carrots. Rabbit ate {{b}} of them. How many carrots are left?",
+   "change-take-2": "Fox has {{a}} marbles and gives {{b}} to Bear. How many marbles does Fox have left?",
+   "change-take-3": "Panda baked {{a}} buns and sold {{b}} of them. How many buns are left?",
+   "change-take-4": "Frog had {{a}} stamps and used {{b}} of them on letters. How many stamps are left?",
+   "compare-1": "Elephant has {{a}} peanuts. Penguin has {{b}} peanuts. How many more peanuts does Elephant have than Penguin?",
+   "compare-2": "Cat has {{b}} stickers. Bear has {{a}} stickers. How many more stickers does Bear have than Cat?",
+   "compare-3": "Fox found {{a}} shells. Frog found {{b}} shells. How many more shells did Fox find than Frog?",
+   "compare-4": "Panda has {{b}} marbles. Rabbit has {{a}} marbles. How many more marbles does Rabbit have than Panda?",
+   "part-whole-1": "Fox has {{a}} red berries and {{b}} blue berries. How many berries in all?",
+   "part-whole-2": "Bear sold {{a}} loaves in the morning and {{b}} in the afternoon. How many loaves did Bear sell?",
+   "part-whole-3": "Rabbit picked {{a}} carrots and Cat picked {{b}} carrots. How many carrots did they pick together?",
+   "part-whole-4": "Panda has {{a}} bamboo sticks in one pile and {{b}} in another. How many sticks are in both piles?"
+  },
   "templates": {
+   "bond-missing": "What number makes {{total}}?",
+   "bond-pairs": "Which two numbers make {{total}}?",
+   "bridge-add": "Make a ten first. What is the total?",
    "cmp-order": "Put the numbers in order, smallest first.",
    "cmp-sign": "Which sign goes in the gap? The open side faces the bigger number.",
    "cmp-tf": "Is this true?",
+   "compensate-add": "Add {{round}}, then take 1 away. What is it?",
+   "compensate-take": "Take away {{round}}, then add 1 back. What is it?",
+   "count-up": "Count up from the smaller number. How many?",
+   "double": "Double {{n}}.",
+   "equals-balance": "Both sides must be the same. What goes in the gap?",
+   "halve": "What is half of {{n}}?",
+   "near-double": "Use a double to help. What is the total?",
    "nl-estimate": "About where is {{n}}? Put it on the line.",
    "nl-half": "What number is halfway between {{a}} and {{b}}?",
    "nl-place": "Put {{n}} on the number line.",
@@ -802,7 +839,8 @@
    "pv-which-4": "Which number has {{th}} thousands, {{h}} hundreds, {{t}} tens and {{o}} ones?",
    "round-hundred": "Round {{n}} to the nearest hundred.",
    "round-ten": "Round {{n}} to the nearest ten.",
-   "round-tf": "Is this the nearest {{unit}}?"
+   "round-tf": "Is this the nearest {{unit}}?",
+   "tens-hundreds": "What is the answer?"
   }
  },
  "rewards": {

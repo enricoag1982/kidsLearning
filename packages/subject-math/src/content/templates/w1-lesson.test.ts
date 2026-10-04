@@ -15,7 +15,7 @@ import { resolveText } from '@learn/platform-content/text-resolve';
 import type { MathContent, MathExerciseDef } from '../../core/types.ts';
 import { playSolution, playWrongThenSolve, starsFor } from '../../testing/play.ts';
 import { mathContent, MATH_TEMPLATES } from '../math-content.ts';
-import { BUG_IDS } from './bugs.ts';
+import { BUG_IDS, W1_BUG_IDS } from './bugs.ts';
 import {
   W1_FIXTURE_LESSON,
   W1_FIXTURE_LESSON_ID,
@@ -136,20 +136,11 @@ function english(lessons: LocaleTree, ref: string): string {
   return text;
 }
 
-describe('the registry', () => {
-  it('holds exactly the 13 W1 templates of the curriculum, and the fixture lesson uses each of them', () => {
-    expect(Object.keys(MATH_TEMPLATES).sort()).toEqual([...W1_FIXTURE_TEMPLATES].sort());
+describe('the fixture lesson’s templates', () => {
+  it('are the 13 W1 templates of the curriculum, each used once, all registered', () => {
     expect(STEMS.map(([, template]) => template)).toEqual([...W1_FIXTURE_TEMPLATES]);
-    expect(Object.keys(mathContent.templates ?? {}).sort()).toEqual(
-      [...W1_FIXTURE_TEMPLATES].sort(),
-    );
-  });
-
-  it('has a template text in lessons.yaml for exactly the templates (and the 4-digit variants of pv-read / pv-which)', () => {
-    const texts = AUTHORED_LOCALES.en?.lessons?.templates;
-    expect(typeof texts === 'object' ? Object.keys(texts).sort() : texts).toEqual(
-      [...W1_FIXTURE_TEMPLATES, 'pv-read-4', 'pv-which-4'].sort(),
-    );
+    for (const template of W1_FIXTURE_TEMPLATES)
+      expect(MATH_TEMPLATES, template).toHaveProperty(template);
   });
 });
 
@@ -198,10 +189,10 @@ describe('the W1 fixture lesson', () => {
     }
   });
 
-  it('can speak every bug of the curriculum (the lessons.yaml sentence resolves for each reason)', () => {
+  it('can speak every W1 bug of the curriculum (the lessons.yaml sentence resolves for each reason)', () => {
     const { content, locales } = load();
     const keys = new Set(defsOf(content).flatMap(reasonKeys));
-    expect([...keys].sort()).toEqual(BUG_IDS.map((id) => `lessons:bugs.${id}`).sort());
+    expect([...keys].sort()).toEqual(W1_BUG_IDS.map((id) => `lessons:bugs.${id}`).sort());
     for (const key of keys) expect(english(locales.en?.lessons ?? {}, key), key).not.toBe('');
   });
 

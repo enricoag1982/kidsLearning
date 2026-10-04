@@ -1,8 +1,8 @@
-// The known misconceptions ("bugs") of the W1 templates (docs/subjects/math/curriculum.md §3 "Bugs"): each bug id is an authoring name
-// and a `lessons:` text `bugs.<id>` (the one sentence spoken when the wrong answer matches), and each has a pure model of the wrong
-// answer it produces, so a template can offer it as a distractor / reason. Numbers are digit lists, high to low (`numeral.ts`).
+// The known misconceptions ("bugs") of the W1 and W2 templates (docs/subjects/math/curriculum.md §3 "Bugs"): each bug id is an authoring
+// name and a `lessons:` text `bugs.<id>` (the one sentence spoken when the wrong answer matches), and each has a pure model of the
+// wrong answer it produces, so a template can offer it as a distractor / reason. Numbers are digit lists, high to low (`numeral.ts`).
 
-export const BUG_IDS = [
+export const W1_BUG_IDS = [
   'append',
   'swap',
   'drop-zero',
@@ -11,6 +11,20 @@ export const BUG_IDS = [
   'truncate',
   'five-down',
 ] as const;
+
+export const W2_BUG_IDS = [
+  'digit-tens',
+  'tens-only',
+  'halve-tens-only',
+  'off-by-one',
+  'off-by-ten',
+  'wrong-place',
+  'forgot-adjust',
+  'answer-next',
+  'wrong-op',
+] as const;
+
+export const BUG_IDS = [...W1_BUG_IDS, ...W2_BUG_IDS] as const;
 
 export type BugId = (typeof BUG_IDS)[number];
 
@@ -91,4 +105,41 @@ export function nearestTo(n: number, unit: number): number {
 /** The bug behind rounding down when the answer is the upper neighbour: `five-down` when `n` is exactly half-way, else `truncate`. */
 export function roundDownBug(n: number, unit: number): 'truncate' | 'five-down' {
   return n % unit === unit / 2 ? 'five-down' : 'truncate';
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// W2 (mental math): numbers are plain integers
+
+/** `digit-tens`: the partner of `a` to 100 with each digit taken to 10 instead of the tens to 9 (64 → 46, not 36). `null` unless `a`
+ * has a tens digit and a ones digit and neither is 0 (the bug needs a digit to take to 10). */
+export function digitTensPartner(a: number): number | null {
+  const [tens, ones] = [Math.floor(a / 10), a % 10];
+  if (a < 11 || a > 99 || ones === 0) return null;
+  return (10 - tens) * 10 + (10 - ones);
+}
+
+/** `tens-only` (doubling): the tens doubled and the ones left as they are (34 → 60 + 4 = 64, not 68). */
+export function doubleTensOnly(n: number): number {
+  return 20 * Math.floor(n / 10) + (n % 10);
+}
+
+/** `halve-tens-only`: the tens halved and the ones left as they are (74 → 35 + 4 = 39, not 37). */
+export function halveTensOnly(n: number): number {
+  return 5 * Math.floor(n / 10) + (n % 10);
+}
+
+/** `wrong-place`: the place below the one that changes is changed instead: ± 1 for ± 10, ± 10 for ± 100. */
+export function wrongPlace(n: number, step: 10 | 100, op: '+' | '-'): number {
+  return op === '+' ? n + step / 10 : n - step / 10;
+}
+
+/** `forgot-adjust`: the round number used and the 1 never put back (46 + 99 → 46 + 100 = 146; 146 − 99 → 146 − 100 = 46). */
+export function forgotAdjust(n: number, near: 9 | 99, op: '+' | '-'): number {
+  return op === '+' ? n + near + 1 : n - near - 1;
+}
+
+/** `wrong-op`: the other operation done on the story's two numbers: the difference of an addition story (the larger minus the
+ * smaller), the sum of a subtraction story. */
+export function wrongOperation(a: number, b: number, adds: boolean): number {
+  return adds ? Math.abs(a - b) : a + b;
 }
