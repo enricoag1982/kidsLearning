@@ -117,8 +117,5 @@ Rules: `docs/retrospective.md` §9 (≤ 3–4 commits per agent run, lead decide
 |---|---|
 | Pages source = GitHub Actions (deploy needs it) — done 2026-10-04 | Settings → Pages |
 | Ruleset `master-quality` (required check `quality`, squash only) | Settings → Rules (`CONTRIBUTING.md`) |
-| v1.0.0 tag after release checks | Actions → Tag (`docs/release.md` §2) |
-| v1.1.0 tag after release checks (Coding) | Actions → Tag, `ref` = the `m12.7` merge commit |
-| v1.2.0 tag after release checks (Math) | Actions → Tag, `ref` = the `m13.15` merge commit |
-| v1.3.0 tag after release checks (Logic) | Actions → Tag, `ref` = the last M14 merge commit (`m14.14`, phone polish) |
-| v1.3.1 tag after release checks (follow-ups) | First run on a device that has Chess for Kids progress: the import offer shows once and brings the children along (F1); Actions → Tag, `ref` = the last M15 merge commit |
+| v1.0.0 – v1.3.0 tags (Chess platform, Coding, Math, Logic) — done 2026-10-05 (owner's go; session ran Actions → Tag on the `m11`, `m12`, `m13`, `m14` commits) | Actions → Tag (`docs/release.md` §2) |
+| v1.3.1 tag after release checks (follow-ups) | First run on a device that has Chess for Kids progress: the import offer shows once and brings the children along (F1); Actions → Tag, `ref` = the `m15` commit |
