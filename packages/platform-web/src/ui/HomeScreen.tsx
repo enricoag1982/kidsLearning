@@ -112,11 +112,11 @@ function HeaderAction({
       className={tapClass(
         'round',
         'neutral',
-        'sm:w-auto sm:gap-2 sm:rounded-2xl sm:px-5 sm:font-display sm:text-lg sm:font-semibold',
+        'lg:w-auto lg:gap-2 lg:rounded-2xl lg:px-5 lg:font-display lg:text-lg lg:font-semibold',
       )}
     >
       {children}
-      <span className="hidden sm:inline">{label}</span>
+      <span className="hidden lg:inline">{label}</span>
     </button>
   );
 }

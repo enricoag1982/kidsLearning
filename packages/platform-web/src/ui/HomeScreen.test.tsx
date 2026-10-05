@@ -34,7 +34,7 @@ async function openHome(): Promise<void> {
 }
 
 describe('HomeScreen phone layout (card fixture subject)', () => {
-  it('header action: icon-only round button below sm (accessible name kept), icon + text label from sm', async () => {
+  it('header action: icon-only round button below lg (accessible name kept), icon + text label from lg (1024 px)', async () => {
     await openHome();
 
     const action = screen.getByRole('button', { name: 'Switch player' });
@@ -42,11 +42,11 @@ describe('HomeScreen phone layout (card fixture subject)', () => {
     expect(action.className).toContain('h-16');
     expect(action.className).toContain('w-16');
     expect(action.className).toContain('rounded-full');
-    expect(action.className).toContain('sm:w-auto');
+    expect(action.className).toContain('lg:w-auto');
     const label = action.querySelector('span');
     expect(label?.textContent).toBe('Switch player');
     expect(label?.className).toContain('hidden');
-    expect(label?.className).toContain('sm:inline');
+    expect(label?.className).toContain('lg:inline');
     expect(action.querySelector('svg')).not.toBeNull();
   });
 
