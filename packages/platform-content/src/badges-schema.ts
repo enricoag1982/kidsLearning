@@ -4,6 +4,7 @@ import type { ZodShape } from './subject.ts';
 
 export const badgeConditionTypeSchema = z.enum([
   'mastered',
+  'minigame-won',
   'stars-total',
   'perfect-lessons',
   'concept-correct',

@@ -7,6 +7,7 @@ const NOW = new Date('2026-01-01T00:00:00.000Z');
 
 const EMPTY_FACTS: BadgeFacts = {
   masteredScopes: new Set(),
+  wonMiniGames: new Set(),
   starsTotal: 0,
   perfectLessons: 0,
   conceptCorrectTotal: {},
@@ -62,6 +63,40 @@ describe('evaluateBadges', () => {
     // Streak reset back to 1: nothing new to earn, and evaluateBadges itself never removes.
     const result = evaluateBadges(defs, { ...EMPTY_FACTS, streakCurrent: 1 }, earned);
     expect(result).toEqual([]);
+  });
+
+  it('minigame-won: true only for a `minigame:<id>` scope whose game is in wonMiniGames', () => {
+    const defs = [
+      def('bug-beater', { type: 'minigame-won', scope: 'minigame:bug-squash', thresholds: [1] }),
+    ];
+    expect(evaluateBadges(defs, EMPTY_FACTS, [])).toEqual([]);
+    expect(
+      evaluateBadges(defs, { ...EMPTY_FACTS, wonMiniGames: new Set(['fence-builder']) }, []),
+    ).toEqual([]);
+    expect(
+      evaluateBadges(defs, { ...EMPTY_FACTS, wonMiniGames: new Set(['bug-squash']) }, []),
+    ).toEqual([{ badgeId: 'bug-beater', tier: undefined }]);
+  });
+
+  it('minigame-won: a missing scope or one that is not `minigame:<id>` never earns', () => {
+    const facts = { ...EMPTY_FACTS, wonMiniGames: new Set(['bug-squash']) };
+    expect(
+      evaluateBadges([def('a', { type: 'minigame-won', thresholds: [1] })], facts, []),
+    ).toEqual([]);
+    expect(
+      evaluateBadges(
+        [def('b', { type: 'minigame-won', scope: 'bug-squash', thresholds: [1] })],
+        facts,
+        [],
+      ),
+    ).toEqual([]);
+    expect(
+      evaluateBadges(
+        [def('c', { type: 'minigame-won', scope: 'world:bug-squash', thresholds: [1] })],
+        facts,
+        [],
+      ),
+    ).toEqual([]);
   });
 
   it('mastered: true only for a scope present in masteredScopes', () => {

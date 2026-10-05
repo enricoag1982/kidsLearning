@@ -114,7 +114,7 @@ export interface SubjectCore<Ctx = unknown, F = unknown> {
   readonly kinds: Readonly<Record<string, AnyKind<Ctx>>>;
   /** `static`/`versus`-shaped modes; `createSubjectRuntime` adds the platform `series` mode. */
   readonly modes: Readonly<Record<string, AnyMode>>;
-  /** The subject's own facts for badge condition types the engine's 7 generic ones don't cover
+  /** The subject's own facts for badge condition types the engine's 8 generic ones don't cover
    * (chess: `game-win`/`game-event`/`game-played`). */
   readonly rewards?: SubjectRewards<F>;
   /** The `GameRecord` of a finished mini-game state, or `null` for a mode without a game log (chess: `static`/`series`). */

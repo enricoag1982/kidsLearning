@@ -19,6 +19,7 @@ function allConceptIds(lessons: readonly Lesson[]): ReadonlySet<string> {
  * subject's own `badges.validate` (chess: `game-win`/`game-event`/`game-played`). */
 const GENERIC_CONDITION_TYPES = new Set([
   'mastered',
+  'minigame-won',
   'concept-correct',
   'stars-total',
   'perfect-lessons',
@@ -74,6 +75,26 @@ function validateCondition(
       } else {
         issues.push(
           `${where}: scope must be "world:<id>" or "track:<id>", got "${condition.scope}"`,
+        );
+      }
+      break;
+    }
+    case 'minigame-won': {
+      if (condition.scope === undefined) {
+        issues.push(`${where}: type "minigame-won" requires "scope"`);
+        break;
+      }
+      if (!condition.scope.startsWith('minigame:')) {
+        issues.push(`${where}: scope must be "minigame:<id>", got "${condition.scope}"`);
+        break;
+      }
+      const gameId = condition.scope.slice('minigame:'.length);
+      if (!minigames.some((game) => game.id === gameId)) {
+        issues.push(`${where}: scope references unknown mini-game "${gameId}"`);
+      }
+      if (thresholds.length !== 1 || thresholds[0] !== 1) {
+        issues.push(
+          `${where}: type "minigame-won" thresholds must be [1], got [${thresholds.join(', ')}]`,
         );
       }
       break;

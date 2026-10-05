@@ -113,7 +113,7 @@ describe('chessConditionValue', () => {
     expect(chessConditionValue({ type: 'game-played', thresholds: [1] }, facts)).toBe(0);
   });
 
-  it("any other condition type is undefined (the badge engine's own 7)", () => {
+  it("any other condition type is undefined (the badge engine's own 8)", () => {
     expect(chessConditionValue({ type: 'stars-total', thresholds: [1] }, facts)).toBeUndefined();
   });
 });
