@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { lazy, useState } from 'react';
 import type { JSX, SubmitEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { isValidPassword, setupParentPassword } from '@learn/platform-core';
-import { useAppStore, useServices } from '../app/store.ts';
+import { useServices } from '../app/store.ts';
 import { PrivacyDialog, PrivacyLink } from './parent/PrivacyPolicy.tsx';
 import { PARENT_INPUT, PARENT_NOTE, PARENT_PRIMARY_BUTTON } from './parent/parent-styles.ts';
 import { Owl } from './ds/Owl.tsx';
@@ -11,7 +11,12 @@ import { LockIcon } from './ds/icons.tsx';
 import { tapClass } from './ds/tap.ts';
 import { Screen } from './ds/Screen.tsx';
 
-type Step = 'welcome' | 'password' | 'saved';
+// Off the eager path (the offer only exists on a device that ran an older app): its own chunk, loaded when "Saved" is confirmed.
+const LegacyImportStep = lazy(() =>
+  import('./LegacyImportStep.tsx').then((module) => ({ default: module.LegacyImportStep })),
+);
+
+type Step = 'welcome' | 'password' | 'saved' | 'legacy';
 
 function Welcome({ onNext }: { readonly onNext: () => void }): JSX.Element {
   const { t } = useTranslation();
@@ -154,9 +159,9 @@ function SavedStep({
   );
 }
 
-/** Welcome (kid) → parent password → Saved; `finishFirstRun` then picks the wizard, Home or the picker. */
+/** Welcome (kid) → parent password → Saved → `LegacyImportStep` (asks once when an older app's progress is on this device, else
+ * goes straight on); `finishFirstRun` then picks the wizard, Home or the picker. */
 export function FirstRunScreen(): JSX.Element {
-  const finishFirstRun = useAppStore((state) => state.finishFirstRun);
   const [step, setStep] = useState<Step>('welcome');
   const [location, setLocation] = useState('');
 
@@ -179,11 +184,12 @@ export function FirstRunScreen(): JSX.Element {
       />
     );
   }
+  if (step === 'legacy') return <LegacyImportStep />;
   return (
     <SavedStep
       location={location}
       onNext={() => {
-        void finishFirstRun();
+        setStep('legacy');
       }}
     />
   );

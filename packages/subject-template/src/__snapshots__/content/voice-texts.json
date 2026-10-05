@@ -90,6 +90,11 @@
   "source": "owl-line"
  },
  {
+  "key": "39fba8b6577211bc",
+  "text": "Found chess progress from Chess for Kids on this device. Bring it here?",
+  "source": "owl-line"
+ },
+ {
   "key": "42395b2cf6a958b5",
   "text": "Look closely.",
   "source": "exercise-note"
@@ -168,6 +173,11 @@
   "key": "6f4d7aedd06083c1",
   "text": "Sample question 5. Are there four apples? Replace it with yours!",
   "source": "lesson-exercise"
+ },
+ {
+  "key": "74840c74c0358062",
+  "text": "That did not work. Let's start fresh!",
+  "source": "owl-line"
  },
  {
   "key": "77ae1eddf4305d9a",

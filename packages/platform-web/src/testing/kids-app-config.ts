@@ -10,4 +10,5 @@ export const KIDS_TEST_APP_CONFIG: Omit<AppConfig, 'version'> = {
   parentCodeFilePrefix: 'kids-learning-parent-code',
   title: 'Kids Learning',
   legacyBackupApps: { 'chess-kids': 'chess', 'math-demo': 'math' },
+  legacyStorePrefixes: { 'chess-kids': 'chess-kids:' },
 };

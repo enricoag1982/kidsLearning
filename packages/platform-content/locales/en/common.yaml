@@ -63,6 +63,11 @@ first-run:
     title: Parent code saved!
     body: 'Saved a copy: {{location}}'
     primary: Next
+  legacy:
+    owl: Found chess progress from Chess for Kids on this device. Bring it here?
+    yes: Yes
+    no: Not now
+    failed: That did not work. Let's start fresh!
 new-player:
   nickname:
     title: What is your name?

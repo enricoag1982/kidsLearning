@@ -234,6 +234,8 @@ function collectUiTemplates(
     'practice.owl-line',
     'den.owl-line',
     'first-run.welcome.owl',
+    'first-run.legacy.owl',
+    'first-run.legacy.failed',
     'subjects.owl-line',
   ]) {
     addText(entries, resolve(locales, key), 'owl-line');

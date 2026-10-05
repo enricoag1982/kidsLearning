@@ -149,6 +149,9 @@ export interface AppConfig {
   readonly backupAppId: string;
   /** Backup app ids of older single-subject apps this app imports (schema ≤ 5), mapped to the subject that receives their data, e.g. `{ 'chess-kids': 'chess' }`. */
   readonly legacyBackupApps?: Readonly<Record<string, string>>;
+  /** localStorage key prefix of an older single-subject app's store on this origin, by its backup app id (a key of
+   * `legacyBackupApps`), e.g. `{ 'chess-kids': 'chess-kids:' }`: the first run offers once to bring its progress along. */
+  readonly legacyStorePrefixes?: Readonly<Record<string, string>>;
   readonly backupFilePrefix: string;
   readonly parentCodeFilePrefix: string;
   /** The running build's own version string (web: `__APP_VERSION__`, from `package.json`). */

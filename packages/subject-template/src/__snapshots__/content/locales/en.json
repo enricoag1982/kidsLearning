@@ -177,6 +177,12 @@
    "replay": "Say it again"
   },
   "first-run": {
+   "legacy": {
+    "failed": "That did not work. Let's start fresh!",
+    "no": "Not now",
+    "owl": "Found chess progress from Chess for Kids on this device. Bring it here?",
+    "yes": "Yes"
+   },
    "password": {
     "body": "You'll need this parent code to open the grown-ups area. It keeps children out of the settings; it is not a security password.",
     "hide": "Hide",

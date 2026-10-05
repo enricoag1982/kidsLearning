@@ -31,7 +31,7 @@ import { WarmUpScreen } from './ui/WarmUpScreen.tsx';
 // Lazy screens (non-functional.md §4): own chunks, precached by the service worker after first fetch; chosen for size (Parent
 // area) or being off the every-session path. A subject's lazy screens are its `pack.routes`' concern.
 const ParentAreaScreen = lazy(() =>
-  import('./ui/ParentAreaScreen.tsx').then((module) => ({ default: module.ParentAreaScreen })),
+  import('./ui/parent-area.ts').then((module) => ({ default: module.ParentAreaScreen })),
 );
 const PlacementOfferScreen = lazy(() =>
   import('./ui/PlacementOfferScreen.tsx').then((module) => ({
