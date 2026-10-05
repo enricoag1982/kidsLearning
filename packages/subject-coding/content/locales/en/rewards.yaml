@@ -4,7 +4,7 @@ badges:
     condition: Build your first program
   bug-squasher:
     name: Bug Squasher
-    condition: Squash 5 bugs on the first try
+    condition: Beat Bug Squash
   meadow-walker:
     name: Meadow Walker
     condition: Master Meadow Steps and beat Bug Squash

@@ -10,6 +10,7 @@ import {
   makeProgressRepo as buildProgressRepo,
   makeRewardsRepo as buildRewardsRepo,
   makeAttempt as buildAttempt,
+  makeMiniGameProgress as buildMiniGameProgress,
   makeExercise as buildExercise,
   makeLesson as buildLesson,
   makeContentSource,
@@ -58,16 +59,14 @@ function makeMiniGameProgress(
   wins: number,
   profileId = 'p1',
 ): MiniGameProgress {
-  return {
+  return buildMiniGameProgress({
     id: `mg-${profileId}-${miniGameId}`,
     profileId,
     miniGameId,
     bestStars: wins > 0 ? 2 : 0,
     plays: wins + 1,
     wins,
-    createdAt: NOW.toISOString(),
-    updatedAt: NOW.toISOString(),
-  };
+  });
 }
 
 function makeRewardsRepo(initialEarned: readonly EarnedBadge[] = []): RewardsRepository {
