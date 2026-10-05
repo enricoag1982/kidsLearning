@@ -16,7 +16,7 @@ test('lazy-loaded screens (parent area, friend setup) fetch their own chunk on f
   // Parent area: its own chunk is requested only once its screen is actually opened — proves
   // `App.tsx`'s `React.lazy` really does split it out, not just theoretically.
   const parentChunk = page.waitForResponse((response) =>
-    /\/assets\/ParentAreaScreen-.*\.js$/.test(new URL(response.url()).pathname),
+    /\/assets\/parent-area-.*\.js$/.test(new URL(response.url()).pathname),
   );
   await page.getByRole('button', { name: 'Switch player' }).click();
   await page.getByRole('button', { name: /Grown-ups/ }).click();
