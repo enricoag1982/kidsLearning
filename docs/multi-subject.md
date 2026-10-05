@@ -82,9 +82,9 @@ Rules: `docs/retrospective.md` §9 (≤ 3–4 commits per agent run, lead decide
 | F8 | Phone Home header (390 × 844) | Header buttons wrap onto 2 rows; the last Home tile sits at the fold (scrolls) — shared shell — fixed in `m15.1` |
 | F9 | Phone Journey header | World title truncated ("World 1 · Number Mead…"), the 2nd world tab clipped at the right edge — shared shell — fixed in `m15.1` |
 | F10 | Card choice on phones | 3 short items (e.g. `<` `=` `>`) wrap 2 + 1 — fixed in `m15.2` |
-| F11 | Race to 20 polish | Title shown twice (top bar + heading); stones ≈ 28 × 40 px at 1024 × 768 |
-| F12 | Number-line card size | At 1024 × 768 the line card (≈ 150 px) is small beside the prompt card (≈ 450 px) |
-| F13 | Math pictures in cards | `round-ten` / `bridge-add` have no line picture (card prompts have no picture slot); `groups` shows "3 groups of 4" + one emoji (emoji limit 8) |
+| F11 | Race to 20 polish | Title shown twice (top bar + heading); stones ≈ 28 × 40 px at 1024 × 768 — fixed in `m15.3` |
+| F12 | Number-line card size | At 1024 × 768 the line card (≈ 150 px) is small beside the prompt card (≈ 450 px) — fixed in `m15.3` |
+| F13 | Math pictures in cards | `round-ten` / `bridge-add` have no line picture (card prompts have no picture slot); `groups` shows "3 groups of 4" + one emoji (emoji limit 8) — fixed in `m15.3` |
 | F14 | Number rows on a phone | a 5-term number row (`step-next` "3 7 11 15 19 ?") wraps to two lines at 390 px: the number-entry pad narrows the card (m14.9 visual pass) — fixed in `m15.2` |
 | F15 | Prompt-less choice layout | a card-kit `choice` without a prompt (logic `odd-one`) draws small option tiles at the bottom with the board slot empty; options should fill the board slot (m14.10 visual pass) — fixed in `m14.12` |
 | F16 | Venn on a phone | the card pool of a Venn sits partly below the fold at 390 × 844 (one row of 3 visible) (m14.10 visual pass) — fixed in `m14.14` |

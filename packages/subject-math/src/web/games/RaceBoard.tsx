@@ -1,6 +1,6 @@
-// Race to N's board for the platform's `duel` step: a number track 0..target (the start and one stone per number; two rows of 10 on a
-// phone, one row on a tablet), a token on the running total, the stones of the last move lit (green = the child, blue with a paw = the
-// bot: never colour alone), and a big "+1" "+2" "+3" button per step. After each move the board speaks what happened, in the bounded set
+// Race to N's board for the platform's `duel` step: a number track 0..target (the start and one stone per number; the start alone and two
+// rows of 10 on a phone, two rows of 11 and 10 on a tablet: stones 56 px tall, 49 px wide at 1024 × 768), a token on the running total, the
+// stones of the last move lit (green = the child, blue with a paw = the bot: never colour alone), and a big "+1" "+2" "+3" button per step. After each move the board speaks what happened, in the bounded set
 // of lines the content's voice inventory lists (`raceVoiceTemplates`, the `RACE_*` keys), and shows the same line under the track.
 import { useEffect, useRef } from 'react';
 import type { CSSProperties, JSX } from 'react';
@@ -125,7 +125,8 @@ const LOOK_CLASS: Readonly<Record<Look, string>> = {
 };
 
 /** One stone of the track: the number, lit when the last move walked over it, with the token ring on the running total. The stone of
- * 1 starts the second row on a phone (the start stone 0 has a row of its own there); the goal stone has a thick gold edge. */
+ * 1 starts the second row on a phone (the start stone 0 has a row of its own there); the goal stone has a thick gold edge. A tablet
+ * (width 640 px and height 600 px up) draws it 56 px tall with a 1.125 rem number: the child's finger finds the number, not the board. */
 function Stone({
   n,
   look,
@@ -143,7 +144,7 @@ function Stone({
       data-look={look}
       data-token={token ? 'true' : undefined}
       aria-current={token ? 'step' : undefined}
-      className={`flex h-11 min-w-0 flex-col items-center justify-center rounded-lg font-display text-sm leading-none ${
+      className={`flex h-11 min-w-0 flex-col items-center justify-center rounded-lg font-display text-sm leading-none [@media(min-width:640px)_and_(min-height:600px)]:h-14 [@media(min-width:640px)_and_(min-height:600px)]:text-lg ${
         goal ? 'border-4 border-star' : 'border-2'
       } ${LOOK_CLASS[look]} ${
         token ? 'relative z-10 scale-110 font-bold ring-4 ring-ink motion-reduce:scale-100' : ''
@@ -180,8 +181,9 @@ function RaceTrack({
       <div
         role="img"
         aria-label={tContent(t, TEXT_TOTAL, { total, target })}
-        className="grid grid-cols-[repeat(10,minmax(0,1fr))] gap-1 [@media(min-width:640px)_and_(min-height:600px)]:grid-cols-[repeat(var(--stones),minmax(0,1fr))]"
-        style={{ '--stones': target + 1 } as CSSProperties}
+        className="grid grid-cols-[repeat(10,minmax(0,1fr))] gap-1 [@media(min-width:640px)_and_(min-height:600px)]:grid-cols-[repeat(var(--stones),minmax(0,1fr))] [@media(min-width:640px)_and_(min-height:600px)]:gap-2"
+        // Tablet: two rows, the start stone with the first half (0-10, then 11-20): half the stones per row, rounded up.
+        style={{ '--stones': Math.ceil((target + 1) / 2) } as CSSProperties}
       >
         {Array.from({ length: target + 1 }, (_, n) => (
           <Stone key={n} n={n} look={lookOf(n)} token={n === total} goal={n === target} />

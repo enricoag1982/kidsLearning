@@ -63,14 +63,16 @@ function NumberLinePlay({
     }
   }
 
+  // On a tablet the board slot is a 616 px square: the prompt card takes 2 parts of its height and the line card 3 (it spans the slot's
+  // width and its line grows with the card); on a phone the line card keeps its 152 px under the prompt card.
   const board = (
     <div className="flex h-full w-full flex-col gap-3">
       {def.prompt !== undefined && (
-        <div className="min-h-0 flex-1">
+        <div className="min-h-0 flex-1 lg:flex-[2]">
           <CardPromptView prompt={def.prompt} />
         </div>
       )}
-      <div className={def.prompt === undefined ? 'my-auto' : ''}>
+      <div className={def.prompt === undefined ? 'my-auto' : 'lg:min-h-0 lg:flex-[3]'}>
         <NumberLineBand
           def={def}
           marker={marker}
