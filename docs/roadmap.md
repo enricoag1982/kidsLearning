@@ -127,7 +127,7 @@ M5 run order (2026-09-25): `m5.1` ∥ `m5.4` → `m5.2` ∥ `m5.5` → `m5.3` la
 | M11 | Multi-subject app (`kidsLearning` v1.0) | One app hosting chess + math demo; generic platform kit (card kinds, template, `pnpm new-subject`); `docs/multi-subject.md` §4 (`m11.1`–`m11.9`), done 2026-10-04 |
 | M12 | Coding (`kidsLearning` v1.1) | Research + plan in `docs/subjects/coding/`; grid board, coding core / web, W1–W3 (13 lessons, 3 world bosses); `m12.1`–`m12.7`, done 2026-10-04 |
 | M13 | Math (`kidsLearning` v1.2) | W1–W3 (16 lessons, generated exercises, misconception reasons, duel boss); `docs/subjects/math/plan.md` §6 (`m13.1`–`m13.15`), done 2026-10-04 |
-| M14 | Logic (v1.3) | `docs/subjects/logic/` |
+| M14 | Logic (`kidsLearning` v1.3) | W1–W3 (14 lessons: patterns, sorting, grid puzzles; 3 world bosses); card shape tokens, platform `group` kind, `grid-fill` kind with solvers; `docs/subjects/logic/plan.md` §6 (`m14.1`–`m14.14`), done 2026-10-05 |
 | M15 | Store apps | Capacitor Android + iPad, native storage, store listings (was M11) |
 | M16 | Chess paths | Openings, Tactics, Checkmates & Endgames; Lichess puzzle import; path badges (was M12) |
 | v2 → M7 | Time controls + device sharing (offline, no server; owner 2026-09-25; iterations §3 `m7.x`; ships as `v2.0.0`) | Do: 5-min warning (app-level notice, calm screens only), limits per weekday, allowed hours; optional: Play vs Learning limits, holiday overrides, detailed time log. Sharing: merge rules + "Send to other device" file (share sheet) → import merges |
