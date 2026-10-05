@@ -180,20 +180,21 @@ describe('grid-fill UI: the board', () => {
 });
 
 describe('grid-fill UI: playing to the end', () => {
-  it('plays every sample to solved through the UI with 3 stars: no error, no hint, no number pad left', () => {
-    for (const def of Object.values(GRID_FILL_SAMPLES)) {
-      const view = mount(def);
+  // One test per sample: each plays its whole solution through the real controls (a 6 x 6 or a picture is 12 to 25 entries).
+  it.each(Object.values(GRID_FILL_SAMPLES))(
+    'plays $id to solved through the UI with 3 stars: no error, no hint, no number pad or tools left',
+    (def) => {
+      mount(def);
       playSolution(def);
-      expect(session().dataset['solved'], def.id).toBe('true');
-      expect(session().dataset['errors'], def.id).toBe('0');
-      expect(session().dataset['hintLevel'], def.id).toBe('0');
-      expect(screen.getByTestId('done').dataset['stars'], def.id).toBe('3');
-      expect(screen.queryByRole('button', { name: 'Hint' }), def.id).toBeNull();
-      expect(screen.queryByTestId('grid-digits'), def.id).toBeNull();
-      expect(screen.queryByRole('radiogroup'), def.id).toBeNull();
-      view.unmount();
-    }
-  });
+      expect(session().dataset['solved']).toBe('true');
+      expect(session().dataset['errors']).toBe('0');
+      expect(session().dataset['hintLevel']).toBe('0');
+      expect(screen.getByTestId('done').dataset['stars']).toBe('3');
+      expect(screen.queryByRole('button', { name: 'Hint' })).toBeNull();
+      expect(screen.queryByTestId('grid-digits')).toBeNull();
+      expect(screen.queryByRole('radiogroup')).toBeNull();
+    },
+  );
 
   it('a right entry goes back to the instruction: no note under it, until the last one brings the praise', () => {
     mount(lastCell);

@@ -39,16 +39,17 @@ async function play(
 const session = (): HTMLElement => screen.getByTestId('session');
 
 describe('grid-fill e2e driver on the real UI', () => {
-  it('plays every sample’s solution to solved with 3 stars (the real names: row / column, Put d, Fill, Cross)', async () => {
-    for (const def of Object.values(GRID_FILL_SAMPLES)) {
-      const view = renderGridUi(<GridFillHarness def={def} />);
+  // One test per sample: the driver finds every cell by its accessible name, which is slow in jsdom (12 to 25 entries per sample).
+  it.each(Object.values(GRID_FILL_SAMPLES))(
+    'plays $id’s solution to solved with 3 stars (the real names: row / column, Put d, Fill, Cross)',
+    async (def) => {
+      renderGridUi(<GridFillHarness def={def} />);
       const state = await play(def, gridFillSolution(def));
-      expect(state.solved, def.id).toBe(true);
-      expect(session().dataset['solved'], def.id).toBe('true');
-      expect(screen.getByTestId('done').dataset['stars'], def.id).toBe('3');
-      view.unmount();
-    }
-  });
+      expect(state.solved).toBe(true);
+      expect(session().dataset['solved']).toBe('true');
+      expect(screen.getByTestId('done').dataset['stars']).toBe('3');
+    },
+  );
 
   it('a wrong entry costs exactly 1 error on the page too, and the solution still solves it for 2 stars', async () => {
     for (const def of [lastCell, castle]) {
