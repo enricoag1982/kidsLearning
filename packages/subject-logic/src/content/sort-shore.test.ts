@@ -949,7 +949,7 @@ describe('the content review of World 2: exactly one reading leads to the answer
     const statement = find('lu-true');
     const statementText = english(statement.textKey);
     expect(statementText).toBe(
-      'The owl is taller than the hen. The hen is taller than the chick. Is the chick taller than the owl?',
+      'The owl is taller than the hen. The hen is taller than the chick. True or false: the chick is taller than the owl.',
     );
     const clues4 = relation(statementText);
     expect(above(clues4, 'owl', 'chick')).toBe(true);

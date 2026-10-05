@@ -924,7 +924,7 @@
   "lu-order": "The cat is bigger than the mouse. The dog is bigger than the cat. Put them in order, smallest first.",
   "lu-shortest": "The giraffe is taller than the horse. The horse is taller than the dog. Who is the shortest?",
   "lu-tallest": "The bear is taller than the fox. The fox is taller than the rabbit. Who is the tallest?",
-  "lu-true": "The owl is taller than the hen. The hen is taller than the chick. Is the chick taller than the owl?",
+  "lu-true": "The owl is taller than the hen. The hen is taller than the chick. True or false: the chick is taller than the owl.",
   "pat-far": {
    "demo": "Count in twos: numbers 2, 4, 6, 8 and 10 are all blue. Number 10 is blue.",
    "story": "Pip wants to know what comes much later. Count in whole parts that repeat, like red, blue. Red is always first in each part.",

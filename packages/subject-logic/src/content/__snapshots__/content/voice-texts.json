@@ -295,11 +295,6 @@
   "source": "lesson-exercise"
  },
  {
-  "key": "6b845edc8343bee3",
-  "text": "The owl is taller than the hen. The hen is taller than the chick. Is the chick taller than the owl?",
-  "source": "lesson-exercise"
- },
- {
   "key": "6d3f219746a66ce9",
   "text": "Pattern Spotter",
   "source": "badge-earned"
@@ -563,6 +558,11 @@
   "key": "d16ad7f6d3345b20",
   "text": "Right column! Now check the row. This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "d3165bb85147b040",
+  "text": "The owl is taller than the hen. The hen is taller than the chick. True or false: the chick is taller than the owl.",
+  "source": "lesson-exercise"
  },
  {
   "key": "d45cbddc50facb25",

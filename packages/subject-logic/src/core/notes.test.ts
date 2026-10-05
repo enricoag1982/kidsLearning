@@ -46,7 +46,12 @@ const CROSS_TECHNIQUES: readonly CrossTechnique[] = [
 
 describe('logic notes', () => {
   it('are the card kit notes plus logic’s own, in the core', () => {
-    expect(Object.keys(LOGIC_NOTES).sort()).toEqual(['grid-wrong', 'group-wrong', 'hint', 'tap-first']);
+    expect(Object.keys(LOGIC_NOTES).sort()).toEqual([
+      'grid-wrong',
+      'group-wrong',
+      'hint',
+      'tap-first',
+    ]);
     expect(Object.keys(logicCore.notes).sort()).toEqual(
       [...new Set([...Object.keys(CARD_NOTES), ...Object.keys(LOGIC_NOTES)])].sort(),
     );
