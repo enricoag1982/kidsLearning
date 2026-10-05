@@ -60,6 +60,52 @@ describe('ChoiceOptions', () => {
     expect(screen.getByRole('button', { name: 'Four' }).hasAttribute('aria-label')).toBe(false);
   });
 
+  it('draws a large tile (7rem, 9rem from sm) and hands the large size to the look', () => {
+    const visual = vi.fn((_option: NumberOption, size: string) => (
+      <b data-testid="numeral">{size}</b>
+    ));
+    render(
+      withI18n(
+        <ChoiceOptions
+          options={OPTIONS}
+          wrongOptionIds={[]}
+          onPick={vi.fn()}
+          look={{ ...LOOK, visual, tileClass: 'min-h-20' }}
+          size="large"
+        />,
+      ),
+    );
+    const buttons = screen.getAllByRole('button');
+    expect(buttons).toHaveLength(3);
+    for (const button of buttons) {
+      expect(button.className).toContain('min-h-28');
+      expect(button.className).toContain('sm:min-h-36');
+      expect(button.className).not.toContain('min-h-20');
+    }
+    expect(screen.getAllByTestId('numeral').map((node) => node.textContent)).toEqual([
+      'large',
+      'large',
+      'large',
+    ]);
+    expect(document.querySelector('[data-size]')?.getAttribute('data-size')).toBe('large');
+  });
+
+  it('draws normal tiles by default, with the normal size handed to the look', () => {
+    const visual = vi.fn((_option: NumberOption, size: string) => <b>{size}</b>);
+    render(
+      withI18n(
+        <ChoiceOptions
+          options={OPTIONS.slice(0, 1)}
+          wrongOptionIds={[]}
+          onPick={vi.fn()}
+          look={{ ...LOOK, visual }}
+        />,
+      ),
+    );
+    expect(visual).toHaveBeenCalledWith(OPTIONS[0], 'normal');
+    expect(document.querySelector('[data-size]')?.getAttribute('data-size')).toBe('normal');
+  });
+
   it('disables a wrong option in orange and reports a pick by id', () => {
     const onPick = vi.fn();
     render(
@@ -156,5 +202,30 @@ describe('createChoiceUi', () => {
     const { container } = render(withI18n(ui.PlayArea(props({ errors: 6 }))));
     expect(screen.queryByText('problem card')).toBeNull();
     expect(container.firstElementChild?.className).toBe('flex min-h-0 flex-1 flex-col gap-4');
+  });
+
+  it('draws large tiles centred above the Hint row without a stimulus, normal ones under it with one', () => {
+    const { container, unmount } = render(withI18n(ui.PlayArea(props({ errors: 6 }))));
+    expect(container.querySelector('[data-size]')?.getAttribute('data-size')).toBe('large');
+    const hint = screen.getByRole('button', { name: 'Hint' });
+    const tile = screen.getByRole('button', { name: 'Four 3' });
+    expect(tile.compareDocumentPosition(hint)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    unmount();
+
+    const withStimulus = render(withI18n(ui.PlayArea(props({}))));
+    expect(withStimulus.container.querySelector('[data-size]')?.getAttribute('data-size')).toBe(
+      'normal',
+    );
+    const stimulusHint = screen.getByRole('button', { name: 'Hint' });
+    const stimulusTile = screen.getByRole('button', { name: 'Four 3' });
+    expect(stimulusHint.compareDocumentPosition(stimulusTile)).toBe(
+      Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+  });
+
+  it('shows the done block instead of the large tiles once solved', () => {
+    render(withI18n(ui.PlayArea(props({ errors: 6, solved: true }))));
+    expect(screen.getByText('well done')).toBeTruthy();
+    expect(screen.queryAllByRole('button')).toHaveLength(0);
   });
 });
