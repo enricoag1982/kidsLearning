@@ -1,5 +1,5 @@
-// The authored content: it builds, every exercise plays through its own kind, and the pieces fit together. The W1 specifics (frozen
-// seeds, the curriculum table, the content review) are in `pattern-pond.test.ts`.
+// The authored content: it builds, every exercise plays through its own kind, and the pieces fit together. The per-world specifics
+// (frozen seeds, the curriculum table, the content review) are in `pattern-pond.test.ts` (W1) and `sort-shore.test.ts` (W2).
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
@@ -46,30 +46,40 @@ describe.each(allExercises())('$where ($exercise.type)', ({ exercise }) => {
   });
 });
 
-describe('the world', () => {
-  it('is Pattern Pond: 4 lessons taught by Pip the Panda, 8 guided tries, 24 scored exercises and 4 easier variants', () => {
-    expect(
-      [...content.lessons]
-        .sort((a, b) => a.order - b.order)
-        .map((lesson) => [
-          lesson.id,
-          lesson.world,
-          lesson.character,
-          lesson.guided.length,
-          lesson.exercises.length,
-          lesson.variants?.length,
-        ]),
-    ).toEqual([
-      ['pat-repeat', 'pattern-pond', 'panda', 2, 6, 1],
-      ['pat-steps', 'pattern-pond', 'panda', 2, 6, 1],
-      ['pat-grow', 'pattern-pond', 'panda', 2, 6, 1],
-      ['pat-far', 'pattern-pond', 'panda', 2, 6, 1],
+describe('the worlds', () => {
+  const lessonsOf = (world: string) =>
+    [...content.lessons]
+      .filter((lesson) => lesson.world === world)
+      .sort((a, b) => a.order - b.order)
+      .map((lesson) => [
+        lesson.id,
+        lesson.character,
+        lesson.guided.length,
+        lesson.exercises.length,
+        lesson.variants?.length,
+      ]);
+
+  it('are 2: Pattern Pond (4 lessons taught by Pip the Panda, 8 guided tries, 24 scored exercises, 4 easier variants) and Sort Shore (5 lessons, 10 guided, 30 scored, 5 variants)', () => {
+    expect(content.lessons).toHaveLength(9);
+    expect(lessonsOf('pattern-pond')).toEqual([
+      ['pat-repeat', 'panda', 2, 6, 1],
+      ['pat-steps', 'panda', 2, 6, 1],
+      ['pat-grow', 'panda', 2, 6, 1],
+      ['pat-far', 'panda', 2, 6, 1],
+    ]);
+    expect(lessonsOf('sort-shore')).toEqual([
+      ['cls-odd', 'panda', 2, 6, 1],
+      ['cls-rule', 'panda', 2, 6, 1],
+      ['cls-boxes', 'panda', 2, 6, 1],
+      ['cls-circles', 'panda', 2, 6, 1],
+      ['cls-line-up', 'panda', 2, 6, 1],
     ]);
   });
 
-  it('has the Pattern Train boss: the one mini-game, a series of 5 rounds, named by the world', () => {
+  it('have a world boss each: the one mini-game of the world, a series of 5 rounds, named by the world', () => {
     expect(content.minigames.map((game) => [game.id, game.mode, game.rounds.length])).toEqual([
       ['pattern-train', 'series', 5],
+      ['sorting-sprint', 'series', 5],
     ]);
     const [main] = tracks.tracks;
     expect(tracks.tracks).toHaveLength(1);
@@ -81,15 +91,26 @@ describe('the world', () => {
         habitat: 'river',
         boss: 'pattern-train',
       }),
+      expect.objectContaining({
+        id: 'sort-shore',
+        order: 2,
+        habitat: 'ocean',
+        boss: 'sorting-sprint',
+      }),
     ]);
   });
 
-  it('has the thinker rank at the start, the spotter rank after the world and 2 badges', () => {
+  it('have the thinker rank at the start, a rank after each world and 3 badges', () => {
     expect(tracks.ranks).toEqual([
       { id: 'thinker', after: 'start' },
       { id: 'spotter', after: 'world:pattern-pond' },
+      { id: 'sorter', after: 'world:sort-shore' },
     ]);
-    expect(badges.map((badge) => badge.id)).toEqual(['pattern-spotter', 'star-collector']);
+    expect(badges.map((badge) => badge.id)).toEqual([
+      'pattern-spotter',
+      'shore-sorter',
+      'star-collector',
+    ]);
   });
 });
 
@@ -99,8 +120,8 @@ describe('texts and the core', () => {
     expect((en?.common?.app as { title?: string } | undefined)?.title).toBe('Logic');
     expect(en?.journey).toMatchObject({
       tracks: { puzzles: 'Puzzle Paths' },
-      worlds: { 'pattern-pond': 'Pattern Pond' },
-      ranks: { thinker: 'Thinker', spotter: 'Pattern Spotter' },
+      worlds: { 'pattern-pond': 'Pattern Pond', 'sort-shore': 'Sort Shore' },
+      ranks: { thinker: 'Thinker', spotter: 'Pattern Spotter', sorter: 'Shore Sorter' },
     });
     for (const character of ['owl', ...Object.keys(LOGIC_CHARACTERS)]) {
       expect(en?.characters?.[character], character).toBeDefined();

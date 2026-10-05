@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CARD_KIND_UI } from '@learn/platform-web/kinds/cards/ui-registry.ts';
+import { GROUP_KIND_UI } from '@learn/platform-web/kinds/group/ui.ts';
 import { logicEntry } from '../entry.ts';
 import { gridFillUi } from '../kinds/grid-fill/ui.ts';
 import { LOGIC_KIND_UI } from './kinds/ui-registry.ts';
@@ -16,20 +17,32 @@ describe('logicEntry.load', () => {
     expect(common?.app?.title).toBe('Logic');
   });
 
-  it('serves the compiled Pattern Pond: the 4 lessons, the Pattern Train, the track, the catalog and the badges', async () => {
+  it('serves the compiled Pattern Pond and Sort Shore: the 9 lessons, the 2 world bosses, the track, the catalog and the badges', async () => {
     const { pack } = await logicEntry.load();
     const content = pack.createServices().content;
 
-    expect(
-      [...content.lessons()].sort((a, b) => a.order - b.order).map((lesson) => lesson.id),
-    ).toEqual(['pat-repeat', 'pat-steps', 'pat-grow', 'pat-far']);
-    expect(content.minigames().map((game) => game.id)).toEqual(['pattern-train']);
+    const world = (id: string): string[] =>
+      [...content.lessons()]
+        .filter((lesson) => lesson.world === id)
+        .sort((a, b) => a.order - b.order)
+        .map((lesson) => lesson.id);
+    expect(world('pattern-pond')).toEqual(['pat-repeat', 'pat-steps', 'pat-grow', 'pat-far']);
+    expect(world('sort-shore')).toEqual([
+      'cls-odd',
+      'cls-rule',
+      'cls-boxes',
+      'cls-circles',
+      'cls-line-up',
+    ]);
+    expect(content.minigames().map((game) => game.id)).toEqual(['pattern-train', 'sorting-sprint']);
     expect(content.catalog?.().tracks.map((track) => track.id)).toEqual(['puzzles']);
     expect(content.catalog?.().tracks[0]?.worlds.map((world) => world.id)).toEqual([
       'pattern-pond',
+      'sort-shore',
     ]);
     expect(content.badges?.().map((badge) => badge.id)).toEqual([
       'pattern-spotter',
+      'shore-sorter',
       'star-collector',
     ]);
   });
@@ -40,9 +53,12 @@ describe('logicEntry.load', () => {
     for (const [type, kindUi] of Object.entries(CARD_KIND_UI)) {
       expect(pack.kinds[type], type).toBe(kindUi);
     }
+    // The platform's opt-in group UI (same object) joins them since m14.10.
+    expect(pack.kinds['group']).toBe(GROUP_KIND_UI);
     expect(Object.keys(pack.kinds).sort()).toEqual([
       'choice',
       'grid-fill',
+      'group',
       'number-entry',
       'order',
       'true-false',

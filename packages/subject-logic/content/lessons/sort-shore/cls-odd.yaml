@@ -1,0 +1,37 @@
+# W2 lesson 1: odd one out. Four or three cards are alike but one: check the colour, the shape, the size and how many. Generated; seeds
+# are stored, never change them. The demo is the worked example: three blue circles and a blue square.
+id: cls-odd
+order: 1
+concept: cls-odd
+character: panda
+demo:
+  prompt:
+    shapes:
+      - { kind: circle, colour: blue }
+      - { kind: circle, colour: blue }
+      - { kind: circle, colour: blue }
+      - { kind: square, colour: blue }
+guided:
+  - id: odd-g-colour
+    generate: { template: odd-one, count: 1, seed: 7, params: { attr: colour, items: 3 } }
+  - id: odd-g-kind
+    generate: { template: odd-one, count: 1, seed: 2, params: { attr: kind, items: 3 } }
+exercises:
+  - id: odd-colour
+    generate: { template: odd-one, count: 1, seed: 6, params: { attr: colour, items: 4 } }
+  - id: odd-kind
+    generate: { template: odd-one, count: 1, seed: 1, params: { attr: kind, items: 4 } }
+  - id: odd-size
+    generate: { template: odd-one, count: 1, seed: 8, params: { attr: size, items: 4 } }
+  - id: odd-count
+    generate: { template: odd-one, count: 1, seed: 4, params: { attr: count, items: 4 } }
+  - id: odd-noise-a
+    generate:
+      { template: odd-one, count: 1, seed: 6, params: { attr: size, items: 4, noise: true } }
+  - id: odd-noise-b
+    easier: odd-easy-1
+    generate:
+      { template: odd-one, count: 1, seed: 3, params: { attr: colour, items: 4, noise: true } }
+variants:
+  - id: odd-easy
+    generate: { template: odd-one, count: 1, seed: 7, params: { attr: kind, items: 3 } }

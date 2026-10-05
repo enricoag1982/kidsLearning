@@ -1,6 +1,6 @@
-# One main track, "Puzzle Paths": World 1 Pattern Pond (patterns) ending in the Pattern Train world boss (`boss`: a mini-game of the
-# world, opened by its last lesson; the world counts as mastered once its lessons are mastered and the boss is won). `title` and the
-# world's name are texts in locales/en/journey.yaml. m14.10 adds Sort Shore, m14.11 Grid Puzzles.
+# One main track, "Puzzle Paths": World 1 Pattern Pond (patterns) ending in the Pattern Train world boss and World 2 Sort Shore (sorting)
+# ending in the Sorting Sprint (`boss`: a mini-game of the world, opened by its last lesson; the world counts as mastered once its
+# lessons are mastered and the boss is won). `title` and the world's name are texts in locales/en/journey.yaml. m14.11 adds Grid Puzzles.
 tracks:
   - id: puzzles
     kind: main
@@ -13,7 +13,9 @@ tracks:
           title: worlds.pattern-pond,
           boss: pattern-train,
         }
+      - { id: sort-shore, order: 2, habitat: ocean, title: worlds.sort-shore, boss: sorting-sprint }
 # A rank is earned `after` a world (`world:<id>`) or at the `start`; its name is in locales/en/journey.yaml.
 ranks:
   - { id: thinker, after: start }
   - { id: spotter, after: world:pattern-pond }
+  - { id: sorter, after: world:sort-shore }

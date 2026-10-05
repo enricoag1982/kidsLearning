@@ -56,3 +56,66 @@ export interface EntryItem extends ExerciseYamlBase {
 export interface ShapeEntryItem extends EntryItem {
   readonly prompt: { readonly shapes: readonly PromptToken[] };
 }
+
+/** A `choice` of drawn shapes with no prompt (`odd-one`: the cards are the whole question). */
+export interface ShapeCardsItem extends ExerciseYamlBase {
+  readonly type: 'choice';
+  readonly text: string;
+  readonly options: readonly ShapeOption[];
+  readonly answer: string;
+}
+
+/** What a box / axis rule asks of a card: every fact of `all`, none of `none`. */
+export interface RuleYaml {
+  readonly all?: readonly string[];
+  readonly none?: readonly string[];
+}
+
+/** A card of a `group` exercise: a drawn shape (sorting) or an emoji with its tags (animals). */
+export interface GroupCardYaml {
+  readonly id: string;
+  readonly shape?: CardShape;
+  readonly emoji?: string;
+  readonly tags?: readonly string[];
+}
+
+export interface BoxYaml {
+  readonly id: string;
+  readonly text: string;
+  readonly rule: RuleYaml;
+}
+
+export interface AxisYaml {
+  readonly text: string;
+  readonly notText: string;
+  readonly rule: RuleYaml;
+}
+
+/** A `group` exercise (`sort-boxes`: layout `row`; `carroll`; `venn`), exactly as an author writes it. */
+export interface GroupItem extends ExerciseYamlBase {
+  readonly type: 'group';
+  readonly text: string;
+  readonly layout: 'row' | 'carroll' | 'venn';
+  readonly boxes?: readonly BoxYaml[];
+  readonly axes?: readonly [AxisYaml, AxisYaml];
+  readonly items: readonly GroupCardYaml[];
+  readonly answer: Readonly<Record<string, string>>;
+  readonly allowEmpty?: true;
+}
+
+/** An `order` exercise of drawn shapes (`line-up`). */
+export interface OrderShapesItem extends ExerciseYamlBase {
+  readonly type: 'order';
+  readonly text: string;
+  readonly items: readonly { readonly id: string; readonly shape: CardShape }[];
+  readonly answer: readonly string[];
+}
+
+/** A `choice` of rule sentences under a row of shapes (`odd-rule`). */
+export interface ShapeRuleItem extends ExerciseYamlBase {
+  readonly type: 'choice';
+  readonly text: string;
+  readonly prompt: { readonly shapes: readonly PromptToken[] };
+  readonly options: readonly TextOption[];
+  readonly answer: string;
+}

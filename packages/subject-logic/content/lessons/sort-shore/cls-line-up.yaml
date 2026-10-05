@@ -1,0 +1,52 @@
+# W2 lesson 5: line up. Put cards in order by size or by how many, and read "taller than" clues: if the bear is taller than the fox and the
+# fox is taller than the rabbit, the bear is taller than the rabbit. The shape lines are generated (seeds are stored, never change
+# them); the four clue items are authored (texts in locales/en/lessons.yaml). The demo is the worked example: tiny, medium, huge green
+# triangles.
+id: cls-line-up
+order: 5
+concept: cls-line-up
+character: panda
+demo:
+  prompt:
+    shapes:
+      - { kind: triangle, colour: green, size: tiny }
+      - { kind: triangle, colour: green, size: medium }
+      - { kind: triangle, colour: green, size: huge }
+guided:
+  - id: lu-g-size
+    generate: { template: line-up, count: 1, seed: 4, params: { by: size, items: 3 } }
+  - id: lu-g-count
+    generate: { template: line-up, count: 1, seed: 4, params: { by: count, items: 4 } }
+exercises:
+  - id: lu-size-5
+    generate: { template: line-up, count: 1, seed: 4, params: { by: size, items: 5 } }
+  - id: lu-count-5
+    generate: { template: line-up, count: 1, seed: 3, params: { by: count, items: 5 } }
+  - id: lu-tallest
+    type: choice
+    options:
+      - { id: fox, emoji: 🦊 }
+      - { id: rabbit, emoji: 🐰 }
+      - { id: bear, emoji: 🐻 }
+    answer: bear
+  - id: lu-shortest
+    type: choice
+    options:
+      - { id: dog, emoji: 🐕 }
+      - { id: giraffe, emoji: 🦒 }
+      - { id: horse, emoji: 🐎 }
+    answer: dog
+  - id: lu-order
+    type: order
+    easier: lu-easy-1
+    items:
+      - { id: dog, emoji: 🐕 }
+      - { id: mouse, emoji: 🐭 }
+      - { id: cat, emoji: 🐱 }
+    answer: [mouse, cat, dog]
+  - id: lu-true
+    type: true-false
+    answer: false
+variants:
+  - id: lu-easy
+    generate: { template: line-up, count: 1, seed: 3, params: { by: size, items: 3 } }

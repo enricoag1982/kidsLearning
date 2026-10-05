@@ -1,8 +1,18 @@
 [
  {
+  "key": "01f121fe9622f04c",
+  "text": "Pip lines the shells up from smallest to biggest. Compare two at a time. If the bear is taller than the fox, and the fox is taller than the rabbit, then the bear is taller than the rabbit!",
+  "source": "lesson-story"
+ },
+ {
   "key": "04a83fcf89fa37d0",
   "text": "See you tomorrow!",
   "source": "owl-line"
+ },
+ {
+  "key": "0819857e13882737",
+  "text": "Blue? Yes. A circle? No. It goes in the blue circle only.",
+  "source": "lesson-demo"
  },
  {
   "key": "089f030dce660968",
@@ -15,9 +25,29 @@
   "source": "exercise-note"
  },
  {
+  "key": "0a2ba2d1bd8cb77c",
+  "text": "Not that one. Try another! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "0d83bb147d4325e1",
+  "text": "Does it fit both circles, or just one?",
+  "source": "exercise-note"
+ },
+ {
+  "key": "0d9116a7e93d40cc",
+  "text": "Which one comes next?",
+  "source": "exercise-note"
+ },
+ {
   "key": "122efff8f03f4e7c",
   "text": "Which shape is number 15?",
   "source": "lesson-exercise"
+ },
+ {
+  "key": "15cb245201fdca70",
+  "text": "You already know 1 world! Off you go!",
+  "source": "placement"
  },
  {
   "key": "161fdcce3e2e7cdb",
@@ -50,14 +80,29 @@
   "source": "journey"
  },
  {
+  "key": "22fa38fc3ad12281",
+  "text": "Put each card in its box.",
+  "source": "minigame-round"
+ },
+ {
   "key": "2416a7322ac657df",
   "text": "Every star starts with the first step.",
   "source": "placement"
  },
  {
+  "key": "24d88b1483e0fc18",
+  "text": "Right column! Now check the row.",
+  "source": "exercise-note"
+ },
+ {
   "key": "27dfb80057b25845",
   "text": "Here is the answer.",
   "source": "exercise-note"
+ },
+ {
+  "key": "27fca1766381faa2",
+  "text": "What is the same about all of them?",
+  "source": "minigame-round"
  },
  {
   "key": "29e67f0cc6e5b7f4",
@@ -85,6 +130,11 @@
   "source": "lesson-variant"
  },
  {
+  "key": "31e5ac1ecad65b44",
+  "text": "Does it fit either circle?",
+  "source": "exercise-note"
+ },
+ {
   "key": "323fde12bb24ff58",
   "text": "It starts with 0.",
   "source": "exercise-note"
@@ -105,6 +155,16 @@
   "source": "owl-line"
  },
  {
+  "key": "40f629e43b39b793",
+  "text": "Pip sorts the shells into boxes. Each box has a rule. Check the card against the rule, then put it in.",
+  "source": "lesson-story"
+ },
+ {
+  "key": "4103ffc27b68243b",
+  "text": "Right row! Now check the column. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "42395b2cf6a958b5",
   "text": "Look closely.",
   "source": "exercise-note"
@@ -115,6 +175,11 @@
   "source": "lesson-demo"
  },
  {
+  "key": "44cbb942fe77121a",
+  "text": "It does not go here.",
+  "source": "exercise-note"
+ },
+ {
   "key": "44ee1e157e7f833d",
   "text": "What would you like to learn today?",
   "source": "owl-line"
@@ -123,6 +188,11 @@
   "key": "462164a0645e1ed2",
   "text": "Well done!",
   "source": "exercise-note"
+ },
+ {
+  "key": "46a70713c8180d85",
+  "text": "The giraffe is taller than the horse. The horse is taller than the dog. Who is the shortest?",
+  "source": "lesson-exercise"
  },
  {
   "key": "4805eee9fb3cd71d",
@@ -145,6 +215,11 @@
   "source": "owl-line"
  },
  {
+  "key": "4f3e99536fd30f70",
+  "text": "Watch: it goes here.",
+  "source": "exercise-note"
+ },
+ {
   "key": "530abb19f63d5293",
   "text": "It starts with 9.",
   "source": "exercise-note"
@@ -160,6 +235,11 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "58d5b2f1d56c94d4",
+  "text": "Does it fit both circles, or just one? This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
   "key": "5975daf7cd7cef89",
   "text": "Pick a topic, or start your warm-up!",
   "source": "owl-line"
@@ -170,9 +250,29 @@
   "source": "owl-line"
  },
  {
+  "key": "5c13d5fbdf6b80ee",
+  "text": "Pip found shells on the shore. They are all alike, except one! Check the colour, the shape, the size and how many.",
+  "source": "lesson-story"
+ },
+ {
+  "key": "6016601220ef5965",
+  "text": "Is it red? Yes. Is it a circle? Yes. It goes where red meets circle.",
+  "source": "lesson-demo"
+ },
+ {
+  "key": "607b617624da3b29",
+  "text": "You already know Sort Shore — 5 lessons are yours!",
+  "source": "assessment"
+ },
+ {
   "key": "622418bb13e58c02",
   "text": "It starts with 5.",
   "source": "exercise-note"
+ },
+ {
+  "key": "625da6e81b583aeb",
+  "text": "Smallest first: tiny, then medium, then huge.",
+  "source": "lesson-demo"
  },
  {
   "key": "62f897c4502712bc",
@@ -183,6 +283,16 @@
   "key": "65b6393d3c77766e",
   "text": "You earned the Pattern Spotter badge!",
   "source": "celebration"
+ },
+ {
+  "key": "663907575ba56117",
+  "text": "Help Pip sort the shells!",
+  "source": "minigame-goal"
+ },
+ {
+  "key": "67338321d6cbb254",
+  "text": "Put them in order, fewest first.",
+  "source": "lesson-exercise"
  },
  {
   "key": "6d3f219746a66ce9",
@@ -235,6 +345,11 @@
   "source": "home"
  },
  {
+  "key": "7cbdff31f51d7d3c",
+  "text": "Look at what each box wants.",
+  "source": "exercise-note"
+ },
+ {
   "key": "7e8f59e8b51068df",
   "text": "Count in whole parts, not one by one. This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
@@ -245,9 +360,29 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "827f51617b0e2880",
+  "text": "Shore Sorter",
+  "source": "badge-earned"
+ },
+ {
+  "key": "843624953e0f5ea0",
+  "text": "Right row! Now check the column.",
+  "source": "exercise-note"
+ },
+ {
   "key": "8486dc624679f6a6",
   "text": "Some patterns grow. Count how many more there are each time. The next picture has that many more again.",
   "source": "lesson-story"
+ },
+ {
+  "key": "8701c1876c550d08",
+  "text": "Want to show me you already know World 2 · Sort Shore?",
+  "source": "journey"
+ },
+ {
+  "key": "892d2abbccd4293a",
+  "text": "The cat is bigger than the mouse. The dog is bigger than the cat. Put them in order, smallest first.",
+  "source": "lesson-exercise"
  },
  {
   "key": "8b89769909ec6247",
@@ -265,6 +400,16 @@
   "source": "minigame-round"
  },
  {
+  "key": "8cbb4693fa8673cc",
+  "text": "The bear is taller than the fox. The fox is taller than the rabbit. Who is the tallest?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "8cf6c6765d99de90",
+  "text": "Where does each card go? The middle fits both.",
+  "source": "minigame-round"
+ },
+ {
   "key": "94f516a7b14c3876",
   "text": "Not that number. Try again!",
   "source": "exercise-note"
@@ -278,6 +423,31 @@
   "key": "98471e0ff4d81d47",
   "text": "Let's try Logic together!",
   "source": "voice-check"
+ },
+ {
+  "key": "985e32f73174f964",
+  "text": "World boss time: Sorting Sprint!",
+  "source": "home"
+ },
+ {
+  "key": "9cc4b574d3de95c9",
+  "text": "Look at both rules. Where does each card go?",
+  "source": "minigame-round"
+ },
+ {
+  "key": "9ce536719442af57",
+  "text": "Now Pip asks: what do they all share? Check one thing at a time: colour, then shape, then size.",
+  "source": "lesson-story"
+ },
+ {
+  "key": "9ed767a7a8b257db",
+  "text": "Put them in order, smallest first.",
+  "source": "lesson-variant"
+ },
+ {
+  "key": "9f20e5f9e517794c",
+  "text": "Not this box. Check what the box wants. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "9fd4624030447a7a",
@@ -298,6 +468,16 @@
   "key": "aa9864267eaecef3",
   "text": "What comes next?",
   "source": "minigame-round"
+ },
+ {
+  "key": "b1628e6100814c5b",
+  "text": "Shore Sorter. Master Sort Shore and beat Sorting Sprint",
+  "source": "badge-locked"
+ },
+ {
+  "key": "b1660b28338efa52",
+  "text": "Does it fit either circle? This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
  },
  {
   "key": "b66037985c7d77a7",
@@ -323,6 +503,11 @@
   "key": "bac073bb21b21de1",
   "text": "Star Collector. Earn 10 stars",
   "source": "badge-locked"
+ },
+ {
+  "key": "bb60b1d92dd4898b",
+  "text": "Not this box. Check what the box wants.",
+  "source": "exercise-note"
  },
  {
   "key": "bd09bbb7e9ebb05f",
@@ -357,6 +542,26 @@
  {
   "key": "c5fc7b64d601335f",
   "text": "Which shape is number 19?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "c7a22953e2c2dc67",
+  "text": "Three are circles. The square is the odd one out.",
+  "source": "lesson-demo"
+ },
+ {
+  "key": "cc5fe215323ec830",
+  "text": "Two circles, two rules. A card that fits both goes in the middle, where the circles meet. A card that fits neither stays outside.",
+  "source": "lesson-story"
+ },
+ {
+  "key": "d16ad7f6d3345b20",
+  "text": "Right column! Now check the row. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "d3165bb85147b040",
+  "text": "The owl is taller than the hen. The hen is taller than the chick. True or false: the chick is taller than the owl.",
   "source": "lesson-exercise"
  },
  {
@@ -410,9 +615,19 @@
   "source": "celebration"
  },
  {
+  "key": "f1af6ef19d5689c4",
+  "text": "You earned the Shore Sorter badge!",
+  "source": "celebration"
+ },
+ {
   "key": "f3a956b830d551f8",
   "text": "Which shape is number 11?",
   "source": "lesson-exercise"
+ },
+ {
+  "key": "f80c8fc3dcb61f21",
+  "text": "Not that one. Try another!",
+  "source": "exercise-note"
  },
  {
   "key": "f93dc34c7bb2e26d",
@@ -428,6 +643,16 @@
   "key": "fcdc4d925dcb76da",
   "text": "Want to show me you already know Pip?",
   "source": "journey"
+ },
+ {
+  "key": "fe215b2b1f84d782",
+  "text": "Different shapes, different sizes, but all red. They are all red!",
+  "source": "lesson-demo"
+ },
+ {
+  "key": "fed33cea52bc89c6",
+  "text": "Which one is different?",
+  "source": "minigame-round"
  },
  {
   "key": "ff9e1b1facd7d976",

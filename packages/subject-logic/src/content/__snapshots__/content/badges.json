@@ -13,6 +13,19 @@
   }
  },
  {
+  "id": "shore-sorter",
+  "category": "milestone",
+  "nameKey": "rewards:badges.shore-sorter.name",
+  "conditionKey": "rewards:badges.shore-sorter.condition",
+  "condition": {
+   "type": "mastered",
+   "thresholds": [
+    1
+   ],
+   "scope": "world:sort-shore"
+  }
+ },
+ {
   "id": "star-collector",
   "category": "skill",
   "nameKey": "rewards:badges.star-collector.name",

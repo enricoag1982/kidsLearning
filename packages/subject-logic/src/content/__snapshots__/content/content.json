@@ -1676,6 +1676,2618 @@
      "maxDigits": 2
     }
    ]
+  },
+  {
+   "id": "cls-boxes",
+   "world": "sort-shore",
+   "order": 3,
+   "concept": "cls-boxes",
+   "character": "panda",
+   "titleKey": "lessons:cls-boxes.title",
+   "storyKey": "lessons:cls-boxes.story",
+   "demo": {
+    "textKey": "lessons:cls-boxes.demo",
+    "prompt": {
+     "shapes": [
+      {
+       "kind": "circle",
+       "colour": "red"
+      }
+     ]
+    }
+   },
+   "guided": [
+    {
+     "id": "box-g-colour-1",
+     "concept": "cls-boxes",
+     "textKey": "lessons:gen.box-g-colour-1.text",
+     "type": "group",
+     "layout": "row",
+     "boxes": [
+      {
+       "id": "yes",
+       "textKey": "lessons:templates.label.colour-yellow",
+       "rule": {
+        "all": [
+         "colour:yellow"
+        ]
+       }
+      },
+      {
+       "id": "no",
+       "textKey": "lessons:templates.not.colour-yellow",
+       "rule": {
+        "none": [
+         "colour:yellow"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "c1",
+       "shape": {
+        "kind": "square",
+        "colour": "blue",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c2",
+       "shape": {
+        "kind": "square",
+        "colour": "blue",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c3",
+       "shape": {
+        "kind": "square",
+        "colour": "yellow",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c4",
+       "shape": {
+        "kind": "square",
+        "colour": "yellow",
+        "size": "tiny"
+       }
+      }
+     ],
+     "answer": {
+      "c1": "no",
+      "c2": "no",
+      "c3": "yes",
+      "c4": "yes"
+     }
+    },
+    {
+     "id": "box-g-kind-1",
+     "concept": "cls-boxes",
+     "textKey": "lessons:gen.box-g-kind-1.text",
+     "type": "group",
+     "layout": "row",
+     "boxes": [
+      {
+       "id": "yes",
+       "textKey": "lessons:templates.label.kind-heart",
+       "rule": {
+        "all": [
+         "kind:heart"
+        ]
+       }
+      },
+      {
+       "id": "no",
+       "textKey": "lessons:templates.not.kind-heart",
+       "rule": {
+        "none": [
+         "kind:heart"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "c1",
+       "shape": {
+        "kind": "heart",
+        "colour": "yellow"
+       }
+      },
+      {
+       "id": "c2",
+       "shape": {
+        "kind": "heart",
+        "colour": "red"
+       }
+      },
+      {
+       "id": "c3",
+       "shape": {
+        "kind": "triangle",
+        "colour": "purple"
+       }
+      },
+      {
+       "id": "c4",
+       "shape": {
+        "kind": "triangle",
+        "colour": "red"
+       }
+      }
+     ],
+     "answer": {
+      "c1": "yes",
+      "c2": "yes",
+      "c3": "no",
+      "c4": "no"
+     }
+    }
+   ],
+   "exercises": [
+    {
+     "id": "box-two-1",
+     "concept": "cls-boxes",
+     "textKey": "lessons:gen.box-two-1.text",
+     "type": "group",
+     "layout": "row",
+     "boxes": [
+      {
+       "id": "yes",
+       "textKey": "lessons:templates.label.size-huge",
+       "rule": {
+        "all": [
+         "size:huge"
+        ]
+       }
+      },
+      {
+       "id": "no",
+       "textKey": "lessons:templates.not.size-huge",
+       "rule": {
+        "none": [
+         "size:huge"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "c1",
+       "shape": {
+        "kind": "diamond",
+        "colour": "purple",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c2",
+       "shape": {
+        "kind": "diamond",
+        "colour": "red",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c3",
+       "shape": {
+        "kind": "diamond",
+        "colour": "red",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c4",
+       "shape": {
+        "kind": "diamond",
+        "colour": "red",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c5",
+       "shape": {
+        "kind": "diamond",
+        "colour": "yellow",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c6",
+       "shape": {
+        "kind": "diamond",
+        "colour": "yellow",
+        "size": "tiny"
+       }
+      }
+     ],
+     "answer": {
+      "c1": "yes",
+      "c2": "yes",
+      "c3": "no",
+      "c4": "no",
+      "c5": "yes",
+      "c6": "no"
+     }
+    },
+    {
+     "id": "box-three-1",
+     "concept": "cls-boxes",
+     "textKey": "lessons:gen.box-three-1.text",
+     "type": "group",
+     "layout": "row",
+     "boxes": [
+      {
+       "id": "heart",
+       "textKey": "lessons:templates.label.kind-heart",
+       "rule": {
+        "all": [
+         "kind:heart"
+        ]
+       }
+      },
+      {
+       "id": "diamond",
+       "textKey": "lessons:templates.label.kind-diamond",
+       "rule": {
+        "all": [
+         "kind:diamond"
+        ]
+       }
+      },
+      {
+       "id": "triangle",
+       "textKey": "lessons:templates.label.kind-triangle",
+       "rule": {
+        "all": [
+         "kind:triangle"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "c1",
+       "shape": {
+        "kind": "heart",
+        "colour": "yellow"
+       }
+      },
+      {
+       "id": "c2",
+       "shape": {
+        "kind": "diamond",
+        "colour": "yellow"
+       }
+      },
+      {
+       "id": "c3",
+       "shape": {
+        "kind": "triangle",
+        "colour": "yellow"
+       }
+      },
+      {
+       "id": "c4",
+       "shape": {
+        "kind": "diamond",
+        "colour": "red"
+       }
+      },
+      {
+       "id": "c5",
+       "shape": {
+        "kind": "triangle",
+        "colour": "red"
+       }
+      }
+     ],
+     "answer": {
+      "c1": "heart",
+      "c2": "diamond",
+      "c3": "triangle",
+      "c4": "diamond",
+      "c5": "triangle"
+     }
+    },
+    {
+     "id": "car-colour-kind-1",
+     "concept": "cls-boxes",
+     "textKey": "lessons:gen.car-colour-kind-1.text",
+     "type": "group",
+     "layout": "carroll",
+     "axes": [
+      {
+       "textKey": "lessons:templates.label.colour-purple",
+       "notTextKey": "lessons:templates.not.colour-purple",
+       "rule": {
+        "all": [
+         "colour:purple"
+        ]
+       }
+      },
+      {
+       "textKey": "lessons:templates.label.kind-star",
+       "notTextKey": "lessons:templates.not.kind-star",
+       "rule": {
+        "all": [
+         "kind:star"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "c1",
+       "shape": {
+        "kind": "circle",
+        "colour": "purple",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c2",
+       "shape": {
+        "kind": "star",
+        "colour": "purple",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c3",
+       "shape": {
+        "kind": "circle",
+        "colour": "orange",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c4",
+       "shape": {
+        "kind": "circle",
+        "colour": "purple",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c5",
+       "shape": {
+        "kind": "star",
+        "colour": "orange",
+        "size": "medium"
+       }
+      }
+     ],
+     "answer": {
+      "c1": "a-not-b",
+      "c2": "a-b",
+      "c3": "not-a-not-b",
+      "c4": "a-not-b",
+      "c5": "not-a-b"
+     }
+    },
+    {
+     "id": "car-size-kind-1",
+     "concept": "cls-boxes",
+     "textKey": "lessons:gen.car-size-kind-1.text",
+     "type": "group",
+     "layout": "carroll",
+     "axes": [
+      {
+       "textKey": "lessons:templates.label.size-huge",
+       "notTextKey": "lessons:templates.not.size-huge",
+       "rule": {
+        "all": [
+         "size:huge"
+        ]
+       }
+      },
+      {
+       "textKey": "lessons:templates.label.kind-heart",
+       "notTextKey": "lessons:templates.not.kind-heart",
+       "rule": {
+        "all": [
+         "kind:heart"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "c1",
+       "shape": {
+        "kind": "star",
+        "colour": "blue",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c2",
+       "shape": {
+        "kind": "heart",
+        "colour": "blue",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c3",
+       "shape": {
+        "kind": "diamond",
+        "colour": "orange",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c4",
+       "shape": {
+        "kind": "heart",
+        "colour": "blue",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c5",
+       "shape": {
+        "kind": "star",
+        "colour": "blue",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c6",
+       "shape": {
+        "kind": "heart",
+        "colour": "orange",
+        "size": "huge"
+       }
+      }
+     ],
+     "answer": {
+      "c1": "a-not-b",
+      "c2": "not-a-b",
+      "c3": "not-a-not-b",
+      "c4": "a-b",
+      "c5": "not-a-not-b",
+      "c6": "a-b"
+     }
+    },
+    {
+     "id": "car-colour-size-1",
+     "concept": "cls-boxes",
+     "textKey": "lessons:gen.car-colour-size-1.text",
+     "type": "group",
+     "layout": "carroll",
+     "axes": [
+      {
+       "textKey": "lessons:templates.label.colour-green",
+       "notTextKey": "lessons:templates.not.colour-green",
+       "rule": {
+        "all": [
+         "colour:green"
+        ]
+       }
+      },
+      {
+       "textKey": "lessons:templates.label.size-tiny",
+       "notTextKey": "lessons:templates.not.size-tiny",
+       "rule": {
+        "all": [
+         "size:tiny"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "c1",
+       "shape": {
+        "kind": "square",
+        "colour": "green",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c2",
+       "shape": {
+        "kind": "square",
+        "colour": "yellow",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c3",
+       "shape": {
+        "kind": "heart",
+        "colour": "yellow",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c4",
+       "shape": {
+        "kind": "square",
+        "colour": "green",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c5",
+       "shape": {
+        "kind": "square",
+        "colour": "yellow",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c6",
+       "shape": {
+        "kind": "heart",
+        "colour": "green",
+        "size": "tiny"
+       }
+      }
+     ],
+     "answer": {
+      "c1": "a-not-b",
+      "c2": "not-a-b",
+      "c3": "not-a-not-b",
+      "c4": "a-b",
+      "c5": "not-a-not-b",
+      "c6": "a-b"
+     }
+    },
+    {
+     "id": "car-kind-count-1",
+     "concept": "cls-boxes",
+     "textKey": "lessons:gen.car-kind-count-1.text",
+     "type": "group",
+     "layout": "carroll",
+     "axes": [
+      {
+       "textKey": "lessons:templates.label.kind-heart",
+       "notTextKey": "lessons:templates.not.kind-heart",
+       "rule": {
+        "all": [
+         "kind:heart"
+        ]
+       }
+      },
+      {
+       "textKey": "lessons:templates.label.count-5",
+       "notTextKey": "lessons:templates.not.count-5",
+       "rule": {
+        "all": [
+         "count:5"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "c1",
+       "shape": {
+        "kind": "heart",
+        "colour": "purple",
+        "count": 5
+       }
+      },
+      {
+       "id": "c2",
+       "shape": {
+        "kind": "triangle",
+        "colour": "yellow",
+        "count": 5
+       }
+      },
+      {
+       "id": "c3",
+       "shape": {
+        "kind": "heart",
+        "colour": "yellow",
+        "count": 5
+       }
+      },
+      {
+       "id": "c4",
+       "shape": {
+        "kind": "heart",
+        "colour": "orange"
+       }
+      },
+      {
+       "id": "c5",
+       "shape": {
+        "kind": "diamond",
+        "colour": "purple",
+        "count": 5
+       }
+      },
+      {
+       "id": "c6",
+       "shape": {
+        "kind": "diamond",
+        "colour": "orange"
+       }
+      },
+      {
+       "id": "c7",
+       "shape": {
+        "kind": "heart",
+        "colour": "purple"
+       }
+      }
+     ],
+     "answer": {
+      "c1": "a-b",
+      "c2": "not-a-b",
+      "c3": "a-b",
+      "c4": "a-not-b",
+      "c5": "not-a-b",
+      "c6": "not-a-not-b",
+      "c7": "a-not-b"
+     },
+     "easier": "box-easy-1"
+    }
+   ],
+   "variants": [
+    {
+     "id": "box-easy-1",
+     "concept": "cls-boxes",
+     "textKey": "lessons:gen.box-easy-1.text",
+     "type": "group",
+     "layout": "row",
+     "boxes": [
+      {
+       "id": "yes",
+       "textKey": "lessons:templates.label.size-huge",
+       "rule": {
+        "all": [
+         "size:huge"
+        ]
+       }
+      },
+      {
+       "id": "no",
+       "textKey": "lessons:templates.not.size-huge",
+       "rule": {
+        "none": [
+         "size:huge"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "c1",
+       "shape": {
+        "kind": "circle",
+        "colour": "orange",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c2",
+       "shape": {
+        "kind": "circle",
+        "colour": "orange",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c3",
+       "shape": {
+        "kind": "circle",
+        "colour": "blue",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c4",
+       "shape": {
+        "kind": "circle",
+        "colour": "blue",
+        "size": "tiny"
+       }
+      }
+     ],
+     "answer": {
+      "c1": "yes",
+      "c2": "no",
+      "c3": "yes",
+      "c4": "no"
+     }
+    }
+   ]
+  },
+  {
+   "id": "cls-circles",
+   "world": "sort-shore",
+   "order": 4,
+   "concept": "cls-circles",
+   "character": "panda",
+   "titleKey": "lessons:cls-circles.title",
+   "storyKey": "lessons:cls-circles.story",
+   "demo": {
+    "textKey": "lessons:cls-circles.demo",
+    "prompt": {
+     "shapes": [
+      {
+       "kind": "square",
+       "colour": "blue"
+      }
+     ]
+    }
+   },
+   "guided": [
+    {
+     "id": "venn-g-a-1",
+     "concept": "cls-circles",
+     "textKey": "lessons:gen.venn-g-a-1.text",
+     "type": "group",
+     "layout": "venn",
+     "axes": [
+      {
+       "textKey": "lessons:templates.label.kind-circle",
+       "notTextKey": "lessons:templates.not.kind-circle",
+       "rule": {
+        "all": [
+         "kind:circle"
+        ]
+       }
+      },
+      {
+       "textKey": "lessons:templates.label.colour-green",
+       "notTextKey": "lessons:templates.not.colour-green",
+       "rule": {
+        "all": [
+         "colour:green"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "c1",
+       "shape": {
+        "kind": "circle",
+        "colour": "yellow",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c2",
+       "shape": {
+        "kind": "heart",
+        "colour": "green",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c3",
+       "shape": {
+        "kind": "circle",
+        "colour": "blue",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c4",
+       "shape": {
+        "kind": "circle",
+        "colour": "green",
+        "size": "tiny"
+       }
+      }
+     ],
+     "answer": {
+      "c1": "only-a",
+      "c2": "only-b",
+      "c3": "only-a",
+      "c4": "both"
+     },
+     "allowEmpty": true
+    },
+    {
+     "id": "venn-g-b-1",
+     "concept": "cls-circles",
+     "textKey": "lessons:gen.venn-g-b-1.text",
+     "type": "group",
+     "layout": "venn",
+     "axes": [
+      {
+       "textKey": "lessons:templates.label.size-huge",
+       "notTextKey": "lessons:templates.not.size-huge",
+       "rule": {
+        "all": [
+         "size:huge"
+        ]
+       }
+      },
+      {
+       "textKey": "lessons:templates.label.colour-yellow",
+       "notTextKey": "lessons:templates.not.colour-yellow",
+       "rule": {
+        "all": [
+         "colour:yellow"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "c1",
+       "shape": {
+        "kind": "triangle",
+        "colour": "yellow",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c2",
+       "shape": {
+        "kind": "circle",
+        "colour": "yellow",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c3",
+       "shape": {
+        "kind": "circle",
+        "colour": "red",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c4",
+       "shape": {
+        "kind": "star",
+        "colour": "blue",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c5",
+       "shape": {
+        "kind": "circle",
+        "colour": "yellow",
+        "size": "tiny"
+       }
+      }
+     ],
+     "answer": {
+      "c1": "both",
+      "c2": "only-b",
+      "c3": "neither",
+      "c4": "only-a",
+      "c5": "only-b"
+     }
+    }
+   ],
+   "exercises": [
+    {
+     "id": "venn-s1-1",
+     "concept": "cls-circles",
+     "textKey": "lessons:gen.venn-s1-1.text",
+     "type": "group",
+     "layout": "venn",
+     "axes": [
+      {
+       "textKey": "lessons:templates.label.kind-star",
+       "notTextKey": "lessons:templates.not.kind-star",
+       "rule": {
+        "all": [
+         "kind:star"
+        ]
+       }
+      },
+      {
+       "textKey": "lessons:templates.label.size-huge",
+       "notTextKey": "lessons:templates.not.size-huge",
+       "rule": {
+        "all": [
+         "size:huge"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "c1",
+       "shape": {
+        "kind": "heart",
+        "colour": "orange",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c2",
+       "shape": {
+        "kind": "star",
+        "colour": "blue",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c3",
+       "shape": {
+        "kind": "diamond",
+        "colour": "blue",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c4",
+       "shape": {
+        "kind": "star",
+        "colour": "blue",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c5",
+       "shape": {
+        "kind": "star",
+        "colour": "orange",
+        "size": "tiny"
+       }
+      }
+     ],
+     "answer": {
+      "c1": "only-b",
+      "c2": "both",
+      "c3": "only-b",
+      "c4": "only-a",
+      "c5": "only-a"
+     },
+     "allowEmpty": true
+    },
+    {
+     "id": "venn-s2-1",
+     "concept": "cls-circles",
+     "textKey": "lessons:gen.venn-s2-1.text",
+     "type": "group",
+     "layout": "venn",
+     "axes": [
+      {
+       "textKey": "lessons:templates.label.colour-orange",
+       "notTextKey": "lessons:templates.not.colour-orange",
+       "rule": {
+        "all": [
+         "colour:orange"
+        ]
+       }
+      },
+      {
+       "textKey": "lessons:templates.label.kind-triangle",
+       "notTextKey": "lessons:templates.not.kind-triangle",
+       "rule": {
+        "all": [
+         "kind:triangle"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "c1",
+       "shape": {
+        "kind": "square",
+        "colour": "red",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c2",
+       "shape": {
+        "kind": "star",
+        "colour": "red",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c3",
+       "shape": {
+        "kind": "triangle",
+        "colour": "blue",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c4",
+       "shape": {
+        "kind": "triangle",
+        "colour": "orange",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c5",
+       "shape": {
+        "kind": "triangle",
+        "colour": "red",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c6",
+       "shape": {
+        "kind": "square",
+        "colour": "orange",
+        "size": "huge"
+       }
+      }
+     ],
+     "answer": {
+      "c1": "neither",
+      "c2": "neither",
+      "c3": "only-b",
+      "c4": "both",
+      "c5": "only-b",
+      "c6": "only-a"
+     }
+    },
+    {
+     "id": "venn-s3-1",
+     "concept": "cls-circles",
+     "textKey": "lessons:gen.venn-s3-1.text",
+     "type": "group",
+     "layout": "venn",
+     "axes": [
+      {
+       "textKey": "lessons:templates.label.size-tiny",
+       "notTextKey": "lessons:templates.not.size-tiny",
+       "rule": {
+        "all": [
+         "size:tiny"
+        ]
+       }
+      },
+      {
+       "textKey": "lessons:templates.label.colour-red",
+       "notTextKey": "lessons:templates.not.colour-red",
+       "rule": {
+        "all": [
+         "colour:red"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "c1",
+       "shape": {
+        "kind": "diamond",
+        "colour": "red",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c2",
+       "shape": {
+        "kind": "star",
+        "colour": "red",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c3",
+       "shape": {
+        "kind": "star",
+        "colour": "purple",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c4",
+       "shape": {
+        "kind": "diamond",
+        "colour": "red",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c5",
+       "shape": {
+        "kind": "heart",
+        "colour": "red",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c6",
+       "shape": {
+        "kind": "star",
+        "colour": "red",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c7",
+       "shape": {
+        "kind": "star",
+        "colour": "red",
+        "size": "medium"
+       }
+      }
+     ],
+     "answer": {
+      "c1": "both",
+      "c2": "both",
+      "c3": "only-a",
+      "c4": "only-b",
+      "c5": "both",
+      "c6": "only-b",
+      "c7": "only-b"
+     },
+     "allowEmpty": true
+    },
+    {
+     "id": "venn-s4-1",
+     "concept": "cls-circles",
+     "textKey": "lessons:gen.venn-s4-1.text",
+     "type": "group",
+     "layout": "venn",
+     "axes": [
+      {
+       "textKey": "lessons:templates.label.kind-diamond",
+       "notTextKey": "lessons:templates.not.kind-diamond",
+       "rule": {
+        "all": [
+         "kind:diamond"
+        ]
+       }
+      },
+      {
+       "textKey": "lessons:templates.label.colour-orange",
+       "notTextKey": "lessons:templates.not.colour-orange",
+       "rule": {
+        "all": [
+         "colour:orange"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "c1",
+       "shape": {
+        "kind": "circle",
+        "colour": "orange",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c2",
+       "shape": {
+        "kind": "star",
+        "colour": "purple",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c3",
+       "shape": {
+        "kind": "diamond",
+        "colour": "purple",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c4",
+       "shape": {
+        "kind": "circle",
+        "colour": "orange",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c5",
+       "shape": {
+        "kind": "circle",
+        "colour": "purple",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c6",
+       "shape": {
+        "kind": "diamond",
+        "colour": "orange",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c7",
+       "shape": {
+        "kind": "star",
+        "colour": "orange",
+        "size": "tiny"
+       }
+      }
+     ],
+     "answer": {
+      "c1": "only-b",
+      "c2": "neither",
+      "c3": "only-a",
+      "c4": "only-b",
+      "c5": "neither",
+      "c6": "both",
+      "c7": "only-b"
+     }
+    },
+    {
+     "id": "venn-an-a-1",
+     "concept": "cls-circles",
+     "textKey": "lessons:gen.venn-an-a-1.text",
+     "type": "group",
+     "layout": "venn",
+     "axes": [
+      {
+       "textKey": "lessons:templates.label.can-fly",
+       "notTextKey": "lessons:templates.not.can-fly",
+       "rule": {
+        "all": [
+         "can:fly"
+        ]
+       }
+      },
+      {
+       "textKey": "lessons:templates.label.can-swim",
+       "notTextKey": "lessons:templates.not.can-swim",
+       "rule": {
+        "all": [
+         "can:swim"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "goat",
+       "emoji": "🐐",
+       "tags": [
+        "legs:4",
+        "farm"
+       ]
+      },
+      {
+       "id": "duck",
+       "emoji": "🦆",
+       "tags": [
+        "can:fly",
+        "can:swim",
+        "farm"
+       ]
+      },
+      {
+       "id": "owl",
+       "emoji": "🦉",
+       "tags": [
+        "can:fly"
+       ]
+      },
+      {
+       "id": "horse",
+       "emoji": "🐎",
+       "tags": [
+        "legs:4",
+        "farm"
+       ]
+      },
+      {
+       "id": "bee",
+       "emoji": "🐝",
+       "tags": [
+        "can:fly"
+       ]
+      },
+      {
+       "id": "whale",
+       "emoji": "🐋",
+       "tags": [
+        "can:swim"
+       ]
+      }
+     ],
+     "answer": {
+      "goat": "neither",
+      "duck": "both",
+      "owl": "only-a",
+      "horse": "neither",
+      "bee": "only-a",
+      "whale": "only-b"
+     }
+    },
+    {
+     "id": "venn-an-b-1",
+     "concept": "cls-circles",
+     "textKey": "lessons:gen.venn-an-b-1.text",
+     "type": "group",
+     "layout": "venn",
+     "axes": [
+      {
+       "textKey": "lessons:templates.label.farm",
+       "notTextKey": "lessons:templates.not.farm",
+       "rule": {
+        "all": [
+         "farm"
+        ]
+       }
+      },
+      {
+       "textKey": "lessons:templates.label.four-legs",
+       "notTextKey": "lessons:templates.not.four-legs",
+       "rule": {
+        "all": [
+         "legs:4"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "goat",
+       "emoji": "🐐",
+       "tags": [
+        "legs:4",
+        "farm"
+       ]
+      },
+      {
+       "id": "lion",
+       "emoji": "🦁",
+       "tags": [
+        "legs:4"
+       ]
+      },
+      {
+       "id": "cow",
+       "emoji": "🐄",
+       "tags": [
+        "legs:4",
+        "farm"
+       ]
+      },
+      {
+       "id": "duck",
+       "emoji": "🦆",
+       "tags": [
+        "can:fly",
+        "can:swim",
+        "farm"
+       ]
+      },
+      {
+       "id": "penguin",
+       "emoji": "🐧",
+       "tags": [
+        "can:swim"
+       ]
+      },
+      {
+       "id": "pig",
+       "emoji": "🐖",
+       "tags": [
+        "legs:4",
+        "farm"
+       ]
+      },
+      {
+       "id": "eagle",
+       "emoji": "🦅",
+       "tags": [
+        "can:fly"
+       ]
+      }
+     ],
+     "answer": {
+      "goat": "both",
+      "lion": "only-b",
+      "cow": "both",
+      "duck": "only-a",
+      "penguin": "neither",
+      "pig": "both",
+      "eagle": "neither"
+     },
+     "easier": "venn-easy-1"
+    }
+   ],
+   "variants": [
+    {
+     "id": "venn-easy-1",
+     "concept": "cls-circles",
+     "textKey": "lessons:gen.venn-easy-1.text",
+     "type": "group",
+     "layout": "venn",
+     "axes": [
+      {
+       "textKey": "lessons:templates.label.kind-diamond",
+       "notTextKey": "lessons:templates.not.kind-diamond",
+       "rule": {
+        "all": [
+         "kind:diamond"
+        ]
+       }
+      },
+      {
+       "textKey": "lessons:templates.label.colour-orange",
+       "notTextKey": "lessons:templates.not.colour-orange",
+       "rule": {
+        "all": [
+         "colour:orange"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "c1",
+       "shape": {
+        "kind": "diamond",
+        "colour": "purple",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c2",
+       "shape": {
+        "kind": "circle",
+        "colour": "orange",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c3",
+       "shape": {
+        "kind": "diamond",
+        "colour": "orange",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c4",
+       "shape": {
+        "kind": "star",
+        "colour": "orange",
+        "size": "tiny"
+       }
+      }
+     ],
+     "answer": {
+      "c1": "only-a",
+      "c2": "only-b",
+      "c3": "both",
+      "c4": "only-b"
+     },
+     "allowEmpty": true
+    }
+   ]
+  },
+  {
+   "id": "cls-line-up",
+   "world": "sort-shore",
+   "order": 5,
+   "concept": "cls-line-up",
+   "character": "panda",
+   "titleKey": "lessons:cls-line-up.title",
+   "storyKey": "lessons:cls-line-up.story",
+   "demo": {
+    "textKey": "lessons:cls-line-up.demo",
+    "prompt": {
+     "shapes": [
+      {
+       "kind": "triangle",
+       "colour": "green",
+       "size": "tiny"
+      },
+      {
+       "kind": "triangle",
+       "colour": "green",
+       "size": "medium"
+      },
+      {
+       "kind": "triangle",
+       "colour": "green",
+       "size": "huge"
+      }
+     ]
+    }
+   },
+   "guided": [
+    {
+     "id": "lu-g-size-1",
+     "concept": "cls-line-up",
+     "textKey": "lessons:gen.lu-g-size-1.text",
+     "type": "order",
+     "items": [
+      {
+       "id": "s-medium",
+       "shape": {
+        "kind": "diamond",
+        "colour": "blue",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "s-huge",
+       "shape": {
+        "kind": "diamond",
+        "colour": "blue",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "s-tiny",
+       "shape": {
+        "kind": "diamond",
+        "colour": "blue",
+        "size": "tiny"
+       }
+      }
+     ],
+     "answer": [
+      "s-tiny",
+      "s-medium",
+      "s-huge"
+     ]
+    },
+    {
+     "id": "lu-g-count-1",
+     "concept": "cls-line-up",
+     "textKey": "lessons:gen.lu-g-count-1.text",
+     "type": "order",
+     "items": [
+      {
+       "id": "n-5",
+       "shape": {
+        "kind": "diamond",
+        "colour": "blue",
+        "count": 5
+       }
+      },
+      {
+       "id": "n-3",
+       "shape": {
+        "kind": "diamond",
+        "colour": "blue",
+        "count": 3
+       }
+      },
+      {
+       "id": "n-7",
+       "shape": {
+        "kind": "diamond",
+        "colour": "blue",
+        "count": 7
+       }
+      },
+      {
+       "id": "n-1",
+       "shape": {
+        "kind": "diamond",
+        "colour": "blue"
+       }
+      }
+     ],
+     "answer": [
+      "n-1",
+      "n-3",
+      "n-5",
+      "n-7"
+     ]
+    }
+   ],
+   "exercises": [
+    {
+     "id": "lu-size-5-1",
+     "concept": "cls-line-up",
+     "textKey": "lessons:gen.lu-size-5-1.text",
+     "type": "order",
+     "items": [
+      {
+       "id": "s-medium",
+       "shape": {
+        "kind": "diamond",
+        "colour": "blue",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "s-huge",
+       "shape": {
+        "kind": "diamond",
+        "colour": "blue",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "s-big",
+       "shape": {
+        "kind": "diamond",
+        "colour": "blue"
+       }
+      },
+      {
+       "id": "s-tiny",
+       "shape": {
+        "kind": "diamond",
+        "colour": "blue",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "s-small",
+       "shape": {
+        "kind": "diamond",
+        "colour": "blue",
+        "size": "small"
+       }
+      }
+     ],
+     "answer": [
+      "s-tiny",
+      "s-small",
+      "s-medium",
+      "s-big",
+      "s-huge"
+     ]
+    },
+    {
+     "id": "lu-count-5-1",
+     "concept": "cls-line-up",
+     "textKey": "lessons:gen.lu-count-5-1.text",
+     "type": "order",
+     "items": [
+      {
+       "id": "n-5",
+       "shape": {
+        "kind": "heart",
+        "colour": "red",
+        "count": 5
+       }
+      },
+      {
+       "id": "n-9",
+       "shape": {
+        "kind": "heart",
+        "colour": "red",
+        "count": 9
+       }
+      },
+      {
+       "id": "n-4",
+       "shape": {
+        "kind": "heart",
+        "colour": "red",
+        "count": 4
+       }
+      },
+      {
+       "id": "n-6",
+       "shape": {
+        "kind": "heart",
+        "colour": "red",
+        "count": 6
+       }
+      },
+      {
+       "id": "n-1",
+       "shape": {
+        "kind": "heart",
+        "colour": "red"
+       }
+      }
+     ],
+     "answer": [
+      "n-1",
+      "n-4",
+      "n-5",
+      "n-6",
+      "n-9"
+     ]
+    },
+    {
+     "id": "lu-tallest",
+     "concept": "cls-line-up",
+     "textKey": "lessons:lu-tallest",
+     "type": "choice",
+     "options": [
+      {
+       "id": "fox",
+       "emoji": "🦊"
+      },
+      {
+       "id": "rabbit",
+       "emoji": "🐰"
+      },
+      {
+       "id": "bear",
+       "emoji": "🐻"
+      }
+     ],
+     "answer": "bear"
+    },
+    {
+     "id": "lu-shortest",
+     "concept": "cls-line-up",
+     "textKey": "lessons:lu-shortest",
+     "type": "choice",
+     "options": [
+      {
+       "id": "dog",
+       "emoji": "🐕"
+      },
+      {
+       "id": "giraffe",
+       "emoji": "🦒"
+      },
+      {
+       "id": "horse",
+       "emoji": "🐎"
+      }
+     ],
+     "answer": "dog"
+    },
+    {
+     "id": "lu-order",
+     "concept": "cls-line-up",
+     "textKey": "lessons:lu-order",
+     "type": "order",
+     "items": [
+      {
+       "id": "dog",
+       "emoji": "🐕"
+      },
+      {
+       "id": "mouse",
+       "emoji": "🐭"
+      },
+      {
+       "id": "cat",
+       "emoji": "🐱"
+      }
+     ],
+     "answer": [
+      "mouse",
+      "cat",
+      "dog"
+     ],
+     "easier": "lu-easy-1"
+    },
+    {
+     "id": "lu-true",
+     "concept": "cls-line-up",
+     "textKey": "lessons:lu-true",
+     "type": "true-false",
+     "answer": false
+    }
+   ],
+   "variants": [
+    {
+     "id": "lu-easy-1",
+     "concept": "cls-line-up",
+     "textKey": "lessons:gen.lu-easy-1.text",
+     "type": "order",
+     "items": [
+      {
+       "id": "s-huge",
+       "shape": {
+        "kind": "heart",
+        "colour": "red",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "s-tiny",
+       "shape": {
+        "kind": "heart",
+        "colour": "red",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "s-medium",
+       "shape": {
+        "kind": "heart",
+        "colour": "red",
+        "size": "medium"
+       }
+      }
+     ],
+     "answer": [
+      "s-tiny",
+      "s-medium",
+      "s-huge"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cls-odd",
+   "world": "sort-shore",
+   "order": 1,
+   "concept": "cls-odd",
+   "character": "panda",
+   "titleKey": "lessons:cls-odd.title",
+   "storyKey": "lessons:cls-odd.story",
+   "demo": {
+    "textKey": "lessons:cls-odd.demo",
+    "prompt": {
+     "shapes": [
+      {
+       "kind": "circle",
+       "colour": "blue"
+      },
+      {
+       "kind": "circle",
+       "colour": "blue"
+      },
+      {
+       "kind": "circle",
+       "colour": "blue"
+      },
+      {
+       "kind": "square",
+       "colour": "blue"
+      }
+     ]
+    }
+   },
+   "guided": [
+    {
+     "id": "odd-g-colour-1",
+     "concept": "cls-odd",
+     "textKey": "lessons:gen.odd-g-colour-1.text",
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "circle",
+        "colour": "red"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "circle",
+        "colour": "red"
+       }
+      },
+      {
+       "id": "c",
+       "shape": {
+        "kind": "circle",
+        "colour": "blue"
+       }
+      }
+     ],
+     "answer": "c"
+    },
+    {
+     "id": "odd-g-kind-1",
+     "concept": "cls-odd",
+     "textKey": "lessons:gen.odd-g-kind-1.text",
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "diamond",
+        "colour": "purple"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "circle",
+        "colour": "purple"
+       }
+      },
+      {
+       "id": "c",
+       "shape": {
+        "kind": "diamond",
+        "colour": "purple"
+       }
+      }
+     ],
+     "answer": "b"
+    }
+   ],
+   "exercises": [
+    {
+     "id": "odd-colour-1",
+     "concept": "cls-odd",
+     "textKey": "lessons:gen.odd-colour-1.text",
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "star",
+        "colour": "blue"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "star",
+        "colour": "red"
+       }
+      },
+      {
+       "id": "c",
+       "shape": {
+        "kind": "star",
+        "colour": "red"
+       }
+      },
+      {
+       "id": "d",
+       "shape": {
+        "kind": "star",
+        "colour": "red"
+       }
+      }
+     ],
+     "answer": "a"
+    },
+    {
+     "id": "odd-kind-1",
+     "concept": "cls-odd",
+     "textKey": "lessons:gen.odd-kind-1.text",
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "circle",
+        "colour": "green"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "circle",
+        "colour": "green"
+       }
+      },
+      {
+       "id": "c",
+       "shape": {
+        "kind": "circle",
+        "colour": "green"
+       }
+      },
+      {
+       "id": "d",
+       "shape": {
+        "kind": "square",
+        "colour": "green"
+       }
+      }
+     ],
+     "answer": "d"
+    },
+    {
+     "id": "odd-size-1",
+     "concept": "cls-odd",
+     "textKey": "lessons:gen.odd-size-1.text",
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "circle",
+        "colour": "green",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "circle",
+        "colour": "green",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c",
+       "shape": {
+        "kind": "circle",
+        "colour": "green",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "d",
+       "shape": {
+        "kind": "circle",
+        "colour": "green",
+        "size": "tiny"
+       }
+      }
+     ],
+     "answer": "c"
+    },
+    {
+     "id": "odd-count-1",
+     "concept": "cls-odd",
+     "textKey": "lessons:gen.odd-count-1.text",
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "diamond",
+        "colour": "blue"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "diamond",
+        "colour": "blue",
+        "count": 5
+       }
+      },
+      {
+       "id": "c",
+       "shape": {
+        "kind": "diamond",
+        "colour": "blue",
+        "count": 5
+       }
+      },
+      {
+       "id": "d",
+       "shape": {
+        "kind": "diamond",
+        "colour": "blue",
+        "count": 5
+       }
+      }
+     ],
+     "answer": "a"
+    },
+    {
+     "id": "odd-noise-a-1",
+     "concept": "cls-odd",
+     "textKey": "lessons:gen.odd-noise-a-1.text",
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "square",
+        "colour": "red",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "square",
+        "colour": "red",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c",
+       "shape": {
+        "kind": "heart",
+        "colour": "red",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "d",
+       "shape": {
+        "kind": "heart",
+        "colour": "red",
+        "size": "huge"
+       }
+      }
+     ],
+     "answer": "a"
+    },
+    {
+     "id": "odd-noise-b-1",
+     "concept": "cls-odd",
+     "textKey": "lessons:gen.odd-noise-b-1.text",
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "circle",
+        "colour": "green",
+        "count": 5
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "circle",
+        "colour": "blue",
+        "count": 3
+       }
+      },
+      {
+       "id": "c",
+       "shape": {
+        "kind": "circle",
+        "colour": "green",
+        "count": 3
+       }
+      },
+      {
+       "id": "d",
+       "shape": {
+        "kind": "circle",
+        "colour": "green",
+        "count": 5
+       }
+      }
+     ],
+     "answer": "b",
+     "easier": "odd-easy-1"
+    }
+   ],
+   "variants": [
+    {
+     "id": "odd-easy-1",
+     "concept": "cls-odd",
+     "textKey": "lessons:gen.odd-easy-1.text",
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "circle",
+        "colour": "red"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "circle",
+        "colour": "red"
+       }
+      },
+      {
+       "id": "c",
+       "shape": {
+        "kind": "square",
+        "colour": "red"
+       }
+      }
+     ],
+     "answer": "c"
+    }
+   ]
+  },
+  {
+   "id": "cls-rule",
+   "world": "sort-shore",
+   "order": 2,
+   "concept": "cls-rule",
+   "character": "panda",
+   "titleKey": "lessons:cls-rule.title",
+   "storyKey": "lessons:cls-rule.story",
+   "demo": {
+    "textKey": "lessons:cls-rule.demo",
+    "prompt": {
+     "shapes": [
+      {
+       "kind": "circle",
+       "colour": "red",
+       "size": "small"
+      },
+      {
+       "kind": "square",
+       "colour": "red"
+      },
+      {
+       "kind": "star",
+       "colour": "red",
+       "size": "medium"
+      }
+     ]
+    }
+   },
+   "guided": [
+    {
+     "id": "rule-g-colour-1",
+     "concept": "cls-rule",
+     "textKey": "lessons:gen.rule-g-colour-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "star",
+        "colour": "red",
+        "size": "medium"
+       },
+       {
+        "kind": "star",
+        "colour": "red",
+        "size": "tiny"
+       },
+       {
+        "kind": "circle",
+        "colour": "red",
+        "size": "tiny"
+       }
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "kind-circle",
+       "textKey": "lessons:templates.same.kind-circle"
+      },
+      {
+       "id": "size-medium",
+       "textKey": "lessons:templates.same.size-medium"
+      },
+      {
+       "id": "colour-red",
+       "textKey": "lessons:templates.same.colour-red"
+      }
+     ],
+     "answer": "colour-red"
+    },
+    {
+     "id": "rule-g-kind-1",
+     "concept": "cls-rule",
+     "textKey": "lessons:gen.rule-g-kind-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "circle",
+        "colour": "yellow",
+        "size": "medium"
+       },
+       {
+        "kind": "circle",
+        "colour": "green",
+        "size": "medium"
+       },
+       {
+        "kind": "circle",
+        "colour": "yellow",
+        "size": "huge"
+       }
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "kind-circle",
+       "textKey": "lessons:templates.same.kind-circle"
+      },
+      {
+       "id": "size-medium",
+       "textKey": "lessons:templates.same.size-medium"
+      },
+      {
+       "id": "colour-yellow",
+       "textKey": "lessons:templates.same.colour-yellow"
+      }
+     ],
+     "answer": "kind-circle"
+    }
+   ],
+   "exercises": [
+    {
+     "id": "rule-colour-1",
+     "concept": "cls-rule",
+     "textKey": "lessons:gen.rule-colour-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "triangle",
+        "colour": "orange",
+        "size": "huge"
+       },
+       {
+        "kind": "triangle",
+        "colour": "orange",
+        "size": "medium"
+       },
+       {
+        "kind": "diamond",
+        "colour": "orange",
+        "size": "huge"
+       },
+       {
+        "kind": "diamond",
+        "colour": "orange",
+        "size": "tiny"
+       }
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "size-tiny",
+       "textKey": "lessons:templates.same.size-tiny"
+      },
+      {
+       "id": "colour-orange",
+       "textKey": "lessons:templates.same.colour-orange"
+      },
+      {
+       "id": "kind-triangle",
+       "textKey": "lessons:templates.same.kind-triangle"
+      }
+     ],
+     "answer": "colour-orange"
+    },
+    {
+     "id": "rule-kind-1",
+     "concept": "cls-rule",
+     "textKey": "lessons:gen.rule-kind-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "circle",
+        "colour": "green",
+        "size": "tiny"
+       },
+       {
+        "kind": "circle",
+        "colour": "blue",
+        "size": "tiny"
+       },
+       {
+        "kind": "circle",
+        "colour": "yellow",
+        "size": "tiny"
+       },
+       {
+        "kind": "circle",
+        "colour": "blue",
+        "size": "medium"
+       }
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "size-tiny",
+       "textKey": "lessons:templates.same.size-tiny"
+      },
+      {
+       "id": "colour-yellow",
+       "textKey": "lessons:templates.same.colour-yellow"
+      },
+      {
+       "id": "kind-circle",
+       "textKey": "lessons:templates.same.kind-circle"
+      }
+     ],
+     "answer": "kind-circle"
+    },
+    {
+     "id": "rule-size-1",
+     "concept": "cls-rule",
+     "textKey": "lessons:gen.rule-size-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "star",
+        "colour": "purple",
+        "size": "huge"
+       },
+       {
+        "kind": "circle",
+        "colour": "purple",
+        "size": "huge"
+       },
+       {
+        "kind": "circle",
+        "colour": "orange",
+        "size": "huge"
+       },
+       {
+        "kind": "diamond",
+        "colour": "orange",
+        "size": "huge"
+       }
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "size-huge",
+       "textKey": "lessons:templates.same.size-huge"
+      },
+      {
+       "id": "kind-star",
+       "textKey": "lessons:templates.same.kind-star"
+      },
+      {
+       "id": "colour-orange",
+       "textKey": "lessons:templates.same.colour-orange"
+      }
+     ],
+     "answer": "size-huge"
+    },
+    {
+     "id": "rule-last-1",
+     "concept": "cls-rule",
+     "textKey": "lessons:gen.rule-last-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "triangle",
+        "colour": "green",
+        "size": "huge"
+       },
+       {
+        "kind": "star",
+        "colour": "blue",
+        "size": "huge"
+       },
+       {
+        "kind": "circle",
+        "colour": "green",
+        "size": "huge"
+       },
+       {
+        "kind": "triangle",
+        "colour": "blue",
+        "size": "huge"
+       }
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "colour-green",
+       "textKey": "lessons:templates.same.colour-green"
+      },
+      {
+       "id": "kind-star",
+       "textKey": "lessons:templates.same.kind-star"
+      },
+      {
+       "id": "size-huge",
+       "textKey": "lessons:templates.same.size-huge"
+      }
+     ],
+     "answer": "size-huge",
+     "easier": "rule-easy-1"
+    },
+    {
+     "id": "rule-noise-a-1",
+     "concept": "cls-rule",
+     "textKey": "lessons:gen.rule-noise-a-1.text",
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "square",
+        "colour": "red",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "square",
+        "colour": "red",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c",
+       "shape": {
+        "kind": "heart",
+        "colour": "red",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "d",
+       "shape": {
+        "kind": "square",
+        "colour": "red",
+        "size": "medium"
+       }
+      }
+     ],
+     "answer": "c"
+    },
+    {
+     "id": "rule-noise-b-1",
+     "concept": "cls-rule",
+     "textKey": "lessons:gen.rule-noise-b-1.text",
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "star",
+        "colour": "green"
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "star",
+        "colour": "green"
+       }
+      },
+      {
+       "id": "c",
+       "shape": {
+        "kind": "star",
+        "colour": "yellow"
+       }
+      },
+      {
+       "id": "d",
+       "shape": {
+        "kind": "star",
+        "colour": "yellow",
+        "count": 6
+       }
+      }
+     ],
+     "answer": "d"
+    }
+   ],
+   "variants": [
+    {
+     "id": "rule-easy-1",
+     "concept": "cls-rule",
+     "textKey": "lessons:gen.rule-easy-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "diamond",
+        "colour": "yellow",
+        "size": "tiny"
+       },
+       {
+        "kind": "circle",
+        "colour": "yellow",
+        "size": "tiny"
+       },
+       {
+        "kind": "circle",
+        "colour": "red",
+        "size": "tiny"
+       }
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "kind-diamond",
+       "textKey": "lessons:templates.same.kind-diamond"
+      },
+      {
+       "id": "size-tiny",
+       "textKey": "lessons:templates.same.size-tiny"
+      },
+      {
+       "id": "colour-red",
+       "textKey": "lessons:templates.same.colour-red"
+      }
+     ],
+     "answer": "size-tiny"
+    }
+   ]
   }
  ],
  "minigames": [
@@ -1916,6 +4528,348 @@
    "titleKey": "lessons:pattern-train.title",
    "goalKey": "lessons:pattern-train.goal",
    "unlockAfter": "pat-far"
+  },
+  {
+   "mode": "series",
+   "id": "sorting-sprint",
+   "concept": "cls-circles",
+   "rounds": [
+    {
+     "id": "sprint-odd-1",
+     "concept": "cls-circles",
+     "textKey": "lessons:gen.sprint-odd-1.text",
+     "type": "choice",
+     "options": [
+      {
+       "id": "a",
+       "shape": {
+        "kind": "square",
+        "colour": "red",
+        "count": 5
+       }
+      },
+      {
+       "id": "b",
+       "shape": {
+        "kind": "square",
+        "colour": "purple"
+       }
+      },
+      {
+       "id": "c",
+       "shape": {
+        "kind": "square",
+        "colour": "purple",
+        "count": 5
+       }
+      },
+      {
+       "id": "d",
+       "shape": {
+        "kind": "square",
+        "colour": "purple"
+       }
+      }
+     ],
+     "answer": "a"
+    },
+    {
+     "id": "sprint-rule-1",
+     "concept": "cls-circles",
+     "textKey": "lessons:gen.sprint-rule-1.text",
+     "prompt": {
+      "shapes": [
+       {
+        "kind": "star",
+        "colour": "yellow",
+        "size": "huge"
+       },
+       {
+        "kind": "star",
+        "colour": "blue",
+        "size": "huge"
+       },
+       {
+        "kind": "star",
+        "colour": "blue",
+        "size": "medium"
+       },
+       {
+        "kind": "star",
+        "colour": "blue",
+        "size": "tiny"
+       }
+      ]
+     },
+     "type": "choice",
+     "options": [
+      {
+       "id": "kind-star",
+       "textKey": "lessons:templates.same.kind-star"
+      },
+      {
+       "id": "colour-blue",
+       "textKey": "lessons:templates.same.colour-blue"
+      },
+      {
+       "id": "size-huge",
+       "textKey": "lessons:templates.same.size-huge"
+      }
+     ],
+     "answer": "kind-star"
+    },
+    {
+     "id": "sprint-boxes-1",
+     "concept": "cls-circles",
+     "textKey": "lessons:gen.sprint-boxes-1.text",
+     "type": "group",
+     "layout": "row",
+     "boxes": [
+      {
+       "id": "yes",
+       "textKey": "lessons:templates.label.colour-yellow",
+       "rule": {
+        "all": [
+         "colour:yellow"
+        ]
+       }
+      },
+      {
+       "id": "no",
+       "textKey": "lessons:templates.not.colour-yellow",
+       "rule": {
+        "none": [
+         "colour:yellow"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "c1",
+       "shape": {
+        "kind": "square",
+        "colour": "yellow",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c2",
+       "shape": {
+        "kind": "square",
+        "colour": "blue",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c3",
+       "shape": {
+        "kind": "square",
+        "colour": "yellow",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c4",
+       "shape": {
+        "kind": "square",
+        "colour": "blue",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c5",
+       "shape": {
+        "kind": "square",
+        "colour": "yellow",
+        "size": "huge"
+       }
+      }
+     ],
+     "answer": {
+      "c1": "yes",
+      "c2": "no",
+      "c3": "yes",
+      "c4": "no",
+      "c5": "yes"
+     }
+    },
+    {
+     "id": "sprint-carroll-1",
+     "concept": "cls-circles",
+     "textKey": "lessons:gen.sprint-carroll-1.text",
+     "type": "group",
+     "layout": "carroll",
+     "axes": [
+      {
+       "textKey": "lessons:templates.label.colour-green",
+       "notTextKey": "lessons:templates.not.colour-green",
+       "rule": {
+        "all": [
+         "colour:green"
+        ]
+       }
+      },
+      {
+       "textKey": "lessons:templates.label.kind-heart",
+       "notTextKey": "lessons:templates.not.kind-heart",
+       "rule": {
+        "all": [
+         "kind:heart"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "c1",
+       "shape": {
+        "kind": "star",
+        "colour": "green",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c2",
+       "shape": {
+        "kind": "heart",
+        "colour": "yellow",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c3",
+       "shape": {
+        "kind": "diamond",
+        "colour": "yellow",
+        "size": "huge"
+       }
+      },
+      {
+       "id": "c4",
+       "shape": {
+        "kind": "heart",
+        "colour": "green",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c5",
+       "shape": {
+        "kind": "star",
+        "colour": "yellow",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c6",
+       "shape": {
+        "kind": "heart",
+        "colour": "green",
+        "size": "huge"
+       }
+      }
+     ],
+     "answer": {
+      "c1": "a-not-b",
+      "c2": "not-a-b",
+      "c3": "not-a-not-b",
+      "c4": "a-b",
+      "c5": "not-a-not-b",
+      "c6": "a-b"
+     }
+    },
+    {
+     "id": "sprint-venn-1",
+     "concept": "cls-circles",
+     "textKey": "lessons:gen.sprint-venn-1.text",
+     "type": "group",
+     "layout": "venn",
+     "axes": [
+      {
+       "textKey": "lessons:templates.label.size-tiny",
+       "notTextKey": "lessons:templates.not.size-tiny",
+       "rule": {
+        "all": [
+         "size:tiny"
+        ]
+       }
+      },
+      {
+       "textKey": "lessons:templates.label.kind-star",
+       "notTextKey": "lessons:templates.not.kind-star",
+       "rule": {
+        "all": [
+         "kind:star"
+        ]
+       }
+      }
+     ],
+     "items": [
+      {
+       "id": "c1",
+       "shape": {
+        "kind": "star",
+        "colour": "blue",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c2",
+       "shape": {
+        "kind": "star",
+        "colour": "yellow",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c3",
+       "shape": {
+        "kind": "circle",
+        "colour": "yellow",
+        "size": "medium"
+       }
+      },
+      {
+       "id": "c4",
+       "shape": {
+        "kind": "diamond",
+        "colour": "red",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c5",
+       "shape": {
+        "kind": "star",
+        "colour": "red",
+        "size": "tiny"
+       }
+      },
+      {
+       "id": "c6",
+       "shape": {
+        "kind": "circle",
+        "colour": "yellow",
+        "size": "tiny"
+       }
+      }
+     ],
+     "answer": {
+      "c1": "only-b",
+      "c2": "only-b",
+      "c3": "neither",
+      "c4": "only-a",
+      "c5": "both",
+      "c6": "only-a"
+     }
+    }
+   ],
+   "errors3": 0,
+   "errors2": 2,
+   "titleKey": "lessons:sorting-sprint.title",
+   "goalKey": "lessons:sorting-sprint.goal",
+   "unlockAfter": "cls-line-up"
   }
  ]
 }

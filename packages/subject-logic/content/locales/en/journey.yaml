@@ -2,6 +2,8 @@ tracks:
   puzzles: Puzzle Paths
 worlds:
   pattern-pond: Pattern Pond
+  sort-shore: Sort Shore
 ranks:
   thinker: Thinker
   spotter: Pattern Spotter
+  sorter: Shore Sorter

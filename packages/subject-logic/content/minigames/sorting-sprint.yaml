@@ -1,0 +1,22 @@
+# Sorting Sprint: World 2's boss, a `series` of 5 rounds: the odd one out (with a second difference to ignore), the rule they share,
+# two boxes, the Carroll table and the Venn. Generated like a lesson's exercises; seeds are stored, never change them.
+id: sorting-sprint
+mode: series
+concept: cls-circles
+unlockAfter: cls-line-up
+errors3: 0
+errors2: 2
+rounds:
+  - id: sprint-odd
+    generate:
+      { template: odd-one, count: 1, seed: 4, params: { attr: colour, items: 4, noise: true } }
+  - id: sprint-rule
+    generate: { template: odd-rule, count: 1, seed: 6, params: { attr: kind, items: 4 } }
+  - id: sprint-boxes
+    generate:
+      { template: sort-boxes, count: 1, seed: 7, params: { attr: colour, boxes: 2, items: 5 } }
+  - id: sprint-carroll
+    generate: { template: carroll, count: 1, seed: 1, params: { axes: [colour, kind], items: 6 } }
+  - id: sprint-venn
+    generate:
+      { template: venn, count: 1, seed: 8, params: { facts: shapes, items: 6, outside: true } }

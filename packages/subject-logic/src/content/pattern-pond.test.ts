@@ -229,7 +229,6 @@ describe('the 4 lessons of World 1', () => {
   it('are the curriculum’s, in order, all taught by Pip the Panda: 2 guided, 6 scored, 1 easier variant each', () => {
     const worldOne = content.lessons.filter((lesson) => lesson.world === 'pattern-pond');
     expect(worldOne).toHaveLength(4);
-    expect(content.lessons).toHaveLength(4);
     const byOrder = [...worldOne].sort((a, b) => a.order - b.order);
     expect(
       byOrder.map((lesson) => [
@@ -755,7 +754,11 @@ describe('the Pattern Train world boss', () => {
     expect(specOf(rawBoss)).toEqual(FROZEN_BOSS);
     expect(compiled.tracks.tracks[0]?.worlds[0]?.boss).toBe('pattern-train');
     expect(lessonOf('pat-far').order).toBe(
-      Math.max(...content.lessons.map((lesson) => lesson.order)),
+      Math.max(
+        ...content.lessons
+          .filter((lesson) => lesson.world === 'pattern-pond')
+          .map((lesson) => lesson.order),
+      ),
     );
   });
 
@@ -772,15 +775,15 @@ describe('the world, its rank and its badge', () => {
     const [main] = compiled.tracks.tracks;
     expect(compiled.tracks.tracks).toHaveLength(1);
     expect(main).toMatchObject({ id: 'puzzles', kind: 'main' });
-    expect(main?.worlds).toEqual([
+    expect(main?.worlds[0]).toEqual(
       expect.objectContaining({
         id: 'pattern-pond',
         order: 1,
         habitat: 'river',
         boss: 'pattern-train',
       }),
-    ]);
-    expect(compiled.tracks.ranks).toEqual([
+    );
+    expect(compiled.tracks.ranks.slice(0, 2)).toEqual([
       { id: 'thinker', after: 'start' },
       { id: 'spotter', after: 'world:pattern-pond' },
     ]);
@@ -793,7 +796,11 @@ describe('the world, its rank and its badge', () => {
   });
 
   it('has the Pattern Spotter badge (master the world and beat the train) and the star badge', () => {
-    expect(compiled.badges.map((badge) => [badge.id, badge.condition])).toEqual([
+    expect(
+      compiled.badges
+        .filter((badge) => badge.id !== 'shore-sorter')
+        .map((badge) => [badge.id, badge.condition]),
+    ).toEqual([
       ['pattern-spotter', { type: 'mastered', scope: 'world:pattern-pond', thresholds: [1] }],
       ['star-collector', { type: 'stars-total', thresholds: [10, 30] }],
     ]);

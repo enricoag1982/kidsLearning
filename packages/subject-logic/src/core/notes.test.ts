@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { compileAll } from '@learn/platform-content/compile-all';
 import { resolveText } from '@learn/platform-content/text-resolve';
 import { CARD_NOTES } from '@learn/platform-core/domain/exercise/kinds/cards/notes';
+import { GROUP_NOTES } from '@learn/platform-core/domain/exercise/kinds/group/notes';
 import { exerciseNote } from '@learn/platform-core/domain/notes';
 import type { ExerciseFeedbackBase, Resolve } from '@learn/platform-core/domain/notes';
 import { logicContent } from '../content/logic-content.ts';
@@ -45,7 +46,12 @@ const CROSS_TECHNIQUES: readonly CrossTechnique[] = [
 
 describe('logic notes', () => {
   it('are the card kit notes plus logic’s own, in the core', () => {
-    expect(Object.keys(LOGIC_NOTES).sort()).toEqual(['grid-wrong', 'hint', 'tap-first']);
+    expect(Object.keys(LOGIC_NOTES).sort()).toEqual([
+      'grid-wrong',
+      'group-wrong',
+      'hint',
+      'tap-first',
+    ]);
     expect(Object.keys(logicCore.notes).sort()).toEqual(
       [...new Set([...Object.keys(CARD_NOTES), ...Object.keys(LOGIC_NOTES)])].sort(),
     );
@@ -53,6 +59,27 @@ describe('logic notes', () => {
     for (const [kind, entry] of Object.entries(CARD_NOTES)) {
       if (kind !== 'hint') expect(logicCore.notes[kind], kind).toBe(entry);
     }
+  });
+
+  it('say the platform’s words for a group: a wrong put (plain, a Carroll axis, a Venn region), the three hints, an error note with the easier offer', () => {
+    expect(logicCore.notes['group-wrong']).toBe(GROUP_NOTES['group-wrong']);
+    expect(note({ kind: 'group-wrong' })?.text).toBe('cards.group.wrong');
+    expect(note({ kind: 'group-wrong', miss: 'row' })?.text).toBe('cards.group.wrong-row');
+    expect(note({ kind: 'group-wrong', miss: 'column' })?.text).toBe('cards.group.wrong-column');
+    expect(note({ kind: 'group-wrong', miss: 'overlap' })?.text).toBe('cards.group.wrong-overlap');
+    expect(note({ kind: 'group-wrong', miss: 'outside' })?.text).toBe('cards.group.wrong-outside');
+    expect(note({ kind: 'group-wrong' }, true)?.text).toBe(
+      'cards.group.wrong exercise.easier-offer',
+    );
+    expect(note({ kind: 'hint', hint: { kind: 'group', level: 1 } })?.text).toBe(
+      'cards.group.hint-1',
+    );
+    expect(
+      note({ kind: 'hint', hint: { kind: 'group', level: 2, itemId: 'a', boxId: 'b' } })?.text,
+    ).toBe('cards.group.hint-2');
+    expect(logicHintText(r, { kind: 'group', level: 3, itemId: 'a', boxId: 'b' })).toBe(
+      'cards.group.hint-3',
+    );
   });
 
   it('say the kit’s words for a card: a wrong card, a wrong place, a hint, the solved praise, and the easier offer after an error', () => {

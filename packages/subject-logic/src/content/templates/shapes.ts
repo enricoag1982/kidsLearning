@@ -29,7 +29,7 @@ export function tokenKey(shape: CardShape): string {
 }
 
 /** Every `size`-element subset of `items`, in list order. */
-function subsetsOf<T>(items: readonly T[], size: number): readonly (readonly T[])[] {
+export function subsetsOf<T>(items: readonly T[], size: number): readonly (readonly T[])[] {
   if (size === 0) return [[]];
   return items.flatMap((item, index) =>
     subsetsOf(items.slice(index + 1), size - 1).map((rest) => [item, ...rest]),
@@ -37,14 +37,14 @@ function subsetsOf<T>(items: readonly T[], size: number): readonly (readonly T[]
 }
 
 /** The sets of `size` colours with no confusable pair. */
-function colourSets(size: number): readonly (readonly ShapeColour[])[] {
+export function colourSets(size: number): readonly (readonly ShapeColour[])[] {
   return subsetsOf(SHAPE_COLOURS, size).filter((set) =>
     set.every((a, index) => set.slice(index + 1).every((b) => !confusableColours(a, b))),
   );
 }
 
 /** The sets of `size` kinds that do not hold both a square and a diamond. */
-function kindSets(size: number): readonly (readonly ShapeKind[])[] {
+export function kindSets(size: number): readonly (readonly ShapeKind[])[] {
   return subsetsOf(SHAPE_KINDS, size).filter(
     (set) => !(set.includes('square') && set.includes('diamond')),
   );

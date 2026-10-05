@@ -1,8 +1,10 @@
 // Logic's exercise-kind e2e-driver registry: the only place exercise-type dispatch happens for e2e. `Page` is type-only; this file
 // (and each kind's `e2e.ts`) is never reachable from app code, only Playwright specs and tests (eslint.config.js). The card kit's
-// four drivers come with the kit; logic's own kinds (`grid-fill` since m14.8, `group` later) join here with their UIs.
+// four drivers and the opt-in `group` driver come with the platform (`group` since m14.10); logic's own `grid-fill` (m14.8) joins
+// here with its UI.
 import type { Page } from '@playwright/test';
 import { CARD_KIND_E2E } from '@learn/platform-web/kinds/cards/e2e-registry.ts';
+import { GROUP_KIND_E2E } from '@learn/platform-web/kinds/group/e2e.ts';
 import type { LogicExerciseDef } from '../../core/types.ts';
 import { gridFillE2E } from '../../kinds/grid-fill/e2e.ts';
 import type {
@@ -35,6 +37,7 @@ export interface LogicKindE2E<
 export const LOGIC_KIND_E2E = {
   ...CARD_KIND_E2E,
   'grid-fill': gridFillE2E,
+  group: GROUP_KIND_E2E,
 } satisfies { readonly [T in ExerciseType]: LogicKindE2E<DefOf<T>> };
 
 /** `type`'s driver, widened: `perform` is a method, so its parameters widen (bivariance) with no cast. */

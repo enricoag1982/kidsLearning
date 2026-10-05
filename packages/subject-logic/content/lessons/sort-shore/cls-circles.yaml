@@ -1,0 +1,42 @@
+# W2 lesson 4: circles. Two circles, two rules: a card that fits both goes in the middle, a card that fits neither stays outside. Shape
+# rules first, then animals. Generated; seeds are stored, never change them. The demo is the worked example: a big blue square, blue
+# but not a circle.
+id: cls-circles
+order: 4
+concept: cls-circles
+character: panda
+demo:
+  prompt:
+    shapes:
+      - { kind: square, colour: blue }
+guided:
+  - id: venn-g-a
+    generate:
+      { template: venn, count: 1, seed: 2, params: { facts: shapes, items: 4, outside: false } }
+  - id: venn-g-b
+    generate:
+      { template: venn, count: 1, seed: 6, params: { facts: shapes, items: 5, outside: true } }
+exercises:
+  - id: venn-s1
+    generate:
+      { template: venn, count: 1, seed: 7, params: { facts: shapes, items: 5, outside: false } }
+  - id: venn-s2
+    generate:
+      { template: venn, count: 1, seed: 5, params: { facts: shapes, items: 6, outside: true } }
+  - id: venn-s3
+    generate:
+      { template: venn, count: 1, seed: 1, params: { facts: shapes, items: 7, outside: false } }
+  - id: venn-s4
+    generate:
+      { template: venn, count: 1, seed: 3, params: { facts: shapes, items: 7, outside: true } }
+  - id: venn-an-a
+    generate:
+      { template: venn, count: 1, seed: 8, params: { facts: animals, items: 6, outside: true } }
+  - id: venn-an-b
+    easier: venn-easy-1
+    generate:
+      { template: venn, count: 1, seed: 5, params: { facts: animals, items: 7, outside: true } }
+variants:
+  - id: venn-easy
+    generate:
+      { template: venn, count: 1, seed: 3, params: { facts: shapes, items: 4, outside: false } }

@@ -1,8 +1,15 @@
-// The Owl bubble's feedback note as data: logic's own feedback kinds (`grid-wrong`, `tap-first`) and the wording of the `grid-fill` hints, added to the
-// card kit's table (`createCardCore({ notes })`). Texts: `grid.wrong.*` / `grid.hint.*` in `content/locales/en/common.yaml`, worded by
-// technique only: no numbers, no coordinates (docs/subjects/logic/plan.md L6).
+// The Owl bubble's feedback note as data: logic's own feedback kinds (`grid-wrong`, `tap-first`), the platform's `group` kind's
+// (`group-wrong`, since m14.10) and the wording of the `grid-fill` and `group` hints, added to the card kit's table
+// (`createCardCore({ notes })`). Texts: `grid.wrong.*` / `grid.hint.*` in `content/locales/en/common.yaml`, worded by technique
+// only: no numbers, no coordinates (docs/subjects/logic/plan.md L6); the group's are the platform's `cards.group.*`.
 import type { CardHint } from '@learn/platform-core/domain/exercise/kinds/cards/def';
 import { cardHintText } from '@learn/platform-core/domain/exercise/kinds/cards/notes';
+import type { GroupHint } from '@learn/platform-core/domain/exercise/kinds/group/def';
+import {
+  GROUP_NOTES,
+  groupHintText,
+  type GroupFeedback,
+} from '@learn/platform-core/domain/exercise/kinds/group/notes';
 import type { NoteEntry, Resolve } from '@learn/platform-core/domain/notes';
 import type { GridFillHint, GridPuzzle } from '../kinds/grid-fill/def.ts';
 import { CROSS_LEVEL, type CrossTechnique, type UnitKind } from './puzzles/index.ts';
@@ -18,13 +25,15 @@ export type LogicFeedback =
       readonly puzzle: GridPuzzle['rules'];
       readonly conflict?: UnitKind;
     }
+  /** group: a wrong put (`miss` = what it got half right). */
+  | Extract<GroupFeedback, { readonly kind: 'group-wrong' }>
   | { readonly kind: 'hint'; readonly hint: LogicHintPayload }
   | { readonly kind: 'solved' };
 
-/** The hints of logic's own kinds, and the card kit's. */
-export type LogicHintPayload = CardHint | GridFillHint;
+/** The hints of logic's own kinds, the group's and the card kit's. */
+export type LogicHintPayload = CardHint | GroupHint | GridFillHint;
 
-type OwnNoteKind = 'grid-wrong' | 'tap-first';
+type OwnNoteKind = 'grid-wrong' | 'tap-first' | 'group-wrong';
 
 type NoteFeedback<K extends OwnNoteKind | 'hint'> = Extract<LogicFeedback, { readonly kind: K }>;
 
@@ -86,9 +95,10 @@ function gridHintText(r: Resolve, hint: GridFillHint): string {
   return r(LOOK[unit.kind]);
 }
 
-/** The nudge of each hint level of logic's own kinds; a card kit hint keeps the kit's wording. */
+/** The nudge of each hint level of logic's own kinds and the group's; a card kit hint keeps the kit's wording. */
 export function logicHintText(r: Resolve, hint: LogicHintPayload): string {
-  return hint.kind === 'grid-fill' ? gridHintText(r, hint) : cardHintText(r, hint);
+  if (hint.kind === 'grid-fill') return gridHintText(r, hint);
+  return hint.kind === 'group' ? groupHintText(r, hint) : cardHintText(r, hint);
 }
 
 export const LOGIC_NOTES = {
@@ -99,5 +109,7 @@ export const LOGIC_NOTES = {
     error: true,
     text: (r, f) => r(gridWrongKey(f)),
   },
+  // The platform's wording of a wrong put (`cards.group.*`), the same object.
+  'group-wrong': GROUP_NOTES['group-wrong'],
   hint: { tone: 'attention', text: (r, f) => logicHintText(r, f.hint) },
 } as const satisfies { readonly [K in OwnNoteKind | 'hint']: NoteEntry<NoteFeedback<K>> };

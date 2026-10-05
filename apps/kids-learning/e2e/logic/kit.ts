@@ -19,6 +19,7 @@ import { logicKindE2EOf } from '@learn/subject-logic/web/kinds/e2e-registry.ts';
 // Node's ESM loader (specs run straight under Playwright, outside Vite) requires this attribute for a JSON import.
 import rawContent from '@learn/subject-logic/dist/content.json' with { type: 'json' };
 import en from '@learn/subject-logic/dist/locales/en.json' with { type: 'json' };
+import rawTracks from '@learn/subject-logic/dist/tracks.json' with { type: 'json' };
 import { getSoleProfileId, withAppStorage } from '../kit/storage.ts';
 
 /** The logic locale's texts, resolved as the app renders them (`lessons:pat-repeat.title`, `cards.erase`). */
@@ -53,11 +54,45 @@ export function findMiniGame(id: string): LogicSeriesGame {
   return game;
 }
 
+interface TrackWorld {
+  readonly id: string;
+  readonly order: number;
+  readonly boss?: string;
+}
+/** The worlds of the main track, in order, as the content defines them (a world added later shows up here with no spec change). */
+const WORLDS: readonly TrackWorld[] = (
+  rawTracks as unknown as {
+    readonly tracks: readonly { readonly kind: string; readonly worlds: readonly TrackWorld[] }[];
+  }
+).tracks
+  .filter((track) => track.kind === 'main')
+  .flatMap((track) => [...track.worlds])
+  .sort((a, b) => a.order - b.order);
+
+/** World id -> its order in the main track (World 1 Pattern Pond, World 2 Sort Shore). */
+const worldOrder = new Map(WORLDS.map((world) => [world.id, world.order] as const));
+
 /** The lessons of one world in Journey order. */
 export function worldLessons(worldId: string): readonly LogicLesson[] {
   return content.lessons
     .filter((lesson) => lesson.world === worldId)
     .sort((a, b) => a.order - b.order);
+}
+
+/**
+ * What a child who finished every world before `worldId` has behind them, found in the content: all their lessons and the ids of all
+ * their world bosses. A spec of a later world seeds these (not a fixed list of lessons), so it keeps working when a world is added
+ * before it.
+ */
+export function worldsBefore(worldId: string): {
+  readonly lessons: readonly LogicLesson[];
+  readonly bosses: readonly string[];
+} {
+  const before = WORLDS.filter((world) => world.order < (worldOrder.get(worldId) ?? 0));
+  return {
+    lessons: before.flatMap((world) => worldLessons(world.id)),
+    bosses: before.flatMap((world) => (world.boss === undefined ? [] : [world.boss])),
+  };
 }
 
 /** Escapes regex metacharacters so `text` can be embedded literally in a `RegExp` source. */
@@ -71,9 +106,13 @@ function escapeRegExp(text: string): string {
  * character shows its own title, so no two nodes share a label).
  */
 export function journeyNodeName(lesson: LogicLesson, status: 'current' | 'locked'): RegExp {
+  // The first lesson of a character is the first one of its first world (lesson orders restart in every world).
   const firstOfCharacter = [...content.lessons]
     .filter((entry) => entry.character === lesson.character)
-    .sort((a, b) => a.order - b.order)[0];
+    .sort(
+      (a, b) =>
+        (worldOrder.get(a.world) ?? 0) - (worldOrder.get(b.world) ?? 0) || a.order - b.order,
+    )[0];
   const name =
     LOGIC_CHARACTERS[lesson.character] !== undefined && firstOfCharacter?.id === lesson.id
       ? `${escapeRegExp(contentText(`characters:${lesson.character}.name`))} the .+`
@@ -85,7 +124,8 @@ export function journeyNodeName(lesson: LogicLesson, status: 'current' | 'locked
   return new RegExp(`^${pattern}$`);
 }
 
-/** Opens the Journey's tab of a world ("1 Pattern Pond": its number and title). */
+/** Opens the Journey's tab of a world ("1 Pattern Pond": its number and title). The Journey opens on the world the child is in; once
+ * that world is finished it moves on to the next one (or, when every world is done, back to the first). */
 export async function openJourneyWorld(page: Page, order: number, worldId: string): Promise<void> {
   await page
     .getByRole('button', {

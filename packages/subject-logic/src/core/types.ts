@@ -1,15 +1,16 @@
-// Logic's exercise defs, lessons and content: the card kit's four kinds (cards, an order, a number pad, true / false) and logic's own
-// `grid-fill` (since m14.7); `group` joins `LogicExerciseDef` with a def under `kinds/<kind>/def.ts`, as math's do.
+// Logic's exercise defs, lessons and content: the card kit's four kinds (cards, an order, a number pad, true / false), the platform's
+// opt-in `group` kind (sort cards into boxes, since m14.10) and logic's own `grid-fill` (since m14.7).
 import type {
   CardDemo,
   CardExerciseDef,
 } from '@learn/platform-core/domain/exercise/kinds/cards/def';
+import type { GroupDef } from '@learn/platform-core/domain/exercise/kinds/group/def';
 import type { SeriesGameDef } from '@learn/platform-core/domain/exercise/modes/series/def';
 import type { Lesson, MiniGameBase } from '@learn/platform-core/domain/subject';
 import type { GridFillDef } from '../kinds/grid-fill/def.ts';
 
-/** Every exercise a logic lesson may hold: the card kit's four kinds and a grid puzzle. */
-export type LogicExerciseDef = CardExerciseDef | GridFillDef;
+/** Every exercise a logic lesson may hold: the card kit's four kinds, a sort into boxes and a grid puzzle. */
+export type LogicExerciseDef = CardExerciseDef | GroupDef | GridFillDef;
 
 export type LogicLesson = Lesson<LogicExerciseDef, CardDemo>;
 

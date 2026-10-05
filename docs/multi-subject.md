@@ -86,6 +86,8 @@ Rules: `docs/retrospective.md` §9 (≤ 3–4 commits per agent run, lead decide
 | F12 | Number-line card size | At 1024 × 768 the line card (≈ 150 px) is small beside the prompt card (≈ 450 px) |
 | F13 | Math pictures in cards | `round-ten` / `bridge-add` have no line picture (card prompts have no picture slot); `groups` shows "3 groups of 4" + one emoji (emoji limit 8) |
 | F14 | Number rows on a phone | a 5-term number row (`step-next` "3 7 11 15 19 ?") wraps to two lines at 390 px: the number-entry pad narrows the card (m14.9 visual pass) |
+| F15 | Prompt-less choice layout | a card-kit `choice` without a prompt (logic `odd-one`) draws small option tiles at the bottom with the board slot empty; options should fill the board slot (m14.10 visual pass) |
+| F16 | Venn on a phone | the card pool of a Venn sits partly below the fold at 390 × 844 (one row of 3 visible) (m14.10 visual pass) |
 
 ## 5. After v1.0
 

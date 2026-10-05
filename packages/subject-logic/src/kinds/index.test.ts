@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { CARD_KINDS } from '@learn/platform-core/domain/exercise/kinds/cards/kinds';
 import { CARD_SOLUTIONS } from '@learn/platform-core/domain/exercise/kinds/cards/solutions';
-import { CARD_SAMPLES } from '@learn/platform-core/testing';
+import { GROUP_KIND } from '@learn/platform-core/domain/exercise/kinds/group/kind';
+import { GROUP_SOLUTION } from '@learn/platform-core/domain/exercise/kinds/group/solution';
+import { CARD_SAMPLES, GROUP_SAMPLES } from '@learn/platform-core/testing';
 import { LOGIC_CHARACTERS, logicCore } from '../core/logic-core.ts';
 import { gridFillKind } from './grid-fill/kind.ts';
 import { gridFillSolution, gridFillWrongAction } from './grid-fill/solution.ts';
@@ -15,16 +17,21 @@ import {
 } from '../testing/index.ts';
 import { LOGIC_KINDS, kindOf, startExercise } from './index.ts';
 
-const TYPES = ['choice', 'grid-fill', 'number-entry', 'order', 'true-false'];
+const TYPES = ['choice', 'grid-fill', 'group', 'number-entry', 'order', 'true-false'];
 
-const SAMPLES = [...Object.values(CARD_SAMPLES), ...Object.values(GRID_FILL_SAMPLES)];
+const SAMPLES = [
+  ...Object.values(CARD_SAMPLES),
+  ...Object.values(GROUP_SAMPLES),
+  ...Object.values(GRID_FILL_SAMPLES),
+];
 
 describe('the logic registry', () => {
-  it('is the card kit kinds (same objects) and grid-fill, one plain object; logic’s own kinds join it with one line each', () => {
+  it('is the card kit kinds (same objects), the platform’s opt-in group kind and grid-fill, one plain object', () => {
     expect(Object.keys(LOGIC_KINDS).sort()).toEqual(TYPES);
     for (const [type, kind] of Object.entries(CARD_KINDS)) {
       expect(LOGIC_KINDS[type as keyof typeof CARD_KINDS], type).toBe(kind);
     }
+    expect(LOGIC_KINDS.group).toBe(GROUP_KIND);
     expect(LOGIC_KINDS['grid-fill']).toBe(gridFillKind);
     for (const [type, kind] of Object.entries(LOGIC_KINDS)) {
       expect(kind.type).toBe(type);
@@ -41,11 +48,12 @@ describe('the logic registry', () => {
     expect(logicCore.context).toBeNull();
   });
 
-  it('has a solution for every kind: the card kit solutions (same objects) and grid-fill’s', () => {
+  it('has a solution for every kind: the card kit solutions (same objects), the group’s and grid-fill’s', () => {
     expect(Object.keys(LOGIC_SOLUTIONS).sort()).toEqual(TYPES);
     for (const [type, solution] of Object.entries(CARD_SOLUTIONS)) {
       expect(LOGIC_SOLUTIONS[type as keyof typeof CARD_SOLUTIONS], type).toBe(solution);
     }
+    expect(LOGIC_SOLUTIONS.group).toBe(GROUP_SOLUTION);
     expect(LOGIC_SOLUTIONS['grid-fill'].solution).toBe(gridFillSolution);
     expect(LOGIC_SOLUTIONS['grid-fill'].wrongAction).toBe(gridFillWrongAction);
   });
@@ -63,6 +71,8 @@ describe('the logic registry', () => {
         hintLevel: 0,
       });
     }
+    // A group starts with nothing placed.
+    expect(startExercise(GROUP_SAMPLES.venn)).toMatchObject({ placed: {}, ruledOut: [] });
     // The card kinds share one state with the typed digits.
     expect(startExercise(CARD_SAMPLES['number-entry'])).toMatchObject({ entry: '' });
     // A grid puzzle starts with its givens in place.
