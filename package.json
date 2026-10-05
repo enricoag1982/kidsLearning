@@ -14,7 +14,7 @@
     "lint": "eslint .",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
-    "test:slow": "pnpm -r --if-present test:slow",
+    "test:slow": "pnpm -r --workspace-concurrency=1 --if-present test:slow",
     "build": "pnpm -r build",
     "test:e2e": "pnpm --filter @learn/kids-learning test:e2e",
     "size": "pnpm --filter @learn/kids-learning size",
