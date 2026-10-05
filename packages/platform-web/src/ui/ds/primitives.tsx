@@ -52,18 +52,21 @@ export function InfoPanel({
 
 export interface InfoPillProps extends HTMLAttributes<HTMLDivElement> {
   readonly tint?: string;
+  /** No side padding below `sm` (see `infoPillClass`). */
+  readonly dense?: boolean;
   readonly children: ReactNode;
 }
 
 /** A flat info pill (docs/screens.md §1): icon + text, no border / shadow; by default no background box, so it never reads as a chip. */
 export function InfoPill({
   tint = '',
+  dense = false,
   className = '',
   children,
   ...rest
 }: InfoPillProps): JSX.Element {
   return (
-    <div className={`${infoPillClass(tint)} ${className}`.trim()} {...rest}>
+    <div className={`${infoPillClass(tint, '', dense)} ${className}`.trim()} {...rest}>
       {children}
     </div>
   );

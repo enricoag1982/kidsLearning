@@ -13,7 +13,7 @@ import { StreakPill } from './StreakPill.tsx';
 import { useNarratedText } from './ds/useNarratedText.ts';
 import { PlayIcon, SubjectsIcon, Svg, SwitchPlayerIcon } from './ds/icons.tsx';
 import { tapClass } from './ds/tap.ts';
-import { BlankScreen, RoundIconButton } from './ds/Screen.tsx';
+import { BlankScreen } from './ds/Screen.tsx';
 import { AvatarBadge } from './ds/AvatarBadge.tsx';
 import { useAsync } from './ds/useAsync.ts';
 
@@ -55,6 +55,7 @@ function HomeTile({
   fg,
   ledge,
   onClick,
+  wide = false,
 }: {
   readonly icon: JSX.Element;
   readonly label: string;
@@ -62,6 +63,8 @@ function HomeTile({
   readonly fg: string;
   readonly ledge: string;
   readonly onClick: () => void;
+  /** A phone's 2-column grid: the odd tile out takes the whole last row (from `sm` every tile has its own column). */
+  readonly wide?: boolean;
 }): JSX.Element {
   return (
     <button
@@ -78,13 +81,42 @@ function HomeTile({
       className={tapClass(
         'custom',
         'none',
-        'flex min-h-24 flex-col items-center justify-center gap-2 rounded-[2rem] py-4',
+        `flex min-h-20 flex-col items-center justify-center gap-1 rounded-[2rem] py-3 sm:min-h-24 sm:gap-2 sm:py-4 ${
+          wide ? 'col-span-2 sm:col-span-1' : ''
+        }`,
       )}
     >
       <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-white sm:h-16 sm:w-16">
         {icon}
       </span>
       <span className="font-display text-lg font-semibold sm:text-2xl">{label}</span>
+    </button>
+  );
+}
+
+/** A header action: an icon-only 64 px round button on a phone (`label` is its accessible name), icon + text label from `sm`. */
+function HeaderAction({
+  label,
+  onClick,
+  children,
+}: {
+  readonly label: string;
+  readonly onClick: () => void;
+  readonly children: JSX.Element;
+}): JSX.Element {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      onClick={onClick}
+      className={tapClass(
+        'round',
+        'neutral',
+        'sm:w-auto sm:gap-2 sm:rounded-2xl sm:px-5 sm:font-display sm:text-lg sm:font-semibold',
+      )}
+    >
+      {children}
+      <span className="hidden sm:inline">{label}</span>
     </button>
   );
 }
@@ -207,42 +239,47 @@ export function HomeScreen(): JSX.Element {
   ].sort((a, b) => a.order - b.order);
 
   return (
-    <main className="flex min-h-dvh flex-col gap-6 bg-cream px-4 py-6 sm:px-10 sm:py-8">
-      <h1 className="font-display text-lg text-muted sm:text-xl">{t('app.title')}</h1>
+    <main className="flex min-h-dvh flex-col gap-4 bg-cream px-4 py-4 sm:gap-6 sm:px-10 sm:py-8">
+      <h1 className="font-display text-base text-muted sm:text-xl">{t('app.title')}</h1>
 
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+      {/* Phone: row 1 = who + the two actions, row 2 = the info pills; from `sm` one row (who, pills, actions). */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 sm:gap-x-3">
+        <div className="order-1 flex min-w-0 flex-1 items-center gap-3">
           <AvatarBadge
             avatar={profile.avatar}
             label={t('home.avatar-alt', { name: avatarName(t, profile.avatar) })}
             className="h-14 w-14 flex-shrink-0 overflow-hidden rounded-full p-2 sm:h-16 sm:w-16"
           />
-          <span className="font-display text-2xl text-ink sm:text-3xl">{profile.nickname}</span>
+          <span className="truncate font-display text-2xl text-ink sm:text-3xl">
+            {profile.nickname}
+          </span>
         </div>
-        <div className="flex flex-wrap items-center justify-end gap-3">
-          {streak && streak.current >= 2 && <StreakPill days={streak.current} />}
-          <RankPill rank={journey.rank} />
-          <StarsPill count={stars} />
+        <div className="order-3 flex basis-full flex-wrap items-center gap-x-4 gap-y-1 sm:order-2 sm:basis-auto sm:gap-3">
+          {streak && streak.current >= 2 && <StreakPill days={streak.current} dense />}
+          <RankPill rank={journey.rank} dense />
+          <StarsPill count={stars} dense />
+        </div>
+        <div className="order-2 ml-auto flex items-center gap-2 sm:order-3 sm:gap-3">
           {services.app.subjects.length > 1 && (
-            <RoundIconButton label={t('home.subjects')} onClick={goToSubjects}>
+            <HeaderAction label={t('home.subjects')} onClick={goToSubjects}>
               <SubjectsIcon />
-            </RoundIconButton>
+            </HeaderAction>
           )}
-          <RoundIconButton
+          <HeaderAction
             label={t('home.switch-player')}
             onClick={() => {
               void goToPicker();
             }}
           >
             <SwitchPlayerIcon />
-          </RoundIconButton>
+          </HeaderAction>
         </div>
       </div>
 
       <InstallBanner />
 
-      <div className="flex flex-1 flex-col items-stretch justify-center gap-8 sm:flex-row sm:items-center">
-        <div className="flex flex-1 flex-col gap-3">
+      <div className="flex flex-1 flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-8">
+        <div className="flex flex-1 flex-col gap-2 sm:gap-3">
           <SpeechBubble text={bubbleText} />
           <ReplayButton onClick={replay} label={t('exercise.replay')} />
         </div>
@@ -255,7 +292,7 @@ export function HomeScreen(): JSX.Element {
             className={tapClass(
               'custom',
               'today',
-              'flex h-28 flex-col items-center justify-center gap-1 rounded-[2rem] px-8 sm:h-36 sm:w-96',
+              'flex h-24 flex-col items-center justify-center gap-1 rounded-[2rem] px-8 sm:h-36 sm:w-96',
             )}
           >
             <span className="flex items-center gap-3 font-display text-2xl font-semibold sm:text-3xl">
@@ -270,9 +307,10 @@ export function HomeScreen(): JSX.Element {
       <div
         className={`grid grid-cols-2 gap-3 ${HOME_GRID_COLUMNS[tiles.length] ?? 'sm:grid-cols-4'} sm:gap-6`}
       >
-        {tiles.map((tile) => (
+        {tiles.map((tile, index) => (
           <HomeTile
             key={tile.id}
+            wide={tiles.length % 2 === 1 && index === tiles.length - 1}
             icon={tile.icon}
             label={tile.label}
             bg={tile.colors.bg}
@@ -301,7 +339,7 @@ export function HomeScreen(): JSX.Element {
         )}
       </p>
 
-      <p className="-mt-4 text-center text-xs text-muted">
+      <p className="-mt-2 text-center text-xs text-muted sm:-mt-4">
         {t('parent.version', { version: __APP_VERSION__ })}
       </p>
     </main>
