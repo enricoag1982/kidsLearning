@@ -1,6 +1,6 @@
 import i18next from 'i18next';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { createProfile } from '@learn/platform-core';
 import type { AppConfig } from '@learn/platform-core';
 import { initI18n } from '../i18n.ts';
@@ -9,7 +9,7 @@ import type { Services } from '../app/services.ts';
 import { createAppStore, StoreProvider } from '../app/store.ts';
 import type { AppStore } from '../app/store.ts';
 import { PackProvider } from '../app/subject.ts';
-import type { SubjectEntry } from '../app/subject.ts';
+import type { LoadedSubject, SubjectEntry } from '../app/subject.ts';
 import { createMemoryStorage } from '../testing/memory-storage.ts';
 import {
   createTestContent,
@@ -212,18 +212,53 @@ describe('SubjectsScreen', () => {
     });
   });
 
-  it('lands on the error screen when a subject pack cannot load', async () => {
-    const list = entries().map((entry) =>
-      entry.manifest.id === 'b'
-        ? { ...entry, load: () => Promise.reject(new Error('chunk missing')) }
-        : entry,
-    );
-    const { store } = await renderHub(list);
+  describe('a subject whose pack cannot load (F2)', () => {
+    const LINE = 'Beta could not be loaded. Close the app and try again.';
 
-    fireEvent.click(screen.getByTestId('subject-tile-b'));
+    async function renderWithFailingB() {
+      const load = vi.fn(() => Promise.reject<LoadedSubject>(new Error('chunk missing')));
+      const list = entries().map((entry) =>
+        entry.manifest.id === 'b' ? { ...entry, load } : entry,
+      );
+      return { ...(await renderHub(list)), load };
+    }
 
-    await screen.findByRole('heading', { name: 'Oops, something went wrong' });
-    expect(screen.getByText('chunk missing')).toBeTruthy();
-    expect(store.getState().subjectId).toBe('a');
+    it('turns that tile disabled and the Owl says the calm line; no error screen, the active subject stays', async () => {
+      const { store } = await renderWithFailingB();
+
+      fireEvent.click(screen.getByTestId('subject-tile-b'));
+
+      await screen.findByText(LINE);
+      expect(screen.queryByText('What would you like to learn today?')).toBeNull();
+      expect(screen.queryByRole('heading', { name: 'Oops, something went wrong' })).toBeNull();
+      expect(screen.getByTestId('subject-tile-b')).toHaveProperty('disabled', true);
+      expect(store.getState().subjectId).toBe('a');
+      expect(screen.getByTestId('subject-tile-b').getAttribute('aria-current')).toBeNull();
+    });
+
+    it('the other subject still opens, and the failed tile is not tried again', async () => {
+      const { store, load } = await renderWithFailingB();
+      fireEvent.click(screen.getByTestId('subject-tile-b'));
+      await screen.findByText(LINE);
+
+      fireEvent.click(screen.getByTestId('subject-tile-b'));
+      fireEvent.click(screen.getByTestId('subject-tile-a'));
+
+      await waitFor(() => {
+        expect(store.getState().stack.map((route) => route.name)).toContain('home');
+      });
+      expect(load).toHaveBeenCalledTimes(1);
+      expect(store.getState().subjectId).toBe('a');
+    });
+
+    it('says the line aloud (the narrator speaks the same text the bubble shows)', async () => {
+      const { services } = await renderWithFailingB();
+      const speak = vi.spyOn(services.narrator, 'speak');
+
+      fireEvent.click(screen.getByTestId('subject-tile-b'));
+      await screen.findByText(LINE);
+
+      expect(speak).toHaveBeenCalledWith(LINE);
+    });
   });
 });

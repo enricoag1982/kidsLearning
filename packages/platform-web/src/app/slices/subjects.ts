@@ -1,4 +1,4 @@
-import { planPlacement } from '@learn/platform-core';
+import { getPlacementDecision, planPlacement } from '@learn/platform-core';
 import { setSubjectLocales } from '../../i18n.ts';
 import type { AppGet, AppSet, AppState } from '../store.ts';
 import { loadProfileData } from './profile.ts';
@@ -9,7 +9,8 @@ export interface SubjectsSlice {
   readonly lastSubjectId: string | null;
   /** Subjects hub tile (`SubjectsScreen`): makes `id` the active subject (loading its pack on first use), remembers it as the
    * profile's last (`AppSettings.lastSubjectByProfile`), reloads the profile's data from that subject's stores and lands on
-   * Home, with the hub below it; the placement offer on top on the first entry into a fresh subject (D10, once per app session). */
+   * Home, with the hub below it; the placement offer on top on the first entry into a fresh subject (D10, once per profile and subject:
+   * the answer is stored). */
   readonly selectSubject: (id: string) => Promise<void>;
   /** Home's "Subjects" button: back to the hub. */
   readonly goToSubjects: () => void;
@@ -37,8 +38,9 @@ const SUBJECT_BOUND_RESET: Partial<AppState> = {
 };
 
 /** Placement is due on a profile's first entry into a subject (multi-subject.md D10): the active subject has no lesson progress, no
- * assessment result and no unlock for `profileId`, offers a non-empty plan (the one `acceptPlacement` plays), and the pair was
- * not `offered` earlier in this app session. Reads the state after the profile data reload. */
+ * assessment result and no unlock for `profileId`, no stored answer to the offer (`PlacementDecision`: taken or declined, kept
+ * across restarts), offers a non-empty plan (the one `acceptPlacement` plays), and the pair was not `offered` earlier in this
+ * app session. Reads the state after the profile data reload. */
 async function shouldOfferPlacement(
   get: AppGet,
   profileId: string,
@@ -48,11 +50,12 @@ async function shouldOfferPlacement(
   if (offered.has(`${profileId}:${subjectId}`)) return false;
   const { assessment } = services.deps;
   if (progress.length > 0 || journey === null || assessment === undefined) return false;
-  const [results, unlocks] = await Promise.all([
+  const [results, unlocks, decision] = await Promise.all([
     assessment.listAssessmentResults(profileId),
     assessment.listUnlocks(profileId),
+    getPlacementDecision(services.deps, profileId),
   ]);
-  if (results.length > 0 || unlocks.length > 0) return false;
+  if (results.length > 0 || unlocks.length > 0 || decision !== undefined) return false;
   return planPlacement(journey.catalog, journey.lessons, services.deps.random).length > 0;
 }
 

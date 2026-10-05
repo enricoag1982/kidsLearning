@@ -1,7 +1,5 @@
-// Chess's `SubjectCore` + `AppConfig`: the concrete values every platform seam
-// (`createSubjectRuntime`, `AppDeps.subject`/`app`) plugs in for this app. Chess-bound.
+// Chess's `SubjectCore`: the concrete values the platform seam `createSubjectRuntime` / `AppDeps.subject` plugs in. Chess-bound.
 import { chessGameRecordOf } from './app/games.ts';
-import { CHESS_APP_CONFIG } from './chess/app-config.ts';
 import { CHESS_SETTINGS_SLOT } from './chess/settings-slot.ts';
 import { chessJsRules } from './chess/chessjs-rules.ts';
 import {
@@ -56,6 +54,3 @@ export const chessCore: SubjectCore<VariantRules, ChessRewardFacts> = {
 
 /** The chess app's full default settings as a plain constant (the web store's initial / new-profile state). */
 export const DEFAULT_PROFILE_SETTINGS: ProfileSettings = composeDefaultSettings(chessCore.settings);
-
-// Defined in `chess/app-config.ts` (a light module the app shell imports without the pack); re-exported for the core's users.
-export { CHESS_APP_CONFIG };

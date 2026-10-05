@@ -90,6 +90,11 @@
   "source": "owl-line"
  },
  {
+  "key": "39fba8b6577211bc",
+  "text": "Found chess progress from Chess for Kids on this device. Bring it here?",
+  "source": "owl-line"
+ },
+ {
   "key": "42395b2cf6a958b5",
   "text": "Look closely.",
   "source": "exercise-note"
@@ -170,6 +175,11 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "74840c74c0358062",
+  "text": "That did not work. Let's start fresh!",
+  "source": "owl-line"
+ },
+ {
   "key": "77ae1eddf4305d9a",
   "text": "Let's warm up what you know!",
   "source": "home"
@@ -183,6 +193,11 @@
   "key": "7df1b52546c683d6",
   "text": "Sample try. Put the letters in order. Replace it with yours!",
   "source": "lesson-guided"
+ },
+ {
+  "key": "823fa807dc27b388",
+  "text": "Template could not be loaded. Close the app and try again.",
+  "source": "owl-line"
  },
  {
   "key": "8b807311da9e1eb0",

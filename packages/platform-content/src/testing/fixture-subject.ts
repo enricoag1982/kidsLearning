@@ -299,6 +299,7 @@ export function writeFullContent(): void {
   write(
     'locales/en/common.yaml',
     stringify({
+      app: { title: 'Fixture' },
       'voice-check': { sentence: 'Say hello' },
       home: { 'owl-next': 'Today you meet {{character}}!' },
       den: { 'owl-line': 'Look at everything!' },

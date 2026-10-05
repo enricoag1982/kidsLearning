@@ -169,6 +169,12 @@ const unlockSchema = z.object({
   via: z.enum(['test-out', 'placement', 'parent']),
 });
 
+const placementDecisionSchema = z.object({
+  ...storedRecordFields,
+  profileId: z.string(),
+  decision: z.enum(['taken', 'declined']),
+});
+
 /** One subject's records for one profile. */
 const subjectProfileDataSchema = z.object({
   lessonProgress: z.array(lessonProgressSchema),
@@ -179,6 +185,8 @@ const subjectProfileDataSchema = z.object({
   earnedBadges: z.array(earnedBadgeSchema),
   assessmentResults: z.array(assessmentResultSchema),
   unlocks: z.array(unlockSchema),
+  /** Added after format v6 first shipped; a file without it is valid (no answer yet). */
+  placementDecision: placementDecisionSchema.optional(),
 });
 
 /** Format v6: the shared part plus `subjects` by subject id. */
@@ -258,6 +266,7 @@ async function subjectProfileData(
     earnedBadges,
     assessmentResults,
     unlocks,
+    placementDecision,
   ] = await Promise.all([
     repos.progress.listLessons(profileId),
     repos.progress.listAttempts(profileId),
@@ -267,6 +276,7 @@ async function subjectProfileData(
     repos.badges.listEarnedBadges(profileId),
     repos.assessment?.listAssessmentResults(profileId) ?? Promise.resolve([]),
     repos.assessment?.listUnlocks(profileId) ?? Promise.resolve([]),
+    repos.assessment?.getPlacementDecision(profileId),
   ]);
   return {
     lessonProgress,
@@ -277,6 +287,7 @@ async function subjectProfileData(
     earnedBadges,
     assessmentResults,
     unlocks,
+    ...(placementDecision === undefined ? {} : { placementDecision }),
   };
 }
 

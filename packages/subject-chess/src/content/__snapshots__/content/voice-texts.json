@@ -765,6 +765,11 @@
   "source": "badge-locked"
  },
  {
+  "key": "39fba8b6577211bc",
+  "text": "Found chess progress from Chess for Kids on this device. Bring it here?",
+  "source": "owl-line"
+ },
+ {
   "key": "3a4bc14d927b6f04",
   "text": "Rabbit, locked, Beat Wolf 3 times",
   "source": "play"
@@ -1310,6 +1315,11 @@
   "source": "lesson-exercise"
  },
  {
+  "key": "593a63f06d7b428c",
+  "text": "Chess could not be loaded. Close the app and try again.",
+  "source": "owl-line"
+ },
+ {
   "key": "5975daf7cd7cef89",
   "text": "Pick a topic, or start your warm-up!",
   "source": "owl-line"
@@ -1713,6 +1723,11 @@
   "key": "73304f943036f8a4",
   "text": "Star Collector. Earn 50 stars",
   "source": "badge-locked"
+ },
+ {
+  "key": "74840c74c0358062",
+  "text": "That did not work. Let's start fresh!",
+  "source": "owl-line"
  },
  {
   "key": "748f831919586f1c",

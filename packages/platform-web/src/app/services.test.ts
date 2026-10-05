@@ -11,6 +11,7 @@ import { deleteProfile } from '@learn/platform-core';
 import { buildBackupFile, parseBackupFile } from '@learn/platform-core/backup';
 import { importMerged } from '@learn/platform-core/merge';
 import { makeProgress } from '@learn/platform-core/testing';
+import { SCHEMA_VERSION } from '../adapters/storage/local-store.ts';
 import { createMemoryStorage } from '../testing/memory-storage.ts';
 import { createTestEntry, createTestPack } from '../testing/test-pack.ts';
 import type { LoadedSubject } from './subject.ts';
@@ -197,7 +198,7 @@ describe('createAppServices: backup across subjects', () => {
 
     const file = await buildBackupFile(a);
 
-    expect(file.schemaVersion).toBe(6);
+    expect(file.schemaVersion).toBe(SCHEMA_VERSION);
     const data = file.data.p1;
     expect(Object.keys(data?.subjects ?? {})).toEqual(['a', 'b']);
     expect(data?.subjects.a?.lessonProgress[0]?.bestStars).toEqual({ e1: 1 });

@@ -20,7 +20,7 @@ export { createVariantRules } from './core/variant/rules.ts';
 export { kindOf, startExercise } from './kinds/index.ts';
 export { selectSquaresAnswer } from './kinds/select-squares/engine.ts';
 export { toFen } from './core/chess/fen.ts';
-export { DEFAULT_PROFILE_SETTINGS, CHESS_APP_CONFIG, chessCore } from './core/chess-core.ts';
+export { DEFAULT_PROFILE_SETTINGS, chessCore } from './core/chess-core.ts';
 export { findMoveBySan } from './core/chess/facts/san.ts';
 export { parseDiagram } from './core/chess/diagram.ts';
 export type { ComputerLevelCondition, ComputerLevelStatus } from './core/app/games.ts';

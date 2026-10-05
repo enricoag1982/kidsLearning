@@ -11,4 +11,6 @@ export const KIDS_APP_CONFIG: Omit<AppConfig, 'version'> = {
   title: 'Kids Learning',
   // Older single-subject apps' backup files (schema <= 5) import into the subject that took over their data.
   legacyBackupApps: { 'chess-kids': 'chess', 'math-demo': 'math' },
+  // Chess for Kids ran on this origin (`enricoag1982.github.io`): its `chess-kids:` store is offered once on the first run.
+  legacyStorePrefixes: { 'chess-kids': 'chess-kids:' },
 };

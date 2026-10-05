@@ -1,7 +1,14 @@
 import i18next from 'i18next';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AppConfig } from '@learn/platform-core';
-import { createProfile, parentUnlock, submitAssessment } from '@learn/platform-core';
+import {
+  createProfile,
+  deleteProfile,
+  parentUnlock,
+  recordPlacementDecision,
+  resetProfileData,
+  submitAssessment,
+} from '@learn/platform-core';
 import { makeContentSource, makeProgress } from '@learn/platform-core/testing';
 import { initI18n, setSubjectLocales } from '../../i18n.ts';
 import { createMemoryStorage } from '../../testing/memory-storage.ts';
@@ -396,7 +403,7 @@ describe('placement offer on the first entry into a subject', () => {
     expect(s.store.getState().profile?.id).toBe(other.id);
   });
 
-  it('is not persisted: a new app session over the same storage offers it again', async () => {
+  it('declining is stored: a new app session over the same storage does not offer it again', async () => {
     await s.store.getState().selectSubject('a');
     s.store.getState().declinePlacement();
     await landsOn(['subjects', 'home']);
@@ -405,7 +412,62 @@ describe('placement offer on the first entry into a subject', () => {
     await again.store.getState().selectProfileAndHome(s.profileId);
     await again.store.getState().selectSubject('a');
 
+    expect(names(again.store)).toEqual(['subjects', 'home']);
+    const decision = await again.app.subjectData.a?.assessment?.getPlacementDecision(s.profileId);
+    expect(decision?.decision).toBe('declined');
+  });
+
+  it('accepting is stored too: not offered again after a restart, even with every world failed', async () => {
+    await s.store.getState().selectSubject('b');
+    s.store.getState().acceptPlacement();
+    await landsOn(['subjects', 'home', 'placement']);
+    s.store.getState().finishPlacement();
+    await landsOn(['subjects', 'home']);
+
+    const again = await setup({ storage: s.storage, profileId: s.profileId });
+    await again.store.getState().selectProfileAndHome(s.profileId);
+    await again.store.getState().selectSubject('b');
+
+    expect(names(again.store)).toEqual(['subjects', 'home']);
+    const decision = await again.app.subjectData.b?.assessment?.getPlacementDecision(s.profileId);
+    expect(decision?.decision).toBe('taken');
+  });
+
+  it('the answer is per subject and profile: the other subject, and another profile, are still offered after a restart', async () => {
+    await s.store.getState().selectSubject('a');
+    s.store.getState().declinePlacement();
+    await landsOn(['subjects', 'home']);
+    const other = await createProfile(s.store.getState().services.deps, 'Leo', 'bear');
+
+    const again = await setup({ storage: s.storage, profileId: s.profileId });
+    await again.store.getState().selectProfileAndHome(other.id);
+    await again.store.getState().selectSubject('a');
     expect(names(again.store)).toEqual(['subjects', 'home', 'placement-offer']);
+
+    await again.store.getState().selectProfileAndHome(s.profileId);
+    await again.store.getState().selectSubject('b');
+    expect(names(again.store)).toEqual(['subjects', 'home', 'placement-offer']);
+  });
+
+  it('a stored answer is not offered again even though the subject is still untouched', async () => {
+    await recordPlacementDecision((await s.app.activate('a')).deps, s.profileId, 'declined');
+
+    await s.store.getState().selectSubject('a');
+
+    expect(names(s.store)).toEqual(['subjects', 'home']);
+  });
+
+  it('resetting the child’s progress keeps the answer (like assessment results); deleting the child removes it', async () => {
+    await s.store.getState().selectSubject('a');
+    s.store.getState().declinePlacement();
+    await landsOn(['subjects', 'home']);
+    const deps = (await s.app.activate('a')).deps;
+
+    await resetProfileData(deps, s.profileId);
+    expect((await deps.assessment?.getPlacementDecision(s.profileId))?.decision).toBe('declined');
+
+    await deleteProfile(deps, s.profileId);
+    expect(await deps.assessment?.getPlacementDecision(s.profileId)).toBeUndefined();
   });
 
   it('is not offered in a subject the profile has progress in', async () => {

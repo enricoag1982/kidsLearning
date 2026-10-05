@@ -420,6 +420,11 @@
   "source": "lesson-story"
  },
  {
+  "key": "39fba8b6577211bc",
+  "text": "Found chess progress from Chess for Kids on this device. Bring it here?",
+  "source": "owl-line"
+ },
+ {
   "key": "3a0d9cd3776374e4",
   "text": "Build 1357 with blocks.",
   "source": "lesson-variant"
@@ -813,6 +818,11 @@
   "key": "745b6eb38edff8a6",
   "text": "Hedgie adds 1. Now it's 11.",
   "source": "race-bot-adds"
+ },
+ {
+  "key": "74840c74c0358062",
+  "text": "That did not work. Let's start fresh!",
+  "source": "owl-line"
  },
  {
   "key": "74e666b4ab2b3b88",
@@ -1228,6 +1238,11 @@
   "key": "a58aba8195011222",
   "text": "Panda baked 54 buns and sold 29 of them. How many buns are left?",
   "source": "lesson-exercise"
+ },
+ {
+  "key": "a60f04dfeac99b4e",
+  "text": "Math could not be loaded. Close the app and try again.",
+  "source": "owl-line"
  },
  {
   "key": "a6b6a5b8e605822b",

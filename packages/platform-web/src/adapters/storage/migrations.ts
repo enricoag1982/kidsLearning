@@ -33,4 +33,11 @@ export const MIGRATIONS: readonly Migration[] = [
       // 6: backup format v6 (per-subject sections, m11.3); storage layout unchanged.
     },
   },
+  {
+    to: 7,
+    migrate: () => {
+      // 7: `placement-decisions` (m15.4, one record per profile in each subject's own store); a profile without one reads as
+      // "not answered yet", nothing to transform.
+    },
+  },
 ];

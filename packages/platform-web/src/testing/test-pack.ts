@@ -121,6 +121,7 @@ export function createTestLocales(title: string): LoadedSubject['locales'] {
         subjects: {
           title: 'What shall we learn?',
           'owl-line': 'What would you like to learn today?',
+          'load-failed': '{{name}} could not be loaded. Close the app and try again.',
         },
       },
     },

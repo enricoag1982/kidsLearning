@@ -157,6 +157,26 @@ export function newAssessmentResult(
   };
 }
 
+/** The kid's answer to the placement offer: `'taken'` = accepted (placement started), `'declined'` = said no. */
+export type PlacementChoice = 'taken' | 'declined';
+
+/** One profile's stored answer to the placement offer in one subject (that subject's own store): the offer is made once per
+ * profile and subject, so a stored decision, either way, means it is never offered again. */
+export interface PlacementDecision extends StoredRecord {
+  readonly profileId: string;
+  readonly decision: PlacementChoice;
+}
+
+export function newPlacementDecision(
+  id: string,
+  profileId: string,
+  decision: PlacementChoice,
+  now: Date,
+): PlacementDecision {
+  const nowIso = now.toISOString();
+  return { id, profileId, decision, createdAt: nowIso, updatedAt: nowIso };
+}
+
 /** A lesson/world unlocked out of order (test-out, placement or parent); `targetId`s feed `journey.ts`'s `unlocked`. */
 export interface Unlock extends StoredRecord {
   readonly profileId: string;

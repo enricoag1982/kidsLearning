@@ -72,10 +72,10 @@ Rules: `docs/retrospective.md` §9 (≤ 3–4 commits per agent run, lead decide
 
 | # | Item | Notes |
 |---|---|---|
-| F1 | Import Chess for Kids progress without a file | Same origin (`enricoag1982.github.io`): read `chess-kids:` localStorage once on first run (not iOS home-screen apps: separate storage) |
-| F2 | Parent overview when a subject pack fails to load | Today an unhandled rejection; show the other subjects and an error line |
-| F3 | Placement decision not stored | Offered again on entering an untouched subject after a restart |
-| F4 | Interim single-store configs | `CHESS_APP_CONFIG` `subjectStoragePrefix` only serves tests; drop when those tests use `KIDS_APP_CONFIG` (`MATH_APP_CONFIG` removed in `m13.5`) |
+| F1 | Import Chess for Kids progress without a file | Same origin (`enricoag1982.github.io`): read `chess-kids:` localStorage once on first run (not iOS home-screen apps: separate storage) — fixed in `m15.4` (first-run offer, `domain-model.md` §2) |
+| F2 | Parent overview when a subject pack fails to load | Today an unhandled rejection; show the other subjects and an error line — fixed in `m15.4` (`subjects.load-failed` line in the overview card, the report / settings panels and the hub: tile disabled, Owl says it) |
+| F3 | Placement decision not stored | Offered again on entering an untouched subject after a restart — fixed in `m15.4` (`PlacementDecision` per profile and subject, storage v7, backup + merge) |
+| F4 | Interim single-store configs | `CHESS_APP_CONFIG` `subjectStoragePrefix` only serves tests; drop when those tests use `KIDS_APP_CONFIG` (`MATH_APP_CONFIG` removed in `m13.5`) — fixed in `m15.4` (`CHESS_APP_CONFIG` deleted; tests use `KIDS_TEST_APP_CONFIG`) |
 | F5 | Card-kit Hint button | 56 px like the shared controls; every other card target ≥ 64 px — fixed in `m15.2` |
 | F6 | Crowded control rows | `compact` buttons are `flex-1` with `min-w-14`, so 4 buttons squeeze (coding guided try at 1024 × 768: Reset label touches its padding) instead of wrapping; try `min-width: auto` (content) and check chess / math rows — fixed in `m15.2` |
 | F7 | Bug Squash / boss badges | No generic "mini-game won" badge condition: Bug Squasher counts clean `seq-debug` hunts instead (`docs/subjects/coding/curriculum.md`) — fixed in `m15.5` (`minigame-won`) |
@@ -121,3 +121,4 @@ Rules: `docs/retrospective.md` §9 (≤ 3–4 commits per agent run, lead decide
 | v1.1.0 tag after release checks (Coding) | Actions → Tag, `ref` = the `m12.7` merge commit |
 | v1.2.0 tag after release checks (Math) | Actions → Tag, `ref` = the `m13.15` merge commit |
 | v1.3.0 tag after release checks (Logic) | Actions → Tag, `ref` = the last M14 merge commit (`m14.14`, phone polish) |
+| v1.3.1 tag after release checks (follow-ups) | First run on a device that has Chess for Kids progress: the import offer shows once and brings the children along (F1); Actions → Tag, `ref` = the last M15 merge commit |

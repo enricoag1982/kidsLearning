@@ -1,4 +1,4 @@
-import type { AssessmentResult, Unlock } from '../domain/assessment.ts';
+import type { AssessmentResult, PlacementDecision, Unlock } from '../domain/assessment.ts';
 import type { BadgeDef, EarnedBadge } from '../domain/badges.ts';
 import type { TracksCatalog } from '../domain/journey.ts';
 import type { Lesson } from '../domain/lesson.ts';
@@ -66,6 +66,10 @@ export interface AssessmentRepository {
   listAssessmentResults(profileId: string): Promise<AssessmentResult[]>;
   addUnlock(unlock: Unlock): Promise<void>;
   listUnlocks(profileId: string): Promise<Unlock[]>;
+  /** The profile's stored answer to this subject's placement offer; `undefined` until it answered. */
+  getPlacementDecision(profileId: string): Promise<PlacementDecision | undefined>;
+  /** Replaces the profile's decision (one per profile). */
+  savePlacementDecision(decision: PlacementDecision): Promise<void>;
   deleteProfileData(profileId: string): Promise<void>;
 }
 

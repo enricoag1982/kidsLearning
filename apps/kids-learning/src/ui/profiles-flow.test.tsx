@@ -77,7 +77,7 @@ describe('first run', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Read our privacy policy' }));
     const dialog = await screen.findByRole('dialog', { name: 'Privacy' });
-    await within(dialog).findByText(/Chess for Kids keeps everything on this device/);
+    await within(dialog).findByText(/Kids Learning keeps everything on this device/);
     expect(within(dialog).getByText(/No sign-up, no analytics, no ads/)).toBeTruthy();
 
     fireEvent.click(within(dialog).getByRole('button', { name: 'Close' }));

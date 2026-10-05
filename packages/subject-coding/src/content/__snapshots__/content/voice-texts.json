@@ -85,6 +85,11 @@
   "source": "exercise-note"
  },
  {
+  "key": "0f77ddf23f3d2614",
+  "text": "Coding could not be loaded. Close the app and try again.",
+  "source": "owl-line"
+ },
+ {
   "key": "10141d74ed99846e",
   "text": "Owl says: now Fox walks like you do. Forward goes the way Fox faces. Turn left or turn right to face a new way!",
   "source": "lesson-story"
@@ -353,6 +358,11 @@
   "key": "39fb3677434f9f73",
   "text": "Oops, Fox hit the edge at step 20! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "39fba8b6577211bc",
+  "text": "Found chess progress from Chess for Kids on this device. Bring it here?",
+  "source": "owl-line"
  },
  {
   "key": "3a9fbe7a9244db61",
@@ -668,6 +678,11 @@
   "key": "74698121229f15b0",
   "text": "Oops, Fox hit the edge at step 2! This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "74840c74c0358062",
+  "text": "That did not work. Let's start fresh!",
+  "source": "owl-line"
  },
  {
   "key": "75eba8d4d0fc8e3a",

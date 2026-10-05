@@ -1,5 +1,11 @@
-import type { AssessmentKind, AssessmentScope, AssessmentScore } from '../domain/assessment.ts';
-import { newAssessmentResult, newUnlock } from '../domain/assessment.ts';
+import type {
+  AssessmentKind,
+  AssessmentScope,
+  AssessmentScore,
+  PlacementChoice,
+  PlacementDecision,
+} from '../domain/assessment.ts';
+import { newAssessmentResult, newPlacementDecision, newUnlock } from '../domain/assessment.ts';
 import type { TracksCatalog } from '../domain/journey.ts';
 import { worldLessons } from '../domain/journey.ts';
 import type { Lesson } from '../domain/lesson.ts';
@@ -42,6 +48,31 @@ export async function loadUnlocked(
   if (deps.assessment === undefined) return undefined;
   const unlocks = await deps.assessment.listUnlocks(profileId);
   return new Set(unlocks.map((unlock) => unlock.targetId));
+}
+
+/** The profile's stored answer to the active subject's placement offer; `undefined` before it answered (or without `deps.assessment`). */
+export async function getPlacementDecision(
+  deps: AppDeps,
+  profileId: string,
+): Promise<PlacementDecision | undefined> {
+  return deps.assessment?.getPlacementDecision(profileId);
+}
+
+/** Stores the profile's answer to the active subject's placement offer (taken or declined), so the offer is not made again; a later
+ * answer replaces the earlier one in the same record. */
+export async function recordPlacementDecision(
+  deps: AppDeps,
+  profileId: string,
+  decision: PlacementChoice,
+): Promise<void> {
+  const assessment = requireAssessment(deps);
+  const now = deps.clock.now();
+  const existing = await assessment.getPlacementDecision(profileId);
+  await assessment.savePlacementDecision(
+    existing === undefined
+      ? newPlacementDecision(deps.ids.next(), profileId, decision, now)
+      : { ...existing, decision, updatedAt: now.toISOString() },
+  );
 }
 
 function lessonsInScope(deps: AppDeps, catalog: TracksCatalog, scope: AssessmentScope): Lesson[] {
