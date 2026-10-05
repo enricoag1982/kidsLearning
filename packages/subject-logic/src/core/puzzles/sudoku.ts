@@ -258,10 +258,22 @@ const findLastCell: Finder = (layout, grid) => {
   return undefined;
 };
 
-// A digit missing from a unit that fits in exactly one of the unit's empty cells.
-const findHiddenSingle: Finder = (layout, grid) => {
+// A digit missing from a unit that fits in exactly one of the unit's empty cells. `boxesFirst` scans the boxes, then the rows, then the
+// columns (a lesson that teaches "only place" in a box); the default scan is rows, columns, boxes.
+function findHiddenSingleIn(
+  layout: Layout,
+  grid: SudokuGrid,
+  boxesFirst: boolean,
+): SudokuStep | undefined {
   const masks = grid.map((value, cell) => (value === 0 ? usedMask(layout, grid, cell) : 0));
-  for (const [index, unit] of layout.units.entries()) {
+  const scan = layout.units.map((unit, index) => ({ unit, index }));
+  const ordered = boxesFirst
+    ? [
+        ...scan.filter(({ unit }) => unit.kind === 'box'),
+        ...scan.filter(({ unit }) => unit.kind !== 'box'),
+      ]
+    : scan;
+  for (const { unit, index } of ordered) {
     const cells = layout.cells[index] ?? [];
     let present = 0;
     for (const cell of cells) {
@@ -285,7 +297,9 @@ const findHiddenSingle: Finder = (layout, grid) => {
     }
   }
   return undefined;
-};
+}
+
+const findHiddenSingle: Finder = (layout, grid) => findHiddenSingleIn(layout, grid, false);
 
 // An empty cell where all digits but one appear in its row, column or box.
 const findNakedSingle: Finder = (layout, grid) => {
@@ -310,7 +324,9 @@ const FINDERS: Readonly<Record<SudokuTechnique, Finder>> = {
 
 /**
  * The next deducible step with one of the `allowed` techniques: `prefer` first (when allowed), then the allowed ones in
- * {@link SUDOKU_ORDER}; within a technique the scan is fixed (units: rows, columns, boxes, digits ascending; cells ascending).
+ * {@link SUDOKU_ORDER}; within a technique the scan is fixed (units: rows, columns, boxes, digits ascending; cells ascending),
+ * except that a preferred `hidden-single` scans the boxes first, then the rows, then the columns (the "only place" lesson points at
+ * a box). Without `prefer` the scan is always the default one, so `humanSolveSudoku` and the generator are unchanged.
  * `undefined` = none (solved or stuck).
  */
 export function nextSudokuStep(
@@ -326,7 +342,10 @@ export function nextSudokuStep(
     order.unshift(prefer);
   }
   for (const technique of order) {
-    const step = FINDERS[technique](layout, grid);
+    const step =
+      technique === 'hidden-single' && prefer === 'hidden-single'
+        ? findHiddenSingleIn(layout, grid, true)
+        : FINDERS[technique](layout, grid);
     if (step) {
       return step;
     }

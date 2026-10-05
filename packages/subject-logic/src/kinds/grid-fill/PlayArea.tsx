@@ -32,7 +32,7 @@ const CELL_ID = /^grid-cell-(\d+)-(\d+)$/;
 /** The board, the number pad (sudoku) or the tools (picture cross), the Notes toggle and Hint. The selected cell, the notes mode and the
  * tool are this component's own state: only an entry reaches the engine. A rejected entry shakes its cell and rings the unit that shows
  * why for a moment; a hint rings the units of its step (level 1), names the technique and rings the cell (level 2) or fills it
- * (level 3, flashing). A solved picture shows its `reveal` over the board. */
+ * (level 3, flashing). A guided sudoku rings its target cell(s). A picture shows a "?" below the board and its `reveal` there once solved. */
 function GridFillPlay({
   def,
   state,
@@ -60,6 +60,10 @@ function GridFillPlay({
 
   const rings: BoardRings = {
     selected: sudoku && !solved && selected !== null ? selected : undefined,
+    // A guided try rings the cell(s) to fill until they are filled; the selected one shows the selection instead.
+    ringed: sudoku
+      ? def.targets?.filter((cell) => core.cells[cell] === undefined && cell !== selected)
+      : undefined,
     hint: hint?.units.flatMap((unit) => unitIndices(puzzle, unit)),
     target: hint?.level === 2 ? hint.cell : undefined,
     bad: wrong?.conflict === undefined ? undefined : unitIndices(puzzle, wrong.conflict),
@@ -127,7 +131,8 @@ function GridFillPlay({
 
   const labels = puzzle.rules === 'picture-cross' ? clueLabels(puzzle) : undefined;
   const boxes = puzzle.rules === 'sudoku' ? boxesOf(puzzle) : undefined;
-  const reveal = puzzle.rules === 'picture-cross' && solved ? puzzle.reveal : undefined;
+  // A picture with a `reveal` has a slot below the board from the start ("?"), so the drawing is never covered and the board never moves.
+  const revealSlot = puzzle.rules === 'picture-cross' ? puzzle.reveal : undefined;
 
   const board = (
     <div className="flex h-full w-full flex-col gap-2">
@@ -153,23 +158,29 @@ function GridFillPlay({
           {...(labels === undefined ? {} : { edgeLabels: labels })}
           label={t(sudoku ? 'grid.board.sudoku' : 'grid.board.cross', { size: puzzle.size })}
         />
-        {reveal !== undefined && (
-          <div
-            role="img"
-            aria-label={t('grid.reveal')}
-            data-testid="grid-reveal"
-            className="pointer-events-none absolute inset-0 flex items-center justify-center"
-          >
+      </div>
+      {revealSlot !== undefined && (
+        <div className="flex h-14 shrink-0 items-center justify-center">
+          {solved ? (
+            <span
+              role="img"
+              aria-label={t('grid.reveal')}
+              data-testid="grid-reveal"
+              className="group-drop rounded-2xl bg-card px-4 py-1 text-4xl leading-none shadow"
+            >
+              {revealSlot}
+            </span>
+          ) : (
             <span
               aria-hidden="true"
-              className="group-drop rounded-3xl bg-card/85 p-[3cqmin] leading-none shadow-lg"
-              style={{ fontSize: '48cqmin' }}
+              data-testid="grid-reveal-slot"
+              className="flex h-12 w-16 items-center justify-center rounded-2xl border-2 border-dashed border-edge-neutral font-display text-2xl leading-none font-bold text-muted"
             >
-              {reveal}
+              ?
             </span>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </div>
   );
 

@@ -1,0 +1,26 @@
+# W3 lesson 3: only number. A cell where all numbers but one are already in its row, column or box. 4 x 4 sudoku, techniques allowed:
+# last cell and only number. Generated; seeds are stored, never change them.
+id: grd-only-number
+order: 3
+concept: grd-only-number
+character: panda
+demo:
+  prompt: { big: '1 2 4 ?' }
+guided:
+  - id: num-g1
+    generate: { template: sdk-number, count: 1, seed: 4, params: { empty: 7, guided: true } }
+  - id: num-g2
+    generate: { template: sdk-number, count: 1, seed: 8, params: { empty: 8, guided: true } }
+exercises:
+  - id: num-8
+    generate: { template: sdk-number, count: 1, seed: 9, params: { empty: 8 } }
+  - id: num-9
+    generate: { template: sdk-number, count: 1, seed: 10, params: { empty: 9 } }
+  - id: num-10a
+    generate: { template: sdk-number, count: 1, seed: 11, params: { empty: 10 } }
+  - id: num-10b
+    easier: num-easy-1
+    generate: { template: sdk-number, count: 1, seed: 12, params: { empty: 10 } }
+variants:
+  - id: num-easy
+    generate: { template: sdk-number, count: 1, seed: 5, params: { empty: 7 } }

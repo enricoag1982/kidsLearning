@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { configure, fireEvent, render, screen } from '@testing-library/react';
+import { configure, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import i18next from 'i18next';
 import { tContent } from '@learn/platform-web/content-text.ts';
 import { jsdomPage } from '@learn/platform-web/testing/jsdom-page.ts';
@@ -108,12 +108,14 @@ describe('the #logic playground', () => {
     fireEvent.click(screen.getByRole('button', { name: 'fx-grid-guided (guided)' }));
     await screen.findByText(text('grid.instruction.sudoku'));
     expect(screen.getByRole('button', { name: /Skip/ })).toBeTruthy();
-    expect(
-      (await screen.findAllByTestId(/^grid-highlight-/)).every(
-        (ring) => ring.dataset['kind'] === 'hint',
-      ),
-    ).toBe(true);
-    expect(screen.getAllByTestId(/^grid-highlight-/)).toHaveLength(4);
+    // The ringed unit (hint 1): its 3 other cells dashed, the one target cell ringed solid (the target is ringed from the start).
+    const kinds = (): (string | undefined)[] =>
+      screen.queryAllByTestId(/^grid-highlight-/).map((ring) => ring.dataset['kind']);
+    await waitFor(() => {
+      expect(kinds().filter((kind) => kind === 'hint')).toHaveLength(3);
+    });
+    expect(kinds().filter((kind) => kind === 'target')).toHaveLength(1);
+    expect(kinds()).toHaveLength(4);
 
     fireEvent.click(screen.getByRole('button', { name: 'fx-grid-last' }));
     await screen.findByText(text('grid.instruction.sudoku'));

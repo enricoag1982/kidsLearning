@@ -355,6 +355,34 @@ describe('nextSudokuStep', () => {
     expect(places).toEqual([step.cell]);
   });
 
+  it('a preferred hidden single scans the boxes first, then the rows, then the columns; without `prefer` the scan is rows, columns, boxes', () => {
+    const { size: four, grid: puzzle } = parseSudoku(['.4.3', '.1.4', '1.42', '4231']);
+    const only = ['hidden-single'] as const;
+    // Row 0 holds a hidden single (its 1 fits only the first cell), and so does the first box (its 3).
+    const byDefault = nextSudokuStep(four, puzzle, only);
+    expect(byDefault?.units).toEqual([{ kind: 'row', index: 0 }]);
+    const preferred = nextSudokuStep(four, puzzle, only, 'hidden-single');
+    expect(preferred?.units).toEqual([{ kind: 'box', index: 0 }]);
+    expect(preferred).toMatchObject({ technique: 'hidden-single', cell: 4, value: 3 });
+    // Both are correct deductions; the counts of `humanSolveSudoku` (no `prefer`) do not depend on the preferred scan.
+    // Both are correct deductions; the steps of `humanSolveSudoku` (no `prefer`) keep the default scan.
+    const solved = humanSolveSudoku(four, puzzle, SUDOKU_ORDER).grid;
+    expect(byDefault?.value).toBe(solved[byDefault?.cell ?? 0]);
+    expect(preferred?.value).toBe(solved[preferred?.cell ?? 0]);
+    expect(
+      humanSolveSudoku(four, puzzle, LESSON_TECHNIQUES['hidden-single']).steps[0]?.units,
+    ).toEqual([{ kind: 'row', index: 2 }]);
+    // With no hidden single in a box, the rows come next, then the columns.
+    const rowOnly = parseSudoku(['.1..', '....', '..43', '....']).grid;
+    expect(nextSudokuStep(four, rowOnly, only, 'hidden-single')?.units).toEqual([
+      { kind: 'row', index: 2 },
+    ]);
+    const columnOnly = parseSudoku(['..4.', '....', '2.1.', '.12.']).grid;
+    expect(nextSudokuStep(four, columnOnly, only, 'hidden-single')?.units).toEqual([
+      { kind: 'column', index: 2 },
+    ]);
+  });
+
   it('a naked single: the only candidate of its cell, with the cell’s row, column and box', () => {
     const step = nextSudokuStep(size, grid, SUDOKU_ORDER, 'naked-single');
     if (!step) {

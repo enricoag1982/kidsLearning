@@ -60,6 +60,39 @@ cls-line-up:
 sorting-sprint:
   title: Sorting Sprint
   goal: Help Pip sort the shells!
+grd-last:
+  title: Last empty cell
+  story: >-
+    Pip has a number grid. The rule: each row, column and box has every number once.
+    If only one cell is empty, which number is missing?
+  demo: This row has 1, 2 and 4. The missing number is 3.
+grd-only-place:
+  title: Only place
+  story: >-
+    Sometimes a number fits in only one place. Pick a box and a number.
+    Cross out every cell that already sees that number. One cell is left!
+  demo: The 3s in these rows block two cells. Only one cell in the box can take the 3.
+grd-only-number:
+  title: Only number
+  story: >-
+    Now pick one empty cell. Which numbers are already in its row, its column and its box?
+    Cross them out. The number left is the answer.
+  demo: Its row has 1, its column has 2 and 4. Only 3 is left.
+grd-six:
+  title: Six by six
+  story: >-
+    A bigger grid! Six numbers, and each box has two rows of three.
+    The same tricks still work.
+  demo: This box already has 1, 2, 4, 5 and 6. The empty cell gets 3.
+grd-pixels:
+  title: Picture cross
+  story: >-
+    Picture cross! The numbers say how many cells in a line are filled, in groups.
+    Fill the cells you are sure of, cross out the empty ones, and a picture appears.
+  demo: 'A 5 in a row of five: fill them all. A 0: cross them all out.'
+sudoku-sprint:
+  title: Sudoku Sprint
+  goal: Fill the grids, step by step!
 # The misconception reasons (docs/subjects/logic/curriculum.md §3): the one sentence spoken when the wrong answer matches.
 bugs:
   unit-break: Say the pattern from the start. Which part repeats?
@@ -156,6 +189,12 @@ templates:
     size-tiny: They are all tiny.
     size-medium: They are all medium.
     size-huge: They are all huge.
+  # W3 (m14.11): the sudoku sentences.
+  sdk-guided: Which number goes in the ringed cell?
+  sdk-last: Fill the grid. Look for a row, column or box with one empty cell.
+  sdk-place: Fill the grid. For each number, find the only place it can go in a box.
+  sdk-number: Fill the grid. For each empty cell, find the only number left.
+  sdk-six: 'Fill the big grid: each row, column and box has 1 to 6 once.'
 # The authored "taller than" items of cls-line-up (`lu-*`): each clue is a sentence, the answer needs both.
 lu-tallest: The bear is taller than the fox. The fox is taller than the rabbit. Who is the tallest?
 lu-shortest: The giraffe is taller than the horse. The horse is taller than the dog. Who is the shortest?

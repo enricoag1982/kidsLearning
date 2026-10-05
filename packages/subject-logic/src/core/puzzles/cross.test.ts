@@ -138,7 +138,7 @@ const PICTURES: Record<
     rows: ['..#..', '..#..', '#####', '..#..', '..#..'],
     rowClues: [[1], [1], [5], [1], [1]],
     colClues: [[1], [1], [5], [1], [1]],
-    needs: 3,
+    needs: 2,
   },
   heart: {
     rows: ['.#.#.', '#####', '#####', '.###.', '..#..'],
@@ -197,13 +197,22 @@ describe('humanSolveCross on hand-drawn 5 × 5 pictures', () => {
         expect(total).toBe(result.steps.length);
       });
 
-      it('needs combine: level 2 gets stuck', () => {
-        const result = humanSolveCross(size, rows, cols, 2);
-        expect(result.solved).toBe(false);
-        expect(result.counts.combine).toBe(0);
-        expect(result.cells.some((cell) => cell === undefined)).toBe(true);
-        expect(humanSolveCross(size, rows, cols, 3).counts.combine).toBeGreaterThan(0);
-      });
+      if (picture.needs === 3) {
+        it('needs combine: level 2 gets stuck', () => {
+          const result = humanSolveCross(size, rows, cols, 2);
+          expect(result.solved).toBe(false);
+          expect(result.counts.combine).toBe(0);
+          expect(result.cells.some((cell) => cell === undefined)).toBe(true);
+          expect(humanSolveCross(size, rows, cols, 3).counts.combine).toBeGreaterThan(0);
+        });
+      } else {
+        it('needs no combine: level 2 solves it', () => {
+          const result = humanSolveCross(size, rows, cols, 2);
+          expect(result.solved).toBe(true);
+          expect(result.counts.combine).toBe(0);
+          expect(humanSolveCross(size, rows, cols, 3).counts.combine).toBe(0);
+        });
+      }
 
       it('level 1 solves only the full lines', () => {
         const result = humanSolveCross(size, rows, cols, 1);
@@ -217,23 +226,38 @@ describe('humanSolveCross on hand-drawn 5 × 5 pictures', () => {
     const { size, solution } = parsePicture(PICTURES.plus?.rows ?? []);
     const { rows, cols } = pictureClues(size, solution);
     const result = humanSolveCross(size, rows, cols, 3);
-    expect(result.counts).toEqual({ 'full-line': 1, overlap: 0, 'cross-out': 4, combine: 4 });
+    // Column 2 is a full line too: the clue alone still fills it after row 2 was done (known cells do not make it a combine).
+    expect(result.counts).toEqual({ 'full-line': 2, overlap: 0, 'cross-out': 4, combine: 0 });
     expect(result.steps.map((step) => [step.technique, step.line.kind, step.line.index])).toEqual([
       ['full-line', 'row', 2],
-      ['cross-out', 'column', 0],
-      ['cross-out', 'column', 1],
-      ['cross-out', 'column', 3],
-      ['cross-out', 'column', 4],
-      ['combine', 'row', 0],
-      ['combine', 'row', 1],
-      ['combine', 'row', 3],
-      ['combine', 'row', 4],
+      ['full-line', 'column', 2],
+      ['cross-out', 'row', 0],
+      ['cross-out', 'row', 1],
+      ['cross-out', 'row', 3],
+      ['cross-out', 'row', 4],
     ]);
     expect(result.steps[0]?.cells).toEqual(
       [0, 1, 2, 3, 4].map((c) => ({ cell: 10 + c, value: F })),
     );
-    // Column cells are row-major indices.
-    expect(result.steps[1]?.cells).toEqual([0, 5, 15, 20].map((cell) => ({ cell, value: X })));
+    // Column cells are row-major indices: column 2 gets its 4 other cells.
+    expect(result.steps[1]?.cells).toEqual([2, 7, 17, 22].map((cell) => ({ cell, value: F })));
+    // Level 1 stops after the two full lines; level 2 finishes without combine.
+    expect(humanSolveCross(size, rows, cols, 1).steps).toHaveLength(2);
+    expect(humanSolveCross(size, rows, cols, 2).solved).toBe(true);
+  });
+
+  it('pictures drawn as animals can be solved at level 2: a rabbit and an owl without any combine', () => {
+    for (const drawing of [
+      ['.#.#.', '.#.#.', '#####', '#.#.#', '.###.'],
+      ['##.##', '#####', '#.#.#', '#####', '.#.#.'],
+    ]) {
+      const { size, solution } = parsePicture(drawing);
+      const { rows, cols } = pictureClues(size, solution);
+      const result = humanSolveCross(size, rows, cols, 2);
+      expect(result.solved, drawing.join('/')).toBe(true);
+      expect(result.counts.combine).toBe(0);
+      expect(humanSolveCross(size, rows, cols, 1).solved).toBe(false);
+    }
   });
 
   it('a picture solved with full lines and cross-outs needs no combine', () => {
@@ -305,6 +329,33 @@ describe('nextCrossStep', () => {
       { cell: 3, value: F },
     ]);
     expect(nextCrossStep(5, rows, twos, cells, 2)).toBeUndefined();
+  });
+
+  it('full-line and overlap read the clue alone: known cells elsewhere in the line do not make them a combine', () => {
+    // A row of 5 with its middle cell known: the clue alone still fills the other four.
+    const known = [...none];
+    known[2] = F;
+    expect(nextCrossStep(5, [[5], ...threes.slice(1)], threes, known, 1)).toEqual({
+      technique: 'full-line',
+      line: { kind: 'row', index: 0 },
+      cells: [0, 1, 3, 4].map((cell) => ({ cell, value: F })),
+    });
+    // A run of 4 with its second cell known: the clue alone forces cells 1-3, so the two new cells are an overlap.
+    const second = [...none];
+    second[1] = F;
+    expect(nextCrossStep(5, [[4], ...threes.slice(1)], threes, second, 2)).toEqual({
+      technique: 'overlap',
+      line: { kind: 'row', index: 0 },
+      cells: [2, 3].map((cell) => ({ cell, value: F })),
+    });
+    // A run of 3 with its first cell crossed: cells 2 and 3 are both filled, but the clue alone only forces cell 2: a combine.
+    const crossed = [...none];
+    crossed[0] = X;
+    const twos = [[2], [2], [2], [2], [2]];
+    const step = nextCrossStep(5, [[3], ...twos.slice(1)], twos, crossed, 3);
+    expect(step?.technique).toBe('combine');
+    expect(step?.line).toEqual({ kind: 'row', index: 0 });
+    expect(step?.cells).toEqual([2, 3].map((cell) => ({ cell, value: F })));
   });
 
   it('lowest level first, then rows before columns', () => {

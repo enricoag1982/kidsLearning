@@ -1,5 +1,5 @@
-// A lesson of `grid-fill` exercises, for the App-flow tests and the `/#logic` playground: no shipped lesson uses the kind yet (World 3
-// does, m14.11). The exercises are the kind's samples (each sudoku focus, a 6 x 6, two pictures); the lesson and its texts are added
+// A lesson of `grid-fill` exercises, for the App-flow tests and the `/#logic` playground (World 3, m14.11, has its own). The exercises
+// are the kind's samples (each sudoku focus, a 6 x 6, two pictures); the lesson and its texts are added
 // here, in Pattern Pond, the one world logic has. Never imported by app code.
 import type { TracksCatalog } from '@learn/platform-core';
 import type { GridFillDef } from '../../kinds/grid-fill/def.ts';

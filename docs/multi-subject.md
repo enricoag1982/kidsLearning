@@ -88,6 +88,7 @@ Rules: `docs/retrospective.md` §9 (≤ 3–4 commits per agent run, lead decide
 | F14 | Number rows on a phone | a 5-term number row (`step-next` "3 7 11 15 19 ?") wraps to two lines at 390 px: the number-entry pad narrows the card (m14.9 visual pass) |
 | F15 | Prompt-less choice layout | a card-kit `choice` without a prompt (logic `odd-one`) draws small option tiles at the bottom with the board slot empty; options should fill the board slot (m14.10 visual pass) — fixed in `m14.12` |
 | F16 | Venn on a phone | the card pool of a Venn sits partly below the fold at 390 × 844 (one row of 3 visible) (m14.10 visual pass) |
+| F17 | Picture cross on a phone | 5 × 5 picture cells are 40 px at 390 × 844 (target 48): the lesson's board band is 302 px tall (m14.11 visual pass) |
 
 ## 5. After v1.0
 

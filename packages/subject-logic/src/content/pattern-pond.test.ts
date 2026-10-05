@@ -798,7 +798,7 @@ describe('the world, its rank and its badge', () => {
   it('has the Pattern Spotter badge (master the world and beat the train) and the star badge', () => {
     expect(
       compiled.badges
-        .filter((badge) => badge.id !== 'shore-sorter')
+        .filter((badge) => ['pattern-spotter', 'star-collector'].includes(badge.id))
         .map((badge) => [badge.id, badge.condition]),
     ).toEqual([
       ['pattern-spotter', { type: 'mastered', scope: 'world:pattern-pond', thresholds: [1] }],

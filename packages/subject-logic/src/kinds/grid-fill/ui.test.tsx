@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, fireEvent, screen } from '@testing-library/react';
 import { stubMatchMedia } from '@learn/platform-web/testing/mock-media-query.ts';
+import { parsePicture, pictureClues } from '../../core/puzzles/index.ts';
 import { GridFillHarness } from '../../web/testing/GridFillHarness.tsx';
 import { renderGridUi } from '../../web/testing/render-grid-ui.tsx';
 import type { CellValue, CrossPuzzle, GridFillAction, GridFillDef, GridFillState } from './def.ts';
@@ -582,14 +583,37 @@ describe('grid-fill UI: hints', () => {
   });
 
   it('a column step says "look at this column and its clue"', () => {
+    // Every row of this picture is a lone 1 (the clue alone fixes nothing), so the first full line is a column.
+    const { size, solution } = parsePicture(['#....', '#....', '#....', '#....', '#....']);
+    const clues = pictureClues(size, solution);
+    const stripe: GridFillDef = {
+      ...castle,
+      id: 'fx-grid-stripe',
+      puzzle: {
+        rules: 'picture-cross',
+        size,
+        rows: clues.rows,
+        cols: clues.cols,
+        solution,
+        maxLevel: 1,
+      },
+    };
+    mount(stripe);
+    hint();
+    expect(note()).toBe('Look at this column and its clue.');
+    expect(ringed(stripe, 'hint')).toEqual([0, 5, 10, 15, 20]);
+  });
+
+  it('a row step that is still the same line after one entry rings the rest of the row', () => {
     mount(castle);
-    // Fill row 0 and row 1 as the solver would, then the next step is another line.
+    // Hint 3 fills the first cell of row 0; the clue alone still fixes the others, so the next hint looks at row 0 again.
     hint();
     hint();
     hint();
     hint();
-    expect(note()).toMatch(/^Look at this (row|column) and its clue\.$/);
-    expect(ringed(castle, 'hint').length).toBe(5);
+    expect(note()).toBe('Look at this row and its clue.');
+    // The cell just filled flashes: the other four carry the ring.
+    expect(ringed(castle, 'hint')).toEqual([1, 2, 3, 4]);
   });
 
   it('a guided try shows hint 1 by itself: the units are ringed with no note under the instruction', () => {
@@ -680,10 +704,12 @@ describe('grid-fill UI: the picture tools', () => {
     expect(radio('Cross').getAttribute('aria-checked')).toBe('true');
   });
 
-  it('a solved picture shows its reveal over the board and takes the tools away', () => {
+  it('a solved picture shows its reveal below the board, where the "?" was, and takes the tools away', () => {
     mount(castle);
     expect(screen.queryByTestId('grid-reveal')).toBeNull();
+    expect(screen.getByTestId('grid-reveal-slot').textContent).toBe('?');
     playSolution(castle);
+    expect(screen.queryByTestId('grid-reveal-slot')).toBeNull();
     const reveal = screen.getByRole('img', { name: 'Picture revealed' });
     expect(reveal.textContent).toBe('🏰');
     expect(reveal.dataset['testid']).toBe('grid-reveal');
@@ -708,7 +734,7 @@ describe('grid-fill UI: the picture tools', () => {
     expect(screen.getByTestId('grid-reveal').textContent).toBe('🐱');
   });
 
-  it('a picture without a reveal, and a sudoku, show nothing over the board when solved', () => {
+  it('a picture without a reveal, and a sudoku, show no reveal slot at all', () => {
     const puzzle = castle.puzzle as CrossPuzzle;
     const bare: GridFillDef = {
       ...castle,
@@ -722,12 +748,14 @@ describe('grid-fill UI: the picture tools', () => {
       },
     };
     const view = mount(bare);
+    expect(screen.queryByTestId('grid-reveal-slot')).toBeNull();
     playSolution(bare);
     expect(session().dataset['solved']).toBe('true');
     expect(screen.queryByTestId('grid-reveal')).toBeNull();
     view.unmount();
 
     mount(lastCell);
+    expect(screen.queryByTestId('grid-reveal-slot')).toBeNull();
     playSolution(lastCell);
     expect(screen.queryByTestId('grid-reveal')).toBeNull();
   });
@@ -890,6 +918,35 @@ describe('grid-fill UI: toUi', () => {
     expect(gridFillUi.initUi(lastCell)).toEqual({});
     expect(gridFillUi.clearWrongUi()).toEqual({});
     expect(gridFillUi.type).toBe('grid-fill');
+  });
+});
+
+describe('grid-fill UI: a guided try', () => {
+  const guided = { ...lastCell, targets: [6] };
+
+  it('rings its target cell until it is filled (the selected target shows the selection); a whole grid rings nothing', () => {
+    const whole = mount(lastCell);
+    expect(ringed(lastCell, 'target')).toEqual([]);
+    whole.unmount();
+
+    mount(guided);
+    expect(ringed(guided, 'target')).toEqual([6]);
+    tap(guided, 6);
+    expect(ringed(guided, 'target')).toEqual([]);
+    expect(ringed(guided, 'selected')).toEqual([6]);
+    tap(guided, 8);
+    expect(ringed(guided, 'target')).toEqual([6]);
+    tap(guided, 6);
+    put(4);
+    expect(ringed(guided, 'target')).toEqual([]);
+    expect(screen.getByTestId('done').dataset['stars']).toBe('3');
+  });
+
+  it('keeps the ring on the target when a hint rings the unit around it', () => {
+    mount(guided);
+    hint();
+    expect(ringed(guided, 'target')).toEqual([6]);
+    expect(ringed(guided, 'hint')).toEqual([4, 5, 7]);
   });
 });
 

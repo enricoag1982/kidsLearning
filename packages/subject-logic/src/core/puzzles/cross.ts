@@ -8,7 +8,8 @@ export type CrossCell = 'fill' | 'cross';
 export type CrossCells = readonly (CrossCell | undefined)[];
 export type CrossTechnique = 'full-line' | 'overlap' | 'cross-out' | 'combine';
 
-/** The level a technique belongs to: a lesson allows the techniques up to its level. */
+/** The level a technique belongs to: a lesson allows the techniques up to its level. `full-line` and `overlap` read the clue alone (the
+ * whole line, or the cells it forces wherever the run sits); `cross-out` and `combine` also read what the other lines found. */
 export const CROSS_LEVEL: Readonly<Record<CrossTechnique, 1 | 2 | 3>> = {
   'full-line': 1,
   overlap: 2,
@@ -205,10 +206,16 @@ function lineStep(
   if (added.length === 0) {
     return undefined;
   }
-  const known = current.filter((value) => value !== undefined).length;
+  // The clue alone (nothing known) decides some cells of the line: all of them (`full-line`) or only a few (`overlap`). A step is one
+  // of these when the clue alone forces every cell it adds, whatever else is known in the line; the cells that need what the other
+  // lines found are `cross-out` (every filled cell is known: cross the rest) or `combine`.
+  const alone = solveLine(clue, new Array<CrossCell | undefined>(size).fill(undefined));
+  const forcedByClue = result.every(
+    (value, k) => current[k] !== undefined || value === undefined || alone?.[k] === value,
+  );
   let technique: CrossTechnique;
-  if (known === 0) {
-    technique = result.every((value) => value !== undefined) ? 'full-line' : 'overlap';
+  if (alone !== undefined && forcedByClue) {
+    technique = alone.every((value) => value !== undefined) ? 'full-line' : 'overlap';
   } else {
     const knownFills = current.filter((value) => value === 'fill').length;
     technique =

@@ -3,7 +3,9 @@ tracks:
 worlds:
   pattern-pond: Pattern Pond
   sort-shore: Sort Shore
+  grid-puzzles: Grid Puzzles
 ranks:
   thinker: Thinker
   spotter: Pattern Spotter
   sorter: Shore Sorter
+  solver: Puzzle Solver

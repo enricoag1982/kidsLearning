@@ -5,6 +5,9 @@ badges:
   shore-sorter:
     name: Shore Sorter
     condition: Master Sort Shore and beat Sorting Sprint
+  puzzle-solver:
+    name: Puzzle Solver
+    condition: Master Grid Puzzles and beat Sudoku Sprint
   star-collector:
     name: Star Collector
     condition_one: 'Earn {{count}} star'
