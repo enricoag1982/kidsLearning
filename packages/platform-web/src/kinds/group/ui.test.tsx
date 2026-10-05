@@ -164,6 +164,37 @@ describe('group UI: a row', () => {
     expect(classes[4]).toContain('grid-cols-2 min-[480px]:grid-cols-4');
   });
 
+  it('the pool keeps its columns by the number of cards the exercise has (not the number left): up to 4 cards in 4 columns, 5 to 8 in a row from 768 px and 3 columns on a phone', async () => {
+    const cards = (count: number): GroupDef => ({
+      ...row,
+      items: Array.from({ length: count }, (_unused, index) => ({
+        id: `c${String(index)}`,
+        shape: { kind: 'circle', colour: 'red', count: index + 1 },
+      })),
+      answer: Object.fromEntries(
+        Array.from({ length: count }, (_unused, index) => [`c${String(index)}`, 'red']),
+      ),
+    });
+    const classes: Record<number, string> = {};
+    for (const count of [3, 4, 5, 8]) {
+      await renderPlayArea(cards(count));
+      classes[count] = screen.getByRole('group', { name: 'Cards to sort' }).className;
+      cleanup();
+    }
+    expect(classes[3]).toContain('sm:grid-cols-3');
+    expect(classes[4]).toContain('grid-cols-2 sm:grid-cols-4');
+    expect(classes[5]).toContain('grid-cols-3');
+    expect(classes[5]).toContain('md:grid-cols-5');
+    expect(classes[8]).toContain('md:grid-cols-8');
+    // Placing cards leaves the columns as they were.
+    const { container } = await renderPlayArea(cards(8), {
+      core: { placed: { c0: 'red', c1: 'red' } },
+    });
+    expect(
+      container.querySelector('[role="group"][aria-label="Cards to sort"]')?.className,
+    ).toContain('md:grid-cols-8');
+  });
+
   it('a box can be labelled by an emoji or a shape (and is named by it)', async () => {
     const def: GroupDef = {
       ...row,
@@ -235,6 +266,13 @@ describe('group UI: a Venn', () => {
       ...container.querySelectorAll('[data-layout="venn"] > span[aria-hidden="true"]'),
     ];
     expect(labels.map((label) => label.textContent)).toEqual(['Square', 'Blue']);
+  });
+
+  it('keeps the board at most 28 rem wide and 46 % of the screen high (never under 17.5 rem), so the cards below stay on a tablet’s screen', async () => {
+    const { container } = await renderPlayArea(venn);
+    const board = container.querySelector<HTMLElement>('[data-layout="venn"]');
+    expect(board?.style.maxWidth).toBe('min(28rem, max(17.5rem, 46vh))');
+    expect(board?.style.aspectRatio).toBe('360 / 340');
   });
 
   it('lays four boxes over the regions, named "In both", "Only Square", "Only Blue", "Neither"', async () => {

@@ -248,8 +248,13 @@ export function VennLayout(props: LayoutProps): JSX.Element {
       aria-label={t('cards.group.boxes')}
       data-group-zones=""
       data-layout="venn"
-      className="relative mx-auto w-full max-w-md"
-      style={{ aspectRatio: `${String(VENN_VIEW.width)} / ${String(VENN_VIEW.height)}` }}
+      className="relative mx-auto w-full"
+      style={{
+        // At most 28 rem wide and, so the cards below stay on a tablet's screen, 46 % of its height (never under 17.5 rem: the zone
+        // buttons stay above 64 px).
+        maxWidth: 'min(28rem, max(17.5rem, 46vh))',
+        aspectRatio: `${String(VENN_VIEW.width)} / ${String(VENN_VIEW.height)}`,
+      }}
     >
       <svg
         viewBox={`0 0 ${String(VENN_VIEW.width)} ${String(VENN_VIEW.height)}`}

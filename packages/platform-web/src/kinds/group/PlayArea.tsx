@@ -18,6 +18,18 @@ import type { GroupPlayAreaProps } from './ui.ts';
 const TILE_SHAPE =
   'flex min-h-20 min-w-16 flex-col items-center justify-center rounded-2xl px-2 font-display';
 
+/** The pool's columns by the number of cards the exercise has (not the number left, so the tiles stay put while cards are placed):
+ * 2 on a phone for up to 4 cards, 3 for more; from a tablet's width one row for up to 8 cards (a tile stays above 64 px at 768 px), so
+ * the cards stay on the screen next to the boxes. */
+const POOL_COLUMNS: Readonly<Record<number, string>> = {
+  3: 'grid-cols-2 sm:grid-cols-3',
+  4: 'grid-cols-2 sm:grid-cols-4',
+  5: 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5',
+  6: 'grid-cols-3 sm:grid-cols-4 md:grid-cols-6',
+  7: 'grid-cols-3 sm:grid-cols-4 md:grid-cols-7',
+  8: 'grid-cols-3 sm:grid-cols-4 md:grid-cols-8',
+};
+
 /** The group hint the screen is showing, if the current hint is one. */
 function groupHintOf(hint: HintBase | null): GroupHint | undefined {
   return hint !== null && hint.kind === 'group' ? (hint as GroupHint) : undefined;
@@ -26,10 +38,13 @@ function groupHintOf(hint: HintBase | null): GroupHint | undefined {
 /** The cards still to sort, as raised tiles: a tap selects one (another card replaces it); the next box tap puts it there. */
 function Pool({
   items,
+  total,
   selected,
   onSelect,
 }: {
   readonly items: readonly GroupItem[];
+  /** How many cards the exercise has in all. */
+  readonly total: number;
   readonly selected?: string;
   readonly onSelect: (itemId: string) => void;
 }): JSX.Element {
@@ -39,7 +54,7 @@ function Pool({
     <div
       role="group"
       aria-label={t('cards.group.pool')}
-      className="grid grid-cols-2 gap-3 sm:grid-cols-4"
+      className={`grid gap-3 ${POOL_COLUMNS[total] ?? POOL_COLUMNS[4] ?? ''}`}
     >
       {items.map((item) => {
         const picked = item.id === selected;
@@ -126,6 +141,7 @@ function GroupPlay({
       />
       <Pool
         items={remaining}
+        total={def.items.length}
         {...(selected === undefined ? {} : { selected })}
         onSelect={(itemId) => {
           setPick({ itemId, at: state.hint });
