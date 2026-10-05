@@ -7,6 +7,7 @@ import { initGroupState } from '@learn/platform-core';
 import { GROUP_SAMPLES } from '@learn/platform-core/testing';
 import { renderCardUi } from '../../testing/card-test-entry.tsx';
 import { GROUP_KIND_UI } from './ui.ts';
+import { VENN_RECTS, VENN_VIEW } from './venn-geometry.ts';
 
 const { row, carroll, venn } = GROUP_SAMPLES;
 
@@ -130,7 +131,7 @@ describe('group UI: a row', () => {
     );
   });
 
-  it('boxes are at least 64 px (min-h-24, min-w-16), pool cards too (min-h-20, min-w-16), all raised', async () => {
+  it('boxes are at least 64 px (min-h-24, min-w-16), pool cards 56 px high on a phone and 80 from `sm` (min-w-16), all raised', async () => {
     await renderPlayArea(row);
     for (const name of ['Red', 'Blue']) {
       expect(zone(name).className).toContain('min-h-24');
@@ -138,7 +139,8 @@ describe('group UI: a row', () => {
       expect(zone(name).className).toContain('tap-raised');
     }
     for (const tile of pool().getAllByRole('button')) {
-      expect(tile.className).toContain('min-h-20');
+      expect(tile.className).toContain('min-h-14');
+      expect(tile.className).toContain('sm:min-h-20');
       expect(tile.className).toContain('min-w-16');
     }
   });
@@ -164,7 +166,7 @@ describe('group UI: a row', () => {
     expect(classes[4]).toContain('grid-cols-2 min-[480px]:grid-cols-4');
   });
 
-  it('the pool keeps its columns by the number of cards the exercise has (not the number left): up to 4 cards in 4 columns, 5 to 8 in a row from 768 px and 3 columns on a phone', async () => {
+  it('the pool keeps its columns by the number of cards the exercise has (not the number left): on a phone 3 or 4 per row (two rows at most), from 768 px 5 to 8 cards in a row', async () => {
     const cards = (count: number): GroupDef => ({
       ...row,
       items: Array.from({ length: count }, (_unused, index) => ({
@@ -176,15 +178,21 @@ describe('group UI: a row', () => {
       ),
     });
     const classes: Record<number, string> = {};
-    for (const count of [3, 4, 5, 8]) {
+    for (const count of [3, 4, 5, 6, 7, 8]) {
       await renderPlayArea(cards(count));
       classes[count] = screen.getByRole('group', { name: 'Cards to sort' }).className;
       cleanup();
     }
-    expect(classes[3]).toContain('sm:grid-cols-3');
-    expect(classes[4]).toContain('grid-cols-2 sm:grid-cols-4');
-    expect(classes[5]).toContain('grid-cols-3');
+    // The first `grid-cols-*` is the phone's.
+    const phone = (count: number): string | undefined =>
+      /(?:^|\s)grid-cols-(\d)(?:\s|$)/.exec(classes[count] ?? '')?.[1];
+    expect([3, 4, 5, 6, 7, 8].map(phone)).toEqual(['3', '4', '3', '3', '4', '4']);
+    // Two rows at most on a phone.
+    for (const count of [3, 4, 5, 6, 7, 8]) {
+      expect(Math.ceil(count / Number(phone(count))), String(count)).toBeLessThanOrEqual(2);
+    }
     expect(classes[5]).toContain('md:grid-cols-5');
+    expect(classes[7]).toContain('md:grid-cols-7');
     expect(classes[8]).toContain('md:grid-cols-8');
     // Placing cards leaves the columns as they were.
     const { container } = await renderPlayArea(cards(8), {
@@ -268,11 +276,22 @@ describe('group UI: a Venn', () => {
     expect(labels.map((label) => label.textContent)).toEqual(['Square', 'Blue']);
   });
 
-  it('keeps the board at most 28 rem wide and 46 % of the screen high (never under 17.5 rem), so the cards below stay on a tablet’s screen', async () => {
+  it('keeps the board at most 28 rem wide and 46 % of the screen high; on a phone or a screen up to 800 px high 7.5 rem less, never under 17 rem (a zone button stays 56 px), so a sort with an Owl note needs no scrolling', async () => {
     const { container } = await renderPlayArea(venn);
     const board = container.querySelector<HTMLElement>('[data-layout="venn"]');
-    expect(board?.style.maxWidth).toBe('min(28rem, max(17.5rem, 46vh))');
+    const classes = board?.className.split(/\s+/) ?? [];
+    expect(classes).toContain('max-w-[min(28rem,max(17.5rem,46dvh))]');
+    expect(classes).toContain(
+      '[@media(max-width:639px),(max-height:800px)]:max-w-[min(28rem,max(17rem,calc(46dvh_-_7.5rem)))]',
+    );
+    expect(board?.style.maxWidth).toBe('');
     expect(board?.style.aspectRatio).toBe('360 / 340');
+    // 17 rem = 272 px wide: the smallest zone (76 of 340 high, 80 of 360 wide) is still 56 px.
+    const scale = (17 * 16) / VENN_VIEW.width;
+    const smallest = Math.min(
+      ...Object.values(VENN_RECTS).flatMap((rect) => [rect.width * scale, rect.height * scale]),
+    );
+    expect(smallest).toBeGreaterThanOrEqual(56);
   });
 
   it('lays four boxes over the regions, named "In both", "Only Square", "Only Blue", "Neither"', async () => {

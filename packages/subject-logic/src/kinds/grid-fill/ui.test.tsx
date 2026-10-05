@@ -716,6 +716,21 @@ describe('grid-fill UI: the picture tools', () => {
     expect(screen.getByTestId('done').dataset['stars']).toBe('3');
   });
 
+  it('keeps the reveal row 40 px high on a phone (56 px from `sm`), so the cells keep the height under the board', () => {
+    mount(castle);
+    const slot = screen.getByTestId('grid-reveal-slot');
+    expect(slot.parentElement?.className).toContain('h-10 shrink-0');
+    expect(slot.parentElement?.className).toContain('sm:h-14');
+    expect(slot.className).toContain('h-10');
+    expect(slot.className).toContain('sm:h-12');
+    expect(slot.parentElement?.parentElement?.className).toContain('gap-1 sm:gap-2');
+    playSolution(castle);
+    const reveal = screen.getByTestId('grid-reveal');
+    expect(reveal.className).toContain('text-3xl');
+    expect(reveal.className).toContain('sm:text-4xl');
+    expect(reveal.parentElement?.className).toContain('h-10 shrink-0');
+  });
+
   it('shows the reveal of the picture that was solved (the cat), and none before the last cell', () => {
     mount(cat);
     const actions = gridFillSolution(cat);

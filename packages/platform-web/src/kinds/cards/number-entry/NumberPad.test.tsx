@@ -43,10 +43,11 @@ describe('NumberPad', () => {
     expect(names).toEqual(['1', '2', '3', '4', '5', '6', '7', '8', '9', 'Delete', '0', 'Check']);
   });
 
-  it('makes every key at least 64px square (h-16 min-w-16)', () => {
+  it('makes every key 64 px wide (min-w-16) and 56 px high on a phone, 64 from `sm` (h-14 sm:h-16: four rows must leave the page its height)', () => {
     renderPad(true);
     for (const button of screen.getAllByRole('button')) {
-      expect(button.className).toContain('h-16');
+      expect(button.className).toContain('h-14');
+      expect(button.className).toContain('sm:h-16');
       expect(button.className).toContain('min-w-16');
     }
   });

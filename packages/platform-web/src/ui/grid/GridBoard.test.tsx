@@ -3,9 +3,11 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import type { Cell } from '@learn/platform-core';
 import { stubMatchMedia } from '../../testing/mock-media-query.ts';
 import { GridBoard } from './GridBoard.tsx';
+import { COMPACT_METRICS } from './fit.ts';
 import type { GridActor, GridBoardProps } from './GridBoard.tsx';
 
 const REDUCED_MOTION = '(prefers-reduced-motion: reduce)';
+const PHONE = '(max-width: 639px)';
 
 function board(props: Partial<GridBoardProps> = {}): GridBoardProps {
   return { size: { cols: 5, rows: 5 }, label: 'Meadow, 5 by 5', ...props };
@@ -400,6 +402,15 @@ describe('GridBoard highlights', () => {
     expect(cellElement(4, 0).getAttribute('aria-label')).toBe('row 1, column 5, not right');
   });
 
+  it('draws the badge a third of the cell, never under 22 px, so its mark stays readable on a phone', () => {
+    render(<GridBoard {...board({ highlights: { '3,0': 'good', '4,0': 'bad' } })} />);
+    for (const mark of screen.getAllByTestId(/^grid-mark-/)) {
+      expect(mark.style.width).toBe('max(22px, 34%)');
+      expect(mark.style.height).toBe('max(22px, 34%)');
+      expect(mark.style.padding).toBe('max(2px, 4%)');
+    }
+  });
+
   it('keeps every mark out of the accessibility tree', () => {
     render(<GridBoard {...board({ highlights: { '0,0': 'good', '1,1': 'bad' } })} />);
     expect(screen.queryByRole('img', { name: /✓|✕|check|cross/i })).toBeNull();
@@ -713,6 +724,60 @@ describe('GridBoard edge labels', () => {
     expect(group.style.getPropertyValue('--grid-cell')).toBe('75px');
     expect(group.style.width).toBe('399px');
   });
+
+  describe('on a phone (under 640 px)', () => {
+    const three = { top: ['1', '1 1 1', '2', '1', '1'], left: ['1', '1', '1', '1', '1 1 1'] };
+
+    it('lays a board with lanes out with the compact metrics: an 8 px frame, 14 px labels on 16 px lines', () => {
+      const restore = stubMatchMedia(PHONE);
+      try {
+        // The area the picture cross gets at 390 x 844 (366 x 318): top 3 * 16 + 4 = 52, left 3 * 9 + two 6 px gaps + 8 = 47,
+        // frame 8: min((366 - 16 - 47) / 5, (318 - 16 - 52) / 5) = min(60.6, 50) = 50 px cells (the regular metrics: 40).
+        stubSizedArea(366, 318);
+        render(<GridBoard {...board({ edgeLabels: three })} />);
+        const group = screen.getByTestId('grid-board');
+        expect(group.style.getPropertyValue('--grid-cell')).toBe('50px');
+        expect(group.style.padding).toBe('8px');
+        expect(group.style.width).toBe(String(50 * 5 + 16 + 47) + 'px');
+        expect(group.style.height).toBe(String(50 * 5 + 16 + 52) + 'px');
+        for (const edge of ['top', 'left']) {
+          const lane = screen.getByTestId(`grid-lane-${edge}`).firstElementChild as HTMLElement;
+          expect(lane.style.fontSize).toBe('14px');
+          expect(lane.style.lineHeight).toBe('16px');
+        }
+        expect(screen.getByTestId('grid-clue-left-4').style.columnGap).toBe('6px');
+        expect(screen.getByTestId('grid-clue-left-4').style.paddingRight).toBe('4px');
+      } finally {
+        restore();
+      }
+    });
+
+    it('keeps the regular metrics on a wider screen, and on a phone for a board without lanes', () => {
+      stubSizedArea(366, 318);
+      const { unmount } = render(<GridBoard {...board({ edgeLabels: three })} />);
+      // Regular: top 3 * 22 + 8 = 74: (318 - 24 - 74) / 5 = 44.
+      expect(screen.getByTestId('grid-board').style.getPropertyValue('--grid-cell')).toBe('44px');
+      expect(screen.getByTestId('grid-board').style.padding).toBe('12px');
+      const lane = screen.getByTestId('grid-lane-top').firstElementChild as HTMLElement;
+      expect(lane.style.fontSize).toBe('18px');
+      expect(lane.style.lineHeight).toBe('22px');
+      unmount();
+
+      const restore = stubMatchMedia(PHONE);
+      try {
+        render(<GridBoard {...board()} />);
+        // No lanes: (318 - 24) / 5 = 58.8 -> 58 px cells with the 12 px frame.
+        expect(screen.getByTestId('grid-board').style.getPropertyValue('--grid-cell')).toBe('58px');
+        expect(screen.getByTestId('grid-board').style.padding).toBe('12px');
+      } finally {
+        restore();
+      }
+    });
+
+    it('keeps the clue digits at 14 px or more', () => {
+      expect(COMPACT_METRICS.laneFont).toBeGreaterThanOrEqual(14);
+    });
+  });
 });
 
 describe('GridBoard pencil marks', () => {
@@ -786,9 +851,9 @@ describe('GridBoard pencil marks', () => {
     expect(marksOf(3, 0)).toBeNull();
   });
 
-  it('sizes the digits to a quarter of the cell', () => {
+  it('sizes the digits to 30 % of the cell, never under 11 px (the smallest cell with notes is 40 px: 12 px; a 6 x 6 cell of a phone, 56 px: 16.8 px)', () => {
     render(<GridBoard {...board({ cells: { '0,0': { marks: ['1'] } } })} />);
-    expect(marksOf(0, 0)?.style.fontSize).toBe('calc(var(--grid-cell, 3rem) * 0.25)');
+    expect(marksOf(0, 0)?.style.fontSize).toBe('max(11px, calc(var(--grid-cell, 3rem) * 0.3))');
   });
 
   it('hides the marks, and their words in the name, when the cell is under 40 px', () => {

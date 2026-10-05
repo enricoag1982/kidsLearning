@@ -87,12 +87,12 @@ Rules: `docs/retrospective.md` §9 (≤ 3–4 commits per agent run, lead decide
 | F13 | Math pictures in cards | `round-ten` / `bridge-add` have no line picture (card prompts have no picture slot); `groups` shows "3 groups of 4" + one emoji (emoji limit 8) |
 | F14 | Number rows on a phone | a 5-term number row (`step-next` "3 7 11 15 19 ?") wraps to two lines at 390 px: the number-entry pad narrows the card (m14.9 visual pass) |
 | F15 | Prompt-less choice layout | a card-kit `choice` without a prompt (logic `odd-one`) draws small option tiles at the bottom with the board slot empty; options should fill the board slot (m14.10 visual pass) — fixed in `m14.12` |
-| F16 | Venn on a phone | the card pool of a Venn sits partly below the fold at 390 × 844 (one row of 3 visible) (m14.10 visual pass) |
-| F17 | Picture cross on a phone | 5 × 5 picture cells are 40 px at 390 × 844 (target 48): the lesson's board band is 302 px tall (m14.11 visual pass) |
-| F18 | Journey world tabs on a phone | with 3 worlds the tab strip scrolls sideways at 390 px and the current world's tab can sit off-screen (no auto-scroll) (m14.13 visual pass) |
+| F16 | Venn on a phone | the card pool of a Venn sits partly below the fold at 390 × 844 (one row of 3 visible) (m14.10 visual pass) — fixed in `m14.14` |
+| F17 | Picture cross on a phone | 5 × 5 picture cells are 40 px at 390 × 844 (target 48): the lesson's board band is 302 px tall (m14.11 visual pass) — fixed in `m14.14` |
+| F18 | Journey world tabs on a phone | with 3 worlds the tab strip scrolls sideways at 390 px and the current world's tab can sit off-screen (no auto-scroll) (m14.13 visual pass) — fixed in `m14.14` |
 | F19 | Home on a phone | the subject Home is 992 px tall at 390 × 844: My Den is below the fold (all subjects) (m14.13 visual pass) |
-| F20 | Small drawn cards in group boxes | count clusters inside Carroll / Venn boxes are ≈ 11 px per token at 390 px (m14.13 visual pass) |
-| F21 | Tiny grid details on a phone | 6 × 6 pencil notes ≈ 9 px and the wrong-cell badge 6–11 px at 390 px (m14.13 visual pass) |
+| F20 | Small drawn cards in group boxes | count clusters inside Carroll / Venn boxes are ≈ 11 px per token at 390 px (m14.13 visual pass) — fixed in `m14.14` |
+| F21 | Tiny grid details on a phone | 6 × 6 pencil notes ≈ 9 px and the wrong-cell badge 6–11 px at 390 px (m14.13 visual pass) — fixed in `m14.14` |
 
 ## 5. After v1.0
 

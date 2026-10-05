@@ -3,16 +3,8 @@ import type { CSSProperties, JSX, KeyboardEvent } from 'react';
 import { cellKey, cellPosition, inGrid, step } from '@learn/platform-core';
 import type { Cell, GridSize, Heading } from '@learn/platform-core';
 import { useMediaQuery } from '../useMediaQuery.ts';
-import {
-  GRID_FRAME_PX,
-  LANE_FONT_PX,
-  LANE_LINE_PX,
-  LANE_PAD_PX,
-  LANE_WORD_GAP_PX,
-  clueLines,
-  laneSizes,
-  useGridFit,
-} from './fit.ts';
+import { COMPACT_METRICS, REGULAR_METRICS, clueLines, laneSizes, useGridFit } from './fit.ts';
+import type { BoardMetrics } from './fit.ts';
 import {
   ArrowUpIcon,
   CheckMark,
@@ -188,6 +180,13 @@ const CHIP_EDGE: Readonly<Record<Heading, string>> = {
   left: 'left-0 top-[36%]',
 };
 
+/** The good / wrong badge on a ringed cell: a third of the cell, never under 22 px (its mark stays ≥ 13 px on a phone's 56 px cell). */
+const BADGE_STYLE: CSSProperties = {
+  width: 'max(22px, 34%)',
+  height: 'max(22px, 34%)',
+  padding: 'max(2px, 4%)',
+};
+
 const CHIP_ROTATION: Readonly<Record<Heading, number>> = { up: 0, right: 90, down: 180, left: 270 };
 
 const ITEM_FONT_EMOJI = 'calc(var(--grid-cell, 3rem) * 0.55)';
@@ -250,13 +249,15 @@ function ClueLane({
   edge,
   labels,
   count,
+  metrics,
 }: {
   readonly edge: 'top' | 'left';
   readonly labels: readonly string[] | undefined;
   readonly count: number;
+  readonly metrics: BoardMetrics;
 }): JSX.Element {
   const top = edge === 'top';
-  const gap = LANE_PAD_PX / 2;
+  const gap = metrics.lanePad / 2;
   const template = `repeat(${String(count)}, minmax(0, 1fr))`;
   return (
     <div
@@ -272,8 +273,8 @@ function ClueLane({
         style={{
           ...(top ? { bottom: gap } : { right: gap }),
           ...(top ? { gridTemplateColumns: template } : { gridTemplateRows: template }),
-          fontSize: LANE_FONT_PX,
-          lineHeight: `${String(LANE_LINE_PX)}px`,
+          fontSize: metrics.laneFont,
+          lineHeight: `${String(metrics.laneLine)}px`,
         }}
       >
         {Array.from({ length: count }, (_, index) => {
@@ -283,9 +284,13 @@ function ClueLane({
               key={index}
               data-testid={`grid-clue-${edge}-${String(index)}`}
               className={`flex shadow-[inset_0_0_0_1px_var(--color-grid-line)] ${
-                top ? 'flex-col items-center justify-end pb-0.5' : 'items-center justify-end pr-2'
+                top ? 'flex-col items-center justify-end pb-0.5' : 'items-center justify-end'
               }`}
-              style={top ? undefined : { columnGap: LANE_WORD_GAP_PX }}
+              style={
+                top
+                  ? undefined
+                  : { columnGap: metrics.laneWordGap, paddingRight: metrics.laneInset }
+              }
             >
               {words.map((word, at) => (
                 <span key={at}>{word}</span>
@@ -298,7 +303,8 @@ function ClueLane({
   );
 }
 
-const MARK_FONT = 'calc(var(--grid-cell, 3rem) * 0.25)';
+/** A third of the cell, never under 11 px (cells under `MARKS_MIN_CELL_PX` show no notes, so the smallest one that does is 40 px: 12 px). */
+const MARK_FONT = 'max(11px, calc(var(--grid-cell, 3rem) * 0.3))';
 
 function CellMarks({
   marks,
@@ -347,9 +353,13 @@ export function GridBoard({
 }: GridBoardProps): JSX.Element {
   const { cols, rows } = size;
   const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
-  const lanes = laneSizes(edgeLabels);
-  const hasLanes = lanes.top > 0 || lanes.left > 0;
-  const { areaRef, cell: cellPx } = useGridFit(size, lanes);
+  const phone = useMediaQuery('(max-width: 639px)');
+  const regularLanes = laneSizes(edgeLabels);
+  const hasLanes = regularLanes.top > 0 || regularLanes.left > 0;
+  // Clue lanes on a phone take the compact metrics, so the cells keep the height the lesson leaves (picture cross ≥ 48 px).
+  const metrics = hasLanes && phone ? COMPACT_METRICS : REGULAR_METRICS;
+  const lanes = metrics === REGULAR_METRICS ? regularLanes : laneSizes(edgeLabels, metrics);
+  const { areaRef, cell: cellPx } = useGridFit(size, lanes, metrics.frame);
   const showMarks = cellPx === null || cellPx >= MARKS_MIN_CELL_PX;
   const tapMode = onCellTap !== undefined;
 
@@ -376,11 +386,11 @@ export function GridBoard({
 
   const boardStyle: CSSProperties =
     cellPx === null
-      ? { padding: GRID_FRAME_PX, aspectRatio: `${String(cols)} / ${String(rows)}` }
+      ? { padding: metrics.frame, aspectRatio: `${String(cols)} / ${String(rows)}` }
       : ({
-          padding: GRID_FRAME_PX,
-          width: cellPx * cols + 2 * GRID_FRAME_PX + lanes.left,
-          height: cellPx * rows + 2 * GRID_FRAME_PX + lanes.top,
+          padding: metrics.frame,
+          width: cellPx * cols + 2 * metrics.frame + lanes.left,
+          height: cellPx * rows + 2 * metrics.frame + lanes.top,
           '--grid-cell': `${String(cellPx)}px`,
         } as CSSProperties);
   const template: CSSProperties = {
@@ -509,7 +519,8 @@ export function GridBoard({
               <span
                 data-testid={`grid-mark-${String(x)}-${String(y)}`}
                 data-kind={highlight}
-                className={`absolute right-[4%] top-[4%] h-[34%] w-[34%] rounded-full border-2 bg-card p-[4%] ${
+                style={BADGE_STYLE}
+                className={`absolute right-[4%] top-[4%] rounded-full border-2 bg-card ${
                   highlight === 'good' ? 'border-go' : 'border-today'
                 }`}
               >
@@ -605,8 +616,12 @@ export function GridBoard({
               gridTemplateRows: `${String(lanes.top)}px minmax(0, 1fr)`,
             }}
           >
-            {lanes.top > 0 && <ClueLane edge="top" labels={edgeLabels?.top} count={cols} />}
-            {lanes.left > 0 && <ClueLane edge="left" labels={edgeLabels?.left} count={rows} />}
+            {lanes.top > 0 && (
+              <ClueLane edge="top" labels={edgeLabels?.top} count={cols} metrics={metrics} />
+            )}
+            {lanes.left > 0 && (
+              <ClueLane edge="left" labels={edgeLabels?.left} count={rows} metrics={metrics} />
+            )}
             {cellsArea}
           </div>
         ) : (

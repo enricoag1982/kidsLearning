@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import type {
@@ -24,7 +24,7 @@ import {
 import { CharacterIcon, OwlIcon } from './art/characters.tsx';
 import { StarsRow } from './StarsRow.tsx';
 import { TestOutSheet } from './TestOutSheet.tsx';
-import { useMediaQuery } from './useMediaQuery.ts';
+import { prefersReducedMotion, useMediaQuery } from './useMediaQuery.ts';
 import { CheckIcon, CrownIcon, FlagIcon, LockIcon } from './ds/icons.tsx';
 import { tapClass } from './ds/tap.ts';
 import { BlankScreen, Screen, ScreenHeader } from './ds/Screen.tsx';
@@ -402,8 +402,21 @@ function WorldRow({
 }): JSX.Element {
   const { t } = useTranslation();
   const dim = status === 'locked' || status === 'coming-soon';
+  const tab = useRef<HTMLButtonElement>(null);
+  // The strip scrolls sideways on a phone: the selected world's tab comes into view when the map opens and whenever the
+  // selection changes (no scrolling when it is already in view; reduced motion jumps instead of gliding).
+  useEffect(() => {
+    const element = tab.current;
+    if (!selected || element === null || typeof element.scrollIntoView !== 'function') return;
+    element.scrollIntoView({
+      inline: 'nearest',
+      block: 'nearest',
+      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+    });
+  }, [selected]);
   return (
     <button
+      ref={tab}
       type="button"
       onClick={onSelect}
       className={tapClass(

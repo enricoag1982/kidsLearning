@@ -32,7 +32,8 @@ const CELL_ID = /^grid-cell-(\d+)-(\d+)$/;
 /** The board, the number pad (sudoku) or the tools (picture cross), the Notes toggle and Hint. The selected cell, the notes mode and the
  * tool are this component's own state: only an entry reaches the engine. A rejected entry shakes its cell and rings the unit that shows
  * why for a moment; a hint rings the units of its step (level 1), names the technique and rings the cell (level 2) or fills it
- * (level 3, flashing). A guided sudoku rings its target cell(s). A picture shows a "?" below the board and its `reveal` there once solved. */
+ * (level 3, flashing). A guided sudoku rings its target cell(s). A picture shows a "?" below the board and its `reveal` there once solved (a 40 px row on a phone, 56 px from `sm`: the cells keep
+ * the height). */
 function GridFillPlay({
   def,
   state,
@@ -135,7 +136,7 @@ function GridFillPlay({
   const revealSlot = puzzle.rules === 'picture-cross' ? puzzle.reveal : undefined;
 
   const board = (
-    <div className="flex h-full w-full flex-col gap-2">
+    <div className="flex h-full w-full flex-col gap-1 sm:gap-2">
       {def.prompt !== undefined && (
         <div className="shrink-0">
           <CardPromptView prompt={def.prompt} compact />
@@ -160,13 +161,13 @@ function GridFillPlay({
         />
       </div>
       {revealSlot !== undefined && (
-        <div className="flex h-14 shrink-0 items-center justify-center">
+        <div className="flex h-10 shrink-0 items-center justify-center sm:h-14">
           {solved ? (
             <span
               role="img"
               aria-label={t('grid.reveal')}
               data-testid="grid-reveal"
-              className="group-drop rounded-2xl bg-card px-4 py-1 text-4xl leading-none shadow"
+              className="group-drop rounded-2xl bg-card px-4 py-0.5 text-3xl leading-none shadow sm:py-1 sm:text-4xl"
             >
               {revealSlot}
             </span>
@@ -174,7 +175,7 @@ function GridFillPlay({
             <span
               aria-hidden="true"
               data-testid="grid-reveal-slot"
-              className="flex h-12 w-16 items-center justify-center rounded-2xl border-2 border-dashed border-edge-neutral font-display text-2xl leading-none font-bold text-muted"
+              className="flex h-10 w-14 items-center justify-center rounded-2xl border-2 border-dashed border-edge-neutral font-display text-2xl leading-none font-bold text-muted sm:h-12 sm:w-16"
             >
               ?
             </span>

@@ -4,7 +4,7 @@ import type { Digit } from '@learn/platform-core/domain/exercise/kinds/number-en
 import { tapClass } from '../../../ui/ds/tap.ts';
 
 const KEY_SHAPE =
-  'flex h-16 min-w-16 items-center justify-center rounded-2xl font-display text-2xl font-semibold';
+  'flex h-14 min-w-16 items-center justify-center rounded-2xl font-display text-2xl font-semibold sm:h-16';
 const KEY = tapClass('custom', 'neutral', KEY_SHAPE);
 const WORD_KEY = tapClass('custom', 'neutral', `${KEY_SHAPE} text-lg`);
 const CHECK_KEY = tapClass('custom', 'go', `${KEY_SHAPE} text-lg disabled:opacity-40`);
