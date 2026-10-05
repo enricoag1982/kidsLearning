@@ -1,7 +1,7 @@
 import type { AppDeps, ContentSource, SubjectDataRepositories } from '@learn/platform-core';
 import { createSubjectRuntime } from '@learn/platform-core';
 import { bot } from '../../chess.ts';
-import { CHESS_APP_CONFIG, chessCore } from '../../core/chess-core.ts';
+import { chessCore } from '../../core/chess-core.ts';
 import { chessEntry } from '../../entry.ts';
 import { createWorkerBotPlayer } from '../adapters/bot/worker-bot-player.ts';
 import { createBundledContentSource } from '../adapters/content/bundled-content-source.ts';
@@ -22,6 +22,7 @@ import {
 } from '@learn/platform-web/adapters/storage/local-store.ts';
 import { MIGRATIONS } from '@learn/platform-web/adapters/storage/migrations.ts';
 import type { AppServices, Services } from '@learn/platform-web/app/services.ts';
+import { KIDS_TEST_APP_CONFIG } from '@learn/platform-web/testing/kids-app-config.ts';
 import { createFakeBackupFileWriter } from '@learn/platform-web/testing/fake-backup-file-writer.ts';
 import { createFakeNarrator } from '@learn/platform-web/testing/fake-narrator.ts';
 import { createFakePasswordFileWriter } from '@learn/platform-web/testing/fake-password-file-writer.ts';
@@ -41,7 +42,7 @@ export function createTestServices(
 ): Services {
   const store = openLocalStore(storage, {
     migrations: MIGRATIONS,
-    keyPrefix: CHESS_APP_CONFIG.storagePrefix,
+    keyPrefix: KIDS_TEST_APP_CONFIG.storagePrefix,
   });
   const progress = new LocalStorageProgressRepository(store);
   const gameRecords = new LocalStorageGameRecordRepository(store);
@@ -68,7 +69,7 @@ export function createTestServices(
     backupImporter: new LocalStorageBackupImporter(store, { [chessCore.id]: store }),
     storageSchemaVersion: SCHEMA_VERSION,
     subject: createSubjectRuntime(chessCore),
-    app: { ...CHESS_APP_CONFIG, version: __APP_VERSION__ },
+    app: { ...KIDS_TEST_APP_CONFIG, version: __APP_VERSION__ },
     subjectId: chessCore.id,
     subjectData,
   };

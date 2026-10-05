@@ -39,7 +39,7 @@ describe('sendBackupToOtherDevice', () => {
     expect(share).toHaveBeenCalledTimes(1);
     const [payload] = share.mock.calls[0] as [{ files: File[]; title: string }];
     expect(payload.files).toHaveLength(1);
-    expect(payload.files[0]?.name).toMatch(/^chess-for-kids-all-\d{4}-\d{2}-\d{2}\.json$/);
+    expect(payload.files[0]?.name).toMatch(/^kids-learning-all-\d{4}-\d{2}-\d{2}\.json$/);
     expect(createObjectURL).not.toHaveBeenCalled(); // no download fallback triggered
   });
 
@@ -53,7 +53,7 @@ describe('sendBackupToOtherDevice', () => {
     await sendBackupToOtherDevice(deps, [mia.id]);
 
     const [payload] = share.mock.calls[0] as [{ files: File[] }];
-    expect(payload.files[0]?.name).toMatch(/^chess-for-kids-mia-\d{4}-\d{2}-\d{2}\.json$/);
+    expect(payload.files[0]?.name).toMatch(/^kids-learning-mia-\d{4}-\d{2}-\d{2}\.json$/);
   });
 
   it('falls back to download when the browser has no navigator.share at all (Safari 15.4)', async () => {
@@ -71,7 +71,7 @@ describe('sendBackupToOtherDevice', () => {
     expect(outcome).toBe('downloaded');
     expect(clickSpy).toHaveBeenCalledTimes(1);
     const anchor = clickSpy.mock.instances[0] as HTMLAnchorElement;
-    expect(anchor.download).toMatch(/^chess-for-kids-all-\d{4}-\d{2}-\d{2}\.json$/);
+    expect(anchor.download).toMatch(/^kids-learning-all-\d{4}-\d{2}-\d{2}\.json$/);
   });
 
   it('falls back to download when the browser cannot share this particular file', async () => {

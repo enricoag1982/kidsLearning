@@ -40,6 +40,7 @@ const SUBJECT_NAMES = [
   'earned-badges',
   'assessment-results',
   'unlocks',
+  'placement-decisions',
 ];
 
 function emptySection(overrides: Partial<SubjectSection> = {}): SubjectSection {
@@ -246,6 +247,28 @@ describe('LocalStorageBackupImporter: shared store + per-subject stores', () => 
     expect(JSON.stringify(stored(device.storage, 'app-a:lesson-progress'))).not.toContain('lu');
   });
 
+  it('writes each subject’s placement decisions by profile id into its own store', async () => {
+    const device = openDevice();
+    const decision = (id: string, answer: 'taken' | 'declined') => ({
+      id,
+      profileId: 'p1',
+      decision: answer,
+      createdAt: T0,
+      updatedAt: T0,
+    });
+    const file = fileWith({
+      a: emptySection({ placementDecision: decision('pd-a', 'declined') }),
+      b: emptySection(),
+    });
+
+    await importerFor(device).writeMerged(file, { deviceSettings: DEVICE_SETTINGS });
+
+    expect(stored(device.storage, 'app-a:placement-decisions')).toEqual({
+      p1: decision('pd-a', 'declined'),
+    });
+    expect(stored(device.storage, 'app-b:placement-decisions')).toEqual({});
+  });
+
   it('caps attempts per subject, not over all of them', async () => {
     const device = openDevice();
     const at = (index: number): string => new Date(Date.UTC(2026, 0, 1, 0, 0, index)).toISOString();
@@ -298,7 +321,7 @@ describe('LocalStorageBackupImporter: shared store + per-subject stores', () => 
 });
 
 describe('LocalStorageBackupImporter: one store for shared and subject records (single-store app)', () => {
-  it('gives that store all twelve records', async () => {
+  it('gives that store all thirteen records', async () => {
     const storage = createMemoryStorage();
     const store = openLocalStore(storage, { keyPrefix: 'solo:' });
     const importer = new LocalStorageBackupImporter(store, { chess: store });

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { AssessmentResult, Unlock } from './assessment.ts';
+import type { AssessmentResult, PlacementDecision, Unlock } from './assessment.ts';
 import type { EarnedBadge } from './badges.ts';
 import {
   emptyProfileData,
@@ -9,6 +9,7 @@ import {
   mergeEarnedBadges,
   mergeLessonProgress,
   mergeMiniGameProgress,
+  mergePlacementDecision,
   mergeProfileData,
   mergeProfileSettings,
   mergeSessionLogs,
@@ -385,6 +386,47 @@ describe('mergeUnlocks', () => {
   });
 });
 
+describe('mergePlacementDecision', () => {
+  function decision(overrides: Partial<PlacementDecision> = {}): PlacementDecision {
+    return {
+      id: 'pd-local',
+      profileId: 'p1',
+      decision: 'declined',
+      createdAt: EARLIER.toISOString(),
+      updatedAt: EARLIER.toISOString(),
+      ...overrides,
+    };
+  }
+
+  it('is the other side when only one has answered, and nothing when neither has', () => {
+    const answered = decision();
+    expect(mergePlacementDecision(undefined, answered)).toBe(answered);
+    expect(mergePlacementDecision(answered, undefined)).toBe(answered);
+    expect(mergePlacementDecision(undefined, undefined)).toBeUndefined();
+  });
+
+  it('taken beats declined, whichever side holds it', () => {
+    const taken = decision({ id: 'pd-taken', decision: 'taken' });
+    const declined = decision({ id: 'pd-declined', decision: 'declined' });
+    expect(mergePlacementDecision(declined, taken)).toBe(taken);
+    expect(mergePlacementDecision(taken, declined)).toBe(taken);
+    // Even when the declined answer is the newer one.
+    const newerDeclined = decision({ decision: 'declined', updatedAt: LATER.toISOString() });
+    expect(mergePlacementDecision(taken, newerDeclined)).toBe(taken);
+    expect(mergePlacementDecision(newerDeclined, taken)).toBe(taken);
+  });
+
+  it('keeps local when both gave the same answer (a re-merge changes nothing)', () => {
+    const local = decision({ id: 'pd-a' });
+    const incoming = decision({ id: 'pd-b' });
+    expect(mergePlacementDecision(local, incoming)).toBe(local);
+    const takenLocal = decision({ id: 'pd-a', decision: 'taken' });
+    expect(mergePlacementDecision(takenLocal, decision({ id: 'pd-b', decision: 'taken' }))).toBe(
+      takenLocal,
+    );
+  });
+});
+
 /** One-subject profile data (subject `main`) from flat overrides: the per-subject lists go into `subjects.main`. */
 function fullProfileData(
   overrides: Partial<SubjectProfileData> &
@@ -612,6 +654,51 @@ function earnedBadge(overrides: Partial<EarnedBadge> = {}): EarnedBadge {
     ...overrides,
   };
 }
+
+describe('mergeProfileData: placement decision', () => {
+  const answer = (overrides: Partial<PlacementDecision> = {}): PlacementDecision => ({
+    id: 'pd-1',
+    profileId: 'p1',
+    decision: 'declined',
+    createdAt: EARLIER.toISOString(),
+    updatedAt: EARLIER.toISOString(),
+    ...overrides,
+  });
+
+  it('carries the decision of a subject, per subject, and keeps the key absent without one', () => {
+    const local = twoSubjectData();
+    const incoming = twoSubjectData({ placementDecision: answer({ decision: 'taken' }) });
+
+    const merged = mergeProfileData(local, incoming, NOW);
+
+    expect(subjectOf(merged, 'a').placementDecision?.decision).toBe('taken');
+    expect('placementDecision' in subjectOf(merged, 'b')).toBe(false);
+  });
+
+  it('taken beats declined across devices, and merging twice changes nothing', () => {
+    const local = twoSubjectData({ placementDecision: answer({ decision: 'declined' }) });
+    const incoming = twoSubjectData({
+      placementDecision: answer({ id: 'pd-2', decision: 'taken' }),
+    });
+
+    const once = mergeProfileData(local, incoming, NOW);
+    expect(subjectOf(once, 'a').placementDecision?.decision).toBe('taken');
+    expect(mergeProfileData(once, incoming, NOW)).toEqual(once);
+    expect(subjectOf(mergeProfileData(incoming, local, NOW), 'a').placementDecision?.decision).toBe(
+      'taken',
+    );
+  });
+
+  it('rekeyProfileData points the decision at the target profile', () => {
+    const data = twoSubjectData({ placementDecision: answer({ profileId: 'incoming-id' }) });
+
+    const rekeyed = rekeyProfileData(data, 'local-id');
+
+    expect(subjectOf(rekeyed, 'a').placementDecision?.profileId).toBe('local-id');
+    expect(subjectOf(rekeyed, 'a').placementDecision?.id).toBe('pd-1');
+    expect('placementDecision' in subjectOf(rekeyed, 'b')).toBe(false);
+  });
+});
 
 describe('mergeProfileData: per-subject sections', () => {
   it('the same lesson id in two subjects stays separate (never merged across subjects)', () => {

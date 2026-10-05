@@ -10,7 +10,13 @@ import {
   makeContentSource,
   makeDeps as buildDeps,
 } from '../testing/index.ts';
-import { loadUnlocked, parentUnlock, submitAssessment } from './assessment.ts';
+import {
+  getPlacementDecision,
+  loadUnlocked,
+  parentUnlock,
+  recordPlacementDecision,
+  submitAssessment,
+} from './assessment.ts';
 import { loadJourney } from './journey.ts';
 import type { AssessmentRepository, ContentSource } from './ports.ts';
 import type { AppDeps } from './use-cases.ts';
@@ -221,5 +227,43 @@ describe('loadUnlocked', () => {
   it('is undefined without deps.assessment wired up (pre-M4.5 fixtures)', async () => {
     const deps = makeDeps({ assessment: undefined });
     expect(await loadUnlocked(deps, 'p1')).toBeUndefined();
+  });
+});
+
+describe('placement decision', () => {
+  it('is undefined until the profile answered, and without deps.assessment', async () => {
+    expect(await getPlacementDecision(makeDeps(), 'p1')).toBeUndefined();
+    expect(await getPlacementDecision(makeDeps({ assessment: undefined }), 'p1')).toBeUndefined();
+  });
+
+  it('stores the answer per profile: declined, then read back', async () => {
+    const deps = makeDeps();
+
+    await recordPlacementDecision(deps, 'p1', 'declined');
+
+    expect(await getPlacementDecision(deps, 'p1')).toMatchObject({
+      profileId: 'p1',
+      decision: 'declined',
+    });
+    expect(await getPlacementDecision(deps, 'p2')).toBeUndefined();
+  });
+
+  it('a later answer replaces the earlier one in the same record', async () => {
+    const deps = makeDeps();
+    await recordPlacementDecision(deps, 'p1', 'declined');
+    const first = await getPlacementDecision(deps, 'p1');
+
+    await recordPlacementDecision(deps, 'p1', 'taken');
+
+    const second = await getPlacementDecision(deps, 'p1');
+    expect(second?.decision).toBe('taken');
+    expect(second?.id).toBe(first?.id);
+    expect(second?.createdAt).toBe(first?.createdAt);
+  });
+
+  it('throws without deps.assessment wired up', async () => {
+    await expect(
+      recordPlacementDecision(makeDeps({ assessment: undefined }), 'p1', 'taken'),
+    ).rejects.toThrow('AppDeps.assessment is not wired up');
   });
 });

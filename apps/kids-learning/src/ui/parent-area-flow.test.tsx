@@ -44,7 +44,7 @@ function incomingFileFor(
     updatedAt: now,
   };
   return {
-    app: 'chess-kids',
+    app: 'kids-learning',
     schemaVersion: SCHEMA_VERSION,
     exportedAt: now,
     profiles: [profile],
@@ -447,7 +447,7 @@ describe('Parent area privacy and version (M5.5)', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Privacy' }));
     await screen.findByRole('heading', { name: 'Privacy' });
-    expect(screen.getByText(/Chess for Kids keeps everything on this device/)).toBeTruthy();
+    expect(screen.getByText(/Kids Learning keeps everything on this device/)).toBeTruthy();
     expect(screen.getByText(/No sign-up, no analytics, no ads/)).toBeTruthy();
 
     fireEvent.click(screen.getByRole('button', { name: 'Back' }));
@@ -485,7 +485,7 @@ describe('Parent area backup — export (M5.1)', () => {
     await waitFor(() => {
       const writer = services.deps.backupFileWriter as FakeBackupFileWriter;
       expect(writer.writes).toHaveLength(1);
-      expect(writer.writes[0]?.filename).toMatch(/^chess-kids-backup-\d{4}-\d{2}-\d{2}\.json$/);
+      expect(writer.writes[0]?.filename).toMatch(/^kids-learning-backup-\d{4}-\d{2}-\d{2}\.json$/);
     });
   });
 });
@@ -506,7 +506,7 @@ describe('Parent area — Send to other device (M7.2 device sharing)', () => {
     await screen.findByText('Sent.');
     expect(share).toHaveBeenCalledTimes(1);
     const [payload] = share.mock.calls[0] as [{ files: File[] }];
-    expect(payload.files[0]?.name).toMatch(/^chess-for-kids-all-\d{4}-\d{2}-\d{2}\.json$/);
+    expect(payload.files[0]?.name).toMatch(/^kids-learning-all-\d{4}-\d{2}-\d{2}\.json$/);
   });
 
   it('falls back to a download when file sharing is unavailable (Safari 15.4)', async () => {

@@ -463,6 +463,75 @@ describe('buildBackupFile: per-subject sections', () => {
   });
 });
 
+describe('placement decision in the backup', () => {
+  const DECISION = {
+    id: 'pd-b',
+    profileId: 'p1',
+    decision: 'declined' as const,
+    createdAt: T0,
+    updatedAt: T0,
+  };
+
+  /** Subject `a` untouched, subject `b` with the child's answer to the placement offer. */
+  function deciderDeps(): AppDeps {
+    const b = subjectRepos('b');
+    return twoSubjectDeps({
+      subjectData: {
+        a: subjectRepos('a'),
+        b: { ...b, assessment: buildAssessmentRepo([], [], [DECISION]) },
+      },
+    });
+  }
+
+  it('exports the decision in its own subject section, and no key for a subject without one', async () => {
+    const file = await buildBackupFile(deciderDeps());
+
+    expect(file.data.p1?.subjects.b?.placementDecision).toEqual(DECISION);
+    expect('placementDecision' in (file.data.p1?.subjects.a ?? {})).toBe(false);
+  });
+
+  it('round-trips through JSON, and a taken answer reads back as taken', async () => {
+    const deps = deciderDeps();
+    const file = await buildBackupFile(deps);
+    expect(await parseBackupFile(deps, JSON.stringify(file))).toEqual(file);
+
+    const taken = {
+      ...file,
+      data: {
+        p1: {
+          ...file.data.p1,
+          subjects: {
+            ...file.data.p1?.subjects,
+            b: {
+              ...file.data.p1?.subjects.b,
+              placementDecision: { ...DECISION, decision: 'taken' },
+            },
+          },
+        },
+      },
+    };
+    const parsed = await parseBackupFile(deps, JSON.stringify(taken));
+    expect(parsed.data.p1?.subjects.b?.placementDecision?.decision).toBe('taken');
+  });
+
+  it('a file from before the field existed (no key) parses, the decision stays absent', async () => {
+    const deps = twoSubjectDeps();
+    const file = await buildBackupFile(deps);
+
+    const parsed = await parseBackupFile(deps, JSON.stringify(file));
+
+    expect('placementDecision' in (parsed.data.p1?.subjects.a ?? {})).toBe(false);
+  });
+
+  it('rejects an answer that is neither taken nor declined', async () => {
+    const deps = deciderDeps();
+    const file = await buildBackupFile(deps);
+    const bad = JSON.stringify(file).replace('"decision":"declined"', '"decision":"maybe"');
+
+    await expect(parseBackupFile(deps, bad)).rejects.toThrow(BackupValidationError);
+  });
+});
+
 describe('parseBackupFile: format v6', () => {
   it('round-trips a two-subject file', async () => {
     const deps = twoSubjectDeps();

@@ -118,3 +118,30 @@ describe('MIGRATIONS (v4 -> v5, M4.5 assessment results/unlocks)', () => {
     expect(await repo.listUnlocks('profile-1')).toEqual([]);
   });
 });
+
+describe('MIGRATIONS (v6 -> v7, M15.4 placement decisions)', () => {
+  it('brings v6 storage up to the current version without touching existing data', () => {
+    localStorage.setItem('chess-kids:schema-version', '6');
+    localStorage.setItem(
+      'chess-kids:lesson-progress',
+      JSON.stringify({ 'profile-1:rook': { id: 'lp1', profileId: 'profile-1', lessonId: 'rook' } }),
+    );
+
+    const store = openTestStore({ migrations: MIGRATIONS });
+
+    expect(SCHEMA_VERSION).toBe(7);
+    expect(localStorage.getItem('chess-kids:schema-version')).toBe(String(SCHEMA_VERSION));
+    expect(store.read('lesson-progress')).toEqual({
+      'profile-1:rook': { id: 'lp1', profileId: 'profile-1', lessonId: 'rook' },
+    });
+  });
+
+  it('a profile upgraded from v6 (no placement-decisions key yet) has not answered the offer', async () => {
+    localStorage.setItem('chess-kids:schema-version', '6');
+
+    const store = openTestStore({ migrations: MIGRATIONS });
+    const repo = new LocalStorageAssessmentRepository(store);
+
+    expect(await repo.getPlacementDecision('profile-1')).toBeUndefined();
+  });
+});

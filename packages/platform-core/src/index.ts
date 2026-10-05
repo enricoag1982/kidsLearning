@@ -49,11 +49,14 @@ export type {
   AssessmentScope,
   AssessmentScore,
   AssessmentResult,
+  PlacementChoice,
+  PlacementDecision,
   PlacementWorldPlan,
   Unlock,
 } from './domain/assessment.ts';
 export {
   TEST_OUT_LESSON_TASKS,
+  newPlacementDecision,
   PLACEMENT_TASKS_PER_WORLD,
   planTestOutLesson,
   planTestOutWorld,
@@ -148,7 +151,12 @@ export type { Journey } from './app/journey.ts';
 export { loadJourney } from './app/journey.ts';
 
 export type { ParentUnlockTarget } from './app/assessment.ts';
-export { submitAssessment, parentUnlock } from './app/assessment.ts';
+export {
+  submitAssessment,
+  parentUnlock,
+  getPlacementDecision,
+  recordPlacementDecision,
+} from './app/assessment.ts';
 
 export { recordSessionMinutes, starsToday, checkRewards } from './app/rewards.ts';
 

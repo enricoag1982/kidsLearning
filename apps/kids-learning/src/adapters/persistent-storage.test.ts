@@ -14,7 +14,7 @@ function services(storage: Storage): ReturnType<typeof createTestServices> {
  * module's own responsibility. This reads exactly what `save()` actually persisted instead — what
  * `requestPersistentStorageIfNeeded` itself is responsible for. */
 function rawStoredSettings(storage: Storage): unknown {
-  const raw = storage.getItem('chess-kids:settings');
+  const raw = storage.getItem('kids:settings');
   return raw === null ? undefined : (JSON.parse(raw) as unknown);
 }
 
@@ -34,7 +34,7 @@ describe('requestPersistentStorageIfNeeded', () => {
 
     expect(persist).toHaveBeenCalledTimes(1);
     expect(rawStoredSettings(storage)).toMatchObject({ storagePersisted: true });
-    expect(window.localStorage.getItem('chess-kids:storage-persist-requested')).toBe('1');
+    expect(window.localStorage.getItem('kids:storage-persist-requested')).toBe('1');
   });
 
   it("keeps its flag under the app's own storage prefix", async () => {
@@ -49,7 +49,7 @@ describe('requestPersistentStorageIfNeeded', () => {
     });
 
     expect(window.localStorage.getItem('other:storage-persist-requested')).toBe('1');
-    expect(window.localStorage.getItem('chess-kids:storage-persist-requested')).toBeNull();
+    expect(window.localStorage.getItem('kids:storage-persist-requested')).toBeNull();
   });
 
   it('stores a denied result too, so it is never asked again', async () => {

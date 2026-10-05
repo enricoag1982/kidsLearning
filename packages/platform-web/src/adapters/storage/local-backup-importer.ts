@@ -10,6 +10,7 @@ import type {
   GameRecord,
   LessonProgress,
   MiniGameProgress,
+  PlacementDecision,
   Profile,
   ProfileSettings,
   SessionLog,
@@ -28,7 +29,7 @@ import { STORAGE_KEYS } from './storage-keys.ts';
 /** Raw value per record name, as the repositories' `readAll` / `writeAll` store it. The shared store's records are `profiles`,
  * `settings`, `streaks`, `session-logs` (never `parent-lock`: a restored backup never touches the parent password); each
  * subject store's are `lesson-progress`, `attempts`, `minigame-progress`, `concept-stats`, `game-records`, `earned-badges`,
- * `assessment-results`, `unlocks`. */
+ * `assessment-results`, `unlocks`, `placement-decisions`. */
 type RawRecords = Readonly<Record<string, unknown>>;
 
 function byCreatedAtAsc(
@@ -101,6 +102,7 @@ function toSubjectRecords(file: BackupFile, subjectId: string): RawRecords {
   let earnedBadges: EarnedBadge[] = [];
   let assessmentResults: AssessmentResult[] = [];
   let unlocks: Unlock[] = [];
+  const placementDecisions: Record<string, PlacementDecision> = {};
 
   for (const profile of file.profiles) {
     const subject = file.data[profile.id]?.subjects[subjectId];
@@ -120,6 +122,9 @@ function toSubjectRecords(file: BackupFile, subjectId: string): RawRecords {
     earnedBadges = earnedBadges.concat(subject.earnedBadges);
     assessmentResults = assessmentResults.concat(subject.assessmentResults);
     unlocks = unlocks.concat(subject.unlocks);
+    if (subject.placementDecision !== undefined) {
+      placementDecisions[subject.placementDecision.profileId] = subject.placementDecision;
+    }
   }
 
   return {
@@ -131,6 +136,7 @@ function toSubjectRecords(file: BackupFile, subjectId: string): RawRecords {
     [STORAGE_KEYS.earnedBadges]: earnedBadges,
     [STORAGE_KEYS.assessmentResults]: capped(assessmentResults, MAX_ASSESSMENT_RESULTS),
     [STORAGE_KEYS.unlocks]: unlocks,
+    [STORAGE_KEYS.placementDecisions]: placementDecisions,
   };
 }
 
@@ -143,7 +149,7 @@ interface StagedRecord {
 
 /** Writes `file` as the device's whole dataset: the shared part over `sharedStore`, each subject's records over its own store
  * in `subjectStores` (by subject id). A store may be both the shared one and a subject's (single-store apps): it then gets
- * all twelve records. Every replaced record in every store is staged under `backup-staging:<name>` first, then all are
+ * all thirteen records. Every replaced record in every store is staged under `backup-staging:<name>` first, then all are
  * copied to the real keys: a quota error partway removes everything staged and leaves the real keys untouched
  * (`docs/architecture.md` §11). A file's subject with no registered store is ignored; a registered subject missing from the
  * file is written empty. */

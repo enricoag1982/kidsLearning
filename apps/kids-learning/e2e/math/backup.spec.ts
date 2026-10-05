@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
+import { SCHEMA_VERSION } from '@learn/platform-web/adapters/storage/local-store.ts';
 import {
   completeFirstRun,
   contentText,
@@ -86,7 +87,10 @@ test.describe('Backup', () => {
     ]);
     expect(exported.suggestedFilename()).toMatch(/^kids-learning-backup-\d{4}-\d{2}-\d{2}\.json$/);
     const exportedPath = await exported.path();
-    expect(readBackup(exportedPath)).toMatchObject({ app: 'kids-learning', schemaVersion: 6 });
+    expect(readBackup(exportedPath)).toMatchObject({
+      app: 'kids-learning',
+      schemaVersion: SCHEMA_VERSION,
+    });
 
     const [shared] = await Promise.all([
       page.waitForEvent('download'),

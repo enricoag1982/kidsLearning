@@ -6,6 +6,7 @@ import {
   planPlacement,
   planTestOutLesson,
   planTestOutWorld,
+  recordPlacementDecision,
   scorePlacementWorld,
   scoreTestOut,
   submitAssessment,
@@ -13,6 +14,7 @@ import {
   type AssessmentScore,
   type ConceptTask,
   type Lesson,
+  type PlacementChoice,
 } from '@learn/platform-core';
 import type { Route } from '../routes.ts';
 import { backAndRefresh, type AppGet, type SliceCreator } from '../store.ts';
@@ -35,8 +37,10 @@ export interface LearnSlice {
   /** Runner's `onDone`: scores + records the pass, unlocking the scope; the runner shows the result, then calls `exitAssessment`. */
   readonly submitAssessmentRun: (results: readonly boolean[]) => Promise<AssessmentScore>;
   readonly exitAssessment: () => void;
+  /** Placement offer "No": stores the answer (`declined`: the offer is not made again to this profile in this subject), then Home. */
   readonly declinePlacement: () => void;
-  /** Placement offer "Yes": plans `planPlacement` and opens the first Basics world's run; straight to Home if nothing to test. */
+  /** Placement offer "Yes": stores the answer (`taken`), plans `planPlacement` and opens the first Basics world's run; straight to
+   * Home if nothing to test. */
   readonly acceptPlacement: () => void;
   /** One placement world's `onDone`: scores + records the pass; the screen then calls
    * `advancePlacementWorld` (more worlds left) or `finishPlacement`. */
@@ -87,6 +91,19 @@ async function recordScore(
   const { profile, services } = get();
   if (!profile) return;
   await submitAssessment(services.deps, { profileId: profile.id, kind, scope, results, score });
+}
+
+/** Stores the active profile's answer to the placement offer in the active subject (asked once per profile and subject, so a restart
+ * does not ask again); no-op without a profile. A storage failure is not fatal here: the kid moves on, and the session's own
+ * `offered` memory (`subjects.ts`) still stops a repeat until the app restarts. */
+async function rememberPlacement(get: AppGet, decision: PlacementChoice): Promise<void> {
+  const { profile, services } = get();
+  if (!profile || services.deps.assessment === undefined) return;
+  try {
+    await recordPlacementDecision(services.deps, profile.id, decision);
+  } catch {
+    // Not stored; see above.
+  }
 }
 
 export const createLearnSlice: SliceCreator<LearnSlice> = (set, get) => {
@@ -159,7 +176,9 @@ export const createLearnSlice: SliceCreator<LearnSlice> = (set, get) => {
 
     exitAssessment: backAndRefresh(get),
 
-    declinePlacement: () => void get().back('home', { gate: true }),
+    declinePlacement() {
+      void rememberPlacement(get, 'declined').then(() => get().back('home', { gate: true }));
+    },
 
     acceptPlacement() {
       const { journey, services } = get();
@@ -172,6 +191,7 @@ export const createLearnSlice: SliceCreator<LearnSlice> = (set, get) => {
         void get().back();
         return;
       }
+      void rememberPlacement(get, 'taken');
       void get().replace({ name: 'placement', plan, index: 0 });
     },
 

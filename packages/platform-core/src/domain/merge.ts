@@ -1,4 +1,4 @@
-import type { AssessmentResult, Unlock } from './assessment.ts';
+import type { AssessmentResult, PlacementDecision, Unlock } from './assessment.ts';
 import type { EarnedBadge } from './badges.ts';
 import type { ProfileSettings } from './profile-settings.ts';
 import type { Attempt, GameRecord, LessonProgress, MiniGameProgress, Stars } from './progress.ts';
@@ -18,6 +18,8 @@ export interface SubjectProfileData {
   readonly earnedBadges: readonly EarnedBadge[];
   readonly assessmentResults: readonly AssessmentResult[];
   readonly unlocks: readonly Unlock[];
+  /** The profile's answer to this subject's placement offer; absent until it answered. */
+  readonly placementDecision?: PlacementDecision;
 }
 
 export interface MergeableProfileData {
@@ -379,6 +381,24 @@ export function mergeUnlocks(local: readonly Unlock[], incoming: readonly Unlock
   return [...byKey.values()];
 }
 
+/** One answer per profile and subject: `'taken'` beats `'declined'` (placement was started on one side, so it is no longer an
+ * open question there); the same answer on both sides keeps `local`, so merging twice changes nothing. */
+export function mergePlacementDecision(
+  local: PlacementDecision | undefined,
+  incoming: PlacementDecision | undefined,
+): PlacementDecision | undefined {
+  if (local === undefined) return incoming;
+  if (incoming === undefined) return local;
+  return local.decision === 'declined' && incoming.decision === 'taken' ? incoming : local;
+}
+
+/** `{ placementDecision }` when there is one, else `{}`: the key is absent, never `undefined`, in a backup file. */
+function optionalPlacementDecision(
+  placementDecision: PlacementDecision | undefined,
+): Pick<SubjectProfileData, 'placementDecision'> {
+  return placementDecision === undefined ? {} : { placementDecision };
+}
+
 /** One subject's records: every per-record rule above, caps applied to this subject alone. */
 function mergeSubjectProfileData(
   local: SubjectProfileData,
@@ -398,6 +418,9 @@ function mergeSubjectProfileData(
       MAX_ASSESSMENT_RESULTS,
     ),
     unlocks: mergeUnlocks(local.unlocks, incoming.unlocks),
+    ...optionalPlacementDecision(
+      mergePlacementDecision(local.placementDecision, incoming.placementDecision),
+    ),
   };
 }
 
@@ -454,6 +477,11 @@ function rekeySubjectProfileData(
       profileId: targetProfileId,
     })),
     unlocks: data.unlocks.map((row) => ({ ...row, profileId: targetProfileId })),
+    ...optionalPlacementDecision(
+      data.placementDecision === undefined
+        ? undefined
+        : { ...data.placementDecision, profileId: targetProfileId },
+    ),
   };
 }
 

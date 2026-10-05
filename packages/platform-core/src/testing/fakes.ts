@@ -10,7 +10,7 @@ import type { Attempt, GameRecord, LessonProgress, MiniGameProgress } from '../d
 import type { ConceptStats } from '../domain/review.ts';
 import type { SessionLog } from '../domain/session-log.ts';
 import type { Streak } from '../domain/streak.ts';
-import type { AssessmentResult, Unlock } from '../domain/assessment.ts';
+import type { AssessmentResult, PlacementDecision, Unlock } from '../domain/assessment.ts';
 import type { BackupFile } from '../app/backup.ts';
 import type {
   AppSettings,
@@ -244,9 +244,11 @@ export function makeRewardsRepo(seed: RewardsRepoSeed = {}): RewardsRepository &
 export function makeAssessmentRepo(
   results: readonly AssessmentResult[] = [],
   unlocks: readonly Unlock[] = [],
+  decisions: readonly PlacementDecision[] = [],
 ): AssessmentRepository & { readonly deletedFor: readonly string[] } {
   const resultStore: AssessmentResult[] = [...results];
   const unlockStore: Unlock[] = [...unlocks];
+  const decisionStore = new Map(decisions.map((decision) => [decision.profileId, decision]));
   const deletedFor: string[] = [];
   return {
     addAssessmentResult: (result) => {
@@ -261,8 +263,14 @@ export function makeAssessmentRepo(
     },
     listUnlocks: (profileId) =>
       Promise.resolve(unlockStore.filter((u) => u.profileId === profileId)),
+    getPlacementDecision: (profileId) => Promise.resolve(decisionStore.get(profileId)),
+    savePlacementDecision: (decision) => {
+      decisionStore.set(decision.profileId, decision);
+      return Promise.resolve();
+    },
     deleteProfileData: (profileId) => {
       deletedFor.push(profileId);
+      decisionStore.delete(profileId);
       return Promise.resolve();
     },
     deletedFor,

@@ -12,5 +12,6 @@ export const STORAGE_KEYS = {
   sessionLogs: 'session-logs',
   assessmentResults: 'assessment-results',
   unlocks: 'unlocks',
+  placementDecisions: 'placement-decisions',
   parentLock: 'parent-lock',
 } as const;

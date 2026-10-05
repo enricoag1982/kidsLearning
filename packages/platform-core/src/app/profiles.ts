@@ -153,8 +153,8 @@ export async function deleteProfile(deps: AppDeps, profileId: string): Promise<v
 }
 
 /** Parent "Reset child": clears progress, attempts, concept stats, mini-game progress, game records and badges of every
- * registered subject, plus the shared streak and session log; keeps the profile, assessment results and unlocks (the UI
- * confirms with the password). */
+ * registered subject, plus the shared streak and session log; keeps the profile, assessment results, unlocks and the answer to
+ * the placement offer (the UI confirms with the password). */
 export async function resetProfileData(deps: AppDeps, profileId: string): Promise<void> {
   await requireProfile(deps, profileId);
   for (const data of allSubjectData(deps)) {

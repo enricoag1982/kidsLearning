@@ -34,7 +34,7 @@ export function createPages({ appTitle, texts, subjectId }: PageFlowOptions): Pa
     page.getByRole('button', { name: contentText('placement.offer-no') });
 
   // A tile tap lands on the subject's Home, or on the placement offer first when the subject is fresh for this profile
-  // (once per app session): that offer is declined.
+  // (the offer is stored once answered): that offer is declined.
   async function settleOnHome(page: Page, homeTitle: string): Promise<void> {
     const home = homeHeading(page, homeTitle);
     const decline = declineOfferButton(page);

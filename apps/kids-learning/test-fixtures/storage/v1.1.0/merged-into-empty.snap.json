@@ -1,7 +1,7 @@
 {
  "backup": {
   "app": "kids-learning",
-  "schemaVersion": 6,
+  "schemaVersion": 7,
   "exportedAt": "<masked>",
   "profiles": [
    {
