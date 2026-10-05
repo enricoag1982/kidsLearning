@@ -95,6 +95,7 @@ Tiers: bronze / silver / gold where 3 values are given.
 | Condition type | Parameters | Fact read |
 |---|---|---|
 | `mastered` | `scope: 'world:<id>'` / `'track:<id>'` | `masteredScopes.has(scope)` (from the current `Journey`) |
+| `minigame-won` | `scope: 'minigame:<id>'` (an id of the subject's mini-games; thresholds `[1]`, content build checks both) | the mini-game has `MiniGameProgress.wins >= 1` (a boss won in the Journey and a game won in Play both count; `BadgeFacts.wonMiniGames`) |
 | `stars-total` | thresholds | `totalStars(progresses)` |
 | `perfect-lessons` | thresholds | count of lessons with 3★ on every exercise (boss excluded) |
 | `concept-correct` | `concept`, thresholds, `inARow?`, `noHints?` | lifetime correct count, or the current correct-in-a-row / hint-free-in-a-row streak, from every scored `Attempt` (lesson or review alike) for that concept |
