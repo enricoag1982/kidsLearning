@@ -1,7 +1,7 @@
 // The logic e2e kit: the platform's page flows bound to the Logic subject of the Kids Learning app (through the subjects hub) and its
 // locale, plus a driver that plays any exercise from its kind's `solution()` through the kind's e2e driver (logic's registry: the
 // card kit's drivers, and logic's own kinds as they join; one path for every kind), seeds lessons as mastered and the boss as won in
-// the logic store, and plays a lesson or the Pattern Train round by round.
+// the logic store, and plays a lesson or a world boss round by round.
 import type { Page } from '@playwright/test';
 import { createE2ETexts } from '@learn/platform-web/e2e/i18n.ts';
 import { createPages } from '@learn/platform-web/e2e/pages.ts';
@@ -69,7 +69,7 @@ const WORLDS: readonly TrackWorld[] = (
   .flatMap((track) => [...track.worlds])
   .sort((a, b) => a.order - b.order);
 
-/** World id -> its order in the main track (World 1 Pattern Pond, World 2 Sort Shore). */
+/** World id -> its order in the main track. */
 const worldOrder = new Map(WORLDS.map((world) => [world.id, world.order] as const));
 
 /** The lessons of one world in Journey order. */
@@ -124,8 +124,10 @@ export function journeyNodeName(lesson: LogicLesson, status: 'current' | 'locked
   return new RegExp(`^${pattern}$`);
 }
 
-/** Opens the Journey's tab of a world ("1 Pattern Pond": its number and title). The Journey opens on the world the child is in; once
- * that world is finished it moves on to the next one (or, when every world is done, back to the first). */
+/**
+ * Opens the Journey's tab of a world ("1 Pattern Pond": its number and title). The Journey opens on the world the child is in; once
+ * that world is finished it moves on to the next one, so a finished world's boss node is looked up on its own tab.
+ */
 export async function openJourneyWorld(page: Page, order: number, worldId: string): Promise<void> {
   await page
     .getByRole('button', {

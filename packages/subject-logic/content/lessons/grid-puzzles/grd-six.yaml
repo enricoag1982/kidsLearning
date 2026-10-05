@@ -1,0 +1,27 @@
+# W3 lesson 4: six by six. The same two tricks on a bigger grid (boxes are 2 rows by 3 columns). 6 x 6 sudoku, techniques allowed: last
+# cell and only number. Generated; seeds are stored, never change them.
+id: grd-six
+order: 4
+concept: grd-six
+character: panda
+demo:
+  prompt: { big: '1 2 4 5 6 ?' }
+guided:
+  - id: six-g1
+    generate:
+      { template: sdk-six, count: 1, seed: 1, params: { empty: 6, guided: true, maxTries: 400 } }
+  - id: six-g2
+    generate: { template: sdk-six, count: 1, seed: 1, params: { empty: 8, guided: true } }
+exercises:
+  - id: six-10
+    generate: { template: sdk-six, count: 1, seed: 1, params: { empty: 10 } }
+  - id: six-12
+    generate: { template: sdk-six, count: 1, seed: 1, params: { empty: 12 } }
+  - id: six-14
+    generate: { template: sdk-six, count: 1, seed: 2, params: { empty: 14 } }
+  - id: six-16
+    easier: six-easy-1
+    generate: { template: sdk-six, count: 1, seed: 3, params: { empty: 16 } }
+variants:
+  - id: six-easy
+    generate: { template: sdk-six, count: 1, seed: 2, params: { empty: 8 } }

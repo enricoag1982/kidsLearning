@@ -412,7 +412,7 @@ describe('grid-fill YAML: a picture', () => {
       issuesOf(
         picture({
           picture: ['######', '#....#', '#.##.#', '#.##.#', '#....#', '######'],
-          maxLevel: 3,
+          maxLevel: 2,
         }),
       ),
     ).toEqual([]);

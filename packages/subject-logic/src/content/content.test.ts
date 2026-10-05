@@ -1,5 +1,6 @@
 // The authored content: it builds, every exercise plays through its own kind, and the pieces fit together. The per-world specifics
-// (frozen seeds, the curriculum table, the content review) are in `pattern-pond.test.ts` (W1) and `sort-shore.test.ts` (W2).
+// (frozen seeds, the curriculum table, the content review) are in `pattern-pond.test.ts` (W1), `sort-shore.test.ts` (W2) and
+// `grid-puzzles.test.ts` (W3).
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
@@ -59,8 +60,8 @@ describe('the worlds', () => {
         lesson.variants?.length,
       ]);
 
-  it('are 2: Pattern Pond (4 lessons taught by Pip the Panda, 8 guided tries, 24 scored exercises, 4 easier variants) and Sort Shore (5 lessons, 10 guided, 30 scored, 5 variants)', () => {
-    expect(content.lessons).toHaveLength(9);
+  it('are 3: Pattern Pond (4 lessons taught by Pip the Panda, 8 guided tries, 24 scored exercises, 4 easier variants), Sort Shore (5 lessons, 10 guided, 30 scored, 5 variants) and Grid Puzzles (5 lessons, 10 guided, 20 scored, 5 variants)', () => {
+    expect(content.lessons).toHaveLength(14);
     expect(lessonsOf('pattern-pond')).toEqual([
       ['pat-repeat', 'panda', 2, 6, 1],
       ['pat-steps', 'panda', 2, 6, 1],
@@ -74,12 +75,20 @@ describe('the worlds', () => {
       ['cls-circles', 'panda', 2, 6, 1],
       ['cls-line-up', 'panda', 2, 6, 1],
     ]);
+    expect(lessonsOf('grid-puzzles')).toEqual([
+      ['grd-last', 'panda', 2, 4, 1],
+      ['grd-only-place', 'panda', 2, 4, 1],
+      ['grd-only-number', 'panda', 2, 4, 1],
+      ['grd-six', 'panda', 2, 4, 1],
+      ['grd-pixels', 'panda', 2, 4, 1],
+    ]);
   });
 
   it('have a world boss each: the one mini-game of the world, a series of 5 rounds, named by the world', () => {
     expect(content.minigames.map((game) => [game.id, game.mode, game.rounds.length])).toEqual([
       ['pattern-train', 'series', 5],
       ['sorting-sprint', 'series', 5],
+      ['sudoku-sprint', 'series', 5],
     ]);
     const [main] = tracks.tracks;
     expect(tracks.tracks).toHaveLength(1);
@@ -97,18 +106,26 @@ describe('the worlds', () => {
         habitat: 'ocean',
         boss: 'sorting-sprint',
       }),
+      expect.objectContaining({
+        id: 'grid-puzzles',
+        order: 3,
+        habitat: 'jungle',
+        boss: 'sudoku-sprint',
+      }),
     ]);
   });
 
-  it('have the thinker rank at the start, a rank after each world and 3 badges', () => {
+  it('have the thinker rank at the start, a rank after each world and 4 badges', () => {
     expect(tracks.ranks).toEqual([
       { id: 'thinker', after: 'start' },
       { id: 'spotter', after: 'world:pattern-pond' },
       { id: 'sorter', after: 'world:sort-shore' },
+      { id: 'solver', after: 'world:grid-puzzles' },
     ]);
     expect(badges.map((badge) => badge.id)).toEqual([
       'pattern-spotter',
       'shore-sorter',
+      'puzzle-solver',
       'star-collector',
     ]);
   });
@@ -120,8 +137,17 @@ describe('texts and the core', () => {
     expect((en?.common?.app as { title?: string } | undefined)?.title).toBe('Logic');
     expect(en?.journey).toMatchObject({
       tracks: { puzzles: 'Puzzle Paths' },
-      worlds: { 'pattern-pond': 'Pattern Pond', 'sort-shore': 'Sort Shore' },
-      ranks: { thinker: 'Thinker', spotter: 'Pattern Spotter', sorter: 'Shore Sorter' },
+      worlds: {
+        'pattern-pond': 'Pattern Pond',
+        'sort-shore': 'Sort Shore',
+        'grid-puzzles': 'Grid Puzzles',
+      },
+      ranks: {
+        thinker: 'Thinker',
+        spotter: 'Pattern Spotter',
+        sorter: 'Shore Sorter',
+        solver: 'Puzzle Solver',
+      },
     });
     for (const character of ['owl', ...Object.keys(LOGIC_CHARACTERS)]) {
       expect(en?.characters?.[character], character).toBeDefined();

@@ -119,12 +119,14 @@ export function wordingProblems(item: ExerciseYamlBase, text: string, maxWords =
   return problems;
 }
 
-/** Runs `solve` over seeds 0 … `seeds - 1` (one item each) and gathers every problem it and the build path report. */
+/** Runs `solve` over seeds 0 … `seeds - 1` (one item each) and gathers every problem it and the build path report (`maxWords`: the
+ * longest instruction allowed). */
 export function overSeeds<I extends ExerciseYamlBase>(
   template: string,
   params: unknown,
   solve: (drawn: Drawn<I>, seed: number) => readonly string[],
   seeds = SEEDS,
+  maxWords = 14,
 ): { readonly problems: readonly string[]; readonly items: readonly Drawn<I>[] } {
   const problems: string[] = [];
   const items: Drawn<I>[] = [];
@@ -133,7 +135,7 @@ export function overSeeds<I extends ExerciseYamlBase>(
     problems.push(...issues);
     for (const one of drawn) {
       items.push(one);
-      problems.push(...wordingProblems(one.item, one.text), ...solve(one, seed));
+      problems.push(...wordingProblems(one.item, one.text, maxWords), ...solve(one, seed));
     }
   }
   return { problems: problems.slice(0, 10), items };

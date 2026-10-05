@@ -1,8 +1,10 @@
 // The YAML item shapes the templates write (exactly what an author would put under `exercises:`), one per exercise kind they use:
 // a `choice` of shape cards under a row of shapes, a `choice` of rule texts under a row of numbers, a `number-entry` pad. Every
-// field is the card kit's own; the expander parses each item with the logic exercise schema, so a shape slip is an issue at build time.
+// field is the card kit's own (the W3 sudoku item is `grid-fill`'s); the expander parses each item with the logic exercise schema, so a
+// shape slip is an issue at build time.
 import type { CardShape } from '@learn/platform-core/domain/exercise/kinds/cards/prompt';
 import type { ExerciseYamlBase } from '@learn/platform-content/subject';
+import type { SudokuFocus } from '../../core/puzzles/sudoku.ts';
 
 /** A token of a prompt row: a drawn shape or the `gap` (a dashed "?" box). */
 export type PromptToken = CardShape | 'gap';
@@ -118,4 +120,13 @@ export interface ShapeRuleItem extends ExerciseYamlBase {
   readonly prompt: { readonly shapes: readonly PromptToken[] };
   readonly options: readonly TextOption[];
   readonly answer: string;
+}
+
+/** A `grid-fill` sudoku (W3): rows of `.` and digits, the lesson's focus, and for a guided item the one `[row, column]` target. */
+export interface SudokuItem extends ExerciseYamlBase {
+  readonly type: 'grid-fill';
+  readonly text: string;
+  readonly sudoku: readonly string[];
+  readonly focus: SudokuFocus;
+  readonly targets?: readonly (readonly [number, number])[];
 }

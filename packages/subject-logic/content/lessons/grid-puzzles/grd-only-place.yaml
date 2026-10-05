@@ -1,0 +1,26 @@
+# W3 lesson 2: only place. A number that fits in just one cell of a box (or row, or column) goes there. 4 x 4 sudoku, techniques
+# allowed: last cell and only place. Generated; seeds are stored, never change them.
+id: grd-only-place
+order: 2
+concept: grd-only-place
+character: panda
+demo:
+  prompt: { emoji: 🔎 }
+guided:
+  - id: place-g1
+    generate: { template: sdk-place, count: 1, seed: 1, params: { empty: 5, guided: true } }
+  - id: place-g2
+    generate: { template: sdk-place, count: 1, seed: 1, params: { empty: 6, guided: true } }
+exercises:
+  - id: place-6
+    generate: { template: sdk-place, count: 1, seed: 2, params: { empty: 6 } }
+  - id: place-7
+    generate: { template: sdk-place, count: 1, seed: 3, params: { empty: 7 } }
+  - id: place-8a
+    generate: { template: sdk-place, count: 1, seed: 4, params: { empty: 8 } }
+  - id: place-8b
+    easier: place-easy-1
+    generate: { template: sdk-place, count: 1, seed: 7, params: { empty: 8 } }
+variants:
+  - id: place-easy
+    generate: { template: sdk-place, count: 1, seed: 3, params: { empty: 5 } }

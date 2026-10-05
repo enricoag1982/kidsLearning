@@ -1,6 +1,6 @@
-// A lesson with `grid-fill` exercises, through the whole build (the shipped logic content has none yet: World 3 is m14.11): the kind
-// registered in the content registry, every exercise played through its own kind, the voice notes it adds, and a verify issue failing
-// the build.
+// A fixture lesson with `grid-fill` exercises, through the whole build (the shipped World 3 has them too, m14.11): the kind registered in
+// the content registry, every exercise played through its own kind, the voice notes (one set however many grid exercises), and a
+// verify issue failing the build.
 import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
@@ -118,36 +118,54 @@ describe('a lesson with grid-fill exercises, through the whole build', () => {
     }
   });
 
-  // 14 grid hints + the card kit's "Look closely." (no step left), which the shipped card lessons already voice since W1 (m14.9).
-  it('adds the grid notes to the voice inventory, once however many grid exercises: 2 instructions, 1 pick-cell, 14 wrong, 14 hints', () => {
+  // The shipped World 3 already has grid exercises, so its inventory holds the grid notes; another grid lesson adds none (the texts are
+  // deduped), only its own title / story / demo and instruction.
+  it('adds the grid notes to the voice inventory once however many grid exercises: 2 instructions, 1 pick-cell, 14 wrong, 14 hints, already in the shipped content’s', () => {
     const shipped = compileAll<LogicContent>(logicContent, realRoot);
     const built = compileAll<LogicContent>(logicContent, rootWith(LESSON, TEXTS));
     const before = new Set(shipped.voiceTexts.entries.map((entry) => entry.key));
     const added = built.voiceTexts.entries.filter((entry) => !before.has(entry.key));
-    const bySource = (source: string): string[] =>
-      added.filter((entry) => entry.source === source).map((entry) => entry.text);
-    expect(bySource('exercise-instruction').sort()).toEqual(
+    // Only what the fixture lesson says itself: its story and demo and the one authored instruction (and the placement line that
+    // counts the world's lessons).
+    expect(
+      added
+        .map((entry) => entry.text)
+        .filter((text) => !text.startsWith('You already know'))
+        .sort(),
+    ).toEqual(
       [
+        'Pip fills grids. Each step has one clear answer.',
+        'Pip finds the one number that fits.',
+        'Which number goes in the marked cell?',
+      ].sort(),
+    );
+    const bySource = (source: string): string[] =>
+      shipped.voiceTexts.entries
+        .filter((entry) => entry.source === source)
+        .map((entry) => entry.text);
+    expect(bySource('exercise-instruction')).toEqual(
+      expect.arrayContaining([
         'Fill the grid: each row, column and box has every number once.',
         'Fill the cells to match the clues. Find the picture!',
-      ].sort(),
+      ]),
     );
     expect(bySource('exercise-note').filter((text) => text.startsWith('That number'))).toHaveLength(
       3,
     );
-    expect(bySource('exercise-note-easier-offer')).toHaveLength(7);
-    expect(bySource('exercise-note')).toContain('Tap a cell first.');
     expect(
-      added.filter((entry) => entry.source.startsWith('exercise-')).map((entry) => entry.text),
-    ).toHaveLength(2 + 1 + 7 + 7 + 14);
+      bySource('exercise-note-easier-offer').filter((text) =>
+        /number is already|clue|Not yet|Not this one/.test(text),
+      ),
+    ).toHaveLength(7);
+    expect(bySource('exercise-note')).toContain('Tap a cell first.');
   });
 
-  it('leaves the shipped content’s voice inventory without any grid text', () => {
+  it('has the grid text in the shipped content’s voice inventory: World 3 uses the kind', () => {
     const shipped = compileAll<LogicContent>(logicContent, realRoot);
     const spoken = shipped.voiceTexts.entries.map((entry) => entry.text);
-    expect(spoken.some((text) => text.startsWith('That number is already'))).toBe(false);
-    expect(spoken).not.toContain('Watch: here it goes.');
-    expect(spoken).not.toContain('Fill the grid: each row, column and box has every number once.');
+    expect(spoken.some((text) => text.startsWith('That number is already'))).toBe(true);
+    expect(spoken).toContain('Watch: here it goes.');
+    expect(spoken).toContain('Fill the grid: each row, column and box has every number once.');
   });
 
   it('fails the build on a verify issue, on a bad shape and on a missing instruction text', () => {

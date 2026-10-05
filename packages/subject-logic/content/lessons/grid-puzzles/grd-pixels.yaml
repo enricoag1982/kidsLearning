@@ -1,0 +1,49 @@
+# W3 lesson 5: picture cross. The numbers say how many cells in a line are filled, in groups: fill the cells you are sure of, cross out
+# the empty ones, and a picture appears. 5 x 5 pictures drawn by hand (`#` filled, `.` empty); `maxLevel` is the hardest technique the
+# solver needs: 1 = full lines, 2 = + overlap and cross-out, 3 = + combine. The build proves each one (one solution, solved with its
+# techniques, a step of its level occurs). Two guided tries, four scored pictures, one easier picture for the hardest.
+id: grd-pixels
+order: 5
+concept: grd-pixels
+character: panda
+demo:
+  prompt: { emoji: 🖼️ }
+guided:
+  - id: pix-snake
+    type: grid-fill
+    picture: ['#####', '....#', '#####', '#....', '#####']
+    maxLevel: 1
+    reveal: 🐍
+  - id: pix-rabbit
+    type: grid-fill
+    picture: ['.#.#.', '.#.#.', '#####', '#.#.#', '.###.']
+    maxLevel: 2
+    reveal: 🐰
+exercises:
+  - id: pix-frog
+    type: grid-fill
+    picture: ['##.##', '#####', '#####', '.###.', '#...#']
+    maxLevel: 2
+    reveal: 🐸
+  - id: pix-owl
+    type: grid-fill
+    picture: ['#...#', '#####', '#.#.#', '##.##', '##.##']
+    maxLevel: 2
+    reveal: 🦉
+  - id: pix-turtle
+    type: grid-fill
+    picture: ['.....', '.###.', '#####', '#####', '.#.#.']
+    maxLevel: 3
+    reveal: 🐢
+  - id: pix-cat
+    type: grid-fill
+    easier: pix-mouse
+    picture: ['#...#', '##.##', '#####', '#.#.#', '.###.']
+    maxLevel: 3
+    reveal: 🐱
+variants:
+  - id: pix-mouse
+    type: grid-fill
+    picture: ['##.##', '#####', '#.#.#', '#####', '.###.']
+    maxLevel: 2
+    reveal: 🐭

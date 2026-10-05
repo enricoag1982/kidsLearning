@@ -1,4 +1,4 @@
-# Logic — curriculum (v1.3: plan `m14.1`, W1 shipped `m14.9`, W2 shipped `m14.10`)
+# Logic — curriculum (v1.3: plan `m14.1`, W1 shipped `m14.9`, W2 `m14.10`, W3 `m14.11`)
 
 Lesson / exercise design for W1–W3 of [plan.md](plan.md) §2. A world's rows are its plan until its iteration lands (`m14.9` W1, `m14.10` W2, `m14.11` W3), then what shipped, with an "as built" table (like `docs/subjects/math/curriculum.md`), plus the content review log (§6).
 
@@ -55,19 +55,38 @@ Ranks `sorter` (after `world:sort-shore`, "Shore Sorter"); badge `shore-sorter` 
 
 Totals: 5 lessons, 10 guided, 30 scored, 5 easier variants, 5 boss rounds = 50 exercises (46 generated, 4 authored); 41 new voice clips (budget 65). Stories and demos are the plan's (Pip names the strategy: "check the colour, the shape, the size and how many", "check one thing at a time", "check the card against the rule", "a card that fits both goes in the middle", "compare two at a time"); the five demo cards are authored rows (three blue circles and a blue square; a small red circle, a big red square, a medium red star; a big red circle; a big blue square; tiny, medium, huge green triangles).
 
-### W3 Grid Puzzles (sudoku, picture cross) — plan, `m14.11`
+### W3 Grid Puzzles (sudoku, picture cross) — shipped in `m14.11`
 
-| Lesson | Title | Techniques allowed (plan L9) | Guided (1 target cell) | Scored (4) | Easier variant |
+`packages/subject-logic/content/`: `lessons/grid-puzzles/<lesson>.yaml`, `minigames/sudoku-sprint.yaml`, `tracks.yaml`, `badges.yaml`, texts in `locales/en/` (`journey.yaml`, `rewards.yaml`, `lessons.yaml`: the lessons' title / story / demo and `templates.sdk-*`). World `grid-puzzles` ("Grid Puzzles", habitat `jungle`, order 3, boss `sudoku-sprint`; W2 `sort-shore` is order 2, built in `m14.10`: the content build only needs unique orders, so the gap is harmless). Pip the Panda teaches every lesson (the hub character's first Journey node, "Pip the Puzzler", is in W1; these show their titles). Concept id = lesson id. Every sudoku item is a `generate:` entry (§3) with a stored seed; the pictures are authored. Seeds and drawings are frozen (`src/content/grid-puzzles.test.ts`): never change one.
+
+| Lesson | Title | Techniques allowed (plan L9) | Guided (1 ringed cell) | Scored (4) | Easier variant |
 |---|---|---|---|---|---|
-| `grd-last` | Last empty cell | last cell | 2 `sdk-last` (row; box) | 4 `sdk-last` (empty 4, 5, 6, 6) | `sdk-last` empty 3 |
-| `grd-only-place` | Only place | last cell + only place | 2 `sdk-place` ("Where can the 3 go in this box?") | 4 `sdk-place` (empty 6, 7, 8, 8) | `sdk-place` empty 5 |
-| `grd-only-number` | Only number | last cell + only number | 2 `sdk-number` ("Which number fits here?") | 4 `sdk-number` (empty 8, 9, 10, 10) | `sdk-number` empty 7 |
-| `grd-six` | Six by six | last cell + only number, 6 × 6 (boxes 2 rows × 3 columns) | 2 `sdk-six` (empty 6; 8) | 4 `sdk-six` (empty 10, 12, 14, 16) | `sdk-six` empty 8 |
-| `grd-pixels` | Picture cross | line techniques up to combine | 2 library pictures (full lines only; overlap) | 4 library pictures (cross-out; combine) | library picture, full lines + overlap |
+| `grd-last` | Last empty cell | last cell | `last-g-row` `sdk-last` empty 3 (the first step is in a row) · `last-g-box` empty 6 (in a box: seed 50, 14 of 1 500 seeds give one) | `last-4` · `last-5` · `last-6a` · `last-6b` (empty 4, 5, 6, 6) | `last-easy` empty 3 (for `last-6b-1`) |
+| `grd-only-place` | Only place | last cell + only place | `place-g1` `sdk-place` empty 5 · `place-g2` empty 6 (both: the first step is in a box) | `place-6` · `place-7` · `place-8a` · `place-8b` (empty 6, 7, 8, 8) | `place-easy` empty 5 (for `place-8b-1`) |
+| `grd-only-number` | Only number | last cell + only number | `num-g1` `sdk-number` empty 7 · `num-g2` empty 8 | `num-8` · `num-9` · `num-10a` · `num-10b` (empty 8, 9, 10, 10) | `num-easy` empty 7 (for `num-10b-1`) |
+| `grd-six` | Six by six | last cell + only number, 6 × 6 (boxes 2 rows × 3 columns) | `six-g1` `sdk-six` empty 6 (`maxTries` 400) · `six-g2` empty 8 | `six-10` · `six-12` · `six-14` · `six-16` (empty 10, 12, 14, 16) | `six-easy` empty 8 (for `six-16-1`) |
+| `grd-pixels` | Picture cross | line techniques up to combine | `pix-snake` (level 1: full lines) · `pix-rabbit` (level 2: overlap) | `pix-frog` (2) · `pix-owl` (2) · `pix-turtle` (3) · `pix-cat` (3) | `pix-mouse` (2, for `pix-cat`) |
 
-Sudoku Sprint (`sudoku-sprint`, `series`, `errors3: 1`, `errors2: 3`, concept `grd-six`, `unlockAfter: grd-pixels`, goal "Fill the grids, step by step!"): 5 rounds, `sdk-last` → `sdk-place` → `sdk-number` → `sdk-six` empty 8 → `sdk-six` empty 10. One error allowed for 3 stars: ≈ 40 cells in a row; recalibrate after playtests.
+Sudoku Sprint (`sudoku-sprint`, `series`, `errors3: 1`, `errors2: 3`, concept `grd-six`, `unlockAfter: grd-pixels`, title "Sudoku Sprint", goal "Fill the grids, step by step!"): 5 rounds, `sprint-last` `sdk-last` empty 5 → `sprint-place` `sdk-place` 7 → `sprint-number` `sdk-number` 9 → `sprint-six8` `sdk-six` 8 → `sprint-six10` `sdk-six` 10. One error allowed for 3 stars: ≈ 40 cells in a row; recalibrate after playtests. It is the world boss on the Journey once the five lessons are done.
 
-Totals: 5 lessons, 10 guided, 20 scored, 5 variants, 5 boss rounds = 40 exercises. Rank `solver`; badge `puzzle-solver`.
+Rank `solver` (after `world:grid-puzzles`, "Puzzle Solver"); badge `puzzle-solver` ("Puzzle Solver": `mastered` `world:grid-puzzles`, "Master Grid Puzzles and beat Sudoku Sprint").
+
+Totals: 5 lessons, 10 guided, 20 scored, 5 variants, 5 boss rounds = 40 exercises (33 generated sudokus, 7 drawn pictures); 53 new voice clips (budget 75).
+
+Stories and demos are the plan's (Pip names the strategy: "If only one cell is empty, which number is missing?", "a number fits in only one place", "the number left is the answer", "the same tricks still work", "fill the cells you are sure of, cross out the empty ones"). The demo card has no grid: `grd-last` "1 2 ? 4", `grd-only-place` 🔎, `grd-only-number` "1 2 4 ?", `grd-six` "1 2 4 5 6 ?", `grd-pixels` 🖼️; the demo text walks one step.
+
+#### W3 as built
+
+| Item | As built | Why |
+|---|---|---|
+| Guided target | the cell of `nextSudokuStep(givens, LESSON_TECHNIQUES[focus], prefer = focus)`, the hints' own first step; the grid rings it (`target` ring; the selected cell shows the selection instead, a hint ring around it keeps the target ring) | one ringed cell; "Which number goes in the ringed cell?" is the one guided sentence |
+| Scan order of a preferred hidden single | boxes first, then rows, then columns (`nextSudokuStep`, lead decision 2026-10-05); with no `prefer` the scan is unchanged (rows, columns, boxes), so `humanSolveSudoku` counts and the generator are the same | the story says "pick a box and a number"; rows first made every only-place target a row |
+| Picture techniques | `lineStep` (`core/puzzles/cross.ts`): `full-line` = the clue alone fixes the whole line, `overlap` = the clue alone forces the new cells, both whatever else is known in the line; else `cross-out` (every fill known, crosses only), else `combine` (lead decision 2026-10-05) | before, only a line with no known cell could be full-line or overlap: no 5 × 5 picture had `maxLevel` 2 (all 2^25 were searched), so the guided 2, two scored and the variant could not exist |
+| Whole-grid sentences | `sdk-last` "Fill the grid. Look for a row, column or box with one empty cell." · `sdk-place` "Fill the grid. For each number, find the only place it can go in a box." (16 words: the card kit's 14 is exceeded) · `sdk-number` "Fill the grid. For each empty cell, find the only number left." · `sdk-six` "Fill the big grid: each row, column and box has 1 to 6 once." | the plan's "this box" / "this cell" named nothing on a whole grid (lead decision 2026-10-05) |
+| Picture instruction | the kit's `grid.instruction.cross` ("Fill the cells to match the clues. Find the picture!") | one sentence for all 7, already in the grid notes |
+| Reveal | a slot below the board for every picture with a `reveal`: a dashed "?" until the last cell, then the emoji (no overlay: the child's drawing stays visible) | m14.8 review note |
+| Seeds | one script drew the candidates: per slot the first seed (from 1) whose grid is new in the world (givens and solution grid), the first guided `grd-last` step in a row and the second in a box; frozen | no two items show the same grid (§6 W3.2) |
+| Easier variant | the last scored item's easier item is the lesson's one variant: fewer empty cells (sudoku), level 2 instead of 3 (picture) | curriculum |
 
 All three worlds: 14 lessons, 28 guided, 74 scored, 14 variants, 15 boss rounds = 131 exercises.
 
@@ -149,7 +168,21 @@ Code: `packages/subject-logic/src/content/templates/` (`classify` = attributes, 
 
 ## 4. Picture library (W3 `grd-pixels`, `m14.11`)
 
-12 authored 5 × 5 pictures (`#.` rows, `reveal` emoji): fish 🐟, cat 🐱, rabbit 🐰, duck 🦆, snail 🐌, turtle 🐢, crab 🦀, owl 🦉, frog 🐸, bee 🐝, snake 🐍, mouse 🐭. Clues computed at compile; `verify`: line-solvable with the item's techniques (full-line → overlap → cross-out → combine), one solution. A picture that fails is redrawn or dropped (≥ 7 needed: 2 guided, 4 scored, 1 variant).
+Planned: 12 authored 5 × 5 pictures (`#.` rows, `reveal` emoji): fish 🐟, cat 🐱, rabbit 🐰, duck 🦆, snail 🐌, turtle 🐢, crab 🦀, owl 🦉, frog 🐸, bee 🐝, snake 🐍, mouse 🐭. Clues computed at compile; `verify`: line-solvable with the item's techniques (full-line → overlap → cross-out → combine), one solution, a step of the picture's `maxLevel` occurs.
+
+Shipped: the 7 the lesson needs (2 guided, 4 scored, 1 variant); the others stay unused. Each was checked at 5 × 5 on the production build against its `reveal` (§6 W3.7). `maxLevel` is the lowest level that solves it; the counts are the solver's steps at that level (`humanSolveCross`, techniques read as in "W3 as built").
+
+| Id | Picture | Reveal | Slot | `maxLevel` | full-line / overlap / cross-out / combine |
+|---|---|---|---|---|---|
+| `pix-snake` | `#####/....#/#####/#..../#####` | 🐍 | guided 1 | 1 | 8 / 0 / 0 / 0 |
+| `pix-rabbit` | `.#.#./.#.#./#####/#.#.#/.###.` | 🐰 | guided 2 | 2 | 4 / 1 / 4 / 0 |
+| `pix-frog` | `##.##/#####/#####/.###./#...#` | 🐸 | scored 1 | 2 | 5 / 3 / 1 / 0 |
+| `pix-owl` | `#...#/#####/#.#.#/##.##/##.##` | 🦉 | scored 2 | 2 | 6 / 0 / 1 / 0 |
+| `pix-turtle` | `...../.###./#####/#####/.#.#.` | 🐢 | scored 3 | 3 | 3 / 1 / 3 / 2 |
+| `pix-cat` | `#...#/##.##/#####/#.#.#/.###.` | 🐱 | scored 4 (hardest) | 3 | 3 / 1 / 3 / 4 |
+| `pix-mouse` | `##.##/#####/#.#.#/#####/.###.` | 🐭 | variant (for `pix-cat`) | 2 | 6 / 1 / 2 / 0 |
+
+Drawing notes: a fish drawn with full-line rows only was a block with a notch (it read as a flag), and every fish that reads as one needs `combine`: the snake (a zigzag, every line a full line) is the level-1 picture, and the fish stays in the library. The owl and the cat share ear tufts and eyes, so the cat's second row is notched and the owl has a beak row and two foot rows. The mouse (round ears) is the easier face for the cat.
 
 ## 5. Voice budget (plan L6: ≤ 230 clips)
 
@@ -157,7 +190,7 @@ Code: `packages/subject-logic/src/content/templates/` (`classify` = attributes, 
 |---|---|---|
 | W1 | 55 (49 used, `m14.9`) | 4 lessons (title, story, demo), template sentences, 4 reasons, Pattern Train, hub / Journey / rank / badge lines |
 | W2 | 65 (41 used, `m14.10`) | 5 lessons (story, demo), 7 template sentences, 4 transitive items, Sorting Sprint goal, `group` kind notes (13), order / true-false hints, hub / Journey / rank / badge lines |
-| W3 | 75 | 5 lessons, template sentences, Sudoku Sprint, `grid-fill` notes (≈ 25: conflict per unit kind, hint per technique × unit kind) |
+| W3 | 75 (53 used, `m14.11`) | 5 lessons (story, demo), the 5 template sentences, Sudoku Sprint goal, `grid-fill` notes (22 notes + 7 easier offers: conflict per unit kind, hint per technique × unit kind, 2 instructions), hub / Journey / rank / badge lines |
 | Slack | 35 | rewording after playtests |
 
 Each iteration reports its clip count; `pnpm voice:check` gates it.
@@ -191,3 +224,12 @@ Per CLAUDE.md content rule: every text checked against its board so exactly one 
 | W2.10 | W2 | The answer takes every place: among the 9 choices of 4 cards each place holds it at least once; the 3-card choices and the rule sentences use more than one place | ok |
 | W2.11 | W2 | Voice: every story, demo, instruction and the Sorting Sprint goal are in the inventory with generated audio (`pnpm voice:check`: 41 clips added, none removed); the box / axis words and rule sentences are on the cards only, not narrated | ok |
 | W2.12 | W2 | Visual pass on the production build, 1024 x 768 and 390 x 844 (Journey World 2, odd one out and rule cards, rows of 2 and 3 boxes with a wrong put, Carroll tables incl. `kind × count`, Venn over shapes and animals with a wrong put, the line-ups, the clue items, the Sorting Sprint: 78 screenshots): every box at least 75 px, no horizontal scroll, no overlap, the miss notes read ("Right column! Now check the row.", "Does it fit both circles, or just one?"). Platform `group` UI, fixed in `m14.10` (24 lines): the Venn board (28 rem) pushed the cards below a 768 px screen, and the pool wrapped to a second row from 5 cards → the board is at most 46 % of the screen high (never under 17.5 rem) and the pool keeps one row up to 8 cards from 768 px (3 columns on a phone). Open: a card-kit `choice` without a prompt (`odd-one`) draws its small tiles at the bottom of the screen with the centre empty; the Venn on a phone keeps the pool partly below the fold (1 row of 3 visible, the rest scrolls); `lu-true` asked a question under True / False (fixed by the lead: a statement); the prompt-less `choice` layout is follow-up F15 | ok (3 fixed, 2 open) |
+| W3.1 | W3 | Sudoku grids (33: 7 per sudoku lesson, 5 Sprint rounds): exactly one solution (the counter), reached by the lesson's allowed techniques (the human solver ends on the counter's grid), the lesson's technique occurs, nothing outside the set is used; re-derived from the compiled puzzles | ok |
+| W3.2 | W3 | No repeated grid: 33 different sets of givens, the 4 × 4 solution grids differ inside every lesson and in fact every solution grid (4 × 4 and 6 × 6) is its own in the world | ok |
+| W3.3 | W3 | Guided tries (8 sudoku, "Which number goes in the ringed cell?"): exactly one target, an empty cell, equal to the first step with the lesson's technique (the hints' first step); its unit is a row then a box in `grd-last`, a box in both `grd-only-place` tries, the cell's row, column and box in `grd-only-number` / `grd-six` | ok |
+| W3.4 | W3 | Whole-grid sentences: "look for a row, column or box with one empty cell" (`sdk-last`) starts with such a unit; "for each number, find the only place it can go in a box" (`sdk-place`) with a box that has an only place; "for each empty cell, find the only number left" (`sdk-number`) with a cell that has one number left; the 6 × 6 sentence is true of every 6 × 6 solution. The plan's "this box" / "this cell" named nothing on an unmarked grid: replaced (lead, 2026-10-05) | ok (2 reworded) |
+| W3.5 | W3 | The five demos agree with their texts: "1 2 ? 4" in a row of four, the missing number is 3; the 3s block two cells of the box, one cell takes the 3 (the guided only-place steps are now in a box, as the demo says); "1 2 4 ?" for the cell, only 3 is left; "1 2 4 5 6 ?" in a box of six; a 5 fills a line of five, a 0 crosses it out | ok |
+| W3.6 | W3 | Pictures (7): 5 × 5, a clue for every line, exactly one solution, `maxLevel` is the lowest level that solves it and a step of exactly that level occurs; the lesson climbs (level 1 snake; level 2 rabbit with overlap; frog and owl with cross-out; turtle and cat need combine, the cat 4 times; the mouse is level 2 with overlap, no combine) | ok |
+| W3.7 | W3 | Pictures read as their reveal (production build, 1024 × 768 and 390 × 844, solved boards): snake, rabbit, frog, turtle read; owl, cat and mouse are faces told apart by their ears (tufts / round) and chin or beak. A fish drawn with full lines only looked like a flag: the snake (a zigzag of full lines) is the level-1 picture, the fish needs combine at every drawing | ok (1 redrawn) |
+| W3.8 | W3 | Voice: every story, demo, instruction, guided sentence, Sprint goal and the grid notes are in the inventory with generated audio (`pnpm voice:check`: 53 clips added, none removed; logic's inventory is 141 texts, 100 only logic says); the demo cards are on the card only | ok |
+| W3.9 | W3 | Visual pass on the production build, 1024 × 768 and 390 × 844 (Journey World 3, story, demo, a guided try with its ringed cell, hint 1 and 2, a 4 × 4 mid-play with notes, 6 × 6 guided / scored / hints, the 7 solved pictures, the easier offer, Sudoku Sprint round 1 and result; `scratchpad/m1411-*.png`): the ringed cell is a solid yellow ring inside the dashed hint ring of its unit, the picture's reveal sits below the board (a dashed "?" before) and the drawing stays visible, 6 × 6 cells are 57 px (guided) / 52 px (scored) at 390 px, no horizontal scroll. Open: a 5 × 5 picture's cells are 40 px at 390 × 844 (the board band is 302 px tall, a 3-line clue lane takes 70 px; the 4 × 4 / 6 × 6 are width-limited); the Sprint result leaves the left half empty at 1024 (platform series result, as in every card-only boss) | ok (2 open) |

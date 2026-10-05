@@ -1,4 +1,4 @@
-// Hand-built `grid-fill` defs for tests and the dev playground: no shipped lesson uses the kind yet (the first ones come with World 3).
+// Hand-built `grid-fill` defs for tests and the dev playground (World 3, m14.11, ships its own generated and drawn ones).
 // They cover what the kind and its UI must handle: a 4 x 4 sudoku per focus (last cell, only place, only number, all), a 6 x 6, and two
 // pictures (full lines only; one that needs `combine`). Built through the same parsers as content; the tests check that each has
 // exactly one solution and that the solver finishes it with its focus's techniques. The instruction is the kind's default text.

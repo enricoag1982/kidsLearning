@@ -1,0 +1,27 @@
+# W3 lesson 1: the last empty cell. A row, column or box with one empty cell: the number it is missing goes there. 4 x 4 sudoku,
+# techniques allowed: last cell. Two guided tries with one ringed cell (a row; a box), four whole grids, one easier grid. Generated;
+# seeds are stored, never change them.
+id: grd-last
+order: 1
+concept: grd-last
+character: panda
+demo:
+  prompt: { big: '1 2 ? 4' }
+guided:
+  - id: last-g-row
+    generate: { template: sdk-last, count: 1, seed: 1, params: { empty: 3, guided: true } }
+  - id: last-g-box
+    generate: { template: sdk-last, count: 1, seed: 50, params: { empty: 6, guided: true } }
+exercises:
+  - id: last-4
+    generate: { template: sdk-last, count: 1, seed: 2, params: { empty: 4 } }
+  - id: last-5
+    generate: { template: sdk-last, count: 1, seed: 3, params: { empty: 5 } }
+  - id: last-6a
+    generate: { template: sdk-last, count: 1, seed: 4, params: { empty: 6 } }
+  - id: last-6b
+    easier: last-easy-1
+    generate: { template: sdk-last, count: 1, seed: 5, params: { empty: 6 } }
+variants:
+  - id: last-easy
+    generate: { template: sdk-last, count: 1, seed: 6, params: { empty: 3 } }

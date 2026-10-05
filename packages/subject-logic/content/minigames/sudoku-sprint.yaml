@@ -1,0 +1,19 @@
+# Sudoku Sprint: World 3's boss, a `series` of 5 grids: last cell, only place, only number, then two 6 x 6 grids. Generated like a
+# lesson's exercises; seeds are stored, never change them.
+id: sudoku-sprint
+mode: series
+concept: grd-six
+unlockAfter: grd-pixels
+errors3: 1
+errors2: 3
+rounds:
+  - id: sprint-last
+    generate: { template: sdk-last, count: 1, seed: 13, params: { empty: 5 } }
+  - id: sprint-place
+    generate: { template: sdk-place, count: 1, seed: 6, params: { empty: 7 } }
+  - id: sprint-number
+    generate: { template: sdk-number, count: 1, seed: 14, params: { empty: 9 } }
+  - id: sprint-six8
+    generate: { template: sdk-six, count: 1, seed: 3, params: { empty: 8 } }
+  - id: sprint-six10
+    generate: { template: sdk-six, count: 1, seed: 2, params: { empty: 10 } }

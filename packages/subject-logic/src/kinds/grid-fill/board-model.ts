@@ -73,9 +73,11 @@ export function unitIndices(puzzle: GridPuzzle, unit: GridUnit): readonly number
 }
 
 /** Which cells carry which ring. A cell with several takes the strongest: flash (`good`) over the conflict (`bad`), over the hint's
- * cell (`target`), over the hint's units (`hint`), over the selection. */
+ * cell (`target`), over the cells a guided try asks for (`ringed`, drawn as `target`), over the hint's units (`hint`), over the
+ * selection. */
 export interface BoardRings {
   readonly selected?: number | undefined;
+  readonly ringed?: readonly number[] | undefined;
   readonly hint?: readonly number[] | undefined;
   readonly target?: number | undefined;
   readonly bad?: readonly number[] | undefined;
@@ -92,6 +94,9 @@ export function highlightsOf(puzzle: GridPuzzle, rings: BoardRings): Record<stri
   put(rings.selected, 'selected');
   rings.hint?.forEach((index) => {
     put(index, 'hint');
+  });
+  rings.ringed?.forEach((index) => {
+    put(index, 'target');
   });
   put(rings.target, 'target');
   rings.bad?.forEach((index) => {

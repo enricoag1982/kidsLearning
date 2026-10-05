@@ -415,28 +415,26 @@ describe('grid-fill: the hint ladder', () => {
   });
 
   it('a picture whose entries leave only a higher technique than the lesson allows still gets a hint', () => {
-    // castle allows full lines only. With the first, third and last column filled, every line has known cells or needs an overlap.
-    const column = (index: number, rows: readonly number[]): readonly GridFillAction[] =>
-      rows.map((row) => set(row * 5 + index, 'fill'));
-    const { state } = run(
-      start(castle),
-      ...column(0, [0, 1, 2, 3, 4]),
-      ...column(2, [0, 1, 3, 4]),
-      ...column(4, [0, 1, 2, 3, 4]),
+    // The cat needs overlaps, cross-outs and combines; this lesson allows full lines only. With its two full rows filled the
+    // lesson’s own techniques have nothing left, but the next hint still names the lowest higher step (an overlap in row 3).
+    const { puzzle: drawn } = cat;
+    if (drawn.rules !== 'picture-cross') throw new Error('the cat is a picture');
+    const fullLinesOnly: GridFillDef = { ...cat, puzzle: { ...drawn, maxLevel: 1 } };
+    const fullRows = [1, 2].flatMap((row) =>
+      [0, 1, 2, 3, 4].map((column) => set(row * 5 + column, 'fill')),
     );
+    const { state } = run(start(fullLinesOnly), ...fullRows);
     expect(state.errors).toBe(0);
-    const { puzzle } = castle;
-    if (puzzle.rules !== 'picture-cross') throw new Error('castle is a picture');
     const known = state.cells.map((cell) =>
       cell === 'fill' || cell === 'cross' ? cell : undefined,
     );
-    expect(nextCrossStep(puzzle.size, puzzle.rows, puzzle.cols, known, 1)).toBeUndefined();
+    expect(nextCrossStep(drawn.size, drawn.rows, drawn.cols, known, 1)).toBeUndefined();
     const hint = gridFillKind.hint(state, 1, null);
     expect(hint.hint).toEqual({
       kind: 'grid-fill',
       level: 1,
-      technique: 'cross-out',
-      units: [{ kind: 'row', index: 0 }],
+      technique: 'overlap',
+      units: [{ kind: 'row', index: 3 }],
     });
     expect(hint.state.stepHint).toBe(1);
   });
