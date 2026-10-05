@@ -62,6 +62,30 @@ async function openRace(page: Page): Promise<void> {
   ).toBeVisible();
 }
 
+/** The tiles of a drawn row of groups: `count` of them, square, at least `side` px (a tablet's are 112 px, up to 7 rem), 0.75 rem apart or
+ * more, and the whole row inside the card. */
+async function expectGroupTiles(page: Page, count: number, side: number): Promise<void> {
+  const tiles = page.locator('[data-tile]');
+  await expect(tiles).toHaveCount(count);
+  // The board settles into its size over 200 ms after a lesson step: measure until it holds still.
+  await expect(async () => {
+    const boxes = [];
+    for (let index = 0; index < count; index += 1) boxes.push(await boxOf(tiles.nth(index)));
+    for (const box of boxes) {
+      expect(box.width).toBeGreaterThanOrEqual(side);
+      expect(Math.abs(box.width - box.height)).toBeLessThan(1);
+    }
+    for (let index = 1; index < count; index += 1) {
+      const [before, after] = [boxes[index - 1], boxes[index]];
+      if (before === undefined || after === undefined) throw new Error('a tile is missing');
+      expect(after.x - (before.x + before.width)).toBeGreaterThanOrEqual(11.5);
+    }
+    // One line: every tile at the same height (a pixel of rounding apart at most).
+    const tops = boxes.map((box) => box.y);
+    expect(Math.max(...tops) - Math.min(...tops)).toBeLessThan(2);
+  }).toPass({ timeout: 5000 });
+}
+
 for (const screen of SCREENS) {
   test.describe(`Math pictures and boards, ${screen.name}`, () => {
     test.use({ viewport: { width: screen.width, height: screen.height } });
@@ -144,7 +168,7 @@ for (const screen of SCREENS) {
       }
     });
 
-    test('groups: the card says "3 groups of 2" and draws 3 clusters of 2 shapes, named as one picture', async ({
+    test('groups: the card says "3 groups of 2" and draws 3 clusters of 2 shapes on their own tiles, named as one picture; the tiles are at least 64 px (48 px on a phone) and apart', async ({
       page,
     }) => {
       const lesson = findLesson('mt-groups');
@@ -162,9 +186,23 @@ for (const screen of SCREENS) {
       );
       await expect(picture.locator('svg')).toHaveCount(6);
       await expect(page.locator('[data-count="2"]')).toHaveCount(3);
-      // Each drawn shape is big enough to count (the largest cluster, 9, would be a third of this).
-      const cluster = await boxOf(page.locator('[data-count="2"]').first());
-      expect(cluster.width).toBeGreaterThanOrEqual(tablet ? 56 : 44);
+      await expectGroupTiles(page, 3, tablet ? 64 : 48);
+    });
+
+    test('groups: 4 groups of 5 (the biggest of the lesson) are four tiles of 5 shapes, at least 64 px (48 px on a phone) and apart', async ({
+      page,
+    }) => {
+      const lesson = findLesson('mt-groups');
+      const big = lesson.exercises.find((def) => def.id === 'gr-big-1');
+      expect(big?.prompt?.shapes).toHaveLength(4);
+      await openFirstTry(page, 'mt-groups');
+      for (const def of [...lesson.guided, ...lesson.exercises.slice(0, 2)]) {
+        await completeExercise(page, def);
+      }
+
+      await expect(page.getByText('4 groups of 5', { exact: true })).toBeVisible();
+      await expect(page.locator('[data-count="5"]')).toHaveCount(4);
+      await expectGroupTiles(page, 4, tablet ? 64 : 48);
     });
 
     test('round-ten: the card draws the number between its two tens on a line, the dot where the number is', async ({

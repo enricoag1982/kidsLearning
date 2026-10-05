@@ -27,13 +27,24 @@ export function clusterColumns(count: number): number {
   return count <= 4 ? 2 : 3;
 }
 
-/** The largest side of a token box (a row shows at most 8 tokens: 4 rem wide at most, 2.25 rem compact) and the gap between boxes. */
-const BOX_MAX = { normal: '4rem', compact: '2.25rem' } as const;
-const BOX_GAP = { normal: '0.5rem', compact: '0.25rem' } as const;
+/** The largest side of a token box and the gap between boxes. A prompt row holds at most 8 tokens, so a row of 6 or more keeps boxes of at
+ * most 4 rem (8 tokens fit one line at 390 px); a row of at most `ROOMY_ROW_MAX` tokens has room for 7 rem, so a group of shapes or a
+ * pattern reads at the size of the card (the box side is `min(cap, (row width − gaps) / count)`, so it follows the card's width). The
+ * Story step's compact row stays small. */
+export const ROOMY_ROW_MAX = 5;
+const BOX_MAX = { normal: '4rem', roomy: '7rem', compact: '2.25rem' } as const;
+const BOX_GAP = { normal: '0.5rem', clusters: '0.75rem', compact: '0.25rem' } as const;
 
-/** The side of every token box of a row of `count`: `min(max, (row width − the gaps) / count)`, so the row never wraps (8 tokens fit one
- * line at 390 px) and the boxes stay square and alike. Plain `calc` / `min` (no container units: iOS 15 has none). */
-export function shapeBoxSide(count: number, compact: boolean): string {
-  const size = compact ? 'compact' : 'normal';
-  return `min(${BOX_MAX[size]}, calc((100% - ${BOX_GAP[size]} * ${String(count - 1)}) / ${String(count)}))`;
+/** The gap between the boxes of a row: wider (0.75 rem) when a token is a cluster (it sits on its own tile, and the tiles read as groups),
+ * 0.5 rem otherwise, 0.25 rem in the compact row. */
+export function shapeBoxGap(compact: boolean, clusters: boolean): string {
+  return BOX_GAP[compact ? 'compact' : clusters ? 'clusters' : 'normal'];
+}
+
+/** The side of every token box of a row of `count`: `min(cap, calc((row width − the gaps) / count))`, so the row never wraps (8 tokens fit
+ * one line at 390 px) and the boxes stay square and alike. Plain `calc` / `min` (no container units: iOS 15 has none): the percentage
+ * resolves against the row, which is as wide as the card's content. `clusters`: the row has a cluster (a token with a `count` above 1). */
+export function shapeBoxSide(count: number, compact: boolean, clusters = false): string {
+  const cap = BOX_MAX[compact ? 'compact' : count <= ROOMY_ROW_MAX ? 'roomy' : 'normal'];
+  return `min(${cap}, calc((100% - ${shapeBoxGap(compact, clusters)} * ${String(count - 1)}) / ${String(count)}))`;
 }

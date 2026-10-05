@@ -82,21 +82,33 @@ export interface ShapeRowProps {
   readonly compact?: boolean;
 }
 
-/** The "?" of the gap, smaller in a row of many tokens (its box shrinks with the row; `leading-none` keeps the box square). */
+/** The "?" of the gap, smaller in a row of many tokens (its box shrinks with the row, up to 7 rem in a row of 5 or fewer; `leading-none`
+ * keeps the box square). */
 function gapTextClass(count: number, compact: boolean): string {
   if (compact) return count > 6 ? 'text-xs' : count > 4 ? 'text-base' : 'text-xl';
   if (count > 6) return 'text-lg';
-  return count > 4 ? 'text-2xl' : 'text-3xl';
+  if (count > 5) return 'text-2xl';
+  return count > 4 ? 'text-4xl' : 'text-5xl';
 }
 
-/** A prompt's row of tokens on one line, sized to fit its width; `gap` is a dashed rounded box with a "?". The host names the whole row. */
+/** A token that is a cluster: `count` above 1 (a single shape is a plain token). */
+function isCluster(token: CardShape | 'gap'): token is CardShape {
+  return token !== 'gap' && (token.count ?? 1) > 1;
+}
+
+/** A prompt's row of tokens on one line, sized to fit its width (up to 7 rem a box in a row of 5 or fewer, 4 rem in a row of 6 or more);
+ * `gap` is a dashed rounded box with a "?". In a row with a cluster (a token with a count above 1) every token sits on its own light
+ * rounded tile, 0.75 rem from the next, so each group reads as a group (a growing pattern 1, 3, 5 keeps its single shape on a tile
+ * too); a row of single shapes stays plain. The compact Story row is always a plain small row. The host names the whole row. */
 export function ShapeRow({ shapes, compact = false }: ShapeRowProps): JSX.Element {
+  const clusters = !compact && shapes.some(isCluster);
   // The side is a custom property read by `w-(--box-side)`: the browser resolves its percentage against the row.
-  const side = { '--box-side': shapeBoxSide(shapes.length, compact) } as CSSProperties;
+  const side = { '--box-side': shapeBoxSide(shapes.length, compact, clusters) } as CSSProperties;
+  const gapClass = compact ? 'gap-1' : clusters ? 'gap-3' : 'gap-2';
   return (
     <span
       aria-hidden="true"
-      className={`flex w-full flex-nowrap items-center justify-center ${compact ? 'gap-1' : 'gap-2'}`}
+      className={`flex w-full flex-nowrap items-center justify-center ${gapClass}`}
     >
       {shapes.map((token, index) =>
         token === 'gap' ? (
@@ -107,6 +119,15 @@ export function ShapeRow({ shapes, compact = false }: ShapeRowProps): JSX.Elemen
             className={`flex aspect-square min-h-0 w-(--box-side) shrink-0 items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-edge-neutral font-display leading-none font-bold text-muted ${gapTextClass(shapes.length, compact)}`}
           >
             ?
+          </span>
+        ) : clusters ? (
+          <span
+            key={index}
+            data-tile="true"
+            style={side}
+            className="aspect-square w-(--box-side) shrink-0 rounded-2xl border border-line bg-cream p-[calc(var(--box-side)*0.08)]"
+          >
+            <ShapeCluster shape={token} className="h-full w-full" />
           </span>
         ) : (
           <span key={index} style={side} className="aspect-square w-(--box-side) shrink-0">

@@ -152,9 +152,79 @@ describe('ShapeRow', () => {
     const compact = (
       render(<ShapeRow shapes={row} compact />).container.querySelector('[data-gap]') as HTMLElement
     ).style.getPropertyValue('--box-side');
-    expect(big).toContain('min(4rem');
+    // A row of 5 or fewer tokens has room for 7 rem boxes; the compact Story row keeps its 2.25 rem.
+    expect(big).toContain('min(7rem');
     expect(compact).toContain('min(2.25rem');
-    expect(compact).not.toContain('4rem');
+    expect(compact).not.toContain('7rem');
+  });
+
+  it('keeps the 4 rem cap from 6 tokens up and takes 7 rem up to 5, whatever the tokens are', () => {
+    const tokens = (count: number): CardShape[] =>
+      Array.from({ length: count }, (_unused, index) => ({
+        kind: SHAPE_KINDS[index % SHAPE_KINDS.length] ?? 'circle',
+        colour: SHAPE_COLOURS[index % SHAPE_COLOURS.length] ?? 'red',
+      }));
+    const capOf = (count: number): string | undefined => {
+      const { container } = render(<ShapeRow shapes={tokens(count)} />);
+      const box = container.querySelector('[class*="w-(--box-side)"]') as HTMLElement;
+      return /^min\(([\d.]+rem)/.exec(box.style.getPropertyValue('--box-side'))?.[1];
+    };
+    expect([1, 2, 3, 4, 5].map(capOf)).toEqual(Array(5).fill('7rem'));
+    expect([6, 7, 8].map(capOf)).toEqual(Array(3).fill('4rem'));
+  });
+
+  describe('clusters', () => {
+    const group = { kind: 'diamond', colour: 'blue', count: 2 } as const;
+    const single = { kind: 'circle', colour: 'red' } as const;
+
+    it('puts every cluster (a token with a count above 1) on its own tile: card-tinted, a 1 px border, padding of 8 % of the box', () => {
+      const { container } = render(<ShapeRow shapes={[group, group, group]} />);
+      const tiles = container.querySelectorAll('[data-tile]');
+      expect(tiles).toHaveLength(3);
+      for (const tile of tiles) {
+        expect(tile.className).toContain('rounded-2xl');
+        expect(tile.className).toContain('border border-line');
+        expect(tile.className).toContain('bg-cream');
+        expect(tile.className).toContain('p-[calc(var(--box-side)*0.08)]');
+        expect(tile.querySelectorAll('svg')).toHaveLength(2);
+      }
+    });
+
+    it('spaces the tiles 0.75 rem apart, in the gap class and in the box side that counts the gaps', () => {
+      const { container } = render(<ShapeRow shapes={[group, group, group]} />);
+      expect(container.firstElementChild?.className).toContain('gap-3');
+      expect(container.firstElementChild?.className).not.toContain('gap-2');
+      expect(
+        (container.querySelector('[data-tile]') as HTMLElement).style.getPropertyValue(
+          '--box-side',
+        ),
+      ).toBe('min(7rem, calc((100% - 0.75rem * 2) / 3))');
+      expect(shapeBoxSide(3, false, true)).toBe('min(7rem, calc((100% - 0.75rem * 2) / 3))');
+      expect(shapeBoxSide(7, false, true)).toBe('min(4rem, calc((100% - 0.75rem * 6) / 7))');
+    });
+
+    it('tiles every token of a row that has a cluster, a single shape too (a growing pattern 1, 3, 5), the gap staying a dashed box', () => {
+      const { container } = render(<ShapeRow shapes={[single, group, 'gap']} />);
+      expect(container.querySelectorAll('[data-tile]')).toHaveLength(2);
+      expect(container.querySelectorAll('[data-gap]')).toHaveLength(1);
+      expect(container.firstElementChild?.className).toContain('gap-3');
+      expect(container.querySelector('[data-tile] [data-shape="circle"]')).not.toBeNull();
+    });
+
+    it('draws a row of single shapes as before: no tiles, 0.5 rem gaps', () => {
+      const { container } = render(<ShapeRow shapes={[single, single, 'gap']} />);
+      expect(container.querySelectorAll('[data-tile]')).toHaveLength(0);
+      expect(container.firstElementChild?.className).toContain('gap-2');
+      expect(container.firstElementChild?.className).not.toContain('gap-3');
+      expect(shapeBoxSide(3, false)).toBe('min(7rem, calc((100% - 0.5rem * 2) / 3))');
+    });
+
+    it('keeps the compact Story row plain: no tiles, 0.25 rem gaps, 2.25 rem boxes', () => {
+      const { container } = render(<ShapeRow shapes={[group, group, group]} compact />);
+      expect(container.querySelectorAll('[data-tile]')).toHaveLength(0);
+      expect(container.firstElementChild?.className).toContain('gap-1');
+      expect(shapeBoxSide(3, true, true)).toBe('min(2.25rem, calc((100% - 0.25rem * 2) / 3))');
+    });
   });
 });
 
@@ -207,14 +277,37 @@ describe('ShapeRow at 390 px', () => {
     const eightSide = sidePx(shapeBoxSide(8, false), width);
     expect(eightSide).toBeCloseTo(37.75, 2);
     expect(8 * eightSide + 7 * 8).toBeLessThanOrEqual(width);
-    expect(sidePx(shapeBoxSide(5, false), width)).toBe(64); // (358 - 32) / 5 = 65.2: the 4 rem cap
+    // 5 tokens: (358 - 32) / 5 = 65.2, below the 7 rem cap (112), so a row of 5 uses the whole line; 6 tokens keep the 4 rem cap.
+    expect(sidePx(shapeBoxSide(5, false), width)).toBeCloseTo(65.2, 2);
+    expect(sidePx(shapeBoxSide(6, false), width)).toBe(Math.min(64, (width - 40) / 6));
     for (let count = 1; count <= 8; count += 1) {
       const side = sidePx(shapeBoxSide(count, false), width);
-      expect(side, String(count)).toBeLessThanOrEqual(64);
+      expect(side, String(count)).toBeLessThanOrEqual(count <= 5 ? 112 : 64);
       expect(count * side + (count - 1) * 8, String(count)).toBeLessThanOrEqual(width + 0.001);
       const compact = sidePx(shapeBoxSide(count, true), width);
       expect(compact, String(count)).toBeLessThanOrEqual(36);
       expect(count * compact + (count - 1) * 4, String(count)).toBeLessThanOrEqual(width + 0.001);
+    }
+  });
+
+  it('sizes the boxes of a row to the card: at 1024 x 768 (a 568 px row) 3 groups are 112 px tiles and 5 single shapes about 107 px (were 64); at 390 x 844 (a 316 px row) 5 groups are tiles of at least 48 px', () => {
+    const tablet = 568;
+    const phone = 316;
+    expect(sidePx(shapeBoxSide(3, false, true), tablet)).toBe(112);
+    expect(sidePx(shapeBoxSide(5, false), tablet)).toBeCloseTo(107.2, 1);
+    expect(sidePx(shapeBoxSide(8, false), tablet)).toBe(64);
+    expect(sidePx(shapeBoxSide(5, false, true), phone)).toBeCloseTo(53.6, 1);
+    expect(sidePx(shapeBoxSide(5, false, true), phone)).toBeGreaterThanOrEqual(48);
+    // Every row of up to 8 tokens, with or without clusters, fits one line on the phone.
+    for (let count = 1; count <= 8; count += 1) {
+      for (const clusters of [false, true]) {
+        const side = sidePx(shapeBoxSide(count, false, clusters), phone);
+        const gap = clusters ? 12 : 8;
+        expect(
+          count * side + (count - 1) * gap,
+          `${String(count)} ${String(clusters)}`,
+        ).toBeLessThanOrEqual(phone + 0.001);
+      }
     }
   });
 
@@ -227,7 +320,8 @@ describe('ShapeRow at 390 px', () => {
       const { container } = render(<ShapeRow shapes={shapes} compact={compact} />);
       return container.querySelector('[data-gap]')?.className ?? '';
     };
-    expect(textOf(3)).toContain('text-3xl');
+    expect(textOf(3)).toContain('text-5xl');
+    expect(textOf(5)).toContain('text-4xl');
     expect(textOf(6)).toContain('text-2xl');
     expect(textOf(8)).toContain('text-lg');
     expect(textOf(3, true)).toContain('text-xl');

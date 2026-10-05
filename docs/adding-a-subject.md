@@ -87,6 +87,7 @@ Drawn tokens (kind × colour × size × count) for patterns, odd-one-out and sor
 |---|---|---|
 | Row | verify | 1–8 tokens, at most one `gap` |
 | Colour-blind | verify, one exercise | two tokens (items and prompt row together) that differ only in colour, the colours one of red–green, green–orange, blue–purple (`shape-colours.ts`) → issue; change the kind, size or count too |
+| Row layout | web (`ShapeRow`, prompt rows; the Story step's compact row stays small and plain) | one line, boxes `min(cap, (row width − gaps) / tokens)`: cap 7 rem up to 5 tokens, 4 rem from 6 (8 tokens fit 390 px); a row with a cluster (`count` above 1) puts every token on its own light rounded tile (card-tinted, 1 px border, padding 8 % of the box) and keeps 0.75 rem between tokens (0.5 rem otherwise), so each group reads as a group |
 | Facts | core | `shapeFacts(shape)` → `['kind:circle', 'colour:red', 'size:big', 'count:1']` (defaults filled in), for a kind's rules and a template's `check` |
 | Labels | web | the card / row carries the name, tokens are `aria-hidden`: `cardItemLabel` = text, big, shape, emoji, id; `shapeLabel` → "3 small red circles" (size word omitted for `big`, number for one); row → "Row of shapes: red circle, blue square, red circle, a gap"; words in `cards.shape.*` (platform `common.yaml`); never narrated |
 
