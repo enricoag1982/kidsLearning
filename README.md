@@ -10,7 +10,7 @@ small idea at a time through animal-themed lessons, mini-games and spoken instru
 | Chess | Basics (5 worlds, 23 lessons), computer opponent (5 levels), play vs a friend; 3 paths planned |
 | Math | W1–W3 (16 lessons): place value, mental math, times tables; number line, base-ten blocks, dot arrays; 3 world bosses (Number Train, Market Orders, Race to 20 vs a bot) |
 | Coding | W1–W3 (13 lessons): arrow steps, repeat loops, turns and jumps; 3 world bosses (Bug Squash, Fence Builder, Left-Right Rescue) |
-| Logic | Planned (v1.3) — [`docs/new-subjects.md`](docs/new-subjects.md) |
+| Logic | W1–W3 (14 lessons): patterns, sorting, grid puzzles; shape cards, Carroll and Venn boxes, sudoku 4 × 4 / 6 × 6, picture cross; 3 world bosses (Pattern Train, Sorting Sprint, Sudoku Sprint) |
 
 One install for the whole family: each child picks a subject after choosing their profile; progress, stars and badges are
 kept per subject, while profiles, the parent code, daily time limits and backups are shared. New subjects start from a
@@ -69,6 +69,10 @@ After the Basics, three paths are planned: **Openings**, **Tactics**, and **Chec
 | Math | Race to 20 |
 |---|---|
 | ![Math: building a number with blocks](docs/images/math.png) | ![Race to 20 against the Hedgehog](docs/images/race.png) |
+
+| Logic | Sudoku |
+|---|---|
+| ![Logic: what comes next in the pattern?](docs/images/logic.png) | ![Sudoku with pencil notes](docs/images/sudoku.png) |
 
 ## Run it yourself
 
