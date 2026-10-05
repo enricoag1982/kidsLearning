@@ -146,6 +146,29 @@ describe('CardTile', () => {
     expect(small.container.querySelector('[data-count]')?.className).toContain('h-8');
     expect(screen.getByText('Apples').className).toContain('text-xs');
   });
+
+  it('draws about twice the normal face when large (a choice option with no prompt); a long big text stays smaller', async () => {
+    const item = {
+      id: 'a',
+      emoji: '🍎',
+      big: '3',
+      image: 'fox',
+      shape: { kind: 'star', colour: 'yellow' },
+    } as const;
+    const large = await renderCardUi(<CardTile item={item} large />, ART);
+    expect(large.container.firstElementChild?.getAttribute('data-large')).toBe('true');
+    expect(screen.getByText('🍎').className).toContain('text-7xl');
+    expect(screen.getByText('3').className).toContain('text-6xl');
+    expect(large.container.querySelector('img')?.className).toContain('h-24');
+    expect(large.container.querySelector('[data-count]')?.className).toContain('h-28');
+    cleanup();
+    const sum = await renderCardUi(<CardTile item={{ id: 'b', big: '28 + 82' }} large />, ART);
+    expect(screen.getByText('28 + 82').className).toContain('text-4xl');
+    expect(sum.container.querySelector('[data-large]')).not.toBeNull();
+    cleanup();
+    const normal = await renderCardUi(<CardTile item={item} />, ART);
+    expect(normal.container.firstElementChild?.getAttribute('data-large')).toBeNull();
+  });
 });
 
 describe('cardItemLabel', () => {

@@ -14,3 +14,27 @@ export function panelBody(
     </>
   );
 }
+
+/** Like `panelBody`, for an exercise whose answers are the whole exercise (a choice with no stimulus): `top`, then (solved) `done`,
+ * else `centre` centred in the space left, and `controls` as the row at the bottom. */
+export function centredPanelBody(
+  top: ReactNode,
+  solved: boolean,
+  done: ReactNode | null,
+  centre: ReactNode,
+  controls: ReactNode,
+): JSX.Element {
+  return (
+    <>
+      {top}
+      {solved ? (
+        done
+      ) : (
+        <>
+          <div className="flex min-h-0 flex-1 flex-col justify-center">{centre}</div>
+          {controls}
+        </>
+      )}
+    </>
+  );
+}

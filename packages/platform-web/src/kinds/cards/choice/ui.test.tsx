@@ -94,6 +94,46 @@ describe('card choice UI', () => {
     expect(container.firstElementChild?.className).toBe('flex min-h-0 flex-1 flex-col gap-4');
   });
 
+  it('without a prompt draws large tiles (7rem, 9rem from sm) centred above the Hint row', async () => {
+    const shapes: CardChoiceDef = {
+      ...def,
+      prompt: undefined,
+      options: [
+        { id: 'a', shape: { kind: 'circle', colour: 'green' } },
+        { id: 'b', shape: { kind: 'circle', colour: 'blue', count: 3 } },
+        { id: 'c', emoji: '🍎', textKey: 'lessons:five' },
+      ],
+    };
+    const { container } = await renderPlayArea({}, shapes);
+    const grid = container.querySelector('[data-size]');
+    expect(grid?.getAttribute('data-size')).toBe('large');
+    const tiles = [...(grid?.querySelectorAll('button') ?? [])];
+    expect(tiles).toHaveLength(3);
+    for (const tile of tiles) {
+      expect(tile.className).toContain('min-h-28');
+      expect(tile.className).toContain('sm:min-h-36');
+      expect(tile.className).not.toContain('min-h-20');
+    }
+    expect(container.querySelector('[data-count="3"]')?.className).toContain('h-28');
+    expect(screen.getByText('🍎').className).toContain('text-7xl');
+    // The tiles sit in the centring region, before the Hint row.
+    const region = grid?.closest('.justify-center');
+    expect(region?.className).toContain('flex-1');
+    const hint = screen.getByRole('button', { name: 'Hint' });
+    expect(region?.compareDocumentPosition(hint)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+  });
+
+  it('with a prompt keeps the normal tiles under the Hint row', async () => {
+    const { container } = await renderPlayArea();
+    expect(container.querySelector('[data-size="large"]')).toBeNull();
+    expect(container.querySelector('[data-size]')?.getAttribute('data-size')).toBe('normal');
+    expect(screen.getByRole('button', { name: '3' }).className).not.toContain('min-h-28');
+    expect(screen.getByText('🍎🍎🍎').className).toContain('text-[96px]');
+    const hint = screen.getByRole('button', { name: 'Hint' });
+    const tile = screen.getByRole('button', { name: '3' });
+    expect(hint.compareDocumentPosition(tile)).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+  });
+
   it('replaces the tiles by the done block once solved', async () => {
     await renderPlayArea({ solved: true });
     expect(screen.getByText('Done')).toBeTruthy();
