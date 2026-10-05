@@ -39,8 +39,10 @@ test('keeps showing the app once offline, after the service worker is ready', as
   page,
   context,
 }) => {
+  // The service worker precaches every subject's audio (≈ 19 MB since Logic) before "Ready to play offline."
+  test.slow();
   await completeFirstRun(page, 'Mia');
-  await expect(page.getByText('Ready to play offline.')).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByText('Ready to play offline.')).toBeVisible({ timeout: 45_000 });
 
   await context.setOffline(true);
   await page.reload();

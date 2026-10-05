@@ -19,6 +19,8 @@ test('first lesson story: plays generated audio, never Web Speech, and still loa
   page,
   context,
 }) => {
+  // The service worker precaches every subject's audio (≈ 19 MB since Logic) before "Ready to play offline."
+  test.slow();
   const lesson = nextLesson(catalog, content.lessons, []);
   if (!lesson) throw new Error('bundled content/tracks: no first lesson found');
   const storyText = contentText(lesson.storyKey);
@@ -48,7 +50,7 @@ test('first lesson story: plays generated audio, never Web Speech, and still loa
 
   await completeFirstRun(page, 'Kid');
   // Service worker fully installed/precached (same readiness signal `offline.spec.ts` waits on).
-  await expect(page.getByText('Ready to play offline.')).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByText('Ready to play offline.')).toBeVisible({ timeout: 45_000 });
 
   await page.getByRole('button', { name: /Start/ }).click(); // Home -> Story
   await expect(page.getByText(storyText)).toBeVisible();
