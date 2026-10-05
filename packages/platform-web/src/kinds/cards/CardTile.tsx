@@ -12,13 +12,30 @@ export interface CardTileProps {
   readonly compact?: boolean;
   /** About twice the normal face (the options of a choice with no prompt); wins over `compact`. */
   readonly large?: boolean;
+  /** The normal face on a phone for a 56 px tile (the group pool): the shape box is 3.25 rem instead of 3.5; from `sm` the normal
+   * face. Ignored with `compact` or `large`. */
+  readonly dense?: boolean;
 }
 
 /** Sizing classes of each face part: the normal tile, the compact one (a card in a box), the large one (a choice option with no
  * prompt: about twice the normal size, until `sm` where the tile is taller). */
 const FACE = {
   normal: { image: 'h-12 w-12', emoji: 'text-5xl', big: 'text-4xl', shape: undefined },
-  compact: { image: 'h-8 w-8', emoji: 'text-3xl', big: 'text-2xl', shape: 'h-8 w-8' },
+  dense: {
+    image: 'h-12 w-12',
+    emoji: 'text-5xl',
+    big: 'text-4xl',
+    shape: 'h-[3.25rem] w-[3.25rem] sm:h-14 sm:w-14',
+  },
+  /** A card placed in a box. A count cluster is drawn in a 2.5 rem box (a 2 x 2 cluster keeps its tokens at 20 px), a single token in
+   * 2 rem. */
+  compact: {
+    image: 'h-8 w-8',
+    emoji: 'text-3xl',
+    big: 'text-2xl',
+    shape: 'h-8 w-8',
+    cluster: 'h-10 w-10',
+  },
   large: {
     image: 'h-24 w-24 sm:h-28 sm:w-28',
     emoji: 'text-7xl sm:text-8xl',
@@ -39,9 +56,12 @@ export function CardTile({
   text,
   compact = false,
   large = false,
+  dense = false,
 }: CardTileProps): JSX.Element {
   const pack = usePack();
-  const face = large ? FACE.large : compact ? FACE.compact : FACE.normal;
+  const face = large ? FACE.large : compact ? FACE.compact : dense ? FACE.dense : FACE.normal;
+  const shapeClass =
+    face === FACE.compact && (item.shape?.count ?? 1) > 1 ? FACE.compact.cluster : face.shape;
   return (
     <span
       className="flex flex-col items-center justify-center gap-1"
@@ -70,7 +90,7 @@ export function CardTile({
           {item.big}
         </span>
       )}
-      {item.shape !== undefined && <ShapeCluster shape={item.shape} className={face.shape} />}
+      {item.shape !== undefined && <ShapeCluster shape={item.shape} className={shapeClass} />}
       {text !== undefined && (
         <span className={`text-center font-semibold ${compact ? 'text-xs' : 'text-sm'}`}>
           {text}

@@ -147,6 +147,36 @@ describe('CardTile', () => {
     expect(screen.getByText('Apples').className).toContain('text-xs');
   });
 
+  it('draws a count cluster of a placed card in a 2.5 rem box (a 2 x 2 cluster keeps its tokens at 20 px), a single token in 2 rem', async () => {
+    const cluster = (count: number) =>
+      ({ id: 'a', shape: { kind: 'heart', colour: 'red', count } }) as const;
+    const boxOf = async (count: number, compact: boolean): Promise<string> => {
+      const view = await renderCardUi(<CardTile item={cluster(count)} compact={compact} />);
+      const box = view.container.querySelector('[data-count]')?.className ?? '';
+      cleanup();
+      return box;
+    };
+    expect(await boxOf(1, true)).toContain('h-8 w-8');
+    for (const count of [2, 4, 5, 9]) {
+      expect(await boxOf(count, true), String(count)).toContain('h-10 w-10');
+    }
+    // The normal face keeps its box whatever the count.
+    expect(await boxOf(5, false)).toContain('h-14 w-14');
+  });
+
+  it('draws the normal face with a 3.25 rem shape box on a phone when dense (the 56 px pool tile), 3.5 rem from `sm`', async () => {
+    const item = { id: 'a', shape: { kind: 'star', colour: 'yellow' }, emoji: '🍎' } as const;
+    const dense = await renderCardUi(<CardTile item={item} dense />);
+    const box = dense.container.querySelector('[data-count]')?.className ?? '';
+    expect(box).toContain('h-[3.25rem] w-[3.25rem]');
+    expect(box).toContain('sm:h-14 sm:w-14');
+    expect(screen.getByText('🍎').className).toContain('text-5xl');
+    cleanup();
+    // `compact` and `large` win over `dense`.
+    const compact = await renderCardUi(<CardTile item={item} dense compact />);
+    expect(compact.container.querySelector('[data-count]')?.className).toContain('h-8 w-8');
+  });
+
   it('draws about twice the normal face when large (a choice option with no prompt); a long big text stays smaller', async () => {
     const item = {
       id: 'a',

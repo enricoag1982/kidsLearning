@@ -15,19 +15,20 @@ import { CarrollLayout, RowLayout, VennLayout } from './layouts.tsx';
 import type { LayoutProps } from './layouts.tsx';
 import type { GroupPlayAreaProps } from './ui.ts';
 
+/** A pool tile: 56 px high on a phone (the compact pool, so the cards stay on screen below the boxes), 80 from `sm`. */
 const TILE_SHAPE =
-  'flex min-h-20 min-w-16 flex-col items-center justify-center rounded-2xl px-2 font-display';
+  'flex min-h-14 min-w-16 flex-col items-center justify-center rounded-2xl px-2 font-display sm:min-h-20';
 
 /** The pool's columns by the number of cards the exercise has (not the number left, so the tiles stay put while cards are placed):
- * 2 on a phone for up to 4 cards, 3 for more; from a tablet's width one row for up to 8 cards (a tile stays above 64 px at 768 px), so
- * the cards stay on the screen next to the boxes. */
+ * a phone has 3 for up to 3 or 5 or 6 cards and 4 for 4, 7 or 8 (two rows at most, tiles ≥ 80 px wide); from `sm` 3 to 4, from a
+ * tablet's width one row for up to 8 cards (a tile stays above 64 px at 768 px), so the cards stay on the screen next to the boxes. */
 const POOL_COLUMNS: Readonly<Record<number, string>> = {
-  3: 'grid-cols-2 sm:grid-cols-3',
-  4: 'grid-cols-2 sm:grid-cols-4',
+  3: 'grid-cols-3',
+  4: 'grid-cols-4',
   5: 'grid-cols-3 sm:grid-cols-4 md:grid-cols-5',
   6: 'grid-cols-3 sm:grid-cols-4 md:grid-cols-6',
-  7: 'grid-cols-3 sm:grid-cols-4 md:grid-cols-7',
-  8: 'grid-cols-3 sm:grid-cols-4 md:grid-cols-8',
+  7: 'grid-cols-4 md:grid-cols-7',
+  8: 'grid-cols-4 md:grid-cols-8',
 };
 
 /** The group hint the screen is showing, if the current hint is one. */
@@ -77,6 +78,7 @@ function Pool({
             <CardTile
               item={item}
               text={item.textKey === undefined ? undefined : text(item.textKey)}
+              dense
             />
           </button>
         );
