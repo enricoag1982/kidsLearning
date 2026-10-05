@@ -76,7 +76,7 @@ test.describe('Bug Squash', () => {
 });
 
 test.describe('World 1 boss', () => {
-  test('Bug Squash is the Journey boss node once all four lessons are mastered; winning it marks the node won', async ({
+  test('Bug Squash is the Journey boss node once all four lessons are mastered; winning it marks the node won and earns Bug Squasher', async ({
     page,
   }) => {
     test.setTimeout(180_000);
@@ -95,5 +95,15 @@ test.describe('World 1 boss', () => {
     // World 1 is finished, so the Journey moves on to World 2: its boss node is on World 1's own tab.
     await openJourneyWorld(page, 1, 'meadow-steps');
     await expect(page.getByRole('button', { name: worldBossNodeName(boss, 'won') })).toBeVisible();
+
+    // The win earned Bug Squasher (`minigame-won`): My Den lists it, its locked tile read "Beat Bug Squash" until now.
+    await page.getByRole('button', { name: contentText('journey:ui.back') }).click();
+    await page.getByRole('button', { name: 'My Den', exact: true }).click();
+    await expect(
+      page.getByRole('button', {
+        name: `${contentText('rewards:badges.bug-squasher.name')}, earned`,
+        exact: true,
+      }),
+    ).toBeVisible();
   });
 });

@@ -1,13 +1,12 @@
 # Generic conditions only. Name / condition texts live in locales/en/rewards.yaml under `badges.<id>.name` / `.condition`.
-# A mini-game win has no generic condition (and Bug Squash plays unscored outside its lesson), so "Bug squasher" counts the
-# clean bug hunts of the debugging lesson instead.
+# Bug Squasher = the `minigame-won` condition on Bug Squash (a win from the Journey boss node or from Play).
 badges:
   - id: first-program
     category: milestone
     condition: { type: concept-correct, concept: seq-arrows, thresholds: [1] }
   - id: bug-squasher
     category: skill
-    condition: { type: concept-correct, concept: seq-debug, thresholds: [5] }
+    condition: { type: minigame-won, scope: 'minigame:bug-squash', thresholds: [1] }
   - id: meadow-walker
     category: milestone
     condition: { type: mastered, scope: 'world:meadow-steps', thresholds: [1] }

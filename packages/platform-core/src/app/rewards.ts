@@ -1,6 +1,6 @@
 import type { BadgeFacts, EarnedBadge } from '../domain/badges.ts';
 import { evaluateBadges, newEarnedBadge } from '../domain/badges.ts';
-import type { Attempt, LessonProgress } from '../domain/progress.ts';
+import type { Attempt, LessonProgress, MiniGameProgress } from '../domain/progress.ts';
 import { totalStars } from '../domain/progress.ts';
 import { addMinutes, lastNDays, totalMinutesForDate } from '../domain/session-log.ts';
 import type { SessionLog } from '../domain/session-log.ts';
@@ -88,7 +88,12 @@ function conceptFacts(attempts: readonly Attempt[]): ConceptFacts {
   return { correctTotal, correctInARow, noHintsInARow };
 }
 
-/** Freshly derived facts for the engine's 7 generic condition types (`domain/badges.ts` stays pure); the other 3 read
+/** Ids of the mini-games with at least one win (Journey boss and Play both feed `MiniGameProgress`). */
+function wonMiniGames(miniGames: readonly MiniGameProgress[]): ReadonlySet<string> {
+  return new Set(miniGames.filter((game) => game.wins >= 1).map((game) => game.miniGameId));
+}
+
+/** Freshly derived facts for the engine's 8 generic condition types (`domain/badges.ts` stays pure); the other 3 read
  * `deps.subject.rewards`. */
 export async function buildBadgeFacts(
   deps: AppDeps,
@@ -96,15 +101,17 @@ export async function buildBadgeFacts(
   journey: Journey,
   streakCurrent: number,
 ): Promise<BadgeFacts> {
-  const [progresses, attempts] = await Promise.all([
+  const [progresses, attempts, miniGames] = await Promise.all([
     deps.progress.listLessons(profileId),
     deps.progress.listAttempts(profileId),
+    deps.progress.listMiniGames(profileId),
   ]);
 
   const { correctTotal, correctInARow, noHintsInARow } = conceptFacts(attempts);
 
   return {
     masteredScopes: masteredScopes(journey),
+    wonMiniGames: wonMiniGames(miniGames),
     starsTotal: totalStars(progresses),
     perfectLessons: perfectLessonsCount(journey, progresses),
     conceptCorrectTotal: correctTotal,

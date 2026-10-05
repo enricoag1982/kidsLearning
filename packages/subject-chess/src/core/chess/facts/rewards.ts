@@ -74,7 +74,7 @@ export function chessRewardFacts(records: readonly GameRecord[]): ChessRewardFac
   return { gameWins, queenKeptWins, gameEvents: { promotion, castling }, localGamesPlayed };
 }
 
-/** `SubjectCore.rewards.conditionValue` for chess's 3 game-record condition types; `undefined` for the engine's own 7. */
+/** `SubjectCore.rewards.conditionValue` for chess's 3 game-record condition types; `undefined` for the engine's own 8. */
 export function chessConditionValue(
   condition: BadgeCondition,
   facts: ChessRewardFacts,

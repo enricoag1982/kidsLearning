@@ -3,13 +3,14 @@ import { describe, expect, it } from 'vitest';
 import type { BadgeDef, EarnedBadge } from '../domain/badges.ts';
 import type { Track, TracksCatalog, World } from '../domain/journey.ts';
 import { newLessonProgress, recordExerciseStars } from '../domain/progress.ts';
-import type { Attempt, GameRecord, LessonProgress } from '../domain/progress.ts';
+import type { Attempt, GameRecord, LessonProgress, MiniGameProgress } from '../domain/progress.ts';
 import {
   makeClock,
   makeGameRecordRepo,
   makeProgressRepo as buildProgressRepo,
   makeRewardsRepo as buildRewardsRepo,
   makeAttempt as buildAttempt,
+  makeMiniGameProgress as buildMiniGameProgress,
   makeExercise as buildExercise,
   makeLesson as buildLesson,
   makeContentSource,
@@ -48,8 +49,24 @@ const CATALOG: TracksCatalog = { tracks: [TRACK], ranks: [{ id: 'pawn', after: '
 function makeProgressRepo(
   lessons: readonly LessonProgress[] = [],
   attempts: readonly Attempt[] = [],
+  miniGames: readonly MiniGameProgress[] = [],
 ): AppDeps['progress'] {
-  return buildProgressRepo({ lessons, attempts });
+  return buildProgressRepo({ lessons, attempts, miniGames });
+}
+
+function makeMiniGameProgress(
+  miniGameId: string,
+  wins: number,
+  profileId = 'p1',
+): MiniGameProgress {
+  return buildMiniGameProgress({
+    id: `mg-${profileId}-${miniGameId}`,
+    profileId,
+    miniGameId,
+    bestStars: wins > 0 ? 2 : 0,
+    plays: wins + 1,
+    wins,
+  });
 }
 
 function makeRewardsRepo(initialEarned: readonly EarnedBadge[] = []): RewardsRepository {
@@ -218,6 +235,24 @@ describe('buildBadgeFacts', () => {
     expect(facts.perfectLessons).toBe(1);
   });
 
+  it('lists the mini-games won at least once (this profile only)', async () => {
+    const deps = baseDeps({
+      progress: makeProgressRepo(
+        [],
+        [],
+        [
+          makeMiniGameProgress('bug-squash', 2),
+          makeMiniGameProgress('fence-builder', 0),
+          makeMiniGameProgress('other-profile-game', 1, 'p2'),
+        ],
+      ),
+    });
+    const { loadJourney } = await import('./journey.ts');
+    const journey = await loadJourney(deps, 'p1');
+    const facts = await buildBadgeFacts(deps, 'p1', journey, 0);
+    expect([...facts.wonMiniGames]).toEqual(['bug-squash']);
+  });
+
   it('computes concept-correct-in-a-row and no-hints-in-a-row, reset by a break', async () => {
     const attempts: Attempt[] = [
       makeAttempt({
@@ -323,6 +358,35 @@ describe('evaluateAndRecordBadges', () => {
     const { loadJourney } = await import('./journey.ts');
     const journey = await loadJourney(deps, 'p1');
     expect(await evaluateAndRecordBadges(deps, 'p1', journey, 0, NOW)).toEqual([]);
+  });
+
+  it('earns a minigame-won badge once that mini-game has a win, and only then', async () => {
+    const badge: BadgeDef = {
+      id: 'bug-beater',
+      category: 'skill',
+      nameKey: 'rewards:badges.bug-beater.name',
+      conditionKey: 'rewards:badges.bug-beater.condition',
+      condition: { type: 'minigame-won', scope: 'minigame:bug-squash', thresholds: [1] },
+    };
+    const { loadJourney } = await import('./journey.ts');
+
+    const lost = baseDeps({
+      content: makeContent([], [badge]),
+      progress: makeProgressRepo([], [], [makeMiniGameProgress('bug-squash', 0)]),
+    });
+    expect(
+      await evaluateAndRecordBadges(lost, 'p1', await loadJourney(lost, 'p1'), 0, NOW),
+    ).toEqual([]);
+
+    const rewards = makeRewardsRepo();
+    const won = baseDeps({
+      content: makeContent([], [badge]),
+      progress: makeProgressRepo([], [], [makeMiniGameProgress('bug-squash', 1)]),
+      rewards,
+    });
+    const earned = await evaluateAndRecordBadges(won, 'p1', await loadJourney(won, 'p1'), 0, NOW);
+    expect(earned.map((b) => b.badgeId)).toEqual(['bug-beater']);
+    expect(await rewards.listEarnedBadges('p1')).toHaveLength(1);
   });
 
   it('earns a game-win badge via deps.subject.rewards (chess facts, not the generic engine)', async () => {

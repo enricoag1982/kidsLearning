@@ -117,7 +117,7 @@ A small picture in the prompt card (below the big text): a line with a tick ever
 |---|---|
 | Lesson | `id`, `order`, `concept`, `character`, `demo` (`{ text?, prompt? }`), `guided`, `exercises` (≥ 1), `variants?`, `boss?`; text keys `<id>.title`, `.story`, `.demo` |
 | Boss (`mode: series`) | `id`, `concept`, `unlockAfter` (last lesson of the world naming it as `boss` in `tracks.yaml`), `errors3` ≤ `errors2`, `rounds` (any kinds) |
-| Badge | `id`, `category`, `condition: { type, thresholds }`; texts `badges.<id>.name` / `.condition` |
+| Badge | `id`, `category`, `condition: { type, thresholds }`; texts `badges.<id>.name` / `.condition`. Generic types (`docs/rewards.md` §4): `mastered` (`scope: world:<id>` / `track:<id>`), `minigame-won` (`scope: minigame:<id>`, thresholds `[1]`: that mini-game won once; the build checks the id), `concept-correct`, `stars-total`, `perfect-lessons`, `streak-days`, `warmups`, `comeback`; a subject's own types via `badges.fields` / `validate` (chess `game-*`) |
 
 ## 4. Going further
 

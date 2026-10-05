@@ -78,7 +78,7 @@ Rules: `docs/retrospective.md` §9 (≤ 3–4 commits per agent run, lead decide
 | F4 | Interim single-store configs | `CHESS_APP_CONFIG` `subjectStoragePrefix` only serves tests; drop when those tests use `KIDS_APP_CONFIG` (`MATH_APP_CONFIG` removed in `m13.5`) |
 | F5 | Card-kit Hint button | 56 px like the shared controls; every other card target ≥ 64 px — fixed in `m15.2` |
 | F6 | Crowded control rows | `compact` buttons are `flex-1` with `min-w-14`, so 4 buttons squeeze (coding guided try at 1024 × 768: Reset label touches its padding) instead of wrapping; try `min-width: auto` (content) and check chess / math rows — fixed in `m15.2` |
-| F7 | Bug Squash / boss badges | No generic "mini-game won" badge condition: Bug Squasher counts clean `seq-debug` hunts instead (`docs/subjects/coding/curriculum.md`) |
+| F7 | Bug Squash / boss badges | No generic "mini-game won" badge condition: Bug Squasher counts clean `seq-debug` hunts instead (`docs/subjects/coding/curriculum.md`) — fixed in `m15.5` (`minigame-won`) |
 | F8 | Phone Home header (390 × 844) | Header buttons wrap onto 2 rows; the last Home tile sits at the fold (scrolls) — shared shell — fixed in `m15.1` |
 | F9 | Phone Journey header | World title truncated ("World 1 · Number Mead…"), the 2nd world tab clipped at the right edge — shared shell — fixed in `m15.1` |
 | F10 | Card choice on phones | 3 short items (e.g. `<` `=` `>`) wrap 2 + 1 — fixed in `m15.2` |

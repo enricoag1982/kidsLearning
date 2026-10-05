@@ -1,7 +1,7 @@
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import type { TracksCatalog } from '@learn/platform-core';
+import type { MiniGame, TracksCatalog } from '@learn/platform-core';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { loadBadges } from './badges-load.ts';
 import { ContentError, type Locales } from './load.ts';
@@ -59,6 +59,15 @@ const LESSON = {
   exercises: [],
 };
 
+const BUG_SQUASH: MiniGame = {
+  id: 'bug-squash',
+  mode: 'series',
+  concept: 'rook-move',
+  titleKey: 'minigames:bug-squash.title',
+  goalKey: 'minigames:bug-squash.goal',
+  unlockAfter: 'rook',
+};
+
 /** en locale with every `rewards:badges.<id>.name`/`.condition` this suite's fixtures reference. */
 const LOCALES: Locales = {
   en: {
@@ -76,9 +85,13 @@ const LOCALES: Locales = {
 };
 
 /** Loads `content` (written to a temp `badges.yaml`), returning issues instead of throwing. */
-function loadIssues(content: string, locales: Locales = LOCALES): string[] {
+function loadIssues(
+  content: string,
+  locales: Locales = LOCALES,
+  minigames: readonly MiniGame[] = [],
+): string[] {
   try {
-    loadBadges(write(content), locales, CATALOG, [LESSON], [], NO_SUBJECT_BADGES);
+    loadBadges(write(content), locales, CATALOG, [LESSON], minigames, NO_SUBJECT_BADGES);
     return [];
   } catch (error) {
     if (error instanceof ContentError) return [...error.issues];
@@ -173,6 +186,73 @@ badges:
     condition: { type: mastered, scope: 'board', thresholds: [1] }
 `);
     expect(issues).toEqual([expect.stringContaining('scope must be')]);
+  });
+
+  it('accepts a "minigame-won" condition naming a mini-game of the subject', () => {
+    const issues = loadIssues(
+      `
+badges:
+  - id: has-name
+    category: skill
+    condition: { type: minigame-won, scope: 'minigame:bug-squash', thresholds: [1] }
+`,
+      LOCALES,
+      [BUG_SQUASH],
+    );
+    expect(issues).toEqual([]);
+  });
+
+  it('reports a "minigame-won" scope referencing an unknown mini-game', () => {
+    const issues = loadIssues(
+      `
+badges:
+  - id: has-name
+    category: skill
+    condition: { type: minigame-won, scope: 'minigame:not-real', thresholds: [1] }
+`,
+      LOCALES,
+      [BUG_SQUASH],
+    );
+    expect(issues).toEqual([expect.stringContaining('unknown mini-game "not-real"')]);
+  });
+
+  it('reports a "minigame-won" condition with no scope, or a scope in the wrong shape', () => {
+    const none = loadIssues(
+      `
+badges:
+  - id: has-name
+    category: skill
+    condition: { type: minigame-won, thresholds: [1] }
+`,
+      LOCALES,
+      [BUG_SQUASH],
+    );
+    expect(none).toEqual([expect.stringContaining('requires "scope"')]);
+    const wrong = loadIssues(
+      `
+badges:
+  - id: has-name
+    category: skill
+    condition: { type: minigame-won, scope: 'bug-squash', thresholds: [1] }
+`,
+      LOCALES,
+      [BUG_SQUASH],
+    );
+    expect(wrong).toEqual([expect.stringContaining('scope must be "minigame:<id>"')]);
+  });
+
+  it('reports a "minigame-won" condition with more than one threshold', () => {
+    const issues = loadIssues(
+      `
+badges:
+  - id: has-name
+    category: skill
+    condition: { type: minigame-won, scope: 'minigame:bug-squash', thresholds: [1, 2] }
+`,
+      LOCALES,
+      [BUG_SQUASH],
+    );
+    expect(issues).toEqual([expect.stringContaining('thresholds must be [1]')]);
   });
 
   it('reports a "concept-correct" condition with no concept', () => {

@@ -890,11 +890,6 @@
   "source": "exercise-note"
  },
  {
-  "key": "9abe45e485875505",
-  "text": "Bug Squasher. Squash 5 bugs on the first try",
-  "source": "badge-locked"
- },
- {
   "key": "9b5b0fca6a805a15",
   "text": "Oops, Fox hit the edge at step 14!",
   "source": "exercise-note"
@@ -1093,6 +1088,11 @@
   "key": "c4d927248be651d5",
   "text": "Oops, Fox hit the edge at step 19!",
   "source": "exercise-note"
+ },
+ {
+  "key": "c5a0d19c073565b7",
+  "text": "Bug Squasher. Beat Bug Squash",
+  "source": "badge-locked"
  },
  {
   "key": "c6c2a8120cf638ee",

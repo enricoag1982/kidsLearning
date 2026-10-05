@@ -18,11 +18,11 @@
   "nameKey": "rewards:badges.bug-squasher.name",
   "conditionKey": "rewards:badges.bug-squasher.condition",
   "condition": {
-   "type": "concept-correct",
+   "type": "minigame-won",
    "thresholds": [
-    5
+    1
    ],
-   "concept": "seq-debug"
+   "scope": "minigame:bug-squash"
   }
  },
  {

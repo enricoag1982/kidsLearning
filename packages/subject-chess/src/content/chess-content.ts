@@ -143,7 +143,7 @@ interface ChessBadgeCondition {
 
 const BOT_LEVELS = [1, 2, 3, 4, 5];
 
-/** Chess's badge condition fields and the `game-win` / `game-event` / `game-played` checks the engine's 7 generic types don't cover. */
+/** Chess's badge condition fields and the `game-win` / `game-event` / `game-played` checks the engine's 8 generic types don't cover. */
 export const chessBadges: BadgesContent = {
   fields: {
     extra: z.enum(['queen-kept']).optional(),

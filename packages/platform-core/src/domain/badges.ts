@@ -7,6 +7,7 @@ export type BadgeTier = 'bronze' | 'silver' | 'gold';
 
 export type BadgeConditionType =
   | 'mastered'
+  | 'minigame-won'
   | 'stars-total'
   | 'perfect-lessons'
   | 'concept-correct'
@@ -22,7 +23,7 @@ export type BadgeConditionType =
 export interface BadgeCondition {
   readonly type: BadgeConditionType;
   readonly thresholds: readonly number[];
-  /** `mastered`: `'world:<id>'` or `'track:<id>'`. */
+  /** `mastered`: `'world:<id>'` or `'track:<id>'`; `minigame-won`: `'minigame:<id>'`. */
   readonly scope?: string;
   /** `concept-correct`: the concept id (e.g. `hanging-piece`). */
   readonly concept?: string;
@@ -59,11 +60,13 @@ export interface EarnedBadge extends StoredRecord {
   readonly seen: boolean;
 }
 
-/** Facts the engine's 7 generic condition types read (`app/rewards.ts` builds them from stored data + content);
+/** Facts the engine's 8 generic condition types read (`app/rewards.ts` builds them from stored data + content);
  * the 3 `game-*` types read the subject's own facts. */
 export interface BadgeFacts {
   /** Mastered worlds/tracks, as `'world:<id>'` / `'track:<id>'`. */
   readonly masteredScopes: ReadonlySet<string>;
+  /** Ids of the mini-games won at least once (`MiniGameProgress.wins >= 1`: Journey boss or Play alike). */
+  readonly wonMiniGames: ReadonlySet<string>;
   readonly starsTotal: number;
   /** Lessons with 3 stars on every exercise. */
   readonly perfectLessons: number;
@@ -77,12 +80,14 @@ export interface BadgeFacts {
   readonly comebackCount: number;
 }
 
-/** A subject's badge-condition delegate for the 3 `game-*` types (`undefined` for the engine's own 7). Method syntax:
+/** A subject's badge-condition delegate for the 3 `game-*` types (`undefined` for the engine's own 8). Method syntax:
  * bivariance lets a precise `SubjectRewards<F>` widen to `<unknown>` with no cast. */
 export interface SubjectRewards<F> {
   facts(records: readonly GameRecord[]): F;
   conditionValue(condition: BadgeCondition, facts: F): number | undefined;
 }
+
+const MINIGAME_SCOPE_PREFIX = 'minigame:';
 
 const TIER_NAMES: readonly BadgeTier[] = ['bronze', 'silver', 'gold'];
 
@@ -97,6 +102,11 @@ function factValue<F>(
   switch (condition.type) {
     case 'mastered':
       return condition.scope !== undefined && facts.masteredScopes.has(condition.scope) ? 1 : 0;
+    case 'minigame-won':
+      return condition.scope?.startsWith(MINIGAME_SCOPE_PREFIX) === true &&
+        facts.wonMiniGames.has(condition.scope.slice(MINIGAME_SCOPE_PREFIX.length))
+        ? 1
+        : 0;
     case 'stars-total':
       return facts.starsTotal;
     case 'perfect-lessons':

@@ -52,7 +52,7 @@ export interface ContentIds {
   readonly minigameIds: ReadonlySet<string>;
 }
 
-/** A subject's badge condition fields (chess: `extra`/`event`/`mode`) and validation for the types the engine's 7 generic
+/** A subject's badge condition fields (chess: `extra`/`event`/`mode`) and validation for the types the engine's 8 generic
  * ones don't cover (the content counterpart of `core.rewards`). */
 export interface BadgesContent {
   readonly fields: ZodShape;

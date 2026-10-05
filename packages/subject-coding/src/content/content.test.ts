@@ -344,7 +344,7 @@ describe('the lessons of every world', () => {
     expect(lessons.every((entry) => entry.boss === undefined)).toBe(true);
   });
 
-  it('has the starter, stepper, looper and turner ranks and five badges built on generic conditions', () => {
+  it('has the starter, stepper, looper and turner ranks and five badges built on generic conditions (Bug Squasher = Bug Squash won)', () => {
     expect(tracks.ranks).toEqual([
       { id: 'starter', after: 'start' },
       { id: 'stepper', after: 'world:meadow-steps' },
@@ -357,7 +357,11 @@ describe('the lessons of every world', () => {
         'milestone',
         { type: 'concept-correct', concept: 'seq-arrows', thresholds: [1] },
       ],
-      ['bug-squasher', 'skill', { type: 'concept-correct', concept: 'seq-debug', thresholds: [5] }],
+      [
+        'bug-squasher',
+        'skill',
+        { type: 'minigame-won', scope: 'minigame:bug-squash', thresholds: [1] },
+      ],
       [
         'meadow-walker',
         'milestone',

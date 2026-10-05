@@ -34,12 +34,12 @@ Bosses (all `series`, `errors3: 0`, `errors2: 2`, `unlockAfter` = the world's de
 
 A boss's concept is the lesson whose skill it plays (Fence Builder: a chunk in a Repeat; Left-Right Rescue: build with forward and turns); Bug Squash keeps its debugging lesson. Each boss is a Journey node once all lessons of its world are mastered; it also opens as a Today session mini-game after the world's debugging lesson.
 
-Badges (generic conditions only):
+Badges (generic conditions only; `docs/rewards.md` §4):
 
 | Badge | Condition | Why |
 |---|---|---|
 | First Program | `concept-correct` `seq-arrows` ×1 | the first clean program of the first program lesson |
-| Bug Squasher | `concept-correct` `seq-debug` ×5 | a mini-game win has no generic condition (and a standalone mini-game is unscored): five clean bug hunts instead |
+| Bug Squasher | `minigame-won` `minigame:bug-squash` | Bug Squash won once, from its Journey boss node or from Play (condition text "Beat Bug Squash"; until `m15.5` it counted 5 clean `seq-debug` hunts, a child who earned it that way keeps it) |
 | Meadow Walker | `mastered` `world:meadow-steps` | all four lessons mastered and Bug Squash won (world mastery includes the world boss) |
 | Hill Climber | `mastered` `world:looping-hills` | four lessons mastered and Fence Builder won ("Master Looping Hills and beat Fence Builder") |
 | Woods Ranger | `mastered` `world:turning-woods` | five lessons mastered and Left-Right Rescue won ("Master Turning Woods and beat Left-Right Rescue") |
