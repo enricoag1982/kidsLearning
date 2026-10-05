@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest';
 import {
+  COMPACT_METRICS,
   GRID_FRAME_PX,
   LANE_CHAR_PX,
   LANE_LINE_PX,
   LANE_PAD_PX,
   LANE_WORD_GAP_PX,
+  REGULAR_METRICS,
   clueLines,
   fitCellSize,
+  NO_LANES,
   laneSizes,
 } from './fit.ts';
 
@@ -92,5 +95,61 @@ describe('clue lanes', () => {
     expect(
       fitCellSize({ cols: 5, rows: 5 }, { width: 566, height: 566 }, lanes),
     ).toBeGreaterThanOrEqual(48);
+  });
+});
+
+describe('compact metrics (a board with clue lanes on a phone)', () => {
+  const THREE_LINES = {
+    top: ['1 1 1', '1', '3', '1 1', '2'],
+    left: ['1 1 1', '1', '3', '1 1', '2'],
+  };
+  const TWO_LINES = { top: ['2 1', '1', '3', '1 1', '2'], left: ['1 1', '3', '1', '1 1 1', '2'] };
+
+  it('has the regular constants as its regular metrics', () => {
+    expect(REGULAR_METRICS).toEqual({
+      frame: GRID_FRAME_PX,
+      laneFont: 18,
+      laneLine: LANE_LINE_PX,
+      laneChar: LANE_CHAR_PX,
+      laneWordGap: LANE_WORD_GAP_PX,
+      lanePad: LANE_PAD_PX,
+      laneInset: 8,
+    });
+    expect(laneSizes(THREE_LINES, REGULAR_METRICS)).toEqual(laneSizes(THREE_LINES));
+  });
+
+  it('sizes the lanes with 16 px lines, 9 px characters, 6 px word gaps and a 4 px pad', () => {
+    expect(laneSizes(THREE_LINES, COMPACT_METRICS)).toEqual({
+      top: 3 * 16 + 4,
+      left: 3 * 9 + 2 * 6 + 2 * 4,
+    });
+    expect(laneSizes(TWO_LINES, COMPACT_METRICS).top).toBe(2 * 16 + 4);
+    expect(COMPACT_METRICS.laneFont).toBeGreaterThanOrEqual(14);
+  });
+
+  it('keeps the 5 x 5 picture cross cells at 48 px or more in the board heights a 390 x 844 phone leaves (318 px; 297 px with an Owl note and an Easier button)', () => {
+    const size = { cols: 5, rows: 5 };
+    for (const [labels, height] of [
+      [THREE_LINES, 318],
+      [TWO_LINES, 318],
+      [TWO_LINES, 297],
+    ] as const) {
+      const lanes = laneSizes(labels, COMPACT_METRICS);
+      const fitted = fitCellSize(size, { width: 366, height }, lanes, COMPACT_METRICS.frame);
+      expect(fitted, `${String(labels.top[0])} ${String(height)}`).toBeGreaterThanOrEqual(48);
+    }
+  });
+
+  it('is what the same phone gave before: 40 to 45 px cells in the regular metrics (302 px and 278 px board heights)', () => {
+    const size = { cols: 5, rows: 5 };
+    expect(fitCellSize(size, { width: 366, height: 302 }, laneSizes(THREE_LINES))).toBe(40);
+    expect(fitCellSize(size, { width: 366, height: 302 }, laneSizes(TWO_LINES))).toBe(45);
+    expect(fitCellSize(size, { width: 366, height: 278 }, laneSizes(TWO_LINES))).toBe(40);
+  });
+
+  it('takes the frame off the room: width and height by twice the frame', () => {
+    const area = { width: 300, height: 200 };
+    expect(fitCellSize({ cols: 5, rows: 5 }, area, NO_LANES, 8)).toBe(Math.floor((200 - 16) / 5));
+    expect(fitCellSize({ cols: 5, rows: 5 }, area)).toBe(Math.floor((200 - 24) / 5));
   });
 });
