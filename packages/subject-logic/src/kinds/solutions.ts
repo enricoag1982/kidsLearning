@@ -2,6 +2,7 @@
 // only by `/testing` and, through it, content tests.
 import type { ExerciseSolution } from '@learn/platform-core/domain/exercise/kind';
 import { CARD_SOLUTIONS } from '@learn/platform-core/domain/exercise/kinds/cards/solutions';
+import { GROUP_SOLUTION } from '@learn/platform-core/domain/exercise/kinds/group/solution';
 import type { GridFillAction, GridFillDef } from './grid-fill/def.ts';
 import { gridFillSolution, gridFillWrongAction } from './grid-fill/solution.ts';
 import type { DefOf, ExerciseType, LogicAction } from './index.ts';
@@ -13,6 +14,7 @@ type LogicSolution<
 
 export const LOGIC_SOLUTIONS = {
   ...CARD_SOLUTIONS,
+  group: GROUP_SOLUTION,
   'grid-fill': {
     solution: gridFillSolution,
     wrongAction: gridFillWrongAction,

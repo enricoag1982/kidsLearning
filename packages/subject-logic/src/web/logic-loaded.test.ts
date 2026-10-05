@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { CARD_KIND_UI } from '@learn/platform-web/kinds/cards/ui-registry.ts';
+import { GROUP_KIND_UI } from '@learn/platform-web/kinds/group/ui.ts';
 import { logicEntry } from '../entry.ts';
 import { gridFillUi } from '../kinds/grid-fill/ui.ts';
 import { LOGIC_KIND_UI } from './kinds/ui-registry.ts';
@@ -40,9 +41,12 @@ describe('logicEntry.load', () => {
     for (const [type, kindUi] of Object.entries(CARD_KIND_UI)) {
       expect(pack.kinds[type], type).toBe(kindUi);
     }
+    // The platform's opt-in group UI (same object) joins them since m14.10.
+    expect(pack.kinds['group']).toBe(GROUP_KIND_UI);
     expect(Object.keys(pack.kinds).sort()).toEqual([
       'choice',
       'grid-fill',
+      'group',
       'number-entry',
       'order',
       'true-false',

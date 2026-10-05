@@ -46,3 +46,80 @@ templates:
   rule-double: × 2 each time
   rule-alt: '+{{a}}, then +{{b}}, again and again'
   rule-grow: '+{{a}}, +{{b}}, +{{c}} …'
+  odd-one: Which one is different?
+  odd-rule: What is the same about all of them?
+  sort-boxes: Put each card in its box.
+  carroll: Look at both rules. Where does each card go?
+  venn: Where does each card go? The middle fits both.
+  line-up-size: Put them in order, smallest first.
+  line-up-count: Put them in order, fewest first.
+  # The words of the boxes and axes (`label`, "Not …" = `not`) and of the rule options of odd-rule (`same`), by `<attribute>-<value>`:
+  # drawn cards only name these (the sorting templates reference them directly).
+  label:
+    colour-red: Red
+    colour-blue: Blue
+    colour-yellow: Yellow
+    colour-green: Green
+    colour-purple: Purple
+    colour-orange: Orange
+    kind-circle: Circles
+    kind-square: Squares
+    kind-triangle: Triangles
+    kind-star: Stars
+    kind-heart: Hearts
+    kind-diamond: Diamonds
+    size-tiny: Tiny
+    size-medium: Medium
+    size-huge: Huge
+    count-1: One
+    count-2: Two
+    count-3: Three
+    count-4: Four
+    count-5: Five
+    count-6: Six
+    can-fly: Can fly
+    can-swim: Can swim
+    four-legs: Four legs
+    farm: On a farm
+  not:
+    colour-red: Not red
+    colour-blue: Not blue
+    colour-yellow: Not yellow
+    colour-green: Not green
+    colour-purple: Not purple
+    colour-orange: Not orange
+    kind-circle: Not circles
+    kind-square: Not squares
+    kind-triangle: Not triangles
+    kind-star: Not stars
+    kind-heart: Not hearts
+    kind-diamond: Not diamonds
+    size-tiny: Not tiny
+    size-medium: Not medium
+    size-huge: Not huge
+    count-1: Not one
+    count-2: Not two
+    count-3: Not three
+    count-4: Not four
+    count-5: Not five
+    count-6: Not six
+    can-fly: Cannot fly
+    can-swim: Cannot swim
+    four-legs: Not four legs
+    farm: Not on a farm
+  same:
+    colour-red: They are all red.
+    colour-blue: They are all blue.
+    colour-yellow: They are all yellow.
+    colour-green: They are all green.
+    colour-purple: They are all purple.
+    colour-orange: They are all orange.
+    kind-circle: They are all circles.
+    kind-square: They are all squares.
+    kind-triangle: They are all triangles.
+    kind-star: They are all stars.
+    kind-heart: They are all hearts.
+    kind-diamond: They are all diamonds.
+    size-tiny: They are all tiny.
+    size-medium: They are all medium.
+    size-huge: They are all huge.

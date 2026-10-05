@@ -1,5 +1,5 @@
-// The exercise-kind registry: the only place exercise-type dispatch happens. The card kit's four kinds and logic's own as one plain
-// object (`grid-fill` since m14.7); `group` joins it with one line.
+// The exercise-kind registry: the only place exercise-type dispatch happens. The card kit's four kinds, the platform's opt-in `group`
+// kind (since m14.10) and logic's own `grid-fill` (since m14.7) as one plain object.
 import type {
   CardAction,
   CardHint,
@@ -7,6 +7,13 @@ import type {
   CardState,
 } from '@learn/platform-core/domain/exercise/kinds/cards/def';
 import { CARD_KINDS } from '@learn/platform-core/domain/exercise/kinds/cards/kinds';
+import type {
+  GroupHint,
+  GroupOutcome,
+  GroupState,
+  PutItemAction,
+} from '@learn/platform-core/domain/exercise/kinds/group/def';
+import { GROUP_KIND } from '@learn/platform-core/domain/exercise/kinds/group/kind';
 import type { ExerciseKind } from '@learn/platform-core/domain/exercise/kind';
 import type { LogicExerciseDef } from '../core/types.ts';
 import type {
@@ -20,10 +27,10 @@ import { gridFillKind } from './grid-fill/kind.ts';
 export type ExerciseType = LogicExerciseDef['type'];
 export type DefOf<T extends ExerciseType> = Extract<LogicExerciseDef, { readonly type: T }>;
 
-export type LogicAction = CardAction | GridFillAction;
-export type LogicOutcome = CardOutcome | GridFillOutcome;
-export type LogicHint = CardHint | GridFillHint;
-export type LogicState = CardState | GridFillState;
+export type LogicAction = CardAction | PutItemAction | GridFillAction;
+export type LogicOutcome = CardOutcome | GroupOutcome | GridFillOutcome;
+export type LogicHint = CardHint | GroupHint | GridFillHint;
+export type LogicState = CardState | GroupState | GridFillState;
 
 export type AnyLogicKind = ExerciseKind<
   LogicExerciseDef,
@@ -36,6 +43,7 @@ export type AnyLogicKind = ExerciseKind<
 
 export const LOGIC_KINDS = {
   ...CARD_KINDS,
+  group: GROUP_KIND,
   'grid-fill': gridFillKind,
 } as const satisfies { readonly [T in ExerciseType]: AnyLogicKind & { readonly type: T } };
 
