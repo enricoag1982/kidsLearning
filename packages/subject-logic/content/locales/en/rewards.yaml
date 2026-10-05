@@ -2,6 +2,9 @@ badges:
   pattern-spotter:
     name: Pattern Spotter
     condition: Master Pattern Pond and beat Pattern Train
+  shore-sorter:
+    name: Shore Sorter
+    condition: Master Sort Shore and beat Sorting Sprint
   star-collector:
     name: Star Collector
     condition_one: 'Earn {{count}} star'

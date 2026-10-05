@@ -582,6 +582,7 @@
    "savannah": "Savannah"
   },
   "ranks": {
+   "sorter": "Shore Sorter",
    "spotter": "Pattern Spotter",
    "thinker": "Thinker"
   },
@@ -618,7 +619,8 @@
    "world-stars": "{{earned}} of {{max}} stars"
   },
   "worlds": {
-   "pattern-pond": "Pattern Pond"
+   "pattern-pond": "Pattern Pond",
+   "sort-shore": "Sort Shore"
   }
  },
  "lessons": {
@@ -628,7 +630,59 @@
    "grow-off": "Look how many more there are each time.",
    "unit-break": "Say the pattern from the start. Which part repeats?"
   },
+  "cls-boxes": {
+   "demo": "Is it red? Yes. Is it a circle? Yes. It goes where red meets circle.",
+   "story": "Pip sorts the shells into boxes. Each box has a rule. Check the card against the rule, then put it in.",
+   "title": "Two boxes"
+  },
+  "cls-circles": {
+   "demo": "Blue? Yes. A circle? No. It goes in the blue circle only.",
+   "story": "Two circles, two rules. A card that fits both goes in the middle, where the circles meet. A card that fits neither stays outside.",
+   "title": "Circles"
+  },
+  "cls-line-up": {
+   "demo": "Smallest first: tiny, then medium, then huge.",
+   "story": "Pip lines the shells up from smallest to biggest. Compare two at a time. If the bear is taller than the fox, and the fox is taller than the rabbit, then the bear is taller than the rabbit!",
+   "title": "Line up"
+  },
+  "cls-odd": {
+   "demo": "Three are circles. The square is the odd one out.",
+   "story": "Pip found shells on the shore. They are all alike, except one! Check the colour, the shape, the size and how many.",
+   "title": "Odd one out"
+  },
+  "cls-rule": {
+   "demo": "Different shapes, different sizes, but all red. They are all red!",
+   "story": "Now Pip asks: what do they all share? Check one thing at a time: colour, then shape, then size.",
+   "title": "Find the rule"
+  },
   "gen": {
+   "box-easy-1": {
+    "text": "Put each card in its box."
+   },
+   "box-g-colour-1": {
+    "text": "Put each card in its box."
+   },
+   "box-g-kind-1": {
+    "text": "Put each card in its box."
+   },
+   "box-three-1": {
+    "text": "Put each card in its box."
+   },
+   "box-two-1": {
+    "text": "Put each card in its box."
+   },
+   "car-colour-kind-1": {
+    "text": "Look at both rules. Where does each card go?"
+   },
+   "car-colour-size-1": {
+    "text": "Look at both rules. Where does each card go?"
+   },
+   "car-kind-count-1": {
+    "text": "Look at both rules. Where does each card go?"
+   },
+   "car-size-kind-1": {
+    "text": "Look at both rules. Where does each card go?"
+   },
    "far-ab-1-1": {
     "text": "Which shape is number 11?"
    },
@@ -683,6 +737,48 @@
    "grow-plus2-1": {
     "text": "Which picture comes next?"
    },
+   "lu-count-5-1": {
+    "text": "Put them in order, fewest first."
+   },
+   "lu-easy-1": {
+    "text": "Put them in order, smallest first."
+   },
+   "lu-g-count-1": {
+    "text": "Put them in order, fewest first."
+   },
+   "lu-g-size-1": {
+    "text": "Put them in order, smallest first."
+   },
+   "lu-size-5-1": {
+    "text": "Put them in order, smallest first."
+   },
+   "odd-colour-1": {
+    "text": "Which one is different?"
+   },
+   "odd-count-1": {
+    "text": "Which one is different?"
+   },
+   "odd-easy-1": {
+    "text": "Which one is different?"
+   },
+   "odd-g-colour-1": {
+    "text": "Which one is different?"
+   },
+   "odd-g-kind-1": {
+    "text": "Which one is different?"
+   },
+   "odd-kind-1": {
+    "text": "Which one is different?"
+   },
+   "odd-noise-a-1": {
+    "text": "Which one is different?"
+   },
+   "odd-noise-b-1": {
+    "text": "Which one is different?"
+   },
+   "odd-size-1": {
+    "text": "Which one is different?"
+   },
    "rep-aab-1": {
     "text": "What comes next?"
    },
@@ -709,6 +805,48 @@
    },
    "rep-two-1": {
     "text": "What comes next?"
+   },
+   "rule-colour-1": {
+    "text": "What is the same about all of them?"
+   },
+   "rule-easy-1": {
+    "text": "What is the same about all of them?"
+   },
+   "rule-g-colour-1": {
+    "text": "What is the same about all of them?"
+   },
+   "rule-g-kind-1": {
+    "text": "What is the same about all of them?"
+   },
+   "rule-kind-1": {
+    "text": "What is the same about all of them?"
+   },
+   "rule-last-1": {
+    "text": "What is the same about all of them?"
+   },
+   "rule-noise-a-1": {
+    "text": "Which one is different?"
+   },
+   "rule-noise-b-1": {
+    "text": "Which one is different?"
+   },
+   "rule-size-1": {
+    "text": "What is the same about all of them?"
+   },
+   "sprint-boxes-1": {
+    "text": "Put each card in its box."
+   },
+   "sprint-carroll-1": {
+    "text": "Look at both rules. Where does each card go?"
+   },
+   "sprint-odd-1": {
+    "text": "Which one is different?"
+   },
+   "sprint-rule-1": {
+    "text": "What is the same about all of them?"
+   },
+   "sprint-venn-1": {
+    "text": "Where does each card go? The middle fits both."
    },
    "steps-alt-1": {
     "text": "What number comes next?"
@@ -754,8 +892,39 @@
    },
    "train-steps-1": {
     "text": "What number comes next?"
+   },
+   "venn-an-a-1": {
+    "text": "Where does each card go? The middle fits both."
+   },
+   "venn-an-b-1": {
+    "text": "Where does each card go? The middle fits both."
+   },
+   "venn-easy-1": {
+    "text": "Where does each card go? The middle fits both."
+   },
+   "venn-g-a-1": {
+    "text": "Where does each card go? The middle fits both."
+   },
+   "venn-g-b-1": {
+    "text": "Where does each card go? The middle fits both."
+   },
+   "venn-s1-1": {
+    "text": "Where does each card go? The middle fits both."
+   },
+   "venn-s2-1": {
+    "text": "Where does each card go? The middle fits both."
+   },
+   "venn-s3-1": {
+    "text": "Where does each card go? The middle fits both."
+   },
+   "venn-s4-1": {
+    "text": "Where does each card go? The middle fits both."
    }
   },
+  "lu-order": "The cat is bigger than the mouse. The dog is bigger than the cat. Put them in order, smallest first.",
+  "lu-shortest": "The giraffe is taller than the horse. The horse is taller than the dog. Who is the shortest?",
+  "lu-tallest": "The bear is taller than the fox. The fox is taller than the rabbit. Who is the tallest?",
+  "lu-true": "The owl is taller than the hen. The hen is taller than the chick. Is the chick taller than the owl?",
   "pat-far": {
    "demo": "Count in twos: numbers 2, 4, 6, 8 and 10 are all blue. Number 10 is blue.",
    "story": "Pip wants to know what comes much later. Count in whole parts that repeat, like red, blue. Red is always first in each part.",
@@ -779,6 +948,10 @@
   "pattern-train": {
    "goal": "Every carriage follows the pattern. Which one comes next?",
    "title": "Pattern Train"
+  },
+  "sorting-sprint": {
+   "goal": "Help Pip sort the shells!",
+   "title": "Sorting Sprint"
   },
   "templates": {
    "carroll": "Look at both rules. Where does each card go?",
@@ -877,6 +1050,10 @@
    "pattern-spotter": {
     "condition": "Master Pattern Pond and beat Pattern Train",
     "name": "Pattern Spotter"
+   },
+   "shore-sorter": {
+    "condition": "Master Sort Shore and beat Sorting Sprint",
+    "name": "Shore Sorter"
    },
    "star-collector": {
     "condition_one": "Earn {{count}} star",

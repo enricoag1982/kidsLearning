@@ -12,6 +12,14 @@
      "habitat": "river",
      "titleKey": "journey:worlds.pattern-pond",
      "boss": "pattern-train"
+    },
+    {
+     "id": "sort-shore",
+     "track": "puzzles",
+     "order": 2,
+     "habitat": "ocean",
+     "titleKey": "journey:worlds.sort-shore",
+     "boss": "sorting-sprint"
     }
    ]
   }
@@ -24,6 +32,10 @@
   {
    "id": "spotter",
    "after": "world:pattern-pond"
+  },
+  {
+   "id": "sorter",
+   "after": "world:sort-shore"
   }
  ]
 }

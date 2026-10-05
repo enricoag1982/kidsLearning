@@ -17,20 +17,32 @@ describe('logicEntry.load', () => {
     expect(common?.app?.title).toBe('Logic');
   });
 
-  it('serves the compiled Pattern Pond: the 4 lessons, the Pattern Train, the track, the catalog and the badges', async () => {
+  it('serves the compiled Pattern Pond and Sort Shore: the 9 lessons, the 2 world bosses, the track, the catalog and the badges', async () => {
     const { pack } = await logicEntry.load();
     const content = pack.createServices().content;
 
-    expect(
-      [...content.lessons()].sort((a, b) => a.order - b.order).map((lesson) => lesson.id),
-    ).toEqual(['pat-repeat', 'pat-steps', 'pat-grow', 'pat-far']);
-    expect(content.minigames().map((game) => game.id)).toEqual(['pattern-train']);
+    const world = (id: string): string[] =>
+      [...content.lessons()]
+        .filter((lesson) => lesson.world === id)
+        .sort((a, b) => a.order - b.order)
+        .map((lesson) => lesson.id);
+    expect(world('pattern-pond')).toEqual(['pat-repeat', 'pat-steps', 'pat-grow', 'pat-far']);
+    expect(world('sort-shore')).toEqual([
+      'cls-odd',
+      'cls-rule',
+      'cls-boxes',
+      'cls-circles',
+      'cls-line-up',
+    ]);
+    expect(content.minigames().map((game) => game.id)).toEqual(['pattern-train', 'sorting-sprint']);
     expect(content.catalog?.().tracks.map((track) => track.id)).toEqual(['puzzles']);
     expect(content.catalog?.().tracks[0]?.worlds.map((world) => world.id)).toEqual([
       'pattern-pond',
+      'sort-shore',
     ]);
     expect(content.badges?.().map((badge) => badge.id)).toEqual([
       'pattern-spotter',
+      'shore-sorter',
       'star-collector',
     ]);
   });

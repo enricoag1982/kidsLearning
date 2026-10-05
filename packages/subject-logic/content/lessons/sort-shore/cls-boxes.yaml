@@ -1,0 +1,38 @@
+# W2 lesson 3: two boxes. Each box has a rule: check the card against the rule, then put it in. Two or three boxes in a row, then the
+# Carroll table (two rules at once). Generated; seeds are stored, never change them. The demo is the worked example: a big red circle,
+# red meets circle.
+id: cls-boxes
+order: 3
+concept: cls-boxes
+character: panda
+demo:
+  prompt:
+    shapes:
+      - { kind: circle, colour: red }
+guided:
+  - id: box-g-colour
+    generate:
+      { template: sort-boxes, count: 1, seed: 7, params: { attr: colour, boxes: 2, items: 4 } }
+  - id: box-g-kind
+    generate:
+      { template: sort-boxes, count: 1, seed: 4, params: { attr: kind, boxes: 2, items: 4 } }
+exercises:
+  - id: box-two
+    generate:
+      { template: sort-boxes, count: 1, seed: 4, params: { attr: size, boxes: 2, items: 6 } }
+  - id: box-three
+    generate:
+      { template: sort-boxes, count: 1, seed: 4, params: { attr: kind, boxes: 3, items: 5 } }
+  - id: car-colour-kind
+    generate: { template: carroll, count: 1, seed: 4, params: { axes: [colour, kind], items: 5 } }
+  - id: car-size-kind
+    generate: { template: carroll, count: 1, seed: 1, params: { axes: [size, kind], items: 6 } }
+  - id: car-colour-size
+    generate: { template: carroll, count: 1, seed: 1, params: { axes: [colour, size], items: 6 } }
+  - id: car-kind-count
+    easier: box-easy-1
+    generate: { template: carroll, count: 1, seed: 4, params: { axes: [kind, count], items: 7 } }
+variants:
+  - id: box-easy
+    generate:
+      { template: sort-boxes, count: 1, seed: 3, params: { attr: size, boxes: 2, items: 4 } }

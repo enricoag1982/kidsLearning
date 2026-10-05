@@ -1,6 +1,6 @@
 // sort-boxes, carroll and venn over 200 seeds per parameter set: each item is solved again here from its own rules, cards and words
 // (animals from an independent copy of the table), and every `check` fails on a hand-broken item. Carroll covers every ordered pair of
-// attributes (colour, kind, size, count) with 4, 6 and 8 cards, venn both fact kinds with 4-8 cards and with / without outside.
+// attributes (colour, kind, size, count) with 4 to 8 cards, venn both fact kinds with 4-8 cards and with / without outside.
 import { describe, expect, it } from 'vitest';
 import type { CardShape } from '@learn/platform-core/domain/exercise/kinds/cards/prompt';
 import type { GroupItem } from './items.ts';

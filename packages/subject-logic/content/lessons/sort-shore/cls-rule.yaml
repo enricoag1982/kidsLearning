@@ -1,0 +1,37 @@
+# W2 lesson 2: find the rule. Cards in a row all share one thing: check colour, then shape, then size, and pick the sentence that is true
+# of every card. Generated; seeds are stored, never change them. The demo is the worked example: small red circle, big red square,
+# medium red star.
+id: cls-rule
+order: 2
+concept: cls-rule
+character: panda
+demo:
+  prompt:
+    shapes:
+      - { kind: circle, colour: red, size: small }
+      - { kind: square, colour: red }
+      - { kind: star, colour: red, size: medium }
+guided:
+  - id: rule-g-colour
+    generate: { template: odd-rule, count: 1, seed: 7, params: { attr: colour, items: 3 } }
+  - id: rule-g-kind
+    generate: { template: odd-rule, count: 1, seed: 8, params: { attr: kind, items: 3 } }
+exercises:
+  - id: rule-colour
+    generate: { template: odd-rule, count: 1, seed: 4, params: { attr: colour, items: 4 } }
+  - id: rule-kind
+    generate: { template: odd-rule, count: 1, seed: 7, params: { attr: kind, items: 4 } }
+  - id: rule-size
+    generate: { template: odd-rule, count: 1, seed: 2, params: { attr: size, items: 4 } }
+  - id: rule-last
+    easier: rule-easy-1
+    generate: { template: odd-rule, count: 1, seed: 3, params: { attr: size, items: 4 } }
+  - id: rule-noise-a
+    generate:
+      { template: odd-one, count: 1, seed: 1, params: { attr: kind, items: 4, noise: true } }
+  - id: rule-noise-b
+    generate:
+      { template: odd-one, count: 1, seed: 8, params: { attr: count, items: 4, noise: true } }
+variants:
+  - id: rule-easy
+    generate: { template: odd-rule, count: 1, seed: 7, params: { attr: size, items: 3 } }

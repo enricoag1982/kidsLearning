@@ -3,6 +3,9 @@ badges:
   - id: pattern-spotter
     category: milestone
     condition: { type: mastered, scope: 'world:pattern-pond', thresholds: [1] }
+  - id: shore-sorter
+    category: milestone
+    condition: { type: mastered, scope: 'world:sort-shore', thresholds: [1] }
   - id: star-collector
     category: skill
     condition: { type: stars-total, thresholds: [10, 30] }

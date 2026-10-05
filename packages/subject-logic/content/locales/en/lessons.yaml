@@ -27,6 +27,39 @@ pat-far:
 pattern-train:
   title: Pattern Train
   goal: Every carriage follows the pattern. Which one comes next?
+cls-odd:
+  title: Odd one out
+  story: >-
+    Pip found shells on the shore. They are all alike, except one!
+    Check the colour, the shape, the size and how many.
+  demo: Three are circles. The square is the odd one out.
+cls-rule:
+  title: Find the rule
+  story: >-
+    Now Pip asks: what do they all share?
+    Check one thing at a time: colour, then shape, then size.
+  demo: Different shapes, different sizes, but all red. They are all red!
+cls-boxes:
+  title: Two boxes
+  story: >-
+    Pip sorts the shells into boxes. Each box has a rule.
+    Check the card against the rule, then put it in.
+  demo: 'Is it red? Yes. Is it a circle? Yes. It goes where red meets circle.'
+cls-circles:
+  title: Circles
+  story: >-
+    Two circles, two rules. A card that fits both goes in the middle, where the circles meet.
+    A card that fits neither stays outside.
+  demo: 'Blue? Yes. A circle? No. It goes in the blue circle only.'
+cls-line-up:
+  title: Line up
+  story: >-
+    Pip lines the shells up from smallest to biggest. Compare two at a time.
+    If the bear is taller than the fox, and the fox is taller than the rabbit, then the bear is taller than the rabbit!
+  demo: 'Smallest first: tiny, then medium, then huge.'
+sorting-sprint:
+  title: Sorting Sprint
+  goal: Help Pip sort the shells!
 # The misconception reasons (docs/subjects/logic/curriculum.md §3): the one sentence spoken when the wrong answer matches.
 bugs:
   unit-break: Say the pattern from the start. Which part repeats?
@@ -123,3 +156,8 @@ templates:
     size-tiny: They are all tiny.
     size-medium: They are all medium.
     size-huge: They are all huge.
+# The authored "taller than" items of cls-line-up (`lu-*`): each clue is a sentence, the answer needs both.
+lu-tallest: The bear is taller than the fox. The fox is taller than the rabbit. Who is the tallest?
+lu-shortest: The giraffe is taller than the horse. The horse is taller than the dog. Who is the shortest?
+lu-order: The cat is bigger than the mouse. The dog is bigger than the cat. Put them in order, smallest first.
+lu-true: The owl is taller than the hen. The hen is taller than the chick. Is the chick taller than the owl?

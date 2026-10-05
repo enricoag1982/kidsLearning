@@ -359,13 +359,13 @@ export function sortBoxesProblems(set: SortBoxesSet, item: GroupItem, text: stri
 
 export interface CarrollSet {
   readonly axes: readonly [Attr, Attr];
-  readonly items: 4 | 6 | 8;
+  readonly items: 4 | 5 | 6 | 7 | 8;
 }
 
-/** Every ordered pair of different attributes (colour, kind, size, count) with 4, 6 and 8 cards. */
+/** Every ordered pair of different attributes (colour, kind, size, count) with 4 to 8 cards. */
 export const CARROLL_SETS: readonly CarrollSet[] = ATTRS.flatMap((a) =>
   ATTRS.filter((b) => b !== a).flatMap((b) =>
-    ([4, 6, 8] as const).map((items) => ({ axes: [a, b] as const, items })),
+    ([4, 5, 6, 7, 8] as const).map((items) => ({ axes: [a, b] as const, items })),
   ),
 );
 
