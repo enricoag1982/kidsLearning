@@ -40,6 +40,35 @@ describe('ExerciseControls', () => {
     expect(onHint).toHaveBeenCalledOnce();
   });
 
+  it('keeps the 56 px buttons by default and makes every button of the row 64 px tall when large', () => {
+    const { container, rerender } = render(
+      withI18n(
+        <ExerciseControls showHint onHint={vi.fn()} extras={<button type="button">Skip</button>} />,
+      ),
+    );
+    const row = (): Element | null => container.firstElementChild;
+    expect(row()?.getAttribute('data-controls-size')).toBe('normal');
+    expect(row()?.className).not.toContain('h-16');
+
+    rerender(
+      withI18n(
+        <ExerciseControls
+          showHint
+          onHint={vi.fn()}
+          extras={<button type="button">Skip</button>}
+          size="large"
+        />,
+      ),
+    );
+    expect(row()?.getAttribute('data-controls-size')).toBe('large');
+    // The row's own button rule reaches the host's extras as well as the Hint button.
+    expect(row()?.className).toContain('[&>button]:h-16');
+    expect(Array.from(row()?.children ?? []).map((node) => node.tagName)).toEqual([
+      'BUTTON',
+      'BUTTON',
+    ]);
+  });
+
   it('drops only the Hint button when hints are off, keeping the extras', () => {
     render(
       withI18n(

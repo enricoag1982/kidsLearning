@@ -25,6 +25,30 @@ describe('CardPromptView', () => {
     expect(container.firstElementChild?.className).toContain('h-full');
   });
 
+  it('shrinks a long big text to fit the card: --big-fit is the font size, in cqi, that fills the card on one line', async () => {
+    const { container } = await renderCardUi(
+      <CardPromptView prompt={{ big: '16 20 21 25 26 ?' }} />,
+    );
+    // The card is the query container the text's `cqi` refers to.
+    expect(container.firstElementChild?.className).toContain('@container');
+    const big = screen.getByText('16 20 21 25 26 ?');
+    expect(big.className).toContain('card-big');
+    expect(big.getAttribute('style')).toBe('--big-fit: 10.42cqi;');
+  });
+
+  it('keeps a short big text at its size: its fit is far above the top size', async () => {
+    await renderCardUi(<CardPromptView prompt={{ big: '7' }} />);
+    expect(screen.getByText('7').getAttribute('style')).toBe('--big-fit: 166.67cqi;');
+  });
+
+  it('leaves the Story step small text alone', async () => {
+    await renderCardUi(<CardPromptView prompt={{ big: '16 20 21 25 26 ?' }} compact />);
+    const big = screen.getByText('16 20 21 25 26 ?');
+    expect(big.className).toContain('text-2xl');
+    expect(big.className).not.toContain('card-big');
+    expect(big.hasAttribute('style')).toBe(false);
+  });
+
   it('shows only what the prompt has', async () => {
     const { container } = await renderCardUi(<CardPromptView prompt={{ big: '3' }} />);
     expect(screen.getByText('3')).toBeTruthy();

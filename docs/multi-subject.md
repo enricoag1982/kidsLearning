@@ -76,16 +76,16 @@ Rules: `docs/retrospective.md` §9 (≤ 3–4 commits per agent run, lead decide
 | F2 | Parent overview when a subject pack fails to load | Today an unhandled rejection; show the other subjects and an error line |
 | F3 | Placement decision not stored | Offered again on entering an untouched subject after a restart |
 | F4 | Interim single-store configs | `CHESS_APP_CONFIG` `subjectStoragePrefix` only serves tests; drop when those tests use `KIDS_APP_CONFIG` (`MATH_APP_CONFIG` removed in `m13.5`) |
-| F5 | Card-kit Hint button | 56 px like the shared controls; every other card target ≥ 64 px |
-| F6 | Crowded control rows | `compact` buttons are `flex-1` with `min-w-14`, so 4 buttons squeeze (coding guided try at 1024 × 768: Reset label touches its padding) instead of wrapping; try `min-width: auto` (content) and check chess / math rows |
+| F5 | Card-kit Hint button | 56 px like the shared controls; every other card target ≥ 64 px — fixed in `m15.2` |
+| F6 | Crowded control rows | `compact` buttons are `flex-1` with `min-w-14`, so 4 buttons squeeze (coding guided try at 1024 × 768: Reset label touches its padding) instead of wrapping; try `min-width: auto` (content) and check chess / math rows — fixed in `m15.2` |
 | F7 | Bug Squash / boss badges | No generic "mini-game won" badge condition: Bug Squasher counts clean `seq-debug` hunts instead (`docs/subjects/coding/curriculum.md`) |
 | F8 | Phone Home header (390 × 844) | Header buttons wrap onto 2 rows; the last Home tile sits at the fold (scrolls) — shared shell |
 | F9 | Phone Journey header | World title truncated ("World 1 · Number Mead…"), the 2nd world tab clipped at the right edge — shared shell |
-| F10 | Card choice on phones | 3 short items (e.g. `<` `=` `>`) wrap 2 + 1 |
+| F10 | Card choice on phones | 3 short items (e.g. `<` `=` `>`) wrap 2 + 1 — fixed in `m15.2` |
 | F11 | Race to 20 polish | Title shown twice (top bar + heading); stones ≈ 28 × 40 px at 1024 × 768 |
 | F12 | Number-line card size | At 1024 × 768 the line card (≈ 150 px) is small beside the prompt card (≈ 450 px) |
 | F13 | Math pictures in cards | `round-ten` / `bridge-add` have no line picture (card prompts have no picture slot); `groups` shows "3 groups of 4" + one emoji (emoji limit 8) |
-| F14 | Number rows on a phone | a 5-term number row (`step-next` "3 7 11 15 19 ?") wraps to two lines at 390 px: the number-entry pad narrows the card (m14.9 visual pass) |
+| F14 | Number rows on a phone | a 5-term number row (`step-next` "3 7 11 15 19 ?") wraps to two lines at 390 px: the number-entry pad narrows the card (m14.9 visual pass) — fixed in `m15.2` |
 | F15 | Prompt-less choice layout | a card-kit `choice` without a prompt (logic `odd-one`) draws small option tiles at the bottom with the board slot empty; options should fill the board slot (m14.10 visual pass) — fixed in `m14.12` |
 | F16 | Venn on a phone | the card pool of a Venn sits partly below the fold at 390 × 844 (one row of 3 visible) (m14.10 visual pass) — fixed in `m14.14` |
 | F17 | Picture cross on a phone | 5 × 5 picture cells are 40 px at 390 × 844 (target 48): the lesson's board band is 302 px tall (m14.11 visual pass) — fixed in `m14.14` |

@@ -46,6 +46,9 @@ describe('number-entry UI', () => {
     expect(output('Your answer: 4').getAttribute('aria-live')).toBe('polite');
     expect(screen.getByRole('group', { name: 'Number pad' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Hint' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Hint' }).parentElement?.dataset.controlsSize).toBe(
+      'large',
+    );
   });
 
   it('shows ? in place of an empty entry', async () => {

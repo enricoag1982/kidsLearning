@@ -39,6 +39,9 @@ describe('order UI', () => {
     expect(screen.getByText('🔢').className).toContain('text-[96px]');
     expect(screen.getByText('Instruction')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Hint' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Hint' }).parentElement?.dataset.controlsSize).toBe(
+      'large',
+    );
     expect(slots().map((slot) => slot.getAttribute('aria-label'))).toEqual([
       'Place 1 of 3, empty',
       'Place 2 of 3, empty',

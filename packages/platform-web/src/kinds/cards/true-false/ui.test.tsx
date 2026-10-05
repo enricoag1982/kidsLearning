@@ -29,12 +29,16 @@ async function renderPlayArea(
   return { dispatch, ...view };
 }
 
+const hintRow = (): HTMLElement =>
+  screen.getByRole('button', { name: 'Hint' }).parentElement ?? document.body;
+
 describe('true-false UI', () => {
   it('shows the prompt card, the instruction, Hint and two big buttons, True and False', async () => {
     await renderPlayArea();
     expect(screen.getByText('2 + 2 = 4')).toBeTruthy();
     expect(screen.getByText('Instruction')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Hint' })).toBeTruthy();
+    expect(hintRow().dataset.controlsSize).toBe('large');
     expect(screen.getByRole('button', { name: 'True' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'False' })).toBeTruthy();
   });

@@ -42,9 +42,10 @@ const LOOK_BASE: Readonly<Record<TapLook, string>> = {
   next: 'flex h-16 items-center justify-center gap-3 rounded-3xl px-6 font-display text-xl font-semibold',
   primary:
     'flex h-16 flex-1 items-center justify-center gap-2 rounded-2xl px-4 font-display text-lg font-semibold',
-  // Game-screen action (Hint / Undo / Check / Skip / answers): 56px, icon + short label, shares one row.
+  // Game-screen action (Hint / Undo / Check / Skip / answers): 56px, icon + short label, shares one row. Never narrower than its
+  // content (`min-w-fit`): buttons share a row's width equally (`flex-1`) while they fit, and a row of them wraps when they do not.
   compact:
-    'flex h-14 min-w-14 flex-1 items-center justify-center gap-2 rounded-2xl px-3 font-display text-base font-semibold',
+    'flex h-14 min-w-fit flex-1 items-center justify-center gap-2 rounded-2xl px-3 font-display text-base font-semibold',
   parent: 'flex h-11 items-center justify-center gap-2 rounded-xl px-5 text-sm font-bold',
   custom: '',
 };

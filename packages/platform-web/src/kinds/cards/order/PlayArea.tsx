@@ -137,6 +137,7 @@ export function PlayArea({
           dispatch({ type: 'hint' });
         }}
         extras={actions}
+        size="large"
       />
       <Pool
         items={remaining}

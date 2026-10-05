@@ -26,9 +26,21 @@ export interface ChoiceOptionsProps<O extends ChoiceOptionBase> {
   readonly size?: ChoiceSize;
 }
 
-/** Pickable options: tiles (visual over text) in a grid sized by its container (not the viewport: on a tablet the options sit in the
- * narrow side column), 2 per row up to 4. Each tile is at least 56px tall (game screens, docs/screens.md §1); `large` tiles
- * (7rem, 9rem from `sm`) carry a choice with no stimulus. */
+/** The grid's columns by container width (not the viewport: on a tablet the options sit in the narrow side column). Three options
+ * go in one row of 3 whenever each tile can be 6rem wide (3 x 6rem + 2 gaps: 19.5rem, 20rem with the large tiles' bigger gap), else
+ * 2 + 1; any other count is 2 per row, 3 from 28rem, 4 from 42rem. Tailwind scans these strings, so each is written out whole. */
+function columnsClass(count: number, large: boolean): string {
+  if (count === 3) {
+    return large
+      ? 'grid-cols-2 @min-[20rem]:grid-cols-3'
+      : 'grid-cols-2 @min-[19.5rem]:grid-cols-3';
+  }
+  return 'grid-cols-2 @md:grid-cols-3 @2xl:grid-cols-4';
+}
+
+/** Pickable options: tiles (visual over text) in a grid sized by its container (`columnsClass`): 2 per row, 3 options in one row
+ * of 3 where they fit. Each tile is at least 56px tall (game screens, docs/screens.md §1); `large` tiles (7rem, 9rem from `sm`)
+ * carry a choice with no stimulus. */
 export function ChoiceOptions<O extends ChoiceOptionBase>({
   options,
   wrongOptionIds,
@@ -46,7 +58,7 @@ export function ChoiceOptions<O extends ChoiceOptionBase>({
     <div className="@container">
       <div
         data-size={size}
-        className={`grid grid-cols-2 @md:grid-cols-3 @2xl:grid-cols-4 ${large ? 'gap-4' : 'gap-3'}`}
+        className={`grid ${columnsClass(options.length, large)} ${large ? 'gap-4' : 'gap-3'}`}
       >
         {options.map((option) => {
           const isWrong = wrongOptionIds.includes(option.id);
