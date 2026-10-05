@@ -1,0 +1,34 @@
+# W1 lesson 3: growing pictures. Count how many more there are each time (+1 or +2), pick the next picture or type how many in a later
+# step. Generated; seeds are stored, never change them.
+id: pat-grow
+order: 3
+concept: pat-grow
+character: panda
+demo:
+  prompt:
+    shapes:
+      - { kind: star, colour: yellow, count: 1 }
+      - { kind: star, colour: yellow, count: 3 }
+      - { kind: star, colour: yellow, count: 5 }
+      - gap
+guided:
+  - id: grow-g1
+    generate: { template: grow-next, count: 1, seed: 1, params: { mode: choice, step: 1 } }
+  - id: grow-g2
+    generate: { template: grow-next, count: 1, seed: 5, params: { mode: choice, step: 2 } }
+exercises:
+  - id: grow-plus1
+    generate: { template: grow-next, count: 2, seed: 2, params: { mode: choice, step: 1 } }
+  - id: grow-plus2
+    generate: { template: grow-next, count: 1, seed: 7, params: { mode: choice, step: 2 } }
+  - id: grow-e1
+    generate: { template: grow-next, count: 1, seed: 3, params: { mode: entry, step: 1, ahead: 1 } }
+  - id: grow-e2
+    generate: { template: grow-next, count: 1, seed: 8, params: { mode: entry, step: 1, ahead: 2 } }
+  - id: grow-e3
+    easier: grow-easy-1
+    generate: { template: grow-next, count: 1, seed: 9, params: { mode: entry, step: 2, ahead: 3 } }
+variants:
+  - id: grow-easy
+    generate:
+      { template: grow-next, count: 1, seed: 10, params: { mode: entry, step: 1, ahead: 1 } }

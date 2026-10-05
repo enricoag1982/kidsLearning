@@ -22,6 +22,8 @@ test('plays a guided try and an exercise fully offline, with progress saved', as
   page,
   context,
 }) => {
+  // The service worker precaches every subject's audio (≈ 19 MB since Logic) before "Ready to play offline."
+  test.slow();
   // Whichever lesson the Journey currently offers first (see `journey.spec.ts`), not a hardcoded id.
   const lesson = nextLesson(catalog, content.lessons, []);
   if (!lesson) throw new Error('bundled content/tracks: no first lesson found');
@@ -31,7 +33,7 @@ test('plays a guided try and an exercise fully offline, with progress saved', as
   }
 
   await completeFirstRun(page, 'Kid');
-  await expect(page.getByText('Ready to play offline.')).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByText('Ready to play offline.')).toBeVisible({ timeout: 45_000 });
 
   await context.setOffline(true);
   await page.reload();
@@ -64,6 +66,8 @@ test('a lazy-loaded screen (parent area) and a World 5 exercise both work after 
   page,
   context,
 }) => {
+  // The service worker precaches every subject's audio (≈ 19 MB since Logic) before "Ready to play offline."
+  test.slow();
   // Offline (non-functional.md §1/§4 "Lazy loading"/"Precache"): the parent area is one of the
   // screens `App.tsx` now code-splits into its own chunk (`React.lazy`), never fetched during
   // this test's own online session below (Home -> Journey -> World 5 never visits it) — so it can
@@ -78,7 +82,7 @@ test('a lazy-loaded screen (parent area) and a World 5 exercise both work after 
   await expect(page.getByRole('heading', { name: "Who's playing today?" })).toBeVisible();
   await pickProfileFromPicker(page, 'Kid');
 
-  await expect(page.getByText('Ready to play offline.')).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByText('Ready to play offline.')).toBeVisible({ timeout: 45_000 });
 
   await context.setOffline(true);
   await page.reload();

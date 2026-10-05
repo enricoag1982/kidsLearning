@@ -238,7 +238,7 @@
    "den-tile": "My Den",
    "journey-tile": "Journey",
    "owl-all-done": "You finished everything for now. Come back soon for more!",
-   "owl-next": "Today you meet {{character}}!",
+   "owl-next": "Today {{character}} has new puzzles for you!",
    "owl-next-topic": "Hi! I'm Owl. Today: {{topic}}!",
    "owl-resume": "Let's keep going!",
    "owl-warmup-only": "Let's warm up what you know!",
@@ -551,7 +551,7 @@
    "title": "See you tomorrow!"
   },
   "topic": {
-   "puzzle": "Puzzle"
+   "puzzle": "Puzzler"
   },
   "voice-check": {
    "sentence": "Let's try Logic together!"
@@ -569,6 +569,7 @@
    "savannah": "Savannah"
   },
   "ranks": {
+   "spotter": "Pattern Spotter",
    "thinker": "Thinker"
   },
   "tracks": {
@@ -608,22 +609,183 @@
   }
  },
  "lessons": {
-  "fx-01": "Two frogs, a fish, two frogs, a fish, two frogs. What comes next?",
-  "fx-02": "Put the groups of frogs in order. Start with the fewest frogs.",
-  "fx-03": "Frog, fish, duck, frog, fish, duck, frog, fish. What comes next?",
-  "fx-first": {
-   "demo": "Pip sees a frog, a fish, a frog, a fish, a frog, a fish. The pattern repeats, so Pip knows what comes next.",
-   "story": "Pip the Panda sits by the pond. Frogs and fish line up in a pattern. A pattern repeats, so you can tell what comes next!",
-   "title": "Pond patterns"
+  "bugs": {
+   "far-off": "Count in whole parts, not one by one.",
+   "first-jump": "Check every jump, not just the first one.",
+   "grow-off": "Look how many more there are each time.",
+   "unit-break": "Say the pattern from the start. Which part repeats?"
   },
-  "fx-g1": "Try it with Pip. Frog, fish, frog, fish, frog. What comes next?",
-  "fx-g2": "Try it with Pip. Put the groups of fish in order. Start with the fewest fish."
+  "gen": {
+   "far-ab-1-1": {
+    "text": "Which shape is number 11?"
+   },
+   "far-ab-2-1": {
+    "text": "Which shape is number 15?"
+   },
+   "far-ab-3-1": {
+    "text": "Which shape is number 19?"
+   },
+   "far-abc-1-1": {
+    "text": "Which shape is number 8?"
+   },
+   "far-abc-2-1": {
+    "text": "Which shape is number 12?"
+   },
+   "far-abc-3-1": {
+    "text": "Which shape is number 15?"
+   },
+   "far-easy-1": {
+    "text": "Which shape is number 6?"
+   },
+   "far-g10-1": {
+    "text": "Which shape is number 10?"
+   },
+   "far-g8-1": {
+    "text": "Which shape is number 8?"
+   },
+   "grow-e1-1": {
+    "text": "How many in step 4?"
+   },
+   "grow-e2-1": {
+    "text": "How many in step 5?"
+   },
+   "grow-e3-1": {
+    "text": "How many in step 6?"
+   },
+   "grow-easy-1": {
+    "text": "How many in step 4?"
+   },
+   "grow-g1-1": {
+    "text": "Which picture comes next?"
+   },
+   "grow-g2-1": {
+    "text": "Which picture comes next?"
+   },
+   "grow-plus1-1": {
+    "text": "Which picture comes next?"
+   },
+   "grow-plus1-2": {
+    "text": "Which picture comes next?"
+   },
+   "grow-plus2-1": {
+    "text": "Which picture comes next?"
+   },
+   "rep-aab-1": {
+    "text": "What comes next?"
+   },
+   "rep-abb-1": {
+    "text": "What comes next?"
+   },
+   "rep-abc-1": {
+    "text": "What comes next?"
+   },
+   "rep-easy-1": {
+    "text": "What comes next?"
+   },
+   "rep-g-colour-1": {
+    "text": "What comes next?"
+   },
+   "rep-g-kind-1": {
+    "text": "What comes next?"
+   },
+   "rep-gap-ab-1": {
+    "text": "What is missing?"
+   },
+   "rep-gap-abc-1": {
+    "text": "What is missing?"
+   },
+   "rep-two-1": {
+    "text": "What comes next?"
+   },
+   "steps-alt-1": {
+    "text": "What number comes next?"
+   },
+   "steps-double-1": {
+    "text": "What number comes next?"
+   },
+   "steps-down-1": {
+    "text": "What number comes next?"
+   },
+   "steps-easy-1": {
+    "text": "What number comes next?"
+   },
+   "steps-g3-1": {
+    "text": "What number comes next?"
+   },
+   "steps-g4-1": {
+    "text": "What number comes next?"
+   },
+   "steps-grow-1": {
+    "text": "What number comes next?"
+   },
+   "steps-rule-1": {
+    "rule-a": "+5, then +2, again and again",
+    "rule-b": "+5, then +6, again and again",
+    "rule-c": "+5 each time",
+    "text": "Which rule makes these numbers?"
+   },
+   "steps-up-1": {
+    "text": "What number comes next?"
+   },
+   "train-far-1": {
+    "text": "Which shape is number 17?"
+   },
+   "train-gap-1": {
+    "text": "What is missing?"
+   },
+   "train-grow-1": {
+    "text": "Which picture comes next?"
+   },
+   "train-next-1": {
+    "text": "What comes next?"
+   },
+   "train-steps-1": {
+    "text": "What number comes next?"
+   }
+  },
+  "pat-far": {
+   "demo": "Count in twos: numbers 2, 4, 6, 8 and 10 are all blue. Number 10 is blue.",
+   "story": "Pip wants to know what comes much later. Count in whole parts that repeat, like red, blue. Red is always first in each part.",
+   "title": "Far ahead"
+  },
+  "pat-grow": {
+   "demo": "Each step has 2 more stars. 5 and 2 more make 7.",
+   "story": "Some patterns grow. Count how many more there are each time. The next picture has that many more again.",
+   "title": "Growing"
+  },
+  "pat-repeat": {
+   "demo": "Red circle, blue square, again and again. Next comes a blue square.",
+   "story": "Pip loves patterns. A pattern has a part that repeats, again and again. Find the part that repeats, then say what comes next!",
+   "title": "Repeat"
+  },
+  "pat-steps": {
+   "demo": "Every jump is plus 4. 15 plus 4 is 19.",
+   "story": "Numbers can make patterns too. Look at the jump from one number to the next. Check every jump, not just the first one!",
+   "title": "Number steps"
+  },
+  "pattern-train": {
+   "goal": "Every carriage follows the pattern. Which one comes next?",
+   "title": "Pattern Train"
+  },
+  "templates": {
+   "far-term": "Which shape is number {{n}}?",
+   "grow-next-choice": "Which picture comes next?",
+   "grow-next-entry": "How many in step {{n}}?",
+   "pat-gap": "What is missing?",
+   "pat-next": "What comes next?",
+   "rule-alt": "+{{a}}, then +{{b}}, again and again",
+   "rule-double": "× 2 each time",
+   "rule-grow": "+{{a}}, +{{b}}, +{{c}} …",
+   "rule-step": "+{{d}} each time",
+   "step-next": "What number comes next?",
+   "step-rule": "Which rule makes these numbers?"
+  }
  },
  "rewards": {
   "badges": {
-   "first-lesson": {
-    "condition": "Master your first lesson",
-    "name": "First Lesson"
+   "pattern-spotter": {
+    "condition": "Master Pattern Pond and beat Pattern Train",
+    "name": "Pattern Spotter"
    },
    "star-collector": {
     "condition_one": "Earn {{count}} star",

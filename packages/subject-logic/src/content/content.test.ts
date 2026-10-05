@@ -1,15 +1,15 @@
-// The authored fixture content: it builds, every exercise plays through its own kind, and the pieces fit together.
+// The authored content: it builds, every exercise plays through its own kind, and the pieces fit together. The W1 specifics (frozen
+// seeds, the curriculum table, the content review) are in `pattern-pond.test.ts`.
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { compileAll } from '@learn/platform-content/compile-all';
-import { contentRoot } from '../../scripts/content-root.ts';
 import { LOGIC_CHARACTERS, logicCore } from '../core/logic-core.ts';
 import type { LogicContent, LogicExerciseDef } from '../core/types.ts';
 import { playSolution, playWrongThenSolve, starsFor } from '../testing/index.ts';
 import { logicContent } from './logic-content.ts';
 
-const root = contentRoot(join(dirname(fileURLToPath(import.meta.url)), '..', '..'));
+const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'content');
 const compiled = compileAll<LogicContent>(logicContent, root);
 const { content, tracks, badges, locales } = compiled;
 
@@ -46,43 +46,50 @@ describe.each(allExercises())('$where ($exercise.type)', ({ exercise }) => {
   });
 });
 
-describe('the fixture world', () => {
-  it('is one lesson, fx-first, taught by Pip the Panda: 2 guided tries and 3 scored exercises, no variant', () => {
+describe('the world', () => {
+  it('is Pattern Pond: 4 lessons taught by Pip the Panda, 8 guided tries, 24 scored exercises and 4 easier variants', () => {
     expect(
-      content.lessons.map((lesson) => [
-        lesson.id,
-        lesson.world,
-        lesson.character,
-        lesson.guided.map((def) => def.type),
-        lesson.exercises.map((def) => def.type),
-        lesson.variants?.length,
-      ]),
+      [...content.lessons]
+        .sort((a, b) => a.order - b.order)
+        .map((lesson) => [
+          lesson.id,
+          lesson.world,
+          lesson.character,
+          lesson.guided.length,
+          lesson.exercises.length,
+          lesson.variants?.length,
+        ]),
     ).toEqual([
-      [
-        'fx-first',
-        'pattern-pond',
-        'panda',
-        ['choice', 'order'],
-        ['choice', 'order', 'choice'],
-        undefined,
-      ],
+      ['pat-repeat', 'pattern-pond', 'panda', 2, 6, 1],
+      ['pat-steps', 'pattern-pond', 'panda', 2, 6, 1],
+      ['pat-grow', 'pattern-pond', 'panda', 2, 6, 1],
+      ['pat-far', 'pattern-pond', 'panda', 2, 6, 1],
     ]);
   });
 
-  it('has no boss: the world names none and the content has no mini-game', () => {
-    expect(content.minigames).toEqual([]);
+  it('has the Pattern Train boss: the one mini-game, a series of 5 rounds, named by the world', () => {
+    expect(content.minigames.map((game) => [game.id, game.mode, game.rounds.length])).toEqual([
+      ['pattern-train', 'series', 5],
+    ]);
     const [main] = tracks.tracks;
     expect(tracks.tracks).toHaveLength(1);
     expect(main).toMatchObject({ id: 'puzzles', kind: 'main' });
     expect(main?.worlds).toEqual([
-      expect.objectContaining({ id: 'pattern-pond', order: 1, habitat: 'river' }),
+      expect.objectContaining({
+        id: 'pattern-pond',
+        order: 1,
+        habitat: 'river',
+        boss: 'pattern-train',
+      }),
     ]);
-    expect(main?.worlds[0]).not.toHaveProperty('boss');
   });
 
-  it('has the thinker rank at the start and 2 generic badges', () => {
-    expect(tracks.ranks).toEqual([{ id: 'thinker', after: 'start' }]);
-    expect(badges.map((badge) => badge.id)).toEqual(['first-lesson', 'star-collector']);
+  it('has the thinker rank at the start, the spotter rank after the world and 2 badges', () => {
+    expect(tracks.ranks).toEqual([
+      { id: 'thinker', after: 'start' },
+      { id: 'spotter', after: 'world:pattern-pond' },
+    ]);
+    expect(badges.map((badge) => badge.id)).toEqual(['pattern-spotter', 'star-collector']);
   });
 });
 
@@ -93,14 +100,14 @@ describe('texts and the core', () => {
     expect(en?.journey).toMatchObject({
       tracks: { puzzles: 'Puzzle Paths' },
       worlds: { 'pattern-pond': 'Pattern Pond' },
-      ranks: { thinker: 'Thinker' },
+      ranks: { thinker: 'Thinker', spotter: 'Pattern Spotter' },
     });
     for (const character of ['owl', ...Object.keys(LOGIC_CHARACTERS)]) {
       expect(en?.characters?.[character], character).toBeDefined();
     }
     expect(en?.characters).toMatchObject({ panda: { name: 'Pip' } });
     const topics = en?.common?.topic as Record<string, string> | undefined;
-    expect(topics?.puzzle).toBe('Puzzle');
+    expect(topics?.puzzle).toBe('Puzzler');
   });
 
   it('is a card core under the subject id, with the same characters as the content', () => {

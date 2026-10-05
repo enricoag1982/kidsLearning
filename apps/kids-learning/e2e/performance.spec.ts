@@ -66,13 +66,15 @@ test('cold start: Home is interactive within budget on a throttled tablet', asyn
   page,
   browserName,
 }) => {
+  // The service worker precaches every subject's audio (≈ 19 MB since Logic) before "Ready to play offline."
+  test.slow();
   test.skip(browserName !== 'chromium', 'CPU throttling is a Chromium DevTools protocol feature');
 
   // Untimed setup, normal speed: a returning kid's device already has a profile and a warm
   // service-worker cache (`non-functional.md` §1) — measuring *that* everyday reopen, not a
   // one-time first-run/parent-setup flow, is what "cold start" targets (non-functional.md §4).
   await completeFirstRun(page, 'Kid');
-  await expect(page.getByText('Ready to play offline.')).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByText('Ready to play offline.')).toBeVisible({ timeout: 45_000 });
 
   const client = await page.context().newCDPSession(page);
   // 4x CPU slowdown (non-functional.md §4 decision table): a mid-range Android tablet next to a

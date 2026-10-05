@@ -1,6 +1,6 @@
-# Name / condition texts live in locales/en/rewards.yaml under `badges.<id>.name` / `.condition`.
+# Generic conditions only; name / condition texts live in locales/en/rewards.yaml under `badges.<id>.name` / `.condition`.
 badges:
-  - id: first-lesson
+  - id: pattern-spotter
     category: milestone
     condition: { type: mastered, scope: 'world:pattern-pond', thresholds: [1] }
   - id: star-collector

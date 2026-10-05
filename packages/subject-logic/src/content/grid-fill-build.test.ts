@@ -118,7 +118,8 @@ describe('a lesson with grid-fill exercises, through the whole build', () => {
     }
   });
 
-  it('adds the grid notes to the voice inventory, once however many grid exercises: 2 instructions, 14 wrong, 15 hints', () => {
+  // 14 grid hints + the card kit's "Look closely." (no step left), which the shipped card lessons already voice since W1 (m14.9).
+  it('adds the grid notes to the voice inventory, once however many grid exercises: 2 instructions, 14 wrong, 14 hints', () => {
     const shipped = compileAll<LogicContent>(logicContent, realRoot);
     const built = compileAll<LogicContent>(logicContent, rootWith(LESSON, TEXTS));
     const before = new Set(shipped.voiceTexts.entries.map((entry) => entry.key));
@@ -137,7 +138,7 @@ describe('a lesson with grid-fill exercises, through the whole build', () => {
     expect(bySource('exercise-note-easier-offer')).toHaveLength(7);
     expect(
       added.filter((entry) => entry.source.startsWith('exercise-')).map((entry) => entry.text),
-    ).toHaveLength(2 + 7 + 7 + 15);
+    ).toHaveLength(2 + 7 + 7 + 14);
   });
 
   it('leaves the shipped content’s voice inventory without any grid text', () => {

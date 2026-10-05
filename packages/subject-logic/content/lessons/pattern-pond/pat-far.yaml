@@ -1,0 +1,89 @@
+# W1 lesson 4: far ahead. Count in whole parts that repeat to find number 8, 12 or 19: the places climb from 9 to 20 (AB) and 7 to 15
+# (ABC). Generated; seeds are stored, never change them.
+id: pat-far
+order: 4
+concept: pat-far
+character: panda
+demo:
+  prompt:
+    shapes:
+      - { kind: circle, colour: red }
+      - { kind: circle, colour: blue }
+      - { kind: circle, colour: red }
+      - { kind: circle, colour: blue }
+guided:
+  - id: far-g8
+    generate:
+      {
+        template: far-term,
+        count: 1,
+        seed: 4,
+        params: { unit: AB, attr: colour, position: [8, 8] },
+      }
+  - id: far-g10
+    generate:
+      {
+        template: far-term,
+        count: 1,
+        seed: 1,
+        params: { unit: AB, attr: colour, position: [10, 10] },
+      }
+exercises:
+  - id: far-ab-1
+    generate:
+      {
+        template: far-term,
+        count: 1,
+        seed: 2,
+        params: { unit: AB, attr: colour, position: [9, 12] },
+      }
+  - id: far-ab-2
+    generate:
+      {
+        template: far-term,
+        count: 1,
+        seed: 3,
+        params: { unit: AB, attr: kind, position: [13, 16] },
+      }
+  - id: far-ab-3
+    generate:
+      {
+        template: far-term,
+        count: 1,
+        seed: 1,
+        params: { unit: AB, attr: kind+colour, position: [17, 20] },
+      }
+  - id: far-abc-1
+    generate:
+      {
+        template: far-term,
+        count: 1,
+        seed: 10,
+        params: { unit: ABC, attr: colour, position: [7, 9] },
+      }
+  - id: far-abc-2
+    generate:
+      {
+        template: far-term,
+        count: 1,
+        seed: 3,
+        params: { unit: ABC, attr: kind, position: [10, 12] },
+      }
+  - id: far-abc-3
+    easier: far-easy-1
+    generate:
+      {
+        template: far-term,
+        count: 1,
+        seed: 2,
+        params: { unit: ABC, attr: kind+colour, position: [13, 15] },
+      }
+variants:
+  - id: far-easy
+    generate:
+      {
+        template: far-term,
+        count: 1,
+        seed: 5,
+        params: { unit: AB, attr: colour, position: [6, 6] },
+      }

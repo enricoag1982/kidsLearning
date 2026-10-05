@@ -1,0 +1,31 @@
+# W1 lesson 2: number steps. Look at every jump: a constant step up or down, doubling, two steps taking turns, steps that grow. Generated;
+# seeds are stored, never change them. The terms are written with single spaces (a card's big text holds 16 characters).
+id: pat-steps
+order: 2
+concept: pat-steps
+character: panda
+demo:
+  prompt: { big: 3 7 11 15 ? }
+guided:
+  - id: steps-g3
+    generate: { template: step-next, count: 1, seed: 1, params: { family: up, step: [3, 3] } }
+  - id: steps-g4
+    generate: { template: step-next, count: 1, seed: 2, params: { family: up, step: [4, 4] } }
+exercises:
+  - id: steps-up
+    generate: { template: step-next, count: 1, seed: 3, params: { family: up, step: [6, 9] } }
+  - id: steps-down
+    generate: { template: step-next, count: 1, seed: 1, params: { family: down } }
+  - id: steps-double
+    generate: { template: step-next, count: 1, seed: 1, params: { family: double } }
+  - id: steps-alt
+    generate: { template: step-next, count: 1, seed: 1, params: { family: alternate } }
+  - id: steps-grow
+    easier: steps-easy-1
+    generate: { template: step-next, count: 1, seed: 2, params: { family: grow } }
+  - id: steps-rule
+    generate: { template: step-rule, count: 1, seed: 2, params: { family: alternate } }
+variants:
+  - id: steps-easy
+    generate:
+      { template: step-next, count: 1, seed: 4, params: { family: up, step: [2, 2], easy: true } }

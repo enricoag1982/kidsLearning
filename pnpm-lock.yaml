@@ -62,6 +62,9 @@ importers:
       '@learn/subject-coding':
         specifier: workspace:*
         version: link:../../packages/subject-coding
+      '@learn/subject-logic':
+        specifier: workspace:*
+        version: link:../../packages/subject-logic
       '@learn/subject-math':
         specifier: workspace:*
         version: link:../../packages/subject-math

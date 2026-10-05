@@ -1,6 +1,6 @@
 // Shape tokens of the card kit: kind × colour × size × count drawn as SVG. Everything here is `aria-hidden`: the card or the
 // prompt that shows a token names it (`shapeLabel`, `shapeRowLabel` in `item-label.ts`).
-import type { JSX } from 'react';
+import type { CSSProperties, JSX } from 'react';
 import type {
   CardShape,
   ShapeColour,
@@ -8,7 +8,7 @@ import type {
   ShapeSize,
 } from '@learn/platform-core/domain/exercise/kinds/cards/prompt';
 import { DEFAULT_SHAPE_SIZE } from '@learn/platform-core/domain/exercise/kinds/cards/prompt';
-import { clusterColumns, SHAPE_PATHS, SHAPE_SIZE_SCALE } from './shape-geometry.ts';
+import { clusterColumns, SHAPE_PATHS, SHAPE_SIZE_SCALE, shapeBoxSide } from './shape-geometry.ts';
 
 export interface ShapeTokenProps {
   readonly kind: ShapeKind;
@@ -82,25 +82,36 @@ export interface ShapeRowProps {
   readonly compact?: boolean;
 }
 
-/** A prompt's row of tokens; `gap` is a dashed rounded box with a "?". The host names the whole row. */
+/** The "?" of the gap, smaller in a row of many tokens (its box shrinks with the row; `leading-none` keeps the box square). */
+function gapTextClass(count: number, compact: boolean): string {
+  if (compact) return count > 6 ? 'text-xs' : count > 4 ? 'text-base' : 'text-xl';
+  if (count > 6) return 'text-lg';
+  return count > 4 ? 'text-2xl' : 'text-3xl';
+}
+
+/** A prompt's row of tokens on one line, sized to fit its width; `gap` is a dashed rounded box with a "?". The host names the whole row. */
 export function ShapeRow({ shapes, compact = false }: ShapeRowProps): JSX.Element {
-  const box = compact ? 'h-9 w-9' : 'h-12 w-12 sm:h-16 sm:w-16';
+  // The side is a custom property read by `w-(--box-side)`: the browser resolves its percentage against the row.
+  const side = { '--box-side': shapeBoxSide(shapes.length, compact) } as CSSProperties;
   return (
     <span
       aria-hidden="true"
-      className={`flex flex-wrap items-center justify-center ${compact ? 'gap-1' : 'gap-2'}`}
+      className={`flex w-full flex-nowrap items-center justify-center ${compact ? 'gap-1' : 'gap-2'}`}
     >
       {shapes.map((token, index) =>
         token === 'gap' ? (
           <span
             key={index}
             data-gap="true"
-            className={`flex items-center justify-center rounded-2xl border-2 border-dashed border-edge-neutral font-display font-bold text-muted ${box} ${compact ? 'text-xl' : 'text-3xl'}`}
+            style={side}
+            className={`flex aspect-square min-h-0 w-(--box-side) shrink-0 items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-edge-neutral font-display leading-none font-bold text-muted ${gapTextClass(shapes.length, compact)}`}
           >
             ?
           </span>
         ) : (
-          <ShapeCluster key={index} shape={token} className={box} />
+          <span key={index} style={side} className="aspect-square w-(--box-side) shrink-0">
+            <ShapeCluster shape={token} className="h-full w-full" />
+          </span>
         ),
       )}
     </span>

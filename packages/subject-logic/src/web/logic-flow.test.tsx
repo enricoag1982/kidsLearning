@@ -1,6 +1,6 @@
-// The fixture lesson `fx-first` end to end: the real pack and content (`logicEntry`), opened in the real App and played through the real
-// card UIs (option cards, the order row). Each exercise is solved by its kind's e2e driver from its kind's `solution()` (the way a
-// Playwright spec would), in jsdom.
+// The first lesson, `pat-repeat`, end to end: the real pack and content (`logicEntry`), opened in the real App and played through the
+// real card UIs (a row of shapes, option cards of shapes). Each exercise is solved by its kind's e2e driver from its kind's
+// `solution()` (the way a Playwright spec would), in jsdom.
 import { configure, fireEvent, render, screen } from '@testing-library/react';
 import i18next from 'i18next';
 import { describe, expect, it } from 'vitest';
@@ -13,7 +13,7 @@ import {
 import type { AppConfig } from '@learn/platform-core';
 import App from '@learn/platform-web/App.tsx';
 import { createAppServices } from '@learn/platform-web/app/services.ts';
-import { tContent } from '@learn/platform-web/content-text.ts';
+import { tContent, type ContentText } from '@learn/platform-web/content-text.ts';
 import { createFakePasswordFileWriter } from '@learn/platform-web/testing/fake-password-file-writer.ts';
 import { jsdomPage } from '@learn/platform-web/testing/jsdom-page.ts';
 import { createMemoryStorage } from '@learn/platform-web/testing/memory-storage.ts';
@@ -39,15 +39,16 @@ const APP: Omit<AppConfig, 'version'> = {
 };
 
 const lesson = (bundled as unknown as LogicContent).lessons.find(
-  (entry) => entry.id === 'fx-first',
+  (entry) => entry.id === 'pat-repeat',
 );
-if (lesson === undefined) throw new Error('the logic content has no lesson "fx-first"');
+if (lesson === undefined) throw new Error('the logic content has no lesson "pat-repeat"');
 const GUIDED = lesson.guided;
 const EXERCISES = lesson.exercises;
 
-/** A text key as the app resolves it, `{{vars}}` untouched (what the e2e kit's `contentText` gives a driver). */
-const text = (key: string): string =>
-  tContent(i18next.t, key, { interpolation: { skipOnVariables: true } });
+/** A text key as the app resolves it: with `options` filled in (a shape card's name), else `{{vars}}` untouched (what the e2e kit's
+ * `contentText` gives a driver). */
+const text: ContentText = (key, options) =>
+  tContent(i18next.t, key, options ?? { interpolation: { skipOnVariables: true } });
 const page = jsdomPage() as unknown as Parameters<ReturnType<typeof logicKindE2EOf>['perform']>[0];
 
 /** The one-subject app on a fresh storage with a parent code and the profile `Mia`. */
@@ -113,17 +114,17 @@ async function expectNote(note: string): Promise<void> {
   expect(await screen.findByText(note)).toBeTruthy();
 }
 
-describe('the logic fixture lesson, end to end', () => {
-  it('is fx-first: 2 guided tries and 3 scored exercises of the choice and order cards, from the pond demo', () => {
-    expect(lesson.id).toBe('fx-first');
+describe('the first logic lesson, end to end', () => {
+  it('is pat-repeat: 2 guided tries and 6 scored exercises of choice cards, from the red circle / blue square demo', () => {
+    expect(lesson.id).toBe('pat-repeat');
     expect(lesson.character).toBe('panda');
-    expect(lesson.demo.prompt?.emoji).toBe('🐸🐟🐸🐟🐸🐟');
-    expect(GUIDED.map((def) => def.type)).toEqual(['choice', 'order']);
-    expect(EXERCISES.map((def) => def.type)).toEqual(['choice', 'order', 'choice']);
+    expect(lesson.demo.prompt?.shapes).toHaveLength(6);
+    expect(GUIDED.map((def) => def.type)).toEqual(['choice', 'choice']);
+    expect(EXERCISES.map((def) => def.type)).toEqual(Array<string>(6).fill('choice'));
   });
 
   it(
-    'plays the option cards and the order row through the real UIs: 3 stars each on a clean run, 3 stars for the lesson',
+    'plays the shape cards through the real UIs: 3 stars each on a clean run, 3 stars for the lesson',
     async () => {
       const { app, services, profileId } = await logicApp();
       render(<App services={services} />);
@@ -142,11 +143,11 @@ describe('the logic fixture lesson, end to end', () => {
       }
 
       await screen.findByText('Lesson complete!');
-      expect(screen.getByText('+9 stars')).toBeTruthy();
+      expect(screen.getByText('+18 stars')).toBeTruthy();
       expect(screen.getByTestId('stars-row').querySelectorAll('.reward-star-pop')).toHaveLength(3);
       const saved = await loadProgress(services.deps, profileId);
       const progress = saved.find((entry) => entry.lessonId === lesson.id);
-      expect(progress?.bestStars).toEqual({ 'fx-01': 3, 'fx-02': 3, 'fx-03': 3 });
+      expect(progress?.bestStars).toEqual(Object.fromEntries(EXERCISES.map((def) => [def.id, 3])));
       // The subject's data lives in the subject's own store.
       expect(await app.subjectData['logic']?.progress.listLessons(profileId)).toHaveLength(1);
     },
@@ -154,7 +155,7 @@ describe('the logic fixture lesson, end to end', () => {
   );
 
   it(
-    'a wrong first try speaks the kit’s note for its kind (a wrong card, a wrong place in the order); the next try still solves, for 2 stars',
+    'a wrong first try speaks the kit’s wrong note, or the reason of the card picked (the part that repeats) with the easier offer on the hardest item; the next try still solves, for 2 stars',
     async () => {
       const { services, profileId } = await logicApp();
       render(<App services={services} />);
@@ -164,33 +165,35 @@ describe('the logic fixture lesson, end to end', () => {
         await next();
       }
 
-      const notes = [
-        'Not quite! Try again.',
-        'Not that one. Try another!',
-        'Not quite! Try again.',
-      ];
-      for (const [index, def] of EXERCISES.entries()) {
+      for (const def of EXERCISES) {
         await screen.findByText(instruction(def));
         const afterWrong = await play(def, actionsOf(def, 'wrong'));
         expect(afterWrong, def.id).toMatchObject({ errors: 1, solved: false });
-        await expectNote(notes[index] ?? '');
+        const [pick] = actionsOf(def, 'wrong');
+        const option =
+          def.type === 'choice' && pick?.type === 'answer-choice'
+            ? def.options.find((one) => one.id === pick.optionId)
+            : undefined;
+        const note =
+          option?.reasonKey === undefined ? 'Not quite! Try again.' : text(option.reasonKey);
+        await expectNote(note);
         await play(def, actionsOf(def, 'solution'), afterWrong);
         await expectNote('Well done!');
         await next();
       }
 
       await screen.findByText('Lesson complete!');
-      expect(screen.getByText('+6 stars')).toBeTruthy();
+      expect(screen.getByText('+12 stars')).toBeTruthy();
       const progress = (await loadProgress(services.deps, profileId)).find(
         (entry) => entry.lessonId === lesson.id,
       );
-      expect(Object.values(progress?.bestStars ?? {})).toEqual([2, 2, 2]);
+      expect(Object.values(progress?.bestStars ?? {})).toEqual(Array<number>(6).fill(2));
     },
     SLOW,
   );
 
   it(
-    'asks for hints through the real session: a choice rules a wrong card out, the order row asks which comes next',
+    'asks for a hint through the real session: a choice rules a wrong card out',
     async () => {
       const { services } = await logicApp();
       render(<App services={services} />);
@@ -206,15 +209,6 @@ describe('the logic fixture lesson, end to end', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Hint' }));
       await expectNote('One choice is ruled out.');
       await solve(choice);
-      await expectNote('Well done!');
-      await next();
-
-      const order = EXERCISES[1];
-      if (order === undefined) throw new Error('no second scored exercise');
-      await screen.findByText(instruction(order));
-      fireEvent.click(screen.getByRole('button', { name: 'Hint' }));
-      await expectNote('Which one comes next?');
-      await solve(order);
       await expectNote('Well done!');
     },
     SLOW,

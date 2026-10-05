@@ -5,24 +5,19 @@
   "source": "owl-line"
  },
  {
-  "key": "06d629e3a048bb75",
-  "text": "You earned the First Lesson badge!",
-  "source": "celebration"
- },
- {
   "key": "089f030dce660968",
   "text": "Star Collector, Silver",
   "source": "badge-earned"
  },
  {
-  "key": "0a2ba2d1bd8cb77c",
-  "text": "Not that one. Try another! This one is tricky. Want an easier one?",
-  "source": "exercise-note-easier-offer"
+  "key": "09d0d86ca82c29e8",
+  "text": "It starts with 7.",
+  "source": "exercise-note"
  },
  {
-  "key": "0d9116a7e93d40cc",
-  "text": "Which one comes next?",
-  "source": "exercise-note"
+  "key": "122efff8f03f4e7c",
+  "text": "Which shape is number 15?",
+  "source": "lesson-exercise"
  },
  {
   "key": "161fdcce3e2e7cdb",
@@ -30,9 +25,14 @@
   "source": "exercise-note"
  },
  {
-  "key": "190827b92ff9ecf2",
-  "text": "Today you meet Pip!",
+  "key": "1834e36602f7db1e",
+  "text": "World boss time: Pattern Train!",
   "source": "home"
+ },
+ {
+  "key": "1b596d78d0a4bc5e",
+  "text": "Every carriage follows the pattern. Which one comes next?",
+  "source": "minigame-goal"
  },
  {
   "key": "1ca0f8469d85aaa7",
@@ -40,9 +40,9 @@
   "source": "badge-locked"
  },
  {
-  "key": "1f080a5f32a5b908",
-  "text": "Try it with Pip. Put the groups of fish in order. Start with the fewest fish.",
-  "source": "lesson-guided"
+  "key": "220b955b268d8b6a",
+  "text": "It starts with 6.",
+  "source": "exercise-note"
  },
  {
   "key": "22a758f4250dae9c",
@@ -60,9 +60,34 @@
   "source": "exercise-note"
  },
  {
-  "key": "335d7584b3478c1d",
-  "text": "Pip sees a frog, a fish, a frog, a fish, a frog, a fish. The pattern repeats, so Pip knows what comes next.",
-  "source": "lesson-demo"
+  "key": "29e67f0cc6e5b7f4",
+  "text": "Today Pip has new puzzles for you!",
+  "source": "home"
+ },
+ {
+  "key": "2d20f0920daff38d",
+  "text": "What is missing?",
+  "source": "minigame-round"
+ },
+ {
+  "key": "2e64fcf5b4cffa3e",
+  "text": "Say the pattern from the start. Which part repeats?",
+  "source": "exercise-note"
+ },
+ {
+  "key": "2e67a4b9bacfd48e",
+  "text": "Look how many more there are each time. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "315d1cc05609e259",
+  "text": "How many in step 4?",
+  "source": "lesson-variant"
+ },
+ {
+  "key": "323fde12bb24ff58",
+  "text": "It starts with 0.",
+  "source": "exercise-note"
  },
  {
   "key": "33cacbfd0bfeadc3",
@@ -70,14 +95,24 @@
   "source": "owl-line"
  },
  {
-  "key": "3e10c227a1620252",
-  "text": "Put the groups of frogs in order. Start with the fewest frogs.",
-  "source": "lesson-exercise"
+  "key": "400e4b793da9a0e6",
+  "text": "Pip wants to know what comes much later. Count in whole parts that repeat, like red, blue. Red is always first in each part.",
+  "source": "lesson-story"
  },
  {
   "key": "404fa4fc4752f151",
   "text": "Logic opens at 09:00. See you soon!",
   "source": "owl-line"
+ },
+ {
+  "key": "42395b2cf6a958b5",
+  "text": "Look closely.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "449b9d52797721ec",
+  "text": "Count in twos: numbers 2, 4, 6, 8 and 10 are all blue. Number 10 is blue.",
+  "source": "lesson-demo"
  },
  {
   "key": "44ee1e157e7f833d",
@@ -95,9 +130,34 @@
   "source": "owl-line"
  },
  {
+  "key": "49b9086eeb81ccb3",
+  "text": "Count in whole parts, not one by one.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "4a61f482035c8a48",
+  "text": "It starts with 4.",
+  "source": "exercise-note"
+ },
+ {
   "key": "4c6f24bf60cb97aa",
   "text": "Logic opens at 07:00. See you soon!",
   "source": "owl-line"
+ },
+ {
+  "key": "530abb19f63d5293",
+  "text": "It starts with 9.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "5471b96cd9e4413d",
+  "text": "Which shape is number 6?",
+  "source": "lesson-variant"
+ },
+ {
+  "key": "58d0f88f46638d79",
+  "text": "How many in step 6?",
+  "source": "lesson-exercise"
  },
  {
   "key": "5975daf7cd7cef89",
@@ -110,9 +170,9 @@
   "source": "owl-line"
  },
  {
-  "key": "5b382654bcfdc49d",
-  "text": "You already know Pattern Pond!",
-  "source": "assessment"
+  "key": "622418bb13e58c02",
+  "text": "It starts with 5.",
+  "source": "exercise-note"
  },
  {
   "key": "62f897c4502712bc",
@@ -120,14 +180,49 @@
   "source": "badge-earned"
  },
  {
-  "key": "64bccc35dc1adec3",
-  "text": "Frog, fish, duck, frog, fish, duck, frog, fish. What comes next?",
+  "key": "65b6393d3c77766e",
+  "text": "You earned the Pattern Spotter badge!",
+  "source": "celebration"
+ },
+ {
+  "key": "6d3f219746a66ce9",
+  "text": "Pattern Spotter",
+  "source": "badge-earned"
+ },
+ {
+  "key": "71b02388605ed691",
+  "text": "Check every jump, not just the first one. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "7241c05cc6fd54d7",
+  "text": "Say the pattern from the start. Which part repeats? This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "72d25b86bfb5d41b",
+  "text": "Which shape is number 12?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "7389b683d85bb582",
+  "text": "You already know Pattern Pond — 4 lessons are yours!",
+  "source": "assessment"
+ },
+ {
+  "key": "758ab26e0543cb5d",
+  "text": "Which rule makes these numbers?",
   "source": "lesson-exercise"
  },
  {
   "key": "75b085a80c9a332c",
   "text": "You already know Pip!",
   "source": "assessment"
+ },
+ {
+  "key": "767f3afdf6f947e3",
+  "text": "Numbers can make patterns too. Look at the jump from one number to the next. Check every jump, not just the first one!",
+  "source": "lesson-story"
  },
  {
   "key": "7716abda992f968c",
@@ -140,8 +235,18 @@
   "source": "home"
  },
  {
-  "key": "8a816d543a97d9c5",
-  "text": "Pip the Panda sits by the pond. Frogs and fish line up in a pattern. A pattern repeats, so you can tell what comes next!",
+  "key": "7e8f59e8b51068df",
+  "text": "Count in whole parts, not one by one. This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "7ea8de14a9a6fb18",
+  "text": "Which shape is number 8?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "8486dc624679f6a6",
+  "text": "Some patterns grow. Count how many more there are each time. The next picture has that many more again.",
   "source": "lesson-story"
  },
  {
@@ -150,19 +255,24 @@
   "source": "placement"
  },
  {
+  "key": "8bab8681b7a5146f",
+  "text": "It starts with 3.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "8c46ceb50d023184",
+  "text": "Which shape is number 17?",
+  "source": "minigame-round"
+ },
+ {
+  "key": "94f516a7b14c3876",
+  "text": "Not that number. Try again!",
+  "source": "exercise-note"
+ },
+ {
   "key": "957f278d66fde401",
   "text": "No worries — nothing is lost. Keep practising on your path!",
   "source": "assessment"
- },
- {
-  "key": "95a8585fbd546cdf",
-  "text": "First Lesson",
-  "source": "badge-earned"
- },
- {
-  "key": "9718fbf5479e2d8f",
-  "text": "Two frogs, a fish, two frogs, a fish, two frogs. What comes next?",
-  "source": "lesson-exercise"
  },
  {
   "key": "98471e0ff4d81d47",
@@ -175,14 +285,39 @@
   "source": "home"
  },
  {
-  "key": "a2fc675265b9b0fa",
-  "text": "First Lesson. Master your first lesson",
-  "source": "badge-locked"
+  "key": "a08e137730ad961c",
+  "text": "Look how many more there are each time.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "a4a00559aa6ccb7c",
+  "text": "It starts with 8.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "aa9864267eaecef3",
+  "text": "What comes next?",
+  "source": "minigame-round"
+ },
+ {
+  "key": "b66037985c7d77a7",
+  "text": "Every jump is plus 4. 15 plus 4 is 19.",
+  "source": "lesson-demo"
+ },
+ {
+  "key": "b947a61062345563",
+  "text": "How many in step 5?",
+  "source": "lesson-exercise"
  },
  {
   "key": "b95ef6e6dbddbf22",
   "text": "Not quite! Try again. This one is tricky. Want an easier one?",
   "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "b9bb979e20c75381",
+  "text": "Each step has 2 more stars. 5 and 2 more make 7.",
+  "source": "lesson-demo"
  },
  {
   "key": "bac073bb21b21de1",
@@ -195,9 +330,19 @@
   "source": "placement"
  },
  {
+  "key": "bde564484be6ddb6",
+  "text": "Red circle, blue square, again and again. Next comes a blue square.",
+  "source": "lesson-demo"
+ },
+ {
   "key": "be96f81d5e60d899",
   "text": "Good try!",
   "source": "exercise-note"
+ },
+ {
+  "key": "c2dba55db0a55187",
+  "text": "What number comes next?",
+  "source": "minigame-round"
  },
  {
   "key": "c3a5fe94f9fd2264",
@@ -210,8 +355,33 @@
   "source": "journey"
  },
  {
-  "key": "e6c10e1d991cd8eb",
-  "text": "Try it with Pip. Frog, fish, frog, fish, frog. What comes next?",
+  "key": "c5fc7b64d601335f",
+  "text": "Which shape is number 19?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "d45cbddc50facb25",
+  "text": "Which picture comes next?",
+  "source": "minigame-round"
+ },
+ {
+  "key": "d7442bc92fb21c97",
+  "text": "Pattern Spotter. Master Pattern Pond and beat Pattern Train",
+  "source": "badge-locked"
+ },
+ {
+  "key": "d9dd9bde2ed22057",
+  "text": "It starts with 2.",
+  "source": "exercise-note"
+ },
+ {
+  "key": "e259a020f02b6c7b",
+  "text": "Not that number. Try again! This one is tricky. Want an easier one?",
+  "source": "exercise-note-easier-offer"
+ },
+ {
+  "key": "e27a10911f5e4403",
+  "text": "Which shape is number 10?",
   "source": "lesson-guided"
  },
  {
@@ -240,13 +410,28 @@
   "source": "celebration"
  },
  {
-  "key": "f80c8fc3dcb61f21",
-  "text": "Not that one. Try another!",
+  "key": "f3a956b830d551f8",
+  "text": "Which shape is number 11?",
+  "source": "lesson-exercise"
+ },
+ {
+  "key": "f93dc34c7bb2e26d",
+  "text": "Pip loves patterns. A pattern has a part that repeats, again and again. Find the part that repeats, then say what comes next!",
+  "source": "lesson-story"
+ },
+ {
+  "key": "f9fb6af46e021806",
+  "text": "Check every jump, not just the first one.",
   "source": "exercise-note"
  },
  {
   "key": "fcdc4d925dcb76da",
   "text": "Want to show me you already know Pip?",
   "source": "journey"
+ },
+ {
+  "key": "ff9e1b1facd7d976",
+  "text": "It starts with 1.",
+  "source": "exercise-note"
  }
 ]

@@ -1,0 +1,38 @@
+# W1 lesson 1: find the part that repeats (AB, AAB, ABB, ABC), say what comes next or what is missing. Generated; seeds are stored,
+# never change them. The demo is the worked example: red circle, blue square, again and again.
+id: pat-repeat
+order: 1
+concept: pat-repeat
+character: panda
+demo:
+  prompt:
+    shapes:
+      - { kind: circle, colour: red }
+      - { kind: square, colour: blue }
+      - { kind: circle, colour: red }
+      - { kind: square, colour: blue }
+      - { kind: circle, colour: red }
+      - gap
+guided:
+  - id: rep-g-colour
+    generate: { template: pat-next, count: 1, seed: 5, params: { unit: AB, attr: colour } }
+  - id: rep-g-kind
+    generate: { template: pat-next, count: 1, seed: 2, params: { unit: AB, attr: kind, units: 3 } }
+exercises:
+  - id: rep-aab
+    generate: { template: pat-next, count: 1, seed: 6, params: { unit: AAB, attr: colour } }
+  - id: rep-abb
+    generate: { template: pat-next, count: 1, seed: 5, params: { unit: ABB, attr: kind } }
+  - id: rep-gap-ab
+    generate: { template: pat-gap, count: 1, seed: 8, params: { unit: AB, attr: size, units: 3 } }
+  - id: rep-gap-abc
+    generate: { template: pat-gap, count: 1, seed: 2, params: { unit: ABC, attr: colour } }
+  - id: rep-abc
+    generate: { template: pat-next, count: 1, seed: 2, params: { unit: ABC, attr: kind } }
+  - id: rep-two
+    easier: rep-easy-1
+    generate: { template: pat-next, count: 1, seed: 5, params: { unit: ABC, attr: kind+colour } }
+variants:
+  - id: rep-easy
+    generate:
+      { template: pat-next, count: 1, seed: 14, params: { unit: AB, attr: colour, units: 3 } }

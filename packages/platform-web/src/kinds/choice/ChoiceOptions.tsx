@@ -20,8 +20,8 @@ export interface ChoiceOptionsProps<O extends ChoiceOptionBase> {
   readonly look: ChoiceLook<O>;
 }
 
-/** Pickable options: tiles (visual over text) in a responsive grid, 2 per row on a phone up to 4.
- * Each tile is at least 56px tall (game screens, docs/screens.md §1). */
+/** Pickable options: tiles (visual over text) in a grid sized by its container (not the viewport: on a tablet the options sit in the
+ * narrow side column), 2 per row up to 4. Each tile is at least 56px tall (game screens, docs/screens.md §1). */
 export function ChoiceOptions<O extends ChoiceOptionBase>({
   options,
   wrongOptionIds,
@@ -31,28 +31,30 @@ export function ChoiceOptions<O extends ChoiceOptionBase>({
   const { t } = useTranslation();
   const text: ContentText = (key, options) => tContent(t, key, options);
   return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-      {options.map((option) => {
-        const isWrong = wrongOptionIds.includes(option.id);
-        return (
-          <button
-            key={option.id}
-            type="button"
-            disabled={isWrong}
-            aria-disabled={isWrong}
-            aria-label={option.textKey === undefined ? look.label?.(option, text) : undefined}
-            onClick={() => {
-              onPick(option.id);
-            }}
-            className={`tap-raised flex ${look.tileClass ?? 'min-h-14'} flex-col items-center justify-center gap-1 rounded-2xl px-2 font-display text-sm font-semibold ${
-              isWrong ? 'border-today text-today opacity-80' : 'bg-card text-ink'
-            }`}
-          >
-            {look.visual?.(option)}
-            {option.textKey && <span className="text-center">{text(option.textKey)}</span>}
-          </button>
-        );
-      })}
+    <div className="@container">
+      <div className="grid grid-cols-2 gap-3 @md:grid-cols-3 @2xl:grid-cols-4">
+        {options.map((option) => {
+          const isWrong = wrongOptionIds.includes(option.id);
+          return (
+            <button
+              key={option.id}
+              type="button"
+              disabled={isWrong}
+              aria-disabled={isWrong}
+              aria-label={option.textKey === undefined ? look.label?.(option, text) : undefined}
+              onClick={() => {
+                onPick(option.id);
+              }}
+              className={`tap-raised flex ${look.tileClass ?? 'min-h-14'} flex-col items-center justify-center gap-1 rounded-2xl px-2 font-display text-sm font-semibold ${
+                isWrong ? 'border-today text-today opacity-80' : 'bg-card text-ink'
+              }`}
+            >
+              {look.visual?.(option)}
+              {option.textKey && <span className="text-center">{text(option.textKey)}</span>}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }

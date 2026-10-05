@@ -10,7 +10,8 @@
      "track": "puzzles",
      "order": 1,
      "habitat": "river",
-     "titleKey": "journey:worlds.pattern-pond"
+     "titleKey": "journey:worlds.pattern-pond",
+     "boss": "pattern-train"
     }
    ]
   }
@@ -19,6 +20,10 @@
   {
    "id": "thinker",
    "after": "start"
+  },
+  {
+   "id": "spotter",
+   "after": "world:pattern-pond"
   }
  ]
 }

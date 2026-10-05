@@ -4,10 +4,9 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { compileAll } from '@learn/platform-content/compile-all';
-import { contentRoot } from '../../scripts/content-root.ts';
 import { logicContent } from './logic-content.ts';
 
-const root = contentRoot(join(dirname(fileURLToPath(import.meta.url)), '..', '..'));
+const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'content');
 const compiled = compileAll(logicContent, root);
 
 const UPDATE_HINT =

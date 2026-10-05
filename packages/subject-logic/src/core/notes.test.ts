@@ -6,7 +6,6 @@ import { resolveText } from '@learn/platform-content/text-resolve';
 import { CARD_NOTES } from '@learn/platform-core/domain/exercise/kinds/cards/notes';
 import { exerciseNote } from '@learn/platform-core/domain/notes';
 import type { ExerciseFeedbackBase, Resolve } from '@learn/platform-core/domain/notes';
-import { contentRoot } from '../../scripts/content-root.ts';
 import { logicContent } from '../content/logic-content.ts';
 import type { GridFillHint } from '../kinds/grid-fill/def.ts';
 import { logicCore } from './logic-core.ts';
@@ -18,7 +17,7 @@ const r: Resolve = (key, vars) => (vars === undefined ? key : `${key} ${JSON.str
 const note = (feedback: ExerciseFeedbackBase, offer = false) =>
   exerciseNote(r, feedback, { name: 'Pip', stars: 3, vars: {} }, logicCore.notes, offer);
 
-const root = contentRoot(join(dirname(fileURLToPath(import.meta.url)), '..', '..'));
+const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'content');
 const common = compileAll(logicContent, root).locales.en?.common ?? {};
 
 /** The English of a `grid.*` key as the build compiled it. */

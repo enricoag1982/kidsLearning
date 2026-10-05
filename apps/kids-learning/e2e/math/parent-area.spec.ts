@@ -42,10 +42,10 @@ test.describe('Parent area', () => {
     await page.getByRole('button', { name: /Let me try/ }).waitFor();
 
     const keys = await page.evaluate(() => Object.keys(localStorage));
-    expect(keys.filter((key) => !/^kids(-chess|-math|-coding)?:/.test(key))).toEqual([]);
+    expect(keys.filter((key) => !/^kids(-chess|-math|-coding|-logic)?:/.test(key))).toEqual([]);
     expect(keys).toContain('kids:profiles');
-    // Chess and Coding were never opened: each store holds nothing but its version.
-    for (const unopened of ['kids-chess:', 'kids-coding:']) {
+    // Chess, Coding and Logic were never opened: each store holds nothing but its version.
+    for (const unopened of ['kids-chess:', 'kids-coding:', 'kids-logic:']) {
       expect(
         keys.filter((key) => key.startsWith(unopened) && !key.endsWith(':schema-version')),
         unopened,

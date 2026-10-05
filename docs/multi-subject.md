@@ -85,6 +85,7 @@ Rules: `docs/retrospective.md` §9 (≤ 3–4 commits per agent run, lead decide
 | F11 | Race to 20 polish | Title shown twice (top bar + heading); stones ≈ 28 × 40 px at 1024 × 768 |
 | F12 | Number-line card size | At 1024 × 768 the line card (≈ 150 px) is small beside the prompt card (≈ 450 px) |
 | F13 | Math pictures in cards | `round-ten` / `bridge-add` have no line picture (card prompts have no picture slot); `groups` shows "3 groups of 4" + one emoji (emoji limit 8) |
+| F14 | Number rows on a phone | a 5-term number row (`step-next` "3 7 11 15 19 ?") wraps to two lines at 390 px: the number-entry pad narrows the card (m14.9 visual pass) |
 
 ## 5. After v1.0
 

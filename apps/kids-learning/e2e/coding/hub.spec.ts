@@ -19,15 +19,16 @@ test.describe('Coding in the app', () => {
     ).toBeVisible();
     await expect(page.getByRole('button', { name: /Start/ })).toBeVisible();
 
-    // The hub shows all three subjects; Coding, just opened, is the active one.
+    // The hub shows all four subjects; Coding, just opened, is the active one.
     await page.getByRole('button', { name: 'Subjects', exact: true }).click();
     await expect(
       page.getByRole('heading', { level: 1, name: 'What shall we learn?' }),
     ).toBeVisible();
-    await expect(page.locator('[data-testid^="subject-tile-"]')).toHaveCount(3);
+    await expect(page.locator('[data-testid^="subject-tile-"]')).toHaveCount(4);
     await expect(page.getByTestId('subject-tile-chess')).toContainText('Chess');
     await expect(page.getByTestId('subject-tile-math')).toContainText('Math');
     await expect(page.getByTestId('subject-tile-coding')).toContainText('Coding');
+    await expect(page.getByTestId('subject-tile-logic')).toContainText('Logic');
     await expect(page.getByTestId('subject-tile-coding')).toHaveAttribute('aria-current', 'true');
   });
 });

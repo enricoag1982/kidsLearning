@@ -77,7 +77,9 @@ describe('CardPromptView shapes', () => {
 
   it('draws a smaller row for the Story step', async () => {
     const { container } = await renderCardUi(<CardPromptView prompt={{ shapes: ROW }} compact />);
-    expect(container.querySelector('[data-gap]')?.className).toContain('h-9');
+    expect(
+      (container.querySelector('[data-gap]') as HTMLElement).style.getPropertyValue('--box-side'),
+    ).toContain('min(2.25rem');
   });
 
   it('draws no row without shapes', async () => {
