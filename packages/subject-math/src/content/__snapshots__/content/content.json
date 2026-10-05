@@ -171,7 +171,16 @@
      "concept": "mm-bridge",
      "textKey": "lessons:gen.bridge-g-1.text",
      "prompt": {
-      "big": "7 + 5"
+      "big": "7 + 5",
+      "line": {
+       "from": 7,
+       "to": 20,
+       "step": 1,
+       "marks": [
+        7,
+        10
+       ]
+      }
      },
      "type": "number-entry",
      "answer": 12,
@@ -192,7 +201,16 @@
      "concept": "mm-bridge",
      "textKey": "lessons:gen.bridge-g-2.text",
      "prompt": {
-      "big": "86 + 7"
+      "big": "86 + 7",
+      "line": {
+       "from": 86,
+       "to": 100,
+       "step": 1,
+       "marks": [
+        86,
+        90
+       ]
+      }
      },
      "type": "number-entry",
      "answer": 93,
@@ -215,7 +233,16 @@
      "concept": "mm-bridge",
      "textKey": "lessons:gen.bridge-1.text",
      "prompt": {
-      "big": "28 + 6"
+      "big": "28 + 6",
+      "line": {
+       "from": 28,
+       "to": 40,
+       "step": 1,
+       "marks": [
+        28,
+        30
+       ]
+      }
      },
      "type": "number-entry",
      "answer": 34,
@@ -236,7 +263,16 @@
      "concept": "mm-bridge",
      "textKey": "lessons:gen.bridge-2.text",
      "prompt": {
-      "big": "45 + 9"
+      "big": "45 + 9",
+      "line": {
+       "from": 45,
+       "to": 60,
+       "step": 1,
+       "marks": [
+        45,
+        50
+       ]
+      }
      },
      "type": "number-entry",
      "answer": 54,
@@ -257,7 +293,16 @@
      "concept": "mm-bridge",
      "textKey": "lessons:gen.bridge-3.text",
      "prompt": {
-      "big": "59 + 3"
+      "big": "59 + 3",
+      "line": {
+       "from": 59,
+       "to": 70,
+       "step": 1,
+       "marks": [
+        59,
+        60
+       ]
+      }
      },
      "type": "number-entry",
      "answer": 62,
@@ -278,7 +323,16 @@
      "concept": "mm-bridge",
      "textKey": "lessons:gen.bridge-hard-1.text",
      "prompt": {
-      "big": "69 + 8"
+      "big": "69 + 8",
+      "line": {
+       "from": 69,
+       "to": 80,
+       "step": 1,
+       "marks": [
+        69,
+        70
+       ]
+      }
      },
      "type": "number-entry",
      "answer": 77,
@@ -336,7 +390,16 @@
      "concept": "mm-bridge",
      "textKey": "lessons:gen.bridge-easy-1.text",
      "prompt": {
-      "big": "67 + 5"
+      "big": "67 + 5",
+      "line": {
+       "from": 67,
+       "to": 80,
+       "step": 1,
+       "marks": [
+        67,
+        70
+       ]
+      }
      },
      "type": "number-entry",
      "answer": 72,
@@ -1516,7 +1579,15 @@
      "concept": "pv-round",
      "textKey": "lessons:gen.round-g-1.text",
      "prompt": {
-      "big": "73"
+      "big": "73",
+      "line": {
+       "from": 70,
+       "to": 80,
+       "step": 1,
+       "marks": [
+        73
+       ]
+      }
      },
      "type": "choice",
      "options": [
@@ -1536,7 +1607,15 @@
      "concept": "pv-round",
      "textKey": "lessons:gen.round-g-2.text",
      "prompt": {
-      "big": "36"
+      "big": "36",
+      "line": {
+       "from": 30,
+       "to": 40,
+       "step": 1,
+       "marks": [
+        36
+       ]
+      }
      },
      "type": "choice",
      "options": [
@@ -1559,7 +1638,15 @@
      "concept": "pv-round",
      "textKey": "lessons:gen.round-ten-1.text",
      "prompt": {
-      "big": "28"
+      "big": "28",
+      "line": {
+       "from": 20,
+       "to": 30,
+       "step": 1,
+       "marks": [
+        28
+       ]
+      }
      },
      "type": "choice",
      "options": [
@@ -1580,7 +1667,15 @@
      "concept": "pv-round",
      "textKey": "lessons:gen.round-half-1.text",
      "prompt": {
-      "big": "45"
+      "big": "45",
+      "line": {
+       "from": 40,
+       "to": 50,
+       "step": 1,
+       "marks": [
+        45
+       ]
+      }
      },
      "type": "choice",
      "options": [
@@ -1602,7 +1697,15 @@
      "concept": "pv-round",
      "textKey": "lessons:gen.round-big-1.text",
      "prompt": {
-      "big": "698"
+      "big": "698",
+      "line": {
+       "from": 690,
+       "to": 700,
+       "step": 1,
+       "marks": [
+        698
+       ]
+      }
      },
      "type": "choice",
      "options": [
@@ -1664,7 +1767,15 @@
      "concept": "pv-round",
      "textKey": "lessons:gen.round-easy-1.text",
      "prompt": {
-      "big": "31"
+      "big": "31",
+      "line": {
+       "from": 30,
+       "to": 40,
+       "step": 1,
+       "marks": [
+        31
+       ]
+      }
      },
      "type": "choice",
      "options": [
@@ -2982,8 +3093,24 @@
      "concept": "mt-groups",
      "textKey": "lessons:gen.gr-g-1.text",
      "prompt": {
-      "emoji": "⭐",
-      "big": "3 groups of 2"
+      "big": "3 groups of 2",
+      "shapes": [
+       {
+        "kind": "diamond",
+        "colour": "blue",
+        "count": 2
+       },
+       {
+        "kind": "diamond",
+        "colour": "blue",
+        "count": 2
+       },
+       {
+        "kind": "diamond",
+        "colour": "blue",
+        "count": 2
+       }
+      ]
      },
      "type": "number-entry",
      "answer": 6,
@@ -3000,7 +3127,19 @@
      "concept": "mt-groups",
      "textKey": "lessons:gen.gr-gc-1.text",
      "prompt": {
-      "big": "2 groups of 3"
+      "big": "2 groups of 3",
+      "shapes": [
+       {
+        "kind": "star",
+        "colour": "yellow",
+        "count": 3
+       },
+       {
+        "kind": "star",
+        "colour": "yellow",
+        "count": 3
+       }
+      ]
      },
      "type": "choice",
      "options": [
@@ -3027,8 +3166,24 @@
      "concept": "mt-groups",
      "textKey": "lessons:gen.gr-total-1.text",
      "prompt": {
-      "emoji": "🐟",
-      "big": "3 groups of 4"
+      "big": "3 groups of 4",
+      "shapes": [
+       {
+        "kind": "square",
+        "colour": "orange",
+        "count": 4
+       },
+       {
+        "kind": "square",
+        "colour": "orange",
+        "count": 4
+       },
+       {
+        "kind": "square",
+        "colour": "orange",
+        "count": 4
+       }
+      ]
      },
      "type": "number-entry",
      "answer": 12,
@@ -3045,8 +3200,19 @@
      "concept": "mt-groups",
      "textKey": "lessons:gen.gr-total-2.text",
      "prompt": {
-      "emoji": "🐞",
-      "big": "2 groups of 4"
+      "big": "2 groups of 4",
+      "shapes": [
+       {
+        "kind": "heart",
+        "colour": "purple",
+        "count": 4
+       },
+       {
+        "kind": "heart",
+        "colour": "purple",
+        "count": 4
+       }
+      ]
      },
      "type": "number-entry",
      "answer": 8,
@@ -3063,8 +3229,29 @@
      "concept": "mt-groups",
      "textKey": "lessons:gen.gr-big-1.text",
      "prompt": {
-      "emoji": "🍪",
-      "big": "4 groups of 5"
+      "big": "4 groups of 5",
+      "shapes": [
+       {
+        "kind": "diamond",
+        "colour": "yellow",
+        "count": 5
+       },
+       {
+        "kind": "diamond",
+        "colour": "yellow",
+        "count": 5
+       },
+       {
+        "kind": "diamond",
+        "colour": "yellow",
+        "count": 5
+       },
+       {
+        "kind": "diamond",
+        "colour": "yellow",
+        "count": 5
+       }
+      ]
      },
      "type": "number-entry",
      "answer": 20,
@@ -3160,8 +3347,19 @@
      "concept": "mt-groups",
      "textKey": "lessons:gen.gr-easy-1.text",
      "prompt": {
-      "emoji": "🍎",
-      "big": "2 groups of 2"
+      "big": "2 groups of 2",
+      "shapes": [
+       {
+        "kind": "triangle",
+        "colour": "red",
+        "count": 2
+       },
+       {
+        "kind": "triangle",
+        "colour": "red",
+        "count": 2
+       }
+      ]
      },
      "type": "number-entry",
      "answer": 4,

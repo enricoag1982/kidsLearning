@@ -1,17 +1,19 @@
 // W3 equal-groups templates (docs/subjects/math/curriculum.md §3): `groups` ("3 groups of 4": how many in all?) and `groups-choice`
 // (which sum shows 3 groups of 4?). Bug `add-factors` (3 + 4 instead of 3 × 4); `neighbour` for a repeated sum with one group too
-// many or too few. The card prompt's `emoji` holds 16 UTF-16 units (8 emoji): too few to draw the groups, so `groups` shows the
-// words "3 groups of 4" with one emoji of the thing counted over them.
+// many or too few. The card prompt keeps the words "3 groups of 4" and draws the groups under them with the card kit's shape tokens
+// (`prompt.shapes`: one cluster of n per group, one kind and colour per item, a fixed function of k and n: `pictures.ts`).
 import { pick, randomInt, shuffle } from '@learn/platform-core/domain/random';
 import type { ExerciseTemplate } from '@learn/platform-content/generate/template';
 import { z } from 'zod';
 import { addFactors, bugRef } from './bugs.ts';
 import { fail, sameEntries } from './draw.ts';
-import type { BigOption, ChoiceItem, PictureNumberEntryItem, ValueReason } from './items.ts';
-
-/** The things counted, by a fixed function of the numbers (the same exercise always looks the same, so the expander can tell a
- * repeat from a new one). */
-const THINGS = ['🍎', '🍪', '🐞', '⭐', '🌸', '🐟', '🍓', '🎈'] as const;
+import type { BigOption, GroupsChoiceItem, PictureNumberEntryItem, ValueReason } from './items.ts';
+import {
+  checkGroupClusters,
+  groupClusters,
+  MAX_DRAWN_GROUP_SIZE,
+  MAX_DRAWN_GROUPS,
+} from './pictures.ts';
 
 /** "3 groups of 4" as a card prints it. */
 function groupsText(k: number, n: number): string {
@@ -37,15 +39,15 @@ function sumOf(n: number, terms: number): string {
 
 const groupsParams = z
   .object({
-    maxGroups: z.number().int().min(3).max(5),
-    maxSize: z.number().int().min(3).max(5),
+    maxGroups: z.number().int().min(3).max(MAX_DRAWN_GROUPS),
+    maxSize: z.number().int().min(3).max(MAX_DRAWN_GROUP_SIZE),
   })
   .strict();
 
 export type GroupsParams = z.output<typeof groupsParams>;
 
-/** "3 groups of 4": how many in all? 2 to `maxGroups` groups of 2 to `maxSize`; the added factors (3 + 4) speak `add-factors`, unless
- * they make the answer too (2 groups of 2). */
+/** "3 groups of 4": how many in all? 2 to `maxGroups` groups (at most 5) of 2 to `maxSize` (at most 9), drawn as clusters; the added
+ * factors (3 + 4) speak `add-factors`, unless they make the answer too (2 groups of 2). */
 export const groups: ExerciseTemplate<GroupsParams, PictureNumberEntryItem> = {
   params: groupsParams,
   generate({ maxGroups, maxSize }, ctx) {
@@ -58,7 +60,7 @@ export const groups: ExerciseTemplate<GroupsParams, PictureNumberEntryItem> = {
       id: ctx.id,
       type: 'number-entry',
       text: ctx.text('text', 'templates.groups'),
-      prompt: { emoji: THINGS[(3 * k + n) % THINGS.length] ?? '🍎', big: groupsText(k, n) },
+      prompt: { big: groupsText(k, n), shapes: groupClusters(k, n) },
       answer,
       ...(reasons.length === 0 ? {} : { reasons }),
     };
@@ -82,9 +84,7 @@ export const groups: ExerciseTemplate<GroupsParams, PictureNumberEntryItem> = {
     if (item.answer !== total) {
       fail(at, `${item.prompt.big} is ${String(total)}, not ${String(item.answer)}`);
     }
-    if (item.prompt.emoji === '') {
-      fail(at, 'the picture is empty');
-    }
+    checkGroupClusters(item.prompt.shapes, k, n, at);
     const expected: readonly ValueReason[] =
       k + n === total ? [] : [{ value: k + n, text: 'bugs.add-factors' }];
     if (
@@ -110,6 +110,8 @@ const groupsChoiceParams = z
   .object({
     maxGroups: z.number().int().min(3).max(MAX_TERMS),
     maxSize: z.number().int().min(3).max(MAX_TERMS),
+    /** Draw the groups under the words (default); `false` leaves the card symbols only (CPA: the last 2 scored items of a lesson). */
+    picture: z.boolean().default(true),
   })
   .strict();
 
@@ -124,10 +126,11 @@ function wrongCount(k: number): number {
 
 /** Which sum shows k groups of n? The sum of k n's, the added factors `k + n` (`add-factors`), and the n's and k's the other way round
  * (4 groups of 3: nothing spoken but the wrong-answer note) or, with k = n, the same number written one time too many or too few
- * (`neighbour`). 2 groups of 2 would show the same sum twice and is never drawn. */
-export const groupsChoice: ExerciseTemplate<GroupsChoiceParams, ChoiceItem> = {
+ * (`neighbour`). 2 groups of 2 would show the same sum twice and is never drawn. The groups are drawn under the words unless the entry
+ * says `picture: false` (the numbers and every draw are the same either way). */
+export const groupsChoice: ExerciseTemplate<GroupsChoiceParams, GroupsChoiceItem> = {
   params: groupsChoiceParams,
-  generate({ maxGroups, maxSize }, ctx) {
+  generate({ maxGroups, maxSize, picture }, ctx) {
     const pairs: { k: number; n: number }[] = [];
     for (let k = 2; k <= maxGroups; k += 1) {
       for (let n = 2; n <= maxSize; n += 1) {
@@ -159,20 +162,27 @@ export const groupsChoice: ExerciseTemplate<GroupsChoiceParams, ChoiceItem> = {
       id: ctx.id,
       type: 'choice',
       text: ctx.text('text', 'templates.groups-choice', { k, n }),
-      prompt: { big: groupsText(k, n) },
+      prompt: picture
+        ? { big: groupsText(k, n), shapes: groupClusters(k, n) }
+        : { big: groupsText(k, n) },
       options,
       answer: options[entries.findIndex((entry) => entry.right === true)]?.id ?? 'a',
     };
   },
   check(item, params, at) {
-    const read = readGroups(item.prompt?.big ?? '');
+    const read = readGroups(item.prompt.big);
     if (read === null) {
-      fail(at, `cannot read the prompt "${item.prompt?.big ?? ''}" as "k groups of n"`);
+      fail(at, `cannot read the prompt "${item.prompt.big}" as "k groups of n"`);
       return;
     }
     const { k, n } = read;
     if (k < 2 || k > params.maxGroups || n < 2 || n > params.maxSize || (k === 2 && n === 2)) {
-      fail(at, `"${item.prompt?.big ?? ''}" does not fit the params`);
+      fail(at, `"${item.prompt.big}" does not fit the params`);
+    }
+    if (params.picture) {
+      checkGroupClusters(item.prompt.shapes, k, n, at);
+    } else if (item.prompt.shapes !== undefined) {
+      fail(at, 'the card is symbols only (picture: false) but shows a picture');
     }
     // A sum is a list of terms: the options as numbers, so "4 + 4 + 4" is three 4s whatever the spaces.
     const terms = item.options.map((option) => option.big.split(' + ').map(Number));
