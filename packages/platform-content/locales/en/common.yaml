@@ -338,6 +338,11 @@ cards:
       medium: medium
       big: big
       huge: huge
+  # A prompt's number-line picture (`prompt.line`): its accessible name only, never narrated. One dot or several (plural by the
+  # number of marks); `marks` is the numbers joined with commas.
+  line:
+    label_one: 'Number line from {{from}} to {{to}}, a dot at {{marks}}'
+    label_other: 'Number line from {{from}} to {{to}}, dots at {{marks}}'
 boss:
   ended: Good try!
   # The turn-based duel mini-game (`duel` mode): the turn banner and the lines it speaks.

@@ -37,14 +37,30 @@ export function shapeFacts(shape: CardShape): readonly string[] {
   ];
 }
 
-/** The card a kid looks at: a big emoji, a big short text (e.g. `7 + 5`, `AB?`), an art image id, a row of shape tokens — any
- * mix. The question itself is the exercise's spoken `textKey`. */
+/** Fewest and most gaps (`(to - from) / step`) of a prompt's number-line picture. */
+export const MIN_LINE_GAPS = 2;
+export const MAX_LINE_GAPS = 20;
+
+/** A small number-line picture: ticks every `step` from `from` to `to`, the ends labelled, each mark a dot with its number. Never
+ * a place to tap (the math `number-line` kind is that): the prompt only shows where numbers sit. */
+export interface CardLine {
+  readonly from: number;
+  readonly to: number;
+  readonly step: number;
+  /** Values of the dots, each on the line (`from` to `to`); at least one. */
+  readonly marks: readonly number[];
+}
+
+/** The card a kid looks at: a big emoji, a big short text (e.g. `7 + 5`, `AB?`), an art image id, a row of shape tokens, a number-line
+ * picture — any mix. The question itself is the exercise's spoken `textKey`. */
 export interface CardPrompt {
   readonly emoji?: string;
   readonly big?: string;
   readonly image?: string;
   /** 1–8 tokens in a row, at most one `'gap'` (a "?" slot). */
   readonly shapes?: readonly (CardShape | 'gap')[];
+  /** A number line with dots, 2–20 gaps. */
+  readonly line?: CardLine;
 }
 
 /** Every card exercise def carries an optional prompt. */

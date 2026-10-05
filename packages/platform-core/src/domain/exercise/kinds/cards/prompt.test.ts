@@ -2,8 +2,10 @@ import { describe, expect, it } from 'vitest';
 import {
   DEFAULT_SHAPE_COUNT,
   DEFAULT_SHAPE_SIZE,
+  MAX_LINE_GAPS,
   MAX_PROMPT_SHAPES,
   MAX_SHAPE_COUNT,
+  MIN_LINE_GAPS,
   SHAPE_COLOURS,
   SHAPE_KINDS,
   SHAPE_SIZES,
@@ -22,6 +24,12 @@ describe('shape vocabulary', () => {
       8,
       9,
     ]);
+  });
+});
+
+describe('number-line picture bounds', () => {
+  it('allows 2 to 20 gaps', () => {
+    expect([MIN_LINE_GAPS, MAX_LINE_GAPS]).toEqual([2, 20]);
   });
 });
 

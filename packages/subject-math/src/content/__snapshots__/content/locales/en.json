@@ -89,6 +89,10 @@
    },
    "hint-first-digit": "It starts with {{digit}}.",
    "hint-look": "Look closely.",
+   "line": {
+    "label_one": "Number line from {{from}} to {{to}}, a dot at {{marks}}",
+    "label_other": "Number line from {{from}} to {{to}}, dots at {{marks}}"
+   },
    "number-wrong": "Not that number. Try again!",
    "order-hint": "Which one comes next?",
    "order-pool": "Cards to place",

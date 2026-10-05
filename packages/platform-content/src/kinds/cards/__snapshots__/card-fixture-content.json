@@ -150,7 +150,16 @@
      "concept": "counting",
      "textKey": "lessons:count-03",
      "prompt": {
-      "big": "7 + 5"
+      "big": "7 + 5",
+      "line": {
+       "from": 7,
+       "to": 20,
+       "step": 1,
+       "marks": [
+        7,
+        10
+       ]
+      }
      },
      "type": "number-entry",
      "answer": 12,
