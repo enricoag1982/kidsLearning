@@ -2,7 +2,8 @@ import { devices } from '@playwright/test';
 import { defineE2EConfig } from '@learn/platform-web/build/e2e-config.ts';
 
 // The layout checks (`e2e/fit.spec.ts`, `e2e/coding/fit.spec.ts`) run on the phone and iPad mini projects only; `e2e/logic/fit.spec.ts`
-// sets its own viewports and runs in `chromium` with the other logic specs.
+// sets its own viewports and runs in `chromium` with the other logic specs, and so does `e2e/fit-cards.spec.ts` (card kit and control
+// rows: phone and tablet viewports of its own, across subjects).
 const FIT_SPECS = /e2e[\\/](coding[\\/])?fit\.spec\.ts/;
 
 export default defineE2EConfig({
@@ -17,7 +18,13 @@ export default defineE2EConfig({
         viewport: { width: 1024, height: 768 },
         hasTouch: true,
       },
-      testIgnore: [/fit\.spec\.ts/, /[\\/]math[\\/]/, /[\\/]coding[\\/]/, /[\\/]logic[\\/]/],
+      testIgnore: [
+        /fit\.spec\.ts/,
+        /fit-cards\.spec\.ts/,
+        /[\\/]math[\\/]/,
+        /[\\/]coding[\\/]/,
+        /[\\/]logic[\\/]/,
+      ],
     },
     // Layout checks (accessibility + kid touch-target sizes) on the stacked layouts.
     {
