@@ -75,4 +75,5 @@ Re-cut 2026-10-04 (one concern per iteration, ≤ 4 commits):
 | `m14.9` | W1 Pattern Pond + Pattern Train; Logic registered in the app |
 | `m14.10` | W2 Sort Shore + Sorting Sprint |
 | `m14.11` | W3 Grid Puzzles + Sudoku Sprint |
-| `m14.12` | Release `v1.3.0` |
+| `m14.12` | Prompt-less card choice layout (follow-up F15, found in the `m14.10` visual pass): options fill the board slot as large tiles |
+| `m14.13` | Release `v1.3.0` |
