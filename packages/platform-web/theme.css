@@ -260,3 +260,20 @@
     animation: none;
   }
 }
+
+/* A card prompt's big text (`CardPromptView`): `--big-fit` (inline) is the font size at which the text fills the card's width on one
+   line, from its character count. The size is that, between 1.5rem and the `text-5xl sm:text-6xl` top (3rem, 3.75rem from `sm`); the
+   text wraps only if 1.5rem does not fit either. Container query units are Safari 16+: an older browser (iPad mini 4, iOS 15) keeps the
+   fixed `text-5xl sm:text-6xl`. Unlayered, so it wins over those utilities. */
+@supports (font-size: 1cqi) {
+  .card-big {
+    --big-max: 3rem;
+    font-size: clamp(1.5rem, var(--big-fit), var(--big-max));
+  }
+
+  @media (width >= 40rem) {
+    .card-big {
+      --big-max: 3.75rem;
+    }
+  }
+}
