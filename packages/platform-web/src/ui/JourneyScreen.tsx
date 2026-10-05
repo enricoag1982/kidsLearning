@@ -252,8 +252,16 @@ export function JourneyScreen(): JSX.Element {
     <Screen kind="page">
       <ScreenHeader action="back" actionLabel={tContent(t, 'journey:ui.back')} onAction={goToHome}>
         <div className="flex min-w-0 flex-1 flex-col">
-          <span className="truncate font-display text-2xl text-ink sm:text-3xl">{worldTitle}</span>
-          <span className="text-sm text-muted sm:text-base">
+          <span
+            data-testid="journey-world-title"
+            className="text-balance break-words font-display text-xl leading-tight text-ink sm:text-3xl sm:leading-normal"
+          >
+            {worldTitle}
+          </span>
+          <span
+            data-testid="journey-world-meta"
+            className="truncate text-sm text-muted sm:text-base"
+          >
             {habitatName}
             {worldTotals.max > 0 &&
               ` · ${tContent(t, 'journey:ui.world-stars', { earned: worldTotals.earned, max: worldTotals.max })}`}
@@ -262,7 +270,10 @@ export function JourneyScreen(): JSX.Element {
       </ScreenHeader>
 
       <div className="flex min-h-0 flex-1 flex-col gap-4 lg:flex-row lg:gap-6">
-        <div className="flex gap-2 overflow-x-auto pb-1 lg:w-64 lg:flex-none lg:flex-col lg:overflow-visible lg:pb-0">
+        <div
+          data-testid="journey-world-tabs"
+          className="flex gap-2 overflow-x-auto pb-1 lg:w-64 lg:flex-none lg:flex-col lg:overflow-visible lg:pb-0"
+        >
           {mainWorlds.map((entry) => worldRow(entry))}
           {branchWorlds.length > 0 && (
             <div className="mt-1 flex items-center px-2 text-xs font-extrabold tracking-wide text-muted lg:mt-2 lg:text-[13px] lg:uppercase">
