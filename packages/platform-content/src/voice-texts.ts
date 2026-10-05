@@ -239,6 +239,13 @@ function collectUiTemplates(
     addText(entries, resolve(locales, key), 'owl-line');
   }
 
+  // The hub's calm line when this subject's pack cannot load (`SubjectsScreen`): the subject's own display name fills `{{name}}`.
+  addText(
+    entries,
+    resolve(locales, 'subjects.load-failed', { name: resolve(locales, 'app.title') }),
+    'owl-line',
+  );
+
   // Time limit "too early": bounded by the parent's "Not before" options.
   for (const time of PLAY_FROM_OPTIONS) {
     if (time !== null)

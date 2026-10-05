@@ -95,6 +95,13 @@ describe('voice text inventory (real content)', () => {
     expect(textsBySource.get('minigame-goal')).toHaveLength(content.minigames.length);
   });
 
+  it("has the hub's calm load-failed line with this subject's own name (F2)", () => {
+    const line = 'Chess could not be loaded. Close the app and try again.';
+
+    expect(textsBySource.get('owl-line')).toContain(line);
+    expect(inventory.entries.some((entry) => entry.key === voiceKey(line))).toBe(true);
+  });
+
   it('contains no parent-area / password / backup / privacy text', () => {
     const forbidden = ['parent.', 'new-player.', 'backup.', 'privacy.'];
     for (const entry of inventory.entries) {

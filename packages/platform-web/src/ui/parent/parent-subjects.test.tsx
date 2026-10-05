@@ -111,7 +111,9 @@ beforeAll(() => {
 });
 
 /** The parent area over subjects `a` (active) and `b` (`b` has a second, locked lesson), one profile `Mia` with 3 stars in `a` and 2 in `b`. */
-async function renderParent(options: { readonly only?: Id } = {}): Promise<Setup> {
+async function renderParent(
+  options: { readonly only?: Id; readonly failing?: Id } = {},
+): Promise<Setup> {
   const packs: Readonly<Record<Id, ReturnType<typeof createTestPack>>> = {
     a: {
       ...createTestPack('a', undefined, createTestContent('a')),
@@ -127,7 +129,9 @@ async function renderParent(options: { readonly only?: Id } = {}): Promise<Setup
       Promise.resolve({ pack: packs.a, locales: localesFor('a') }),
     ),
     b: vi.fn((): Promise<LoadedSubject> =>
-      Promise.resolve({ pack: packs.b, locales: localesFor('b') }),
+      options.failing === 'b'
+        ? Promise.reject(new Error('chunk missing'))
+        : Promise.resolve({ pack: packs.b, locales: localesFor('b') }),
     ),
   };
   const entries: SubjectEntry[] = (['a', 'b'] as const)
@@ -326,6 +330,54 @@ describe('Child settings with several subjects', () => {
   });
 });
 
+const BETA_FAILED = 'Beta could not be loaded. Close the app and try again.';
+
+describe('A subject whose pack cannot load (F2)', () => {
+  it('the Overview still shows the other subject and the minutes, with a calm line for the failed one', async () => {
+    await renderParent({ failing: 'b' });
+
+    const lineA = await screen.findByTestId('overview-subject-a');
+    expect(lineA.textContent).toBe('AlphaRank: Alpha pawn3 stars');
+    const lineB = screen.getByTestId('overview-subject-b');
+    expect(lineB.textContent).toBe(BETA_FAILED);
+    expect(lineB.getAttribute('role')).toBe('status');
+    expect(screen.getAllByText(/min today/)).toHaveLength(1);
+    expect(screen.queryByRole('heading', { name: 'Oops, something went wrong' })).toBeNull();
+    expect(screen.getByRole('heading', { name: 'Parent area' })).toBeTruthy();
+  });
+
+  it('the report of the failed subject shows the line, the chips stay, and the other subject still opens', async () => {
+    await renderParent({ failing: 'b' });
+    await openReport();
+    await screen.findByText('World 1: Alpha meadow');
+
+    fireEvent.click(chip('Beta'));
+
+    expect(await screen.findByText(BETA_FAILED)).toBeTruthy();
+    expect(screen.queryByText('World 1: Alpha meadow')).toBeNull();
+    expect(screen.queryByRole('heading', { name: 'Oops, something went wrong' })).toBeNull();
+    expect(chip('Beta').getAttribute('aria-checked')).toBe('true');
+
+    fireEvent.click(chip('Alpha'));
+    await screen.findByText('World 1: Alpha meadow');
+    expect(screen.queryByText(BETA_FAILED)).toBeNull();
+  });
+
+  it('the settings of the failed subject show the line once (its own panel stays empty), the common settings stay', async () => {
+    await renderParent({ failing: 'b' });
+    await openSettings();
+    await screen.findByRole('button', { name: 'a level 1' });
+
+    fireEvent.click(chip('Beta'));
+
+    expect(await screen.findByText(BETA_FAILED)).toBeTruthy();
+    expect(screen.queryByRole('button', { name: 'b level 1' })).toBeNull();
+    expect(screen.getByRole('heading', { name: "Mia's settings" })).toBeTruthy();
+  });
+});
+
+const B_FAILED = 'b could not be loaded. Close the app and try again.';
+
 describe('SubjectScopeProvider', () => {
   async function scopeApp(load?: () => Promise<LoadedSubject>) {
     const a = createTestPack('a', undefined, createTestContent('a'));
@@ -393,8 +445,7 @@ describe('SubjectScopeProvider', () => {
     expect(app.subjects).toHaveLength(2);
   });
 
-  it('throws a failed load to the error boundary', async () => {
-    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+  it('shows the calm line for a failed load, not the error boundary', async () => {
     const { store, services } = await scopeApp(() => Promise.reject(new Error('chunk missing')));
     render(
       <StoreProvider value={store}>
@@ -408,8 +459,34 @@ describe('SubjectScopeProvider', () => {
       </StoreProvider>,
     );
 
-    await screen.findByRole('heading', { name: 'Oops, something went wrong' });
-    expect(screen.getByText('chunk missing')).toBeTruthy();
-    vi.restoreAllMocks();
+    expect(await screen.findByText(B_FAILED)).toBeTruthy();
+    expect(screen.queryByRole('heading', { name: 'Oops, something went wrong' })).toBeNull();
+    expect(screen.queryByText(/scope b/)).toBeNull();
+  });
+
+  it('a failed load shows nothing for fallback={null}, and the line instead of a loading fallback', async () => {
+    const { store, services } = await scopeApp(() => Promise.reject(new Error('chunk missing')));
+    render(
+      <StoreProvider value={store}>
+        <PackProvider value={services.pack}>
+          <div data-testid="slot-null">
+            <SubjectScopeProvider subjectId="b" fallback={null}>
+              <Probe />
+            </SubjectScopeProvider>
+          </div>
+          <div data-testid="slot-node">
+            <SubjectScopeProvider subjectId="b" fallback={<p>waiting</p>}>
+              <Probe />
+            </SubjectScopeProvider>
+          </div>
+        </PackProvider>
+      </StoreProvider>,
+    );
+
+    await waitFor(() => {
+      expect(within(screen.getByTestId('slot-node')).getByText(B_FAILED)).toBeTruthy();
+    });
+    expect(screen.getByTestId('slot-null').textContent).toBe('');
+    expect(screen.queryByText('waiting')).toBeNull();
   });
 });

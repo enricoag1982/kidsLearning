@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { JSX, SubmitEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { ChildOverview } from '@learn/platform-core';
+import type { ChildOverview, Profile } from '@learn/platform-core';
 import {
   buildChildOverview,
   changeParentPassword,
@@ -11,12 +11,13 @@ import {
 import { useAppUpdate } from '../app/app-update-context.ts';
 import type { Services } from '../app/services.ts';
 import { useAppStore, useServices } from '../app/store.ts';
+import { subjectDisplayName } from '../app/subject.ts';
 import { RankPill } from './RankPill.tsx';
 import { BackupScreen } from './parent/BackupPanel.tsx';
 import { ChildReportScreen } from './parent/ChildReport.tsx';
 import { ChildSettingsScreen } from './parent/ChildSettings.tsx';
 import { PrivacyScreen } from './parent/PrivacyScreen.tsx';
-import { SubjectTexts, subjectDisplayName } from './parent/subject-scope.tsx';
+import { SubjectTexts } from './parent/subject-scope.tsx';
 import {
   PARENT_INPUT,
   PARENT_NOTE,
@@ -131,69 +132,84 @@ function RefreshBlock(): JSX.Element {
   );
 }
 
-/** One subject's overview of a child, with the subject's own `Services` (its texts: rank names). */
-interface SubjectOverview {
-  readonly scope: Services;
-  readonly overview: ChildOverview;
-}
+/** One subject's overview of a child, with the subject's own `Services` (its texts: rank names); or, for a subject whose pack
+ * could not load, just its id (the card then shows the calm "could not be loaded" line in its place). */
+type SubjectOverview =
+  | { readonly subjectId: string; readonly scope: Services; readonly overview: ChildOverview }
+  | { readonly subjectId: string; readonly scope: null; readonly overview: null };
 
 /** One child's Overview card (app-structure.md §11): a tappable row (docs/screens.md §1) opening that child's report. With
- * several subjects, one line per subject (name, rank, stars); minutes and streak are the child's, once. */
+ * several subjects, one line per subject (name, rank, stars); minutes and streak are the child's, once (from the first subject
+ * that loaded; none when none did). A subject that failed to load gets its calm error line, the others show as usual. */
 function ChildOverviewCard({
+  profile,
   overviews,
   onOpen,
 }: {
+  readonly profile: Profile;
   readonly overviews: readonly SubjectOverview[];
   readonly onOpen: () => void;
 }): JSX.Element | null {
   const { t, i18n } = useTranslation();
-  const [first] = overviews;
-  if (!first) return null;
-  const { overview } = first;
+  const { app } = useServices();
+  const first = overviews.find((entry) => entry.overview !== null)?.overview ?? null;
   const several = overviews.length > 1;
   return (
     <li>
       <button type="button" onClick={onOpen} className={PARENT_TAPPABLE_ROW}>
         <AvatarBadge
-          avatar={overview.profile.avatar}
+          avatar={profile.avatar}
           className="h-11 w-11 flex-shrink-0 overflow-hidden rounded-full p-1.5"
         />
         <span className="flex flex-1 flex-col gap-1">
           <span className="flex items-center gap-2">
-            <span className="text-base font-extrabold text-ink">{overview.profile.nickname}</span>
-            {!several && <RankPill rank={overview.rank} compact />}
+            <span className="text-base font-extrabold text-ink">{profile.nickname}</span>
+            {!several && first && <RankPill rank={first.rank} compact />}
           </span>
           {several &&
-            overviews.map(({ scope, overview: own }) => {
-              const manifest = scope.app.subjects.find(
-                (entry) => entry.manifest.id === scope.subjectId,
+            overviews.map(({ subjectId, scope, overview: own }) => {
+              const manifest = app.subjects.find(
+                (entry) => entry.manifest.id === subjectId,
               )?.manifest;
-              return (
-                <SubjectTexts key={scope.subjectId} scope={scope}>
+              const name = manifest ? subjectDisplayName(manifest, i18n.language) : subjectId;
+              if (scope === null) {
+                return (
                   <span
-                    data-testid={`overview-subject-${scope.subjectId}`}
+                    key={subjectId}
+                    data-testid={`overview-subject-${subjectId}`}
+                    role="status"
+                    className="text-xs font-bold text-[#8C4012]"
+                  >
+                    {t('subjects.load-failed', { name })}
+                  </span>
+                );
+              }
+              return (
+                <SubjectTexts key={subjectId} scope={scope}>
+                  <span
+                    data-testid={`overview-subject-${subjectId}`}
                     className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-muted"
                   >
-                    <span className="font-bold text-ink">
-                      {manifest ? subjectDisplayName(manifest, i18n.language) : scope.subjectId}
-                    </span>
+                    <span className="font-bold text-ink">{name}</span>
                     <RankPill rank={own.rank} compact />
                     <span>{t('parent.stars-total', { count: own.totalStars })}</span>
                   </span>
                 </SubjectTexts>
               );
             })}
-          <span className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-muted">
-            {!several && <span>{t('parent.stars-total', { count: overview.totalStars })}</span>}
-            <span>
-              {t('parent.overview.minutes-today', { count: overview.minutesToday })}
-              {' · '}
-              {t('parent.overview.minutes-7-days', { count: overview.minutesLast7Days })}
+          {first && (
+            <span className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-muted">
+              {!several && <span>{t('parent.stars-total', { count: first.totalStars })}</span>}
+              <span>
+                {t('parent.overview.minutes-today', { count: first.minutesToday })}
+                {' · '}
+                {t('parent.overview.minutes-7-days', { count: first.minutesLast7Days })}
+              </span>
+              {first.streakCurrent >= 2 && (
+                <span>{t('parent.overview.streak', { count: first.streakCurrent })}</span>
+              )}
             </span>
-            {overview.streakCurrent >= 2 && (
-              <span>{t('parent.overview.streak', { count: overview.streakCurrent })}</span>
-            )}
-          </span>
+          )}
         </span>
         <ChevronRightIcon />
       </button>
@@ -222,25 +238,38 @@ export function ParentAreaScreen(): JSX.Element {
 
   // Re-fetches on every return to `'overview'`, not only when `profiles` changes: a child's stats
   // can change (reset, an import) without the `profiles` array reference changing. With several subjects every subject
-  // is activated (its pack loads once) and each child's overview is built from its scoped deps.
+  // is activated (its pack loads once) and each child's overview is built from its scoped deps; a pack that fails to load
+  // does not stop the others (its entry has no scope: the card shows the calm error line for it).
   const { value: overviews = {} } = useAsync(
     async () => {
-      const scopes: readonly Services[] =
+      const scopes: readonly { readonly subjectId: string; readonly scope: Services | null }[] =
         services.app.subjects.length > 1
           ? await Promise.all(
-              services.app.subjects.map((entry) => services.app.activate(entry.manifest.id)),
+              services.app.subjects.map(async (entry) => {
+                const subjectId = entry.manifest.id;
+                try {
+                  return { subjectId, scope: await services.app.activate(subjectId) };
+                } catch {
+                  return { subjectId, scope: null };
+                }
+              }),
             )
-          : [services];
+          : [{ subjectId: services.subjectId, scope: services }];
       const entries = await Promise.all(
         profiles.map(
           async (profile) =>
             [
               profile.id,
               await Promise.all(
-                scopes.map(async (scope): Promise<SubjectOverview> => ({
-                  scope,
-                  overview: await buildChildOverview(scope.deps, profile.id),
-                })),
+                scopes.map(async ({ subjectId, scope }): Promise<SubjectOverview> =>
+                  scope === null
+                    ? { subjectId, scope, overview: null }
+                    : {
+                        subjectId,
+                        scope,
+                        overview: await buildChildOverview(scope.deps, profile.id),
+                      },
+                ),
               ),
             ] as const,
         ),
@@ -285,6 +314,7 @@ export function ParentAreaScreen(): JSX.Element {
                   return childOverviews ? (
                     <ChildOverviewCard
                       key={profile.id}
+                      profile={profile}
                       overviews={childOverviews}
                       onOpen={() => {
                         setView({ kind: 'report', profileId: profile.id });

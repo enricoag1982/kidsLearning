@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import type { CSSProperties, JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAppStore, useServices } from '../app/store.ts';
+import { subjectDisplayName } from '../app/subject.ts';
 import type { SubjectWebManifest } from '../app/subject.ts';
 import { avatarName } from '../content-text.ts';
 import { AvatarBadge } from './ds/AvatarBadge.tsx';
@@ -11,16 +12,19 @@ import { CheckIcon, SwitchPlayerIcon } from './ds/icons.tsx';
 import { tapClass } from './ds/tap.ts';
 
 /** One subject's tile: its picture in a white circle over a coloured name, like a Home tile (docs/screens.md §1); the profile's
- * current (last opened) subject has a ring and a check mark, and `aria-current`. The accessible name is the subject's name. */
+ * current (last opened) subject has a ring and a check mark, and `aria-current`. The accessible name is the subject's name. A
+ * subject whose pack could not load (`unavailable`) is a disabled tile (dashed edge, no ledge, muted: `.tap-raised:disabled`). */
 function SubjectTile({
   manifest,
   name,
   active,
+  unavailable,
   onSelect,
 }: {
   readonly manifest: SubjectWebManifest;
   readonly name: string;
   readonly active: boolean;
+  readonly unavailable: boolean;
   readonly onSelect: () => void;
 }): JSX.Element {
   const { bg, fg, ledge } = manifest.colors;
@@ -29,6 +33,7 @@ function SubjectTile({
       type="button"
       data-testid={`subject-tile-${manifest.id}`}
       aria-current={active ? 'true' : undefined}
+      disabled={unavailable}
       onClick={onSelect}
       style={
         {
@@ -42,7 +47,7 @@ function SubjectTile({
       className={tapClass(
         'custom',
         'none',
-        'relative flex min-h-48 w-40 flex-col items-center justify-center gap-3 rounded-[2rem] px-3 py-5 sm:min-h-56 sm:w-52',
+        `relative flex min-h-48 w-40 flex-col items-center justify-center gap-3 rounded-[2rem] px-3 py-5 sm:min-h-56 sm:w-52${unavailable ? ' opacity-60' : ''}`,
       )}
     >
       {active && (
@@ -60,7 +65,8 @@ function SubjectTile({
 
 /** The subjects hub (multi-subject.md D9): after the profile select with several subjects, and from Home's "Subjects" button.
  * One big tile per registered subject, the profile's last opened one marked (none for a profile that has not opened any); a tap
- * makes it the active subject and opens its Home. */
+ * makes it the active subject and opens its Home. A pack that cannot load does not break the screen: that tile turns disabled and
+ * the Owl says "{{name}} could not be loaded. Close the app and try again." (the other subjects stay usable). */
 export function SubjectsScreen(): JSX.Element {
   const { t, i18n } = useTranslation();
   const services = useServices();
@@ -69,11 +75,14 @@ export function SubjectsScreen(): JSX.Element {
   const selectSubject = useAppStore((state) => state.selectSubject);
   const goToPicker = useAppStore((state) => state.goToPicker);
   const selecting = useRef(false);
-  const [failure, setFailure] = useState<Error | null>(null);
+  /** Subjects whose pack failed to load this session, in order; a later tap is never offered (the line says to restart). */
+  const [unavailable, setUnavailable] = useState<readonly string[]>([]);
 
-  // A pack that cannot load (a missing chunk) reaches `AppErrorBoundary` rather than leaving the tile dead.
-  if (failure !== null) throw failure;
   if (!profile) return <BlankScreen />;
+
+  const lastFailed = services.app.subjects.find(
+    ({ manifest }) => manifest.id === unavailable[unavailable.length - 1],
+  )?.manifest;
 
   const select = (id: string): void => {
     if (selecting.current) return;
@@ -82,9 +91,9 @@ export function SubjectsScreen(): JSX.Element {
       () => {
         selecting.current = false;
       },
-      (error: unknown) => {
+      () => {
         selecting.current = false;
-        setFailure(error instanceof Error ? error : new Error(String(error)));
+        setUnavailable((ids) => (ids.includes(id) ? ids : [...ids, id]));
       },
     );
   };
@@ -112,7 +121,14 @@ export function SubjectsScreen(): JSX.Element {
         </RoundIconButton>
       </div>
 
-      <NarratedBubble text={t('subjects.owl-line')} layout="row" />
+      <NarratedBubble
+        text={
+          lastFailed === undefined
+            ? t('subjects.owl-line')
+            : t('subjects.load-failed', { name: subjectDisplayName(lastFailed, i18n.language) })
+        }
+        layout="row"
+      />
 
       {/* Two tiles per row on a phone and a portrait tablet, four in one row from 1024 px: four subjects fit without scrolling. */}
       <div className="grid flex-1 grid-cols-[repeat(2,auto)] content-center justify-center gap-4 sm:gap-6 lg:grid-cols-[repeat(4,auto)]">
@@ -120,8 +136,9 @@ export function SubjectsScreen(): JSX.Element {
           <SubjectTile
             key={manifest.id}
             manifest={manifest}
-            name={manifest.names[i18n.language] ?? manifest.names.en ?? manifest.id}
+            name={subjectDisplayName(manifest, i18n.language)}
             active={manifest.id === lastSubjectId}
+            unavailable={unavailable.includes(manifest.id)}
             onSelect={() => {
               select(manifest.id);
             }}

@@ -6,16 +6,9 @@ import { I18nextProvider, useTranslation } from 'react-i18next';
 import { i18nOptions } from '../../i18n-options.ts';
 import type { Services } from '../../app/services.ts';
 import { useServices } from '../../app/store.ts';
-import { PackProvider } from '../../app/subject.ts';
-import type { SubjectWebManifest } from '../../app/subject.ts';
+import { PackProvider, subjectDisplayName } from '../../app/subject.ts';
 import { PARENT_CHIP, PARENT_CHIP_SELECTED } from '../ds/parent-styles-lazy.ts';
-import { PARENT_INFO_PANEL } from './parent-styles.ts';
-
-/** A subject's display name in `language`, else English, else its id (the hub tile's rule). */
-// eslint-disable-next-line react-refresh/only-export-components -- shared with the Overview card
-export function subjectDisplayName(manifest: SubjectWebManifest, language: string): string {
-  return manifest.names[language] ?? manifest.names.en ?? manifest.id;
-}
+import { PARENT_INFO_PANEL, PARENT_NOTE } from './parent-styles.ts';
 
 /** `scope`'s own texts (its merged bundle: platform + subject keys) for `children`. The i18n instance holds only the active
  * subject's bundle (`setSubjectLocales`), so another subject's content keys (world and lesson titles, rank names, …) need an instance
@@ -54,23 +47,25 @@ const ScopeContext = createContext<Services | null>(null);
 export interface SubjectScopeProviderProps {
   readonly subjectId: string;
   readonly children: ReactNode;
-  /** Shown while the subject's pack loads (default: the parent area's loading line). */
+  /** Shown while the subject's pack loads (default: the parent area's loading line). When it fails, the calm "could not be
+   * loaded" line shows instead, or nothing for `fallback={null}` (a slot that is fine empty). */
   readonly fallback?: ReactNode;
 }
 
 /** The subject a parent-area panel shows: an activated `Services` for `subjectId` (via `services.app.activate`, which loads the
  * pack once but does NOT change the app's active subject). The active subject needs no load. Below it `usePack()` is the scoped
- * pack and the texts are the scoped subject's. */
+ * pack and the texts are the scoped subject's. A pack that fails to load shows `subjects.load-failed` ("{{name}} could not be
+ * loaded. Close the app and try again.") instead of the panel: the rest of the parent area keeps working. */
 export function SubjectScopeProvider({
   subjectId,
   children,
   fallback,
 }: SubjectScopeProviderProps): JSX.Element {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const active = useServices();
   const isActive = subjectId === active.subjectId;
   const [loaded, setLoaded] = useState<Services | null>(null);
-  const [failure, setFailure] = useState<Error | null>(null);
+  const [failedId, setFailedId] = useState<string | null>(null);
 
   useEffect(() => {
     if (isActive) return;
@@ -79,29 +74,37 @@ export function SubjectScopeProvider({
       (services) => {
         if (!cancelled) setLoaded(services);
       },
-      (error: unknown) => {
-        if (!cancelled) setFailure(error instanceof Error ? error : new Error(String(error)));
+      () => {
+        if (!cancelled) setFailedId(subjectId);
       },
     );
     return () => {
       cancelled = true;
+      setFailedId(null);
     };
   }, [active.app, subjectId, isActive]);
 
-  // A pack that cannot load (a missing chunk) reaches `AppErrorBoundary` rather than leaving the panel empty.
-  if (failure !== null) throw failure;
+  const failed = !isActive && failedId === subjectId;
   const scope = isActive ? active : loaded?.subjectId === subjectId ? loaded : null;
   if (scope === null) {
+    if (!failed) {
+      return fallback === undefined ? (
+        <p role="status" className={PARENT_INFO_PANEL}>
+          {t('parent.report.loading')}
+        </p>
+      ) : (
+        <>{fallback}</>
+      );
+    }
+    // The line, except where the caller shows nothing at all (`fallback={null}`: a header slot).
+    if (fallback === null) return <></>;
+    const manifest = active.app.subjects.find((entry) => entry.manifest.id === subjectId)?.manifest;
     return (
-      <>
-        {fallback === undefined ? (
-          <p role="status" className={PARENT_INFO_PANEL}>
-            {t('parent.report.loading')}
-          </p>
-        ) : (
-          fallback
-        )}
-      </>
+      <p role="status" className={PARENT_NOTE}>
+        {t('subjects.load-failed', {
+          name: manifest ? subjectDisplayName(manifest, i18n.language) : subjectId,
+        })}
+      </p>
     );
   }
   return (

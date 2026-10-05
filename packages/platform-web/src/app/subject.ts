@@ -135,6 +135,11 @@ export interface SubjectWebManifest extends SubjectManifest {
   readonly colors: HomeTileColors;
 }
 
+/** A subject's display name in `language`, else English, else its id: the hub tile's name and the parent area's subject chips and lines. */
+export function subjectDisplayName(manifest: SubjectWebManifest, language: string): string {
+  return manifest.names[language] ?? manifest.names.en ?? manifest.id;
+}
+
 /** A loaded subject: the pack and its texts. */
 export interface LoadedSubject {
   readonly pack: SubjectWeb;

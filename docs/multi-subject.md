@@ -73,7 +73,7 @@ Rules: `docs/retrospective.md` §9 (≤ 3–4 commits per agent run, lead decide
 | # | Item | Notes |
 |---|---|---|
 | F1 | Import Chess for Kids progress without a file | Same origin (`enricoag1982.github.io`): read `chess-kids:` localStorage once on first run (not iOS home-screen apps: separate storage) |
-| F2 | Parent overview when a subject pack fails to load | Today an unhandled rejection; show the other subjects and an error line |
+| F2 | Parent overview when a subject pack fails to load | Today an unhandled rejection; show the other subjects and an error line — fixed in `m15.4` (`subjects.load-failed` line in the overview card, the report / settings panels and the hub: tile disabled, Owl says it) |
 | F3 | Placement decision not stored | Offered again on entering an untouched subject after a restart — fixed in `m15.4` (`PlacementDecision` per profile and subject, storage v7, backup + merge) |
 | F4 | Interim single-store configs | `CHESS_APP_CONFIG` `subjectStoragePrefix` only serves tests; drop when those tests use `KIDS_APP_CONFIG` (`MATH_APP_CONFIG` removed in `m13.5`) — fixed in `m15.4` (`CHESS_APP_CONFIG` deleted; tests use `KIDS_TEST_APP_CONFIG`) |
 | F5 | Card-kit Hint button | 56 px like the shared controls; every other card target ≥ 64 px — fixed in `m15.2` |
