@@ -116,6 +116,7 @@ Layers and boundary lint: [architecture.md](architecture.md) §3 (platform never
 ## 5. Checklist before shipping
 
 - [ ] Content review rule (CLAUDE.md): each question checked against its card, exactly one reading leads to the accepted answer, no distractor items; log it as a check in [validation.md](validation.md)
+- [ ] `apps/kids-learning/src/i18next.d.ts`: add `typeof <id>En` (`@learn/subject-<id>/dist/locales/en.json`) to `resources`, so the pack's own UI keys typecheck in the app (missed for Logic until `m14.8`)
 - [ ] Nothing else to register: the size check, `pnpm voice:check` and `pnpm voice:generate` read the subjects from `apps/kids-learning/package.json` (`scripts/app-subjects.ts`; the content export must be named `<camelId>Content`, as the scaffold does)
 - [ ] `pnpm voice:generate`, then `pnpm voice:check` green (without audio the device voice speaks)
 - [ ] `pnpm size`: entry ≤ 135 KB, subject chunk `<id>-loaded-*.js` ≤ 70 KB gzip

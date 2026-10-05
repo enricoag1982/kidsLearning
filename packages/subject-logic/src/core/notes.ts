@@ -1,4 +1,4 @@
-// The Owl bubble's feedback note as data: logic's own feedback kinds (`grid-wrong`) and the wording of the `grid-fill` hints, added to the
+// The Owl bubble's feedback note as data: logic's own feedback kinds (`grid-wrong`, `tap-first`) and the wording of the `grid-fill` hints, added to the
 // card kit's table (`createCardCore({ notes })`). Texts: `grid.wrong.*` / `grid.hint.*` in `content/locales/en/common.yaml`, worded by
 // technique only: no numbers, no coordinates (docs/subjects/logic/plan.md L6).
 import type { CardHint } from '@learn/platform-core/domain/exercise/kinds/cards/def';
@@ -9,6 +9,8 @@ import { CROSS_LEVEL, type CrossTechnique, type UnitKind } from './puzzles/index
 
 export type LogicFeedback =
   | { readonly kind: 'instruction' }
+  /** grid-fill: a number was pressed with no cell selected (the session's `tap-first`). */
+  | { readonly kind: 'tap-first' }
   /** grid-fill: an entry was rejected; `conflict` = the kind of the unit that already shows why (a sudoku's row, column or box; a
    * picture's row or column), none = nothing on the grid shows it. */
   | {
@@ -22,7 +24,7 @@ export type LogicFeedback =
 /** The hints of logic's own kinds, and the card kit's. */
 export type LogicHintPayload = CardHint | GridFillHint;
 
-type OwnNoteKind = 'grid-wrong';
+type OwnNoteKind = 'grid-wrong' | 'tap-first';
 
 type NoteFeedback<K extends OwnNoteKind | 'hint'> = Extract<LogicFeedback, { readonly kind: K }>;
 
@@ -90,6 +92,8 @@ export function logicHintText(r: Resolve, hint: LogicHintPayload): string {
 }
 
 export const LOGIC_NOTES = {
+  // Not an error kind: no easier-variant offer.
+  'tap-first': { tone: 'attention', text: (r) => r('grid.pick-cell') },
   'grid-wrong': {
     tone: 'attention',
     error: true,

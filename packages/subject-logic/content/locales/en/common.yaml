@@ -24,6 +24,8 @@ topic:
 # Grid puzzles (kind `grid-fill`): the instruction under each puzzle and what the Owl says about it. Worded by technique only: no numbers
 # and no coordinates (docs/subjects/logic/plan.md L6).
 grid:
+  # The note under a number pressed with no cell selected (the one `grid-fill` note that is not an error).
+  pick-cell: Tap a cell first.
   instruction:
     sudoku: 'Fill the grid: each row, column and box has every number once.'
     cross: Fill the cells to match the clues. Find the picture!
@@ -50,3 +52,15 @@ grid:
     cross-out: This line has all its filled cells. Cross out the rest.
     combine: Use the fills and crosses from the other lines.
     show: 'Watch: here it goes.'
+  # What the play area shows and names (never spoken): the board, the number pad, the Notes toggle and the picture tools.
+  board:
+    sudoku: 'Sudoku, {{size}} by {{size}}'
+    cross: 'Picture cross, {{size}} by {{size}}'
+  digits: Numbers
+  put: 'Put {{digit}}'
+  note: 'Note {{digit}}'
+  notes: Notes
+  tool: Tool
+  fill: Fill
+  cross: Cross
+  reveal: Picture revealed

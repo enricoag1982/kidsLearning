@@ -45,7 +45,7 @@ const CROSS_TECHNIQUES: readonly CrossTechnique[] = [
 
 describe('logic notes', () => {
   it('are the card kit notes plus logic’s own, in the core', () => {
-    expect(Object.keys(LOGIC_NOTES).sort()).toEqual(['grid-wrong', 'hint']);
+    expect(Object.keys(LOGIC_NOTES).sort()).toEqual(['grid-wrong', 'hint', 'tap-first']);
     expect(Object.keys(logicCore.notes).sort()).toEqual(
       [...new Set([...Object.keys(CARD_NOTES), ...Object.keys(LOGIC_NOTES)])].sort(),
     );
@@ -99,6 +99,13 @@ describe('logic notes', () => {
     expect(wrong()).toBe('grid.wrong.cross-plain');
   });
 
+  it('a number pressed with no cell selected says to tap a cell first: an attention note, no easier offer', () => {
+    expect(note({ kind: 'tap-first' })).toEqual({ tone: 'attention', text: 'grid.pick-cell' });
+    expect(note({ kind: 'tap-first' }, true)?.text).toBe('grid.pick-cell');
+    expect(logicCore.notes['tap-first']?.error).toBeUndefined();
+    expect(english('grid.pick-cell')).toBe('Tap a cell first.');
+  });
+
   it('a rejected entry is an error note: the easier offer follows it', () => {
     expect(logicCore.notes['grid-wrong']?.error).toBe(true);
     expect(note({ kind: 'grid-wrong', puzzle: 'sudoku', conflict: 'box' }, true)?.text).toBe(
@@ -143,6 +150,7 @@ describe('logic notes', () => {
     const keys = [
       'grid.instruction.sudoku',
       'grid.instruction.cross',
+      'grid.pick-cell',
       'grid.wrong.row',
       'grid.wrong.column',
       'grid.wrong.box',
@@ -183,6 +191,13 @@ describe('logic notes', () => {
         );
       }
     }
+    exerciseNote(
+      spy,
+      { kind: 'tap-first' },
+      { name: '', stars: 3, vars: {} },
+      logicCore.notes,
+      false,
+    );
     for (const technique of [...SUDOKU_TECHNIQUES, ...CROSS_TECHNIQUES]) {
       for (const level of [1, 2, 3] as const) {
         logicHintText(spy, hint({ level, technique, units: [{ kind: 'row', index: 0 }] }));

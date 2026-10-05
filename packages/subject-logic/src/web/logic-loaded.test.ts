@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { CARD_KIND_UI } from '@learn/platform-web/kinds/cards/ui-registry.ts';
 import { logicEntry } from '../entry.ts';
+import { gridFillUi } from '../kinds/grid-fill/ui.ts';
 import { LOGIC_KIND_UI } from './kinds/ui-registry.ts';
 import { logicWeb } from './logic-pack.ts';
 
@@ -41,15 +42,12 @@ describe('logicEntry.load', () => {
     }
     expect(Object.keys(pack.kinds).sort()).toEqual([
       'choice',
+      'grid-fill',
       'number-entry',
       'order',
       'true-false',
     ]);
-    // One UI per core kind, but `grid-fill`: its UI (and no shipped lesson uses it) comes with m14.8.
-    expect(Object.keys(pack.kinds).sort()).toEqual(
-      Object.keys(pack.core.kinds)
-        .filter((type) => type !== 'grid-fill')
-        .sort(),
-    );
+    expect(pack.kinds['grid-fill']).toBe(gridFillUi);
+    expect(Object.keys(pack.kinds).sort()).toEqual(Object.keys(pack.core.kinds).sort());
   });
 });
