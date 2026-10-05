@@ -20,6 +20,14 @@
      "habitat": "ocean",
      "titleKey": "journey:worlds.sort-shore",
      "boss": "sorting-sprint"
+    },
+    {
+     "id": "grid-puzzles",
+     "track": "puzzles",
+     "order": 3,
+     "habitat": "jungle",
+     "titleKey": "journey:worlds.grid-puzzles",
+     "boss": "sudoku-sprint"
     }
    ]
   }
@@ -36,6 +44,10 @@
   {
    "id": "sorter",
    "after": "world:sort-shore"
+  },
+  {
+   "id": "solver",
+   "after": "world:grid-puzzles"
   }
  ]
 }

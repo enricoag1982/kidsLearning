@@ -582,6 +582,7 @@
    "savannah": "Savannah"
   },
   "ranks": {
+   "solver": "Puzzle Solver",
    "sorter": "Shore Sorter",
    "spotter": "Pattern Spotter",
    "thinker": "Thinker"
@@ -619,6 +620,7 @@
    "world-stars": "{{earned}} of {{max}} stars"
   },
   "worlds": {
+   "grid-puzzles": "Grid Puzzles",
    "pattern-pond": "Pattern Pond",
    "sort-shore": "Sort Shore"
   }
@@ -737,6 +739,27 @@
    "grow-plus2-1": {
     "text": "Which picture comes next?"
    },
+   "last-4-1": {
+    "text": "Fill the grid. Look for a row, column or box with one empty cell."
+   },
+   "last-5-1": {
+    "text": "Fill the grid. Look for a row, column or box with one empty cell."
+   },
+   "last-6a-1": {
+    "text": "Fill the grid. Look for a row, column or box with one empty cell."
+   },
+   "last-6b-1": {
+    "text": "Fill the grid. Look for a row, column or box with one empty cell."
+   },
+   "last-easy-1": {
+    "text": "Fill the grid. Look for a row, column or box with one empty cell."
+   },
+   "last-g-box-1": {
+    "text": "Which number goes in the ringed cell?"
+   },
+   "last-g-row-1": {
+    "text": "Which number goes in the ringed cell?"
+   },
    "lu-count-5-1": {
     "text": "Put them in order, fewest first."
    },
@@ -751,6 +774,27 @@
    },
    "lu-size-5-1": {
     "text": "Put them in order, smallest first."
+   },
+   "num-10a-1": {
+    "text": "Fill the grid. For each empty cell, find the only number left."
+   },
+   "num-10b-1": {
+    "text": "Fill the grid. For each empty cell, find the only number left."
+   },
+   "num-8-1": {
+    "text": "Fill the grid. For each empty cell, find the only number left."
+   },
+   "num-9-1": {
+    "text": "Fill the grid. For each empty cell, find the only number left."
+   },
+   "num-easy-1": {
+    "text": "Fill the grid. For each empty cell, find the only number left."
+   },
+   "num-g1-1": {
+    "text": "Which number goes in the ringed cell?"
+   },
+   "num-g2-1": {
+    "text": "Which number goes in the ringed cell?"
    },
    "odd-colour-1": {
     "text": "Which one is different?"
@@ -778,6 +822,27 @@
    },
    "odd-size-1": {
     "text": "Which one is different?"
+   },
+   "place-6-1": {
+    "text": "Fill the grid. For each number, find the only place it can go in a box."
+   },
+   "place-7-1": {
+    "text": "Fill the grid. For each number, find the only place it can go in a box."
+   },
+   "place-8a-1": {
+    "text": "Fill the grid. For each number, find the only place it can go in a box."
+   },
+   "place-8b-1": {
+    "text": "Fill the grid. For each number, find the only place it can go in a box."
+   },
+   "place-easy-1": {
+    "text": "Fill the grid. For each number, find the only place it can go in a box."
+   },
+   "place-g1-1": {
+    "text": "Which number goes in the ringed cell?"
+   },
+   "place-g2-1": {
+    "text": "Which number goes in the ringed cell?"
    },
    "rep-aab-1": {
     "text": "What comes next?"
@@ -833,17 +898,53 @@
    "rule-size-1": {
     "text": "What is the same about all of them?"
    },
+   "six-10-1": {
+    "text": "Fill the big grid: each row, column and box has 1 to 6 once."
+   },
+   "six-12-1": {
+    "text": "Fill the big grid: each row, column and box has 1 to 6 once."
+   },
+   "six-14-1": {
+    "text": "Fill the big grid: each row, column and box has 1 to 6 once."
+   },
+   "six-16-1": {
+    "text": "Fill the big grid: each row, column and box has 1 to 6 once."
+   },
+   "six-easy-1": {
+    "text": "Fill the big grid: each row, column and box has 1 to 6 once."
+   },
+   "six-g1-1": {
+    "text": "Which number goes in the ringed cell?"
+   },
+   "six-g2-1": {
+    "text": "Which number goes in the ringed cell?"
+   },
    "sprint-boxes-1": {
     "text": "Put each card in its box."
    },
    "sprint-carroll-1": {
     "text": "Look at both rules. Where does each card go?"
    },
+   "sprint-last-1": {
+    "text": "Fill the grid. Look for a row, column or box with one empty cell."
+   },
+   "sprint-number-1": {
+    "text": "Fill the grid. For each empty cell, find the only number left."
+   },
    "sprint-odd-1": {
     "text": "Which one is different?"
    },
+   "sprint-place-1": {
+    "text": "Fill the grid. For each number, find the only place it can go in a box."
+   },
    "sprint-rule-1": {
     "text": "What is the same about all of them?"
+   },
+   "sprint-six10-1": {
+    "text": "Fill the big grid: each row, column and box has 1 to 6 once."
+   },
+   "sprint-six8-1": {
+    "text": "Fill the big grid: each row, column and box has 1 to 6 once."
    },
    "sprint-venn-1": {
     "text": "Where does each card go? The middle fits both."
@@ -921,6 +1022,31 @@
     "text": "Where does each card go? The middle fits both."
    }
   },
+  "grd-last": {
+   "demo": "This row has 1, 2 and 4. The missing number is 3.",
+   "story": "Pip has a number grid. The rule: each row, column and box has every number once. If only one cell is empty, which number is missing?",
+   "title": "Last empty cell"
+  },
+  "grd-only-number": {
+   "demo": "Its row has 1, its column has 2 and 4. Only 3 is left.",
+   "story": "Now pick one empty cell. Which numbers are already in its row, its column and its box? Cross them out. The number left is the answer.",
+   "title": "Only number"
+  },
+  "grd-only-place": {
+   "demo": "The 3s in these rows block two cells. Only one cell in the box can take the 3.",
+   "story": "Sometimes a number fits in only one place. Pick a box and a number. Cross out every cell that already sees that number. One cell is left!",
+   "title": "Only place"
+  },
+  "grd-pixels": {
+   "demo": "A 5 in a row of five: fill them all. A 0: cross them all out.",
+   "story": "Picture cross! The numbers say how many cells in a line are filled, in groups. Fill the cells you are sure of, cross out the empty ones, and a picture appears.",
+   "title": "Picture cross"
+  },
+  "grd-six": {
+   "demo": "This box already has 1, 2, 4, 5 and 6. The empty cell gets 3.",
+   "story": "A bigger grid! Six numbers, and each box has two rows of three. The same tricks still work.",
+   "title": "Six by six"
+  },
   "lu-order": "The cat is bigger than the mouse. The dog is bigger than the cat. Put them in order, smallest first.",
   "lu-shortest": "The giraffe is taller than the horse. The horse is taller than the dog. Who is the shortest?",
   "lu-tallest": "The bear is taller than the fox. The fox is taller than the rabbit. Who is the tallest?",
@@ -952,6 +1078,10 @@
   "sorting-sprint": {
    "goal": "Help Pip sort the shells!",
    "title": "Sorting Sprint"
+  },
+  "sudoku-sprint": {
+   "goal": "Fill the grids, step by step!",
+   "title": "Sudoku Sprint"
   },
   "templates": {
    "carroll": "Look at both rules. Where does each card go?",
@@ -1039,6 +1169,11 @@
     "size-medium": "They are all medium.",
     "size-tiny": "They are all tiny."
    },
+   "sdk-guided": "Which number goes in the ringed cell?",
+   "sdk-last": "Fill the grid. Look for a row, column or box with one empty cell.",
+   "sdk-number": "Fill the grid. For each empty cell, find the only number left.",
+   "sdk-place": "Fill the grid. For each number, find the only place it can go in a box.",
+   "sdk-six": "Fill the big grid: each row, column and box has 1 to 6 once.",
    "sort-boxes": "Put each card in its box.",
    "step-next": "What number comes next?",
    "step-rule": "Which rule makes these numbers?",
@@ -1050,6 +1185,10 @@
    "pattern-spotter": {
     "condition": "Master Pattern Pond and beat Pattern Train",
     "name": "Pattern Spotter"
+   },
+   "puzzle-solver": {
+    "condition": "Master Grid Puzzles and beat Sudoku Sprint",
+    "name": "Puzzle Solver"
    },
    "shore-sorter": {
     "condition": "Master Sort Shore and beat Sorting Sprint",

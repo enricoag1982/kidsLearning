@@ -26,6 +26,19 @@
   }
  },
  {
+  "id": "puzzle-solver",
+  "category": "milestone",
+  "nameKey": "rewards:badges.puzzle-solver.name",
+  "conditionKey": "rewards:badges.puzzle-solver.condition",
+  "condition": {
+   "type": "mastered",
+   "thresholds": [
+    1
+   ],
+   "scope": "world:grid-puzzles"
+  }
+ },
+ {
   "id": "star-collector",
   "category": "skill",
   "nameKey": "rewards:badges.star-collector.name",

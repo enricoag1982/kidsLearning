@@ -46,6 +46,8 @@ Next versions: Mirror Meadow (spatial), Maze Mountain, Clue Cove (true / false, 
 | L7 | Nim / tic-tac-toe move to v1.4 (Plan Ahead); tic-tac-toe needs a draw-aware `duel` (game value win / draw / loss); one-pile Nim = Race to 20, so logic Nim uses two equal piles | scope |
 | L8 | `subject-logic` stays out of the app until W1 plays (`m14.9` registers it) | master deploys on every push |
 | L9 | Sudoku techniques are an allowed set per lesson, not a level hierarchy (`LESSON_TECHNIQUES`): last cell; last cell + only place; last cell + only number; 6 × 6 = last cell + only number. A generated puzzle uses the lesson's technique at least once and nothing outside its set (m14.6, 2026-10-04) | exhaustive check of all 4 × 4 grids × clue sets: when "only place" is allowed, "only number" is never needed (6 × 6: 1 in 200), so a level ladder cannot produce "only number" puzzles |
+| L10 | Picture-cross techniques by what the clue alone forces: `full-line` (the clue fixes the whole line) / `overlap` (the clue alone forces the new cells), whatever the line already holds; else `cross-out` (only crosses, all fills known) or `combine` (m14.11, 2026-10-05) | an exhaustive search of all 2^25 pictures found none at level 2 when "overlap" required an empty line; the child uses the clue alone either way |
+| L11 | "Only place" hints and guided targets look at boxes first (then rows, columns); the default solver order is unchanged (m14.11) | the lesson's story is about boxes; the first hint always fell on a row |
 
 Authored: stories, art, wording, transitive line-up items, the picture library.
 

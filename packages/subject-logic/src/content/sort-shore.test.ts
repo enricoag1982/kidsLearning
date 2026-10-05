@@ -1105,7 +1105,7 @@ describe('the world, its rank and its badge', () => {
         boss: 'sorting-sprint',
       }),
     );
-    expect(compiled.tracks.ranks.at(-1)).toEqual({ id: 'sorter', after: 'world:sort-shore' });
+    expect(compiled.tracks.ranks).toContainEqual({ id: 'sorter', after: 'world:sort-shore' });
     const en = locales.en as Record<string, Record<string, unknown>> | undefined;
     expect(en?.journey).toMatchObject({
       worlds: { 'sort-shore': 'Sort Shore' },
