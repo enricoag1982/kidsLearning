@@ -2,7 +2,9 @@ name: Tag
 
 # Annotated tag per merged iteration. Squash title `M<N>.<i>: …` → tag `m<N>.<i>`; message = the
 # tag's row in docs/validation.md. A row for `m<N>` in the same commit also tags the milestone.
-# Manual run (tag + ref) backfills a tag on an earlier commit.
+# Manual run (tag + ref) backfills a tag on an earlier commit; its row is read from the log on master
+# (it may be newer than the commit), the last row with that tag winning (the inherited Chess for Kids
+# `v1.0.0` / `v1.1.0` rows come first).
 on:
   push:
     branches: [master]
@@ -43,14 +45,16 @@ jobs:
 
           if [ -n "$INPUT_TAG" ]; then
             tags="$INPUT_TAG"
+            log=$(git show origin/master:docs/validation.md)
           else
             iteration=$(printf '%s\n' "$TITLE" | head -n 1 | sed -nE 's/^M([0-9]+)\.([0-9]+):.*/m\1.\2/p')
             [ -n "$iteration" ] || { echo "Title is not 'M<N>.<i>: …': no tag."; exit 0; }
             tags="$iteration ${iteration%%.*}"
+            log=$(cat docs/validation.md)
           fi
 
           for tag in $tags; do
-            row=$(grep -F "| \`$tag\` |" docs/validation.md || true)
+            row=$(printf '%s\n' "$log" | grep -F "| \`$tag\` |" | tail -n 1 || true)
             if [ -z "$row" ]; then
               if [ -z "$INPUT_TAG" ] && [ "$tag" = "${tag%%.*}" ]; then
                 echo "No milestone row for $tag: skipped."

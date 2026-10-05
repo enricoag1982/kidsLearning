@@ -23,8 +23,10 @@ Every merged iteration already gets an annotated tag from `.github/workflows/tag
 1. Merge the last M5 PR (squash title `M5.3: …`). CI creates `m5.3` and `m5` on the merge commit.
 2. Note the merge commit's full SHA (`git log master` or the merge PR page).
 3. `docs/validation.md` must already have a `v1.0.0` row (added in the release PR, pointing at the same commit as `m5`) — the tag workflow requires a row for whatever tag it creates, even on a manual run.
-4. GitHub UI → Actions → **Tag** → Run workflow → `tag: v1.0.0`, `ref: <merge commit SHA>` → Run. (A Claude session cannot push tags directly — HTTP 403 — so this step is always a manual workflow run, by the owner or a session with that permission.)
+4. GitHub UI → Actions → **Tag** → Run workflow → `tag: v1.0.0`, `ref: <merge commit SHA>` → Run. (A Claude session cannot push tags directly — HTTP 403 — so this step is always a manual workflow run: by the owner, or by a session through the GitHub API's `workflow_dispatch` once the owner says go.)
 5. Confirm the `v1.0.0` tag exists and points at the same commit as `m5`.
+
+kidsLearning (2026-10-05): a manual run reads the row from the log on `master`, so a release row can land after its commit; the last row with that tag wins, which keeps the inherited Chess for Kids `v1.0.0` / `v1.1.0` rows as history. Release tags sit on the milestone commit (`v1.0.0` = `m11`, `v1.1.0` = `m12`, `v1.2.0` = `m13`, `v1.3.0` = `m14`, `v1.3.1` = `m15`).
 
 ## 3. Rollback
 
