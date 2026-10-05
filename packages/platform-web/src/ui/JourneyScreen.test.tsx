@@ -112,3 +112,24 @@ describe('JourneyScreen world tabs', () => {
     }
   });
 });
+
+describe('JourneyScreen header', () => {
+  it('the world title wraps (balanced, never an ellipsis) and the habitat / stars line is one line', async () => {
+    const app = createAppServices([createCardTestEntry()], APP, createMemoryStorage());
+    const services = await app.activate('cards');
+    const profile = await createProfile(services.deps, 'Mia', 'fox');
+    await selectProfile(services.deps, profile.id);
+    await renderWithStore(<JourneyScreen />, services);
+    await screen.findAllByRole('button');
+
+    const title = screen.getByTestId('journey-world-title');
+    expect(title.textContent).toMatch(/^World 1 · /);
+    expect(title.className).toContain('text-balance');
+    expect(title.className).toContain('break-words');
+    expect(title.className).toContain('text-xl');
+    expect(title.className).not.toContain('truncate');
+    expect(title.className).not.toContain('whitespace-nowrap');
+    const meta = screen.getByTestId('journey-world-meta');
+    expect(meta.className).toContain('truncate');
+  });
+});
