@@ -6,9 +6,11 @@ describe('tapClass looks', () => {
   it('compact: a 56px game action that shares a row (icon + short label)', () => {
     const classes = tapClass('compact', 'neutral').split(' ');
     expect(classes).toEqual(
-      expect.arrayContaining(['tap-raised', 'h-14', 'min-w-14', 'flex-1', 'gap-2', 'text-base']),
+      expect.arrayContaining(['tap-raised', 'h-14', 'min-w-fit', 'flex-1', 'gap-2', 'text-base']),
     );
     expect(classes).not.toContain('h-16');
+    // Never squeezed below its content: a crowded row wraps instead (the old `min-w-14` cut a label's padding).
+    expect(classes).not.toContain('min-w-14');
   });
 
   it('compact takes a tone like every other look', () => {

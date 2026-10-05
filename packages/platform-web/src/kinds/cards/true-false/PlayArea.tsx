@@ -74,6 +74,7 @@ export function PlayArea({
           dispatch({ type: 'hint' });
         }}
         extras={actions}
+        size="large"
       />
       <div className="grid grid-cols-2 gap-3">
         {[true, false].map((value) => (

@@ -7,6 +7,7 @@ import type {
   ChoiceState,
 } from '@learn/platform-core/domain/exercise/kinds/choice/def';
 import { ExerciseControls } from '../ExerciseControls.tsx';
+import type { ControlsSize } from '../ExerciseControls.tsx';
 import { ExerciseFrame } from '../ExercisePlay.tsx';
 import type { ExerciseKindUI, PlayAreaProps } from '../kind-ui.ts';
 import { centredPanelBody, panelBody } from '../panel-body.tsx';
@@ -25,6 +26,8 @@ export interface ChoiceUiSpec<
    * options the whole exercise: full width, large tiles centred between the instruction and the Hint row. */
   stimulus(props: PlayAreaProps<D, S, AnswerChoiceAction, Extra>): JSX.Element | null;
   readonly look: ChoiceLook<D['options'][number]>;
+  /** The Hint row's button size; default `normal` (56 px). The card kit's choice passes `large`. */
+  readonly controlsSize?: ControlsSize;
 }
 
 /** The `choice` kind's UI: the stimulus beside a Hint button and the option tiles; without a stimulus the large tiles fill the
@@ -67,6 +70,7 @@ export function createChoiceUi<
             dispatch({ type: 'hint' });
           }}
           extras={actions}
+          {...(spec.controlsSize === undefined ? {} : { size: spec.controlsSize })}
         />
       );
       const options = (

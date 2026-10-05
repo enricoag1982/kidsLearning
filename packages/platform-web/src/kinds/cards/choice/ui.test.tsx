@@ -37,6 +37,9 @@ describe('card choice UI', () => {
     expect(screen.getByText('🍎🍎🍎').className).toContain('text-[96px]');
     expect(screen.getByText('Instruction')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Hint' })).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Hint' }).parentElement?.dataset.controlsSize).toBe(
+      'large',
+    );
     expect(screen.getAllByRole('button', { name: /^(2|3|Five)$/ })).toHaveLength(3);
   });
 

@@ -12,4 +12,5 @@ export const cardChoiceUi = createChoiceUi<CardChoiceDef, CardState<CardChoiceDe
   clearWrongUi: () => ({}),
   stimulus: CardStimulus,
   look: CARD_CHOICE_LOOK,
+  controlsSize: 'large',
 });
