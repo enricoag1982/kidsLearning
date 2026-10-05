@@ -1,7 +1,8 @@
 // bridge-add and count-up over 1 000 seeds per parameter set of curriculum §2: each item is solved again here from its card by the
-// bridge it teaches (up to the next ten, then the rest), and every `check` fails on a hand-broken item.
+// bridge it teaches (up to the next ten, then the rest), the card's number line is read back against the numbers (the start and the
+// next ten as dots, the ten after the total as the end, never the answer), and every `check` fails on a hand-broken item.
 import { describe, expect, it } from 'vitest';
-import type { NumberEntryItem } from './items.ts';
+import type { LineNumberEntryItem, NumberEntryItem } from './items.ts';
 import { checkIssues, draw, overSeeds, sample } from './testing.ts';
 
 const MINUS = '−';
@@ -17,7 +18,7 @@ const ADD_SETS = [
 describe('bridge-add', () => {
   describe.each(ADD_SETS)('ones sum $onesSum, max $max', (params) => {
     it('adds the second number by making a ten first, with the ones adding to the ones sum; one jump and one ten short are the off-by-one and off-by-ten reasons', () => {
-      const { problems, items } = overSeeds<NumberEntryItem>(
+      const { problems, items } = overSeeds<LineNumberEntryItem>(
         'bridge-add',
         params,
         ({ item, text }) => {
@@ -26,7 +27,21 @@ describe('bridge-add', () => {
           const toTen = 10 - (a % 10);
           const bridged = a + toTen + (b - toTen);
           const reasons = item.reasons ?? [];
+          const { line } = item.prompt;
           return [
+            // The picture: from the first number to the ten after the total, dots on the start and the next ten, a tick per number.
+            ...(line.from === a &&
+            line.to === (Math.floor(bridged / 10) + 1) * 10 &&
+            line.step === 1 &&
+            line.marks.join() === [a, a + toTen].join()
+              ? []
+              : [`${item.id}: line ${JSON.stringify(line)} for ${item.prompt.big}`]),
+            ...(!line.marks.includes(bridged) && line.to !== bridged && line.to > bridged
+              ? []
+              : [`${item.id}: the line shows the answer ${String(bridged)}`]),
+            ...(line.to - line.from >= 2 && line.to - line.from <= 20
+              ? []
+              : [`${item.id}: ${String(line.to - line.from)} gaps`]),
             ...(text === 'Make a ten first. What is the total?' ? [] : [`${item.id}: "${text}"`]),
             ...(card === null ? [`${item.id}: card "${item.prompt.big}"`] : []),
             ...(b >= 2 && b <= 9 && a % 10 >= 2
@@ -66,11 +81,11 @@ describe('bridge-add', () => {
   });
 
   it('is the curriculum example: 38 + 7 → 45, 44 is off-by-one, 35 is off-by-ten', () => {
-    const item: NumberEntryItem = {
+    const item: LineNumberEntryItem = {
       id: 'dr-1',
       type: 'number-entry',
       text: 'gen.dr-1.text',
-      prompt: { big: '38 + 7' },
+      prompt: { big: '38 + 7', line: { from: 38, to: 50, step: 1, marks: [38, 40] } },
       answer: 45,
       reasons: [
         { value: 44, text: 'bugs.off-by-one' },
@@ -105,10 +120,19 @@ describe('bridge-add', () => {
 
   describe('check', () => {
     const params = { onesSum: [11, 18], max: 100 };
-    const good = sample<NumberEntryItem>('bridge-add', params);
-    const at = (big: string, answer: number): NumberEntryItem => ({
+    const good = sample<LineNumberEntryItem>('bridge-add', params);
+    /** A hand-made item for `a + b`: its line from `a` to the ten after the total, dots on `a` and the next ten. */
+    const at = (big: string, answer: number): LineNumberEntryItem => ({
       ...good,
-      prompt: { big },
+      prompt: {
+        big,
+        line: {
+          from: Number(big.split(' ')[0]),
+          to: (Math.floor(answer / 10) + 1) * 10,
+          step: 1,
+          marks: [Number(big.split(' ')[0]), (Math.floor(Number(big.split(' ')[0]) / 10) + 1) * 10],
+        },
+      },
       answer,
       reasons: [
         { value: answer - 1, text: 'bugs.off-by-one' },
@@ -126,10 +150,33 @@ describe('bridge-add', () => {
         checkIssues('bridge-add', params, { ...good, answer: good.answer - 1 }).join(),
       ).toMatch(/is [0-9]+, not/);
       for (const big of ['38', `38 ${MINUS} 7`, '38 + 7 + 1', 'a + 7']) {
-        expect(checkIssues('bridge-add', params, { ...good, prompt: { big } }).join(), big).toMatch(
-          /cannot read the prompt/,
-        );
+        expect(
+          checkIssues('bridge-add', params, { ...good, prompt: { ...good.prompt, big } }).join(),
+          big,
+        ).toMatch(/cannot read the prompt/);
       }
+    });
+
+    it('reports a number line that does not match the card: no line, another end, a dot on the answer, a wrong or missing dot', () => {
+      const line = good.prompt.line;
+      const withLine = (next: Partial<typeof line> | undefined): string =>
+        checkIssues('bridge-add', params, {
+          ...good,
+          prompt: {
+            big: good.prompt.big,
+            ...(next === undefined ? {} : { line: { ...line, ...next } }),
+          },
+        }).join();
+      expect(withLine({})).toBe('');
+      expect(withLine(undefined)).toMatch(/has no number line/);
+      expect(withLine({ from: line.from - 1 })).toMatch(/number line/);
+      expect(withLine({ to: line.to + 10 })).toMatch(/number line/);
+      expect(withLine({ step: 2 })).toMatch(/number line/);
+      expect(withLine({ marks: [line.from] })).toMatch(/number line/);
+      expect(withLine({ marks: [...line.marks, line.from + 1] })).toMatch(/number line/);
+      // A dot on the answer, and an end on the answer, give the answer away.
+      expect(withLine({ marks: [...line.marks, good.answer] })).toMatch(/shows the answer/);
+      expect(withLine({ to: good.answer })).toMatch(/shows the answer/);
     });
 
     it('reports a sum that makes no bridge or breaks the params', () => {

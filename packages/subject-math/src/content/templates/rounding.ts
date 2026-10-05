@@ -1,6 +1,7 @@
-// W1 rounding templates (docs/subjects/math/curriculum.md §3): `round-ten` (pick the nearer ten), `round-hundred` (type the nearer
-// hundred), `round-tf` ("47 → 50": is that the nearest ten / hundred?). Exactly half-way goes up. Reasons: `truncate` (always rounding
-// down) and `five-down` (a half-way number rounded down). With `five: false` no number is half-way; `five: true` it always is.
+// W1 rounding templates (docs/subjects/math/curriculum.md §3): `round-ten` (pick the nearer ten; the card draws the number between its
+// two tens on a small number line), `round-hundred` (type the nearer hundred), `round-tf` ("47 → 50": is that the nearest ten / hundred?).
+// Exactly half-way goes up. Reasons: `truncate` (always rounding down) and `five-down` (a half-way number rounded down). With
+// `five: false` no number is half-way; `five: true` it always is.
 import { pick, randomInt } from '@learn/platform-core/domain/random';
 import type { ExerciseTemplate } from '@learn/platform-content/generate/template';
 import { z } from 'zod';
@@ -8,12 +9,13 @@ import { bugRef, floorTo, nearestTo, roundDownBug } from './bugs.ts';
 import { fail, sameEntries } from './draw.ts';
 import type {
   BigOption,
-  ChoiceItem,
+  LineChoiceItem,
   NumberEntryItem,
   TrueFalseItem,
   ValueReason,
 } from './items.ts';
 import { numeral, parseNumeral } from './numeral.ts';
+import { checkLine, wholeNumberLine } from './pictures.ts';
 
 const ARROW = '→';
 
@@ -44,8 +46,9 @@ const roundTenParams = z
 
 export type RoundTenParams = z.output<typeof roundTenParams>;
 
-/** Round 47 to the nearest ten: the card shows the number, the options the ten below and the ten above. */
-export const roundTen: ExerciseTemplate<RoundTenParams, ChoiceItem> = {
+/** Round 47 to the nearest ten: the card shows the number and a line from the ten below to the ten above with a dot at the number
+ * (never a hint at the answer: the dot sits where the number is), the options the ten below and the ten above. */
+export const roundTen: ExerciseTemplate<RoundTenParams, LineChoiceItem> = {
   params: roundTenParams,
   generate({ max, five }, ctx) {
     const lower = randomInt(ctx.random, 1, max / 10 - 1) * 10;
@@ -61,15 +64,15 @@ export const roundTen: ExerciseTemplate<RoundTenParams, ChoiceItem> = {
       id: ctx.id,
       type: 'choice',
       text: ctx.text('text', 'templates.round-ten', { n }),
-      prompt: { big: numeral(n) },
+      prompt: { big: numeral(n), line: wholeNumberLine(lower, lower + 10, [n]) },
       options: [down, { id: 'up', big: numeral(lower + 10) }],
       answer: answerUp ? 'up' : 'down',
     };
   },
   check(item, params, at) {
-    const n = parseNumeral(item.prompt?.big ?? '');
+    const n = parseNumeral(item.prompt.big);
     if (n === null) {
-      fail(at, `cannot read the prompt "${item.prompt?.big ?? ''}" as a number`);
+      fail(at, `cannot read the prompt "${item.prompt.big}" as a number`);
       return;
     }
     if (n % 10 === 0 || n < 11 || n >= params.max || (n % 10 === 5) !== params.five) {
@@ -91,6 +94,9 @@ export const roundTen: ExerciseTemplate<RoundTenParams, ChoiceItem> = {
     }
     if (high - low !== 10 || n < low || n > high) {
       fail(at, `${String(low)} and ${String(high)} are not the tens either side of ${String(n)}`);
+    } else {
+      // The picture is the same stretch, from the ten below to the ten above, with one dot where the number is.
+      checkLine(item.prompt.line, wholeNumberLine(low, high, [n]), at);
     }
     const nearest = nearestOf(n, 10);
     const right = item.options.filter((_option, index) => (index === 0 ? low : high) === nearest);

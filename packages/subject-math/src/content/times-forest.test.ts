@@ -65,7 +65,7 @@ const FROZEN: Readonly<Record<LessonId, Spec>> = {
     exercises: [
       'gr-total groups×2 @32 {"maxGroups":4,"maxSize":4}',
       'gr-big groups×1 @5 {"maxGroups":5,"maxSize":5} easier gr-easy-1',
-      'gr-sum groups-choice×2 @1 {"maxGroups":4,"maxSize":4}',
+      'gr-sum groups-choice×2 @1 {"maxGroups":4,"maxSize":4,"picture":false}',
       'gr-times fact×1 @6 {"tables":[2],"b":[3,10]}',
     ],
     variants: ['gr-easy groups×1 @7 {"maxGroups":3,"maxSize":3}'],
@@ -304,12 +304,18 @@ describe('the 6 lessons of World 3', () => {
 
   it('keep the CPA rule: pictures (groups, arrays) only among the first 4 scored items; the last 2 are symbols only', () => {
     const pictured = (def: MathExerciseDef): boolean =>
-      def.type === 'array' || def.prompt?.emoji !== undefined;
+      def.type === 'array' ||
+      def.prompt?.emoji !== undefined ||
+      def.prompt?.shapes !== undefined ||
+      def.prompt?.line !== undefined;
     for (const id of LESSON_IDS) {
       const scored = lessonOf(id).exercises;
       expect(scored.slice(-2).filter(pictured), id).toEqual([]);
     }
     expect(lessonOf('mt-groups').exercises.slice(0, 3).filter(pictured)).toHaveLength(3);
+    // The scored sums are symbols (`picture: false`: one entry makes both, the second is among the last 2); the guided one is drawn.
+    expect(lessonOf('mt-groups').exercises.slice(3, 5).filter(pictured)).toEqual([]);
+    expect(lessonOf('mt-groups').guided.filter(pictured)).toHaveLength(2);
     expect(lessonOf('mt-arrays').exercises.slice(0, 3).filter(pictured)).toHaveLength(3);
     for (const id of ['mt-2-5-10', 'mt-4-8', 'mt-3-6-9', 'mt-7-mixed'] as const) {
       expect(everyOf(lessonOf(id)).filter(pictured), id).toEqual([]);
@@ -528,10 +534,20 @@ describe('the content review of World 3: exactly one reading leads to the answer
       const [k, n] = groupsOf(def) ?? [0, 0];
       expect(english(def.textKey), where).toBe('How many in all?');
       expect(def.answer, where).toBe(product(n, k));
+      // The thing counted is drawn: k clusters of n shapes, one kind and colour, no emoji.
+      const drawn = def.prompt?.shapes ?? [];
+      expect(drawn, where).toHaveLength(k);
       expect(
-        Array.from(new Intl.Segmenter('en').segment(def.prompt?.emoji ?? '')),
+        drawn.every(
+          (cluster) =>
+            cluster !== 'gap' &&
+            cluster.count === n &&
+            cluster.kind === (drawn[0] === 'gap' ? '' : drawn[0]?.kind) &&
+            cluster.colour === (drawn[0] === 'gap' ? '' : drawn[0]?.colour),
+        ),
         where,
-      ).toHaveLength(1);
+      ).toBe(true);
+      expect(def.prompt?.emoji, where).toBeUndefined();
       expect(
         (def.reasons ?? []).map((reason) => [reason.value, reason.reasonKey]),
         where,

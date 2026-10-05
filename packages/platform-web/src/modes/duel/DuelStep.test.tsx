@@ -126,6 +126,18 @@ async function kidTurnAtFour(): Promise<Mounted> {
 }
 
 describe('the duel step', () => {
+  it('shows the game title once, as the step heading: as a lesson boss and played from the Play screen (no second copy in the top bar)', async () => {
+    await mount();
+    expect(screen.getAllByText('Take Away')).toHaveLength(1);
+    expect(screen.getByRole('heading', { name: 'Take Away', level: 2 })).toBeTruthy();
+    cleanup();
+    await mount({ standalone: true });
+    expect(screen.getAllByText('Take Away')).toHaveLength(1);
+    expect(screen.getByRole('heading', { name: 'Take Away', level: 2 })).toBeTruthy();
+    // The top bar keeps its close button.
+    expect(screen.getByRole('button', { name: 'Close' })).toBeTruthy();
+  });
+
   it("hands the board the bot's name as the banner shows it", async () => {
     await mount();
     expect(banner()).toBe("Fox's turn");

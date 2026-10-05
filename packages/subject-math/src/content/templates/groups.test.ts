@@ -1,8 +1,26 @@
 // `groups` and `groups-choice` over 1 000 seeds per parameter combination: each item is solved again here from its English sentence and
-// card, and every `check` fails on a hand-broken item.
+// card, the picture (k clusters of n shapes) is read back from the card's shape tokens, and every `check` fails on a hand-broken item.
 import { describe, expect, it } from 'vitest';
-import type { ChoiceItem, PictureNumberEntryItem } from './items.ts';
+import type { GroupCluster, GroupsChoiceItem, PictureNumberEntryItem } from './items.ts';
 import { checkIssues, draw, overSeeds, sample } from './testing.ts';
+
+/** `k` clusters of `n` red circles: a hand-made picture of "k groups of n". */
+const clustersOf = (k: number, n: number): GroupCluster[] =>
+  Array.from({ length: k }, () => ({ kind: 'circle', colour: 'red', count: n }));
+
+/** What the picture shows, read from the tokens alone: `[k, n]` when it is k clusters that all hold n, one kind and one colour. */
+function readPicture(shapes: readonly GroupCluster[]): readonly [number, number] | null {
+  const first = shapes[0];
+  return first !== undefined &&
+    shapes.every(
+      (cluster) =>
+        cluster.count === first.count &&
+        cluster.kind === first.kind &&
+        cluster.colour === first.colour,
+    )
+    ? [shapes.length, first.count]
+    : null;
+}
 
 describe('groups', () => {
   const combos = [
@@ -30,9 +48,14 @@ describe('groups', () => {
               : [
                   `${item.id}: ${item.prompt.big} is ${String(k * n)}, answer ${String(item.answer)}`,
                 ]),
-            ...(Array.from(new Intl.Segmenter('en').segment(item.prompt.emoji)).length === 1
+            ...(readPicture(item.prompt.shapes)?.join() === `${String(k)},${String(n)}`
               ? []
-              : [`${item.id}: emoji ${item.prompt.emoji}`]),
+              : [
+                  `${item.id}: the picture ${JSON.stringify(item.prompt.shapes)} is not ${item.prompt.big}`,
+                ]),
+            ...(Object.keys(item.prompt).join() === 'big,shapes' && !('emoji' in item.prompt)
+              ? []
+              : [`${item.id}: prompt fields ${Object.keys(item.prompt).join()}`]),
             ...(k + n === k * n
               ? reasons.length === 0
                 ? []
@@ -56,21 +79,51 @@ describe('groups', () => {
   });
 
   it('draws the same picture for the same numbers, so the expander tells a repeat', () => {
-    const emojiOf = (seed: number): string[] =>
+    const picturesOf = (seed: number): [string, string][] =>
       draw<PictureNumberEntryItem>('groups', { maxGroups: 4, maxSize: 4 }, seed, 12).drawn.map(
-        ({ item }) => `${item.prompt.big} ${item.prompt.emoji}`,
+        ({ item }) => [item.prompt.big, JSON.stringify(item.prompt.shapes)],
       );
-    const bigToEmoji = new Map<string, string>();
+    const bigToPicture = new Map<string, string>();
     for (let seed = 0; seed < 30; seed += 1) {
-      for (const line of emojiOf(seed)) {
-        const [big, emoji] = [
-          line.slice(0, line.lastIndexOf(' ')),
-          line.slice(line.lastIndexOf(' ') + 1),
-        ];
-        expect(bigToEmoji.get(big) ?? emoji, big).toBe(emoji);
-        bigToEmoji.set(big, emoji);
+      for (const [big, picture] of picturesOf(seed)) {
+        expect(bigToPicture.get(big) ?? picture, big).toBe(picture);
+        bigToPicture.set(big, picture);
       }
     }
+    expect(bigToPicture.size).toBe(3 * 3);
+  });
+
+  it('keeps every number of the entries it drew before the pictures (the same seed draws the same k and n)', () => {
+    // Drawn by the template before it drew pictures, with the seeds of the shipped lesson `mt-groups`.
+    const bigs = (params: unknown, seed: number, count: number): string[] =>
+      draw<PictureNumberEntryItem>('groups', params, seed, count).drawn.map(
+        ({ item }) => item.prompt.big,
+      );
+    expect(bigs({ maxGroups: 3, maxSize: 3 }, 1, 1)).toEqual(['3 groups of 2']);
+    expect(bigs({ maxGroups: 4, maxSize: 4 }, 32, 2)).toEqual(['3 groups of 4', '2 groups of 4']);
+    expect(bigs({ maxGroups: 5, maxSize: 5 }, 5, 1)).toEqual(['4 groups of 5']);
+  });
+
+  it('draws groups of up to 9 and up to 5 groups, every one inside the 8-token row, and keeps one kind and colour per item', () => {
+    const { problems, items } = overSeeds<PictureNumberEntryItem>(
+      'groups',
+      { maxGroups: 5, maxSize: 9 },
+      ({ item }) => {
+        const picture = readPicture(item.prompt.shapes);
+        return picture !== null && picture[0] <= 5 && picture[1] <= 9
+          ? []
+          : [`${item.id}: picture`];
+      },
+    );
+    expect(problems).toEqual([]);
+    const counts = new Set(items.flatMap(({ item }) => item.prompt.shapes.map((c) => c.count)));
+    expect([...counts].sort()).toEqual([2, 3, 4, 5, 6, 7, 8, 9]);
+    const looks = new Set(
+      items.map(
+        ({ item }) => `${item.prompt.shapes[0]?.kind ?? ''} ${item.prompt.shapes[0]?.colour ?? ''}`,
+      ),
+    );
+    expect(looks.size).toBeGreaterThan(10);
   });
 
   it('is the curriculum example: 3 groups of 4 is 12, and 7 is the add-factors bug', () => {
@@ -82,7 +135,7 @@ describe('groups', () => {
       id: 'dr-1',
       type: 'number-entry',
       text: 'gen.dr-1.text',
-      prompt: { emoji: '🍎', big },
+      prompt: { big, shapes: clustersOf(Number(big.split(' ')[0]), Number(big.split(' ')[3])) },
       answer,
       ...(reasons === undefined ? {} : { reasons }),
     });
@@ -108,7 +161,10 @@ describe('groups', () => {
       }
     }
     expect(draw('groups', { maxGroups: 2, maxSize: 3 }, 0).issues).not.toEqual([]);
-    expect(draw('groups', { maxGroups: 3, maxSize: 6 }, 0).issues).not.toEqual([]);
+    // A cluster holds 9 shapes at most, the prompt row 8 clusters, the curriculum 5 groups.
+    expect(draw('groups', { maxGroups: 3, maxSize: 9 }, 0).issues).toEqual([]);
+    expect(draw('groups', { maxGroups: 3, maxSize: 10 }, 0).issues).not.toEqual([]);
+    expect(draw('groups', { maxGroups: 6, maxSize: 3 }, 0).issues).not.toEqual([]);
     expect(draw('groups', { maxGroups: 3 }, 0).issues).not.toEqual([]);
   });
 
@@ -155,8 +211,30 @@ describe('groups', () => {
         }).join(),
       ).toMatch(/does not fit/);
       expect(
-        checkIssues('groups', params, { ...plain, prompt: { ...plain.prompt, emoji: '' } }).join(),
+        checkIssues('groups', params, { ...plain, prompt: { ...plain.prompt, shapes: [] } }).join(),
       ).toMatch(/picture/);
+    });
+
+    it('reports a picture that does not match the card: too few groups, a group of another size, mixed kinds or colours', () => {
+      const [k, n] = readPicture(plain.prompt.shapes) ?? [0, 0];
+      const first = plain.prompt.shapes[0] ?? { kind: 'circle', colour: 'red', count: n };
+      const picture = (shapes: readonly GroupCluster[]): string =>
+        checkIssues('groups', params, { ...plain, prompt: { ...plain.prompt, shapes } }).join();
+      expect(picture(clustersOf(k, n))).not.toMatch(/the picture shows/);
+      expect(picture(clustersOf(k - 1, n))).toMatch(/the picture shows/);
+      expect(picture(clustersOf(k + 1, n))).toMatch(/the picture shows/);
+      expect(picture(clustersOf(k, n + 1))).toMatch(/the picture shows/);
+      expect(picture([...plain.prompt.shapes.slice(1), { ...first, count: n + 1 }])).toMatch(
+        /the picture shows/,
+      );
+      const otherKind = first.kind === 'star' ? 'heart' : 'star';
+      const otherColour = first.colour === 'blue' ? 'red' : 'blue';
+      expect(picture([...plain.prompt.shapes.slice(1), { ...first, kind: otherKind }])).toMatch(
+        /one kind and one colour/,
+      );
+      expect(picture([...plain.prompt.shapes.slice(1), { ...first, colour: otherColour }])).toMatch(
+        /one kind and one colour/,
+      );
     });
 
     it('reports a missing, a wrong and an unneeded reason', () => {
@@ -198,7 +276,7 @@ describe('groups-choice', () => {
 
   describe.each(combos)('maxGroups $maxGroups, maxSize $maxSize', (params) => {
     it('has exactly one sum of k terms that are all n, the added factors with add-factors, and a third that is a spoken neighbour only when k = n', () => {
-      const { problems, items } = overSeeds<ChoiceItem>(
+      const { problems, items } = overSeeds<GroupsChoiceItem>(
         'groups-choice',
         params,
         ({ item, text }) => {
@@ -214,9 +292,14 @@ describe('groups-choice', () => {
           const thirdTerms = termsOf(third?.big ?? '');
           return [
             ...(found === null ? [`${item.id}: "${text}" is not the groups sentence`] : []),
-            ...(item.prompt?.big === `${String(k)} groups of ${String(n)}`
+            ...(item.prompt.big === `${String(k)} groups of ${String(n)}`
               ? []
-              : [`${item.id}: card ${item.prompt?.big ?? ''}`]),
+              : [`${item.id}: card ${item.prompt.big}`]),
+            ...(readPicture(item.prompt.shapes ?? [])?.join() === `${String(k)},${String(n)}`
+              ? []
+              : [
+                  `${item.id}: the picture ${JSON.stringify(item.prompt.shapes)} is not ${item.prompt.big}`,
+                ]),
             ...(k >= 2 &&
             k <= params.maxGroups &&
             n >= 2 &&
@@ -284,11 +367,11 @@ describe('groups-choice', () => {
   });
 
   it('is the curriculum example: 3 groups of 4 → 4 + 4 + 4, with 3 + 4 the add-factors bug and 3 + 3 + 3 + 3 a plain wrong answer', () => {
-    const item: ChoiceItem = {
+    const item: GroupsChoiceItem = {
       id: 'dr-1',
       type: 'choice',
       text: 'gen.dr-1.text',
-      prompt: { big: '3 groups of 4' },
+      prompt: { big: '3 groups of 4', shapes: clustersOf(3, 4) },
       options: [
         { id: 'a', big: '3 + 3 + 3 + 3' },
         { id: 'b', big: '4 + 4 + 4' },
@@ -319,20 +402,20 @@ describe('groups-choice', () => {
 
   describe('check', () => {
     const params = { maxGroups: 4, maxSize: 4 };
-    const swapped = sample<ChoiceItem>(
+    const swapped = sample<GroupsChoiceItem>(
       'groups-choice',
       params,
-      (item) => item.prompt?.big === '3 groups of 4',
+      (item) => item.prompt.big === '3 groups of 4',
     );
-    const alike = sample<ChoiceItem>(
+    const alike = sample<GroupsChoiceItem>(
       'groups-choice',
       params,
-      (item) => item.prompt?.big === '3 groups of 3',
+      (item) => item.prompt.big === '3 groups of 3',
     );
     const withOptions = (
-      item: ChoiceItem,
-      edit: (option: ChoiceItem['options'][number]) => ChoiceItem['options'][number],
-    ): ChoiceItem => ({
+      item: GroupsChoiceItem,
+      edit: (option: GroupsChoiceItem['options'][number]) => GroupsChoiceItem['options'][number],
+    ): GroupsChoiceItem => ({
       ...item,
       options: item.options.map(edit),
     });
@@ -348,17 +431,83 @@ describe('groups-choice', () => {
         /should show 3 groups of 4/,
       );
       expect(
-        checkIssues('groups-choice', params, { ...swapped, prompt: { big: '3 × 4' } }).join(),
+        checkIssues('groups-choice', params, {
+          ...swapped,
+          prompt: { ...swapped.prompt, big: '3 × 4' },
+        }).join(),
       ).toMatch(/cannot read the prompt/);
       expect(
         checkIssues('groups-choice', params, {
           ...swapped,
-          prompt: { big: '2 groups of 2' },
+          prompt: { ...swapped.prompt, big: '2 groups of 2' },
         }).join(),
       ).toMatch(/does not fit/);
       expect(checkIssues('groups-choice', { maxGroups: 3, maxSize: 3 }, swapped).join()).toMatch(
         /does not fit/,
       );
+    });
+
+    it('reports a picture that does not match the card', () => {
+      const picture = (item: GroupsChoiceItem, shapes: readonly GroupCluster[]): string =>
+        checkIssues('groups-choice', params, {
+          ...item,
+          prompt: { ...item.prompt, shapes },
+        }).join();
+      const drawn = swapped.prompt.shapes ?? [];
+      expect(drawn).toHaveLength(3);
+      expect(picture(swapped, drawn)).toBe('');
+      expect(picture(swapped, [])).toMatch(/the picture shows/);
+      expect(picture(swapped, clustersOf(4, 3))).toMatch(/the picture shows/);
+      expect(picture(swapped, clustersOf(3, 3))).toMatch(/the picture shows/);
+      expect(
+        picture(swapped, [...drawn.slice(1), { kind: 'star', colour: 'red', count: 4 }]),
+      ).toMatch(/one kind and one colour/);
+      // No picture at all is a picture of nothing, unless the entry says `picture: false`.
+      expect(
+        checkIssues('groups-choice', params, {
+          ...swapped,
+          prompt: { big: swapped.prompt.big },
+        }).join(),
+      ).toMatch(/the picture shows/);
+    });
+
+    it('with `picture: false` draws the card as words only, with the same numbers and options as with the picture', () => {
+      const draws = (picture: boolean): GroupsChoiceItem[] =>
+        Array.from(
+          { length: 40 },
+          (_unused, seed) =>
+            draw<GroupsChoiceItem>('groups-choice', { maxGroups: 4, maxSize: 4, picture }, seed, 2)
+              .drawn,
+        ).flatMap((drawn) => drawn.map(({ item }) => item));
+      const [plain, pictured] = [draws(false), draws(true)];
+      expect(plain.length).toBe(pictured.length);
+      for (const [index, item] of plain.entries()) {
+        expect(Object.keys(item.prompt), item.id).toEqual(['big']);
+        expect({ ...item, prompt: undefined }, item.id).toEqual({
+          ...pictured[index],
+          prompt: undefined,
+        });
+        expect(item.prompt.big, item.id).toBe(pictured[index]?.prompt.big);
+        expect(pictured[index]?.prompt.shapes?.length, item.id).toBeGreaterThan(1);
+      }
+      expect(
+        draw('groups-choice', { maxGroups: 4, maxSize: 4, picture: 'no' }, 0).issues,
+      ).not.toEqual([]);
+      const flat = plain[0];
+      if (flat === undefined) throw new Error('no item');
+      expect(
+        checkIssues('groups-choice', { maxGroups: 4, maxSize: 4, picture: false }, flat),
+      ).toEqual([]);
+      expect(
+        checkIssues(
+          'groups-choice',
+          { maxGroups: 4, maxSize: 4, picture: false },
+          {
+            ...flat,
+            prompt: { ...flat.prompt, shapes: clustersOf(2, 2) },
+          },
+        ).join(),
+      ).toMatch(/symbols only/);
     });
 
     it('reports options that are not three distinct sums', () => {

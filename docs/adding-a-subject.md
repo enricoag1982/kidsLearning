@@ -43,7 +43,7 @@ Layout: `tracks.yaml` (worlds, ranks), `badges.yaml`, `lessons/<world>/<lesson>.
 | Field | Meaning |
 |---|---|
 | `id`, `type`, `text?` | kebab id; kind; text key (default `id`) |
-| `prompt?` | `{ emoji?, big?, image?, shapes? }`, at least one; `big` ≤ 16 chars (`big: 3` reads as text); `image` = id in `art`; `shapes` = a row of shape tokens (below) |
+| `prompt?` | `{ emoji?, big?, image?, shapes?, line? }`, at least one; `big` ≤ 16 chars (`big: 3` reads as text); `image` = id in `art`; `shapes` = a row of shape tokens, `line` = a number-line picture (below) |
 | `easier?` | id of a lesson `variants` entry; scored exercises only; each variant is referenced once |
 | item (option / order item) | `{ id, text?, emoji?, big?, image?, shape? }`, at least one of the five |
 
@@ -87,10 +87,31 @@ Drawn tokens (kind × colour × size × count) for patterns, odd-one-out and sor
 |---|---|---|
 | Row | verify | 1–8 tokens, at most one `gap` |
 | Colour-blind | verify, one exercise | two tokens (items and prompt row together) that differ only in colour, the colours one of red–green, green–orange, blue–purple (`shape-colours.ts`) → issue; change the kind, size or count too |
+| Row layout | web (`ShapeRow`, prompt rows; the Story step's compact row stays small and plain) | one line, boxes `min(cap, (row width − gaps) / tokens)`: cap 7 rem up to 5 tokens, 4 rem from 6 (8 tokens fit 390 px); a row with a cluster (`count` above 1) puts every token on its own light rounded tile (card-tinted, 1 px border, padding 8 % of the box) and keeps 0.75 rem between tokens (0.5 rem otherwise), so each group reads as a group |
 | Facts | core | `shapeFacts(shape)` → `['kind:circle', 'colour:red', 'size:big', 'count:1']` (defaults filled in), for a kind's rules and a template's `check` |
 | Labels | web | the card / row carries the name, tokens are `aria-hidden`: `cardItemLabel` = text, big, shape, emoji, id; `shapeLabel` → "3 small red circles" (size word omitted for `big`, number for one); row → "Row of shapes: red circle, blue square, red circle, a gap"; words in `cards.shape.*` (platform `common.yaml`); never narrated |
 
 Colours are `--color-shape-*` in `theme.css` (one light theme), drawn under a dark `--color-ink` outline.
+
+### Number line (`prompt.line`)
+
+A small picture in the prompt card (below the big text): a line with a tick every `step`, the ends labelled, each mark a dot with its number above it. Never a place to tap (the math `number-line` kind is that).
+
+| Field | Meaning |
+|---|---|
+| `from`, `to` | whole numbers, `from < to` |
+| `step` | whole number ≥ 1; `(to - from) / step` is a whole number from 2 to 20 (one tick per step) |
+| `marks` | ≥ 1 whole numbers, each from `from` to `to` (a dot each; an end with a dot shows the dot's number only) |
+
+```yaml
+- { id: where-47, type: choice, prompt: { big: 47, line: { from: 40, to: 50, step: 1, marks: [47] } }, options: [...], answer: a }
+```
+
+| Rule | Where | Detail |
+|---|---|---|
+| Line | verify (`line-verify.ts`), exercises and lesson demos | goes up, 2–20 gaps, whole gaps, every mark on the line |
+| Label | web | the picture is one image, its drawing `aria-hidden`: "Number line from 40 to 50, a dot at 47" ("dots at 38, 40" for several; `cards.line.label` one / other, platform `common.yaml`); never narrated |
+| Templates | a fixed function of the numbers already drawn | a picture never takes another draw from `ctx.random` (it would move every later item of the entry and the repeat check): math `round-ten`, `bridge-add` (`line`) and `groups` (`shapes`) |
 
 | File | Shape |
 |---|---|

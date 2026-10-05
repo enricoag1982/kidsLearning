@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { recordMiniGameResult } from '@learn/platform-core';
 import { useAppStore, useRoute, useServices } from '../app/store.ts';
 import { BossStep } from '../modes/BossStep.tsx';
-import { tContent } from '../content-text.ts';
 import type { BossPlaySession } from '../modes/mode-ui.ts';
 import { BlankScreen, Screen, ScreenHeader } from './ds/Screen.tsx';
 
-/** A mini-game played standalone from Play: the lesson's `BossStep` in a simple top bar, saved via `recordMiniGameResult`. */
+/** A mini-game played standalone from Play: the lesson's `BossStep` under a top bar with the close button only (every mode's step
+ * shows the game's title as its own heading, as in a lesson boss: the title is never in both), saved via `recordMiniGameResult`. */
 export function MiniGameSessionScreen(): JSX.Element {
   const { t } = useTranslation();
   const services = useServices();
@@ -54,11 +54,7 @@ export function MiniGameSessionScreen(): JSX.Element {
         action="close"
         actionLabel={t('play.close')}
         onAction={exitMiniGame}
-      >
-        <span className="min-w-0 flex-1 truncate font-display text-xl text-ink sm:text-2xl">
-          {tContent(t, minigame.titleKey)}
-        </span>
-      </ScreenHeader>
+      />
 
       <div className="flex min-h-0 flex-1 flex-col">
         <BossStep lesson={lesson} game={minigame} nextStepIndex={0} session={session} />

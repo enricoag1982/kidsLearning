@@ -136,7 +136,7 @@ describe('place-value YAML', () => {
     expect(issuesOf(pv({ start: 'none' }))).toHaveLength(1);
     expect(issuesOf(pv({ start: [0, 1.5, 0] }))).toHaveLength(1);
     expect(issuesOf(pv({ prompt: {} }))).toEqual([
-      'prompt needs "emoji", "big", "image" or "shapes"',
+      'prompt needs "emoji", "big", "image", "shapes" or "line"',
     ]);
   });
 

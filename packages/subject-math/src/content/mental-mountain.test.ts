@@ -270,6 +270,31 @@ describe('the 5 lessons of World 2', () => {
     }
   });
 
+  it('draw a small number line on `bridge-add` cards only (the guided tries and the first 4 scored items); every other card, and the last 2 scored of every lesson, are symbols or text', () => {
+    for (const id of LESSON_IDS) {
+      const lesson = lessonOf(id);
+      for (const def of everyOf(lesson)) {
+        const bridge = /^bridge-/.test(def.id);
+        expect(def.prompt?.line !== undefined, def.id).toBe(bridge);
+        expect(def.prompt?.shapes, def.id).toBeUndefined();
+      }
+      expect(
+        lesson.exercises.slice(-2).filter((def) => def.prompt?.line !== undefined),
+        id,
+      ).toEqual([]);
+    }
+    const bridge = lessonOf('mm-bridge');
+    expect(bridge.guided.map((def) => def.prompt?.line !== undefined)).toEqual([true, true]);
+    expect(bridge.exercises.map((def) => def.prompt?.line !== undefined)).toEqual([
+      true,
+      true,
+      true,
+      true,
+      false,
+      false,
+    ]);
+  });
+
   it('have the curriculum’s mix of templates per lesson (read from the generated sentences and cards)', () => {
     const shape = (def: MathExerciseDef): string => {
       const text = english(def.textKey);

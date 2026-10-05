@@ -64,6 +64,8 @@ export function draw<I extends ExerciseYamlBase = ExerciseYamlBase>(
       const kind = mathContent.kinds[def.type];
       checkTextKey(def.textKey, locales, where, issues);
       kind?.verify?.(def, where, issues);
+      // The card kit's picture rules (a shape row of 1-8 tokens, a number line of 2-20 gaps with its marks on it).
+      mathContent.stimulus.check?.(def, { where, issues });
       for (const ref of kind?.textKeys?.(def) ?? []) {
         checkTextKey(ref.key, locales, `${where}: ${ref.label}`, issues);
       }

@@ -2,6 +2,7 @@
 // items) — a text, an emoji, a big text, an art image id, a shape token (a row of them for a prompt), at least one.
 import type {
   CardItem,
+  CardLine,
   CardPrompt,
   CardShape,
 } from '@learn/platform-core/domain/exercise/kinds/cards/prompt';
@@ -59,11 +60,30 @@ export function compileShape(raw: ShapeRaw): CardShape {
   };
 }
 
-/** A prompt's visual fields: the shared ones and `shapes` (tokens and `gap`; their number and the single gap are verify rules,
- * `shape-verify.ts`). */
+/** A number-line picture: whole numbers, `step` 1 or more, at least one mark. That the line goes up, has 2-20 gaps and holds its
+ * marks are verify rules (`line-verify.ts`). */
+export const lineSchema = z
+  .object({
+    from: z.number().int(),
+    to: z.number().int(),
+    step: z.number().int().min(1),
+    marks: z.array(z.number().int()).min(1),
+  })
+  .strict();
+
+export type LineRaw = z.output<typeof lineSchema>;
+
+/** The compiled picture, keys in `from`, `to`, `step`, `marks` order. */
+export function compileLine(raw: LineRaw): CardLine {
+  return { from: raw.from, to: raw.to, step: raw.step, marks: [...raw.marks] };
+}
+
+/** A prompt's visual fields: the shared ones, `shapes` (tokens and `gap`; their number and the single gap are verify rules,
+ * `shape-verify.ts`) and `line`. */
 const promptVisualFields = {
   ...cardVisualFields,
   shapes: z.array(z.union([z.literal('gap'), shapeSchema])).optional(),
+  line: lineSchema.optional(),
 };
 
 /** A card item's visual fields: the shared ones and one `shape`. */
@@ -71,14 +91,15 @@ export const cardItemVisualFields = { ...cardVisualFields, shape: shapeSchema.op
 
 const visualSchema = z.object(promptVisualFields).strict();
 
-/** `{ emoji?, big?, image?, shapes? }`, at least one. */
+/** `{ emoji?, big?, image?, shapes?, line? }`, at least one. */
 export const promptSchema = visualSchema.refine(
   (prompt) =>
     prompt.emoji !== undefined ||
     prompt.big !== undefined ||
     prompt.image !== undefined ||
-    prompt.shapes !== undefined,
-  { message: 'prompt needs "emoji", "big", "image" or "shapes"' },
+    prompt.shapes !== undefined ||
+    prompt.line !== undefined,
+  { message: 'prompt needs "emoji", "big", "image", "shapes" or "line"' },
 );
 
 /** What every card exercise's YAML has besides its kind's own fields. */
@@ -99,13 +120,14 @@ function compileCommonVisual(raw: {
   };
 }
 
-/** The compiled prompt, keys in `emoji`, `big`, `image`, `shapes` order. */
+/** The compiled prompt, keys in `emoji`, `big`, `image`, `shapes`, `line` order. */
 export function compilePrompt(raw: PromptRaw): CardPrompt {
   return {
     ...compileCommonVisual(raw),
     ...(raw.shapes === undefined
       ? {}
       : { shapes: raw.shapes.map((token) => (token === 'gap' ? token : compileShape(token))) }),
+    ...(raw.line === undefined ? {} : { line: compileLine(raw.line) }),
   };
 }
 

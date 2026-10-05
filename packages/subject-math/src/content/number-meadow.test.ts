@@ -268,6 +268,11 @@ describe('the 5 lessons of World 1', () => {
           lastTwo.filter((type) => pictured.has(type)),
           id,
         ).toEqual([]);
+        // A card's small number line (`round-ten`) is a picture too.
+        expect(
+          scored.slice(-2).filter((def) => def.prompt?.line !== undefined),
+          id,
+        ).toEqual([]);
       }
     }
     // Place-value builds come first in the two lessons that have them.

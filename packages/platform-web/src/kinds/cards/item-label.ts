@@ -1,4 +1,8 @@
-import type { CardItem, CardShape } from '@learn/platform-core/domain/exercise/kinds/cards/prompt';
+import type {
+  CardItem,
+  CardLine,
+  CardShape,
+} from '@learn/platform-core/domain/exercise/kinds/cards/prompt';
 import { DEFAULT_SHAPE_SIZE } from '@learn/platform-core/domain/exercise/kinds/cards/prompt';
 import type { ContentText } from '../../content-text.ts';
 
@@ -28,6 +32,17 @@ export function shapeRowLabel(text: ContentText, shapes: readonly (CardShape | '
     tokens: shapes
       .map((token) => (token === 'gap' ? text('cards.shape.gap') : shapeLabel(text, token)))
       .join(', '),
+  });
+}
+
+/** The name of a prompt's number line: `Number line from 40 to 50, a dot at 47` (`dots at 38, 40` for several; one form per count in
+ * the locale, `cards.line.label`). */
+export function lineLabel(text: ContentText, line: CardLine): string {
+  return text('cards.line.label', {
+    from: String(line.from),
+    to: String(line.to),
+    marks: line.marks.map(String).join(', '),
+    count: line.marks.length,
   });
 }
 

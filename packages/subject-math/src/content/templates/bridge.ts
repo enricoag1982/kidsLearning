@@ -1,6 +1,8 @@
-// W2 bridging templates (docs/subjects/math/curriculum.md §3): `bridge-add` ("38 + 7": make a ten first; the ones add to 11-18) and
-// `count-up` ("82 − 76": count up from the smaller number across a ten). Reasons: `off-by-one` and `off-by-ten` for an addition
-// that is a jump short, `off-by-ten` for a difference with the ten counted twice.
+// W2 bridging templates (docs/subjects/math/curriculum.md §3): `bridge-add` ("38 + 7": make a ten first; the ones add to 11-18; the card
+// draws the start and the next ten on a small number line, never the answer) and `count-up` ("82 − 76": count up from the smaller number
+// across a ten). Reasons: `off-by-one` and `off-by-ten` for an addition that is a jump short, `off-by-ten` for a difference with the ten
+// counted twice.
+import type { CardLine } from '@learn/platform-core/domain/exercise/kinds/cards/prompt';
 import { pick, randomInt } from '@learn/platform-core/domain/random';
 import type { ExerciseTemplate } from '@learn/platform-content/generate/template';
 import { z } from 'zod';
@@ -14,7 +16,8 @@ import {
   type WrongValue,
 } from './arithmetic.ts';
 import { fail } from './draw.ts';
-import type { NumberEntryItem } from './items.ts';
+import type { LineNumberEntryItem, NumberEntryItem } from './items.ts';
+import { checkLine, lineOf, wholeNumberLine } from './pictures.ts';
 
 // ---------------------------------------------------------------------------------------------------------------------
 // bridge-add
@@ -50,9 +53,16 @@ function bridgeReasons(answer: number): readonly WrongValue[] {
   ];
 }
 
+/** The line of "38 + 7": from the first addend `a` to the ten after the total (38 to 50), a dot on `a` and one on the next ten (40).
+ * The total (45) gets no dot: the child counts on from the ten. */
+function bridgeLine(a: number, total: number): CardLine {
+  const nextTen = a - (a % 10) + 10;
+  return wholeNumberLine(a, total - (total % 10) + 10, [a, nextTen]);
+}
+
 /** "38 + 7": the first addend is 0 to 8 tens and a ones digit, the second a single digit, the ones adding to `onesSum` (a ten is
  * made first), the total at most `max`. */
-export const bridgeAdd: ExerciseTemplate<BridgeAddParams, NumberEntryItem> = {
+export const bridgeAdd: ExerciseTemplate<BridgeAddParams, LineNumberEntryItem> = {
   params: bridgeAddParams,
   generate({ onesSum: [least, most], max }, ctx) {
     const pairs = DIGITS.flatMap((ones) =>
@@ -61,7 +71,7 @@ export const bridgeAdd: ExerciseTemplate<BridgeAddParams, NumberEntryItem> = {
     const { ones, b } = pick(ctx.random, pairs);
     const tens = randomInt(ctx.random, 0, Math.floor((max - ones - b) / 10));
     const a = tens * 10 + ones;
-    return entryItem(
+    const item = entryItem(
       {
         id: ctx.id,
         text: ctx.text('text', 'templates.bridge-add'),
@@ -70,6 +80,7 @@ export const bridgeAdd: ExerciseTemplate<BridgeAddParams, NumberEntryItem> = {
       },
       bridgeReasons(a + b),
     );
+    return { ...item, prompt: { ...item.prompt, line: bridgeLine(a, a + b) } };
   },
   check(item, params, at) {
     const operation = readOperationOf(item, ['+'], at);
@@ -91,6 +102,17 @@ export const bridgeAdd: ExerciseTemplate<BridgeAddParams, NumberEntryItem> = {
     }
     checkAnswer(item, a + b, `${String(a)} + ${String(b)}`, at);
     checkReasons(item, bridgeReasons(a + b), at);
+    // Re-derived from the card's numbers (the ten above the first addend, the ten above the total), not from `bridgeLine`.
+    const line = lineOf(item);
+    checkLine(
+      line,
+      wholeNumberLine(a, Math.ceil((a + b) / 10) * 10, [a, Math.ceil((a + 1) / 10) * 10]),
+      at,
+    );
+    // The picture never shows the answer: no dot on it, and the line does not end on it.
+    if (line?.marks.includes(item.answer) || line?.to === item.answer) {
+      fail(at, `the number line shows the answer ${String(item.answer)}`);
+    }
   },
 };
 

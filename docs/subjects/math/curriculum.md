@@ -10,7 +10,7 @@ Lesson / exercise design for W1–W3 of [plan.md](plan.md) §2. A world's rows a
 | Characters | Owl narrates; the Hedgehog teaches (every lesson; the math demo's character and the hub icon) |
 | Ranks | `counter` (start) → `builder` (W1) → `climber` (W2) → `multiplier` (W3) |
 | Lesson | story 2–3 sentences (Owl + Hedgehog, the rule), demo = full worked example (fading: guided 1 leaves the last step, guided 2 two steps), 2 guided, 6 scored, ≥ 1 easier variant for the hardest scored item, concept = lesson id |
-| CPA | guided and the first 4 scored may show pictures (blocks, line, groups, array); the last 2 scored are symbols only (W1: all lessons but `pv-line`, whose table has one symbol item, `nl-half`, last; W2 has no pictures: bonds, sums and stories are symbols or text, §2 W2; W3: all lessons) |
+| CPA | guided and the first 4 scored may show pictures (blocks, line, groups, array); the last 2 scored are symbols only (W1: all lessons but `pv-line`, whose table has one symbol item, `nl-half`, last; W2: only the `bridge-add` cards carry a picture (a small number line, `m15.3`), bonds, sums and stories are symbols or text, §2 W2; W3: all lessons) |
 | Generated | every guided / scored / variant / boss round comes from a template (§3) with a stored seed; stories, demos, word-problem frames and reasons are authored |
 | Reasons | a wrong answer matching a known bug speaks its reason (§3 "Bugs"); any other wrong answer gets the kind's default note |
 | Stars | card kit: 3 = no error, no hint; 2 = 1 error or hint 1; 1 = otherwise. Mastery = mean ≥ 2.4 |
@@ -52,7 +52,7 @@ Retired in `m13.10`: the demo world `adding` (lessons `add-within-5`, `add-withi
 | `mm-tens` | Tens, hundreds, nearly | `mm-tens` | number-entry / number-entry | `tens-hundreds` (+ 10), `compensate` (+ 9) | 2 `tens-hundreds` (− 10; + 100) · 3 `compensate` (− 9; + 99; − 99) · 1 `equals-balance` | 1 `compensate` + 9 (for `comp-minus-1`) | — |
 | `mm-problems` | Story problems | `mm-problems` | number-entry / number-entry | 2 `story` (part-whole; change: add) | 6 `story` (2 part-whole, 1 change: add, 1 change: take away, 2 comparison) | 1 `story` part-whole ≤ 20 (for `story-part-1`) | Market Orders (world boss) |
 
-Totals: 5 lessons, 10 guided, 30 scored, 5 easier variants, 5 boss rounds = 50 exercises (every one generated); 65 new voice clips. The scored order keeps the symbols last (CPA, §1): there are no pictures in W2 (see §3 "W2 templates as built").
+Totals: 5 lessons, 10 guided, 30 scored, 5 easier variants, 5 boss rounds = 50 exercises (every one generated); 65 new voice clips. The scored order keeps the symbols last (CPA, §1): the only W2 pictures are the `bridge-add` number lines (the guided tries and the first 4 scored items; see §3 "W2 templates as built").
 
 Market Orders (`market-orders`, `series`, `errors3: 0`, `errors2: 2`, concept `mm-problems`, `unlockAfter: mm-problems`, title "Market Orders", goal "Help the market animals with their orders!"): 5 `story` rounds of mixed frames, one customer animal per round: add the parts (Bear), take away (Rabbit), compare "how many more" (Elephant), add more (Penguin), take away (Panda). It is the world boss on the Journey once the five lessons are done.
 
@@ -82,7 +82,7 @@ Race to 20 (`duel`) — built in `m13.13` (`minigames/race-to-20.yaml`; game `ra
 | World boss of W3 | Yes (`m13.14`): `tracks.yaml` `boss: race-to-20`, `concept` and `unlockAfter` `mt-7-mixed` (the world's last lesson; `m13.13` had `take-away`, `m13.10` `pv-round`). It opens from its Journey node once the six lessons are mastered; the Today session no longer offers it after Rounding. Id `race-to-20` kept. e2e: `math/race.spec.ts` (Journey → world boss node → win, node won; Hint → 2 stars) |
 | Hint "Leave a number in the 4 times table" | "Try to land on 4, 8, 12 or 16." (the best step button also glows) |
 | Bot | the unlock lesson's character: the Hedgehog (`mt-7-mixed`), "Hedgie". Board lines are spoken after each move: "Hedgie adds 2. Now it's 7." / "You add 1. Now it's 4." (every step and total below 20) and "Your turn!"; unchanged by the move to W3 (the bot was already Hedgie since `m13.10`: no clip added or removed) |
-| Board | number track 0–20 (two rows of 10 on a phone, one row on a tablet), token on the total, last move's stones green (kid) / blue with a paw (bot), +1 +2 +3 buttons (80 px) |
+| Board | number track 0–20 (the start alone and two rows of 10 on a phone, ≥ 32 px wide stones; two rows of 11 and 10 on a tablet, stones 56 px tall and 49 px wide at 1024 × 768: `m15.3`, one row of 28 × 40 px stones before), token on the total, last move's stones green (kid) / blue with a paw (bot), +1 +2 +3 buttons (80 px). The game title is the step's heading only: the standalone screen's top bar has the close button alone (`m15.3`; it showed the title twice) |
 
 Totals: 16 lessons, 32 guided, 96 scored, 16 easier variants, 10 series rounds + 1 duel, all shipped: W1 (5 lessons, Number Train), W2 (5 lessons, Market Orders), W3 (6 lessons, Race to 20).
 
@@ -102,7 +102,7 @@ Kinds: card kit `choice` / `true-false` / `number-entry` / `order`; math `number
 | `nl-place` | number-line | `from`, `to`, `step` 1 / 10 / 50 / 100, `labels`, `values`; target = any inner tick | position | `ticks-not-gaps` | built (m13.9) |
 | `nl-estimate` | number-line | same line params; target between ticks, ≥ ¼ step from each, tolerance ½ step (kind) | position | — | built (m13.9) |
 | `nl-half` | number-entry | `unit` 10 / 100 / 1000; "halfway between 300 and 400" | 350 | — | built (m13.9) |
-| `round-ten` | choice (the 2 tens) | `max` 100 / 1000, `five` | ten | `truncate`, `five-down` | built (m13.9) |
+| `round-ten` | choice (the 2 tens); card: the number + a number line from the ten below to the ten above, a dot at the number | `max` 100 / 1000, `five` | ten | `truncate`, `five-down` | built (m13.9); line picture `m15.3` |
 | `round-hundred` | number-entry | `max` 1 000 / 10 000, `five` | hundred | `truncate`, `five-down` | built (m13.9) |
 | `round-tf` | true-false | `to` 10 / 100, `max`; "47 → 50" | bool | `truncate`, `five-down` | built (m13.9) |
 | `bond-missing` | number-entry | `total` 10 / 20 / 100, `tensOnly` (100 only); "64 + ? = 100" | total − a | `digit-tens` | built (m13.11) |
@@ -110,14 +110,14 @@ Kinds: card kit `choice` / `true-false` / `number-entry` / `order`; math `number
 | `double` | number-entry | `max` 20 / 50; "Double 34." + card "34 + 34" | 2n | `tens-only` | built (m13.11) |
 | `near-double` | number-entry | `max` 10–50; card "35 + 36" | 2n + 1 | `off-by-one` | built (m13.11) |
 | `halve` | number-entry | `max` 20–100, even from 12 | n / 2 | `halve-tens-only` | built (m13.11) |
-| `bridge-add` | number-entry | `onesSum` [min, max] within 11–18, `max` 20–100; "38 + 7" | a + b | `off-by-one`, `off-by-ten` | built (m13.11) |
+| `bridge-add` | number-entry; card: "38 + 7" + a number line from 38 to 50 with dots on 38 and 40 (never 45) | `onesSum` [min, max] within 11–18, `max` 20–100; "38 + 7" | a + b | `off-by-one`, `off-by-ten` | built (m13.11); line picture `m15.3` |
 | `count-up` | number-entry | `maxDiff` 4–12; "82 − 76" across a ten | b − a | `off-by-ten` | built (m13.11) |
 | `tens-hundreds` | number-entry | `step` 10 / 100, `op` + / −; "347 + 10", one digit changes | n ± step | `wrong-place` | built (m13.11) |
 | `compensate` | number-entry | `near` 9 / 99, `op` + / −; "46 + 99" | n ± near | `forgot-adjust` | built (m13.11) |
 | `equals-balance` | number-entry | `max` 10–20; "7 + 5 = 6 + ?" | a + b − c | `answer-next` | built (m13.11) |
 | `story` | number-entry (text only) | `frame` part-whole / change-add / change-take / compare, `max` 20–100; 4 authored sentences per frame (`stories.*`) | a ± b | `wrong-op` | built (m13.11) |
-| `groups` | number-entry; card "3 groups of 4" + one emoji | `maxGroups` 3–5, `maxSize` 3–5 (2 up to each) | k × n | `add-factors` | built (m13.14) |
-| `groups-choice` | choice (3 sums); card "3 groups of 4" | `maxGroups` 3–4, `maxSize` 3–4: "3 groups of 4" → 4 + 4 + 4 / 3 + 4 / 3 + 3 + 3 + 3 | 4 + 4 + 4 | `add-factors`, `neighbour` | built (m13.14) |
+| `groups` | number-entry; card "3 groups of 4" + 3 clusters of 4 shapes | `maxGroups` 3–5, `maxSize` 3–9 (2 up to each) | k × n | `add-factors` | built (m13.14); clusters `m15.3` |
+| `groups-choice` | choice (3 sums); card "3 groups of 4" + its clusters (`picture: false` = words only) | `maxGroups` 3–4, `maxSize` 3–4, `picture` (default true): "3 groups of 4" → 4 + 4 + 4 / 3 + 4 / 3 + 3 + 3 + 3 | 4 + 4 + 4 | `add-factors`, `neighbour` | built (m13.14); clusters `m15.3` |
 | `array-build` | array; card "3 × 4" | `maxRows` 3–6, `maxCols` 3–6 (2 up to each), `fixedRows` (rows fixed by the text, default) | rows, cols | `neighbour` | built (m13.14) |
 | `array-commute` | true-false | `max` 3–10: "3 × 4 = 4 × 3" / "3 × 4 = 3 + 4" | bool | `add-factors` | built (m13.14) |
 | `fact` | number-entry; card "7 × 6" | `tables` (0–10), `b` [lowest, highest] (default 1–10) | a × b | `add-factors`, `neighbour`, `digit-swap` | built (m13.14) |
@@ -160,12 +160,13 @@ Code: `packages/subject-math/src/content/templates/` (`numeral`, `bugs`, `place-
 | `cmp-sign` / `cmp-order` / `cmp-tf` `shared` | 0 / 1 / 2 (0 added) | the `pv-compare` variant "different hundreds" |
 | `cmp-order` bug | none | the `order` kind has no reasons |
 | `nl-half` bug | none | no wrong answer to name |
-| `round-ten` line picture | not built (decided `m13.10`): the guided `round-ten` tries are plain choice cards; the story and demo say "closer to 50 than to 40", the Number Train and `pv-line` carry the line | the choice card has no picture slot (a platform change, out of scope) |
+| `round-ten` line picture | built (`m15.3`; not built in `m13.10`, the choice card had no picture slot): the card shows the number and a line from the ten below to the ten above (step 1, 10 gaps) with one dot at the number; guided tries and the first 3 scored items (the last 3 are `round-hundred` / `round-tf`, symbols) | card kit `prompt.line` (`docs/adding-a-subject.md`); a fixed function of the number: no extra seed draw, the numbers and ids are unchanged |
 | `round-hundred`, `round-tf` | `five-down` added | a number ending in 50 is half-way |
 | `five: false` | no half-way number (ones 5 / ends in 50); `five: true` always | one lever per item |
 | Ranges | `round-ten` 11 … max − 1; `round-hundred` 101 … max − 1; `round-tf` the lower neighbour ≥ `to` | no rounding to 0 |
 | `nl-place` target | any inner tick, labelled or not (never an end) | an `all` / listed `labels` line is the easier variant |
 | `nl-estimate` | target ≥ ¼ step from every tick as specified, but the kind's ± ½ step zone still covers the nearest tick | the zone is fixed by the kind (`tolerance` = step / 2) |
+| `number-line` card on a tablet | `m15.3`: from `lg` (1024 × 768) the line card spans the board slot (616 px) and takes 3 parts of its height, the prompt card 2 (was 450 px over 152 px); the line, ticks, numbers and pin draw 1.6 × bigger (`--nl-scale`), 10 gaps are 53 px apart; a phone keeps the 152 px card under the prompt card | the 152 px card looked small under a 450 px prompt card |
 | `pv-read` / `pv-which` text | fixed in `m13.10`: every non-zero place count is drawn from 2–9 (0 stays: "0 tens"), `check` rejects a card with a 1, a 1 000-seed test asserts no text says "1 hundreds" / "1 tens" / "1 ones" / "1 thousands" | the resolver pluralises one `count` var, not one per place; `pv-build` (no plural) still draws 1–9 |
 | `round-easy` "far from the middle" | no template lever: the stored seed draws 31 (ones 1, 2, 8 or 9), a test pins it | one lever per item; a `far` param is not worth a template change |
 
@@ -183,7 +184,7 @@ Code: `packages/subject-math/src/content/templates/` (`arithmetic`, `bonds`, `do
 | `wrong-op` | always present: the difference (larger − smaller) for an add story, the sum for a take-away or comparison; plan: "when ≥ 0" | a child who subtracts takes the smaller from the larger |
 | `bond-missing` / `bond-pairs` | the first number is 11–89 with no zero digit (`tensOnly`: a multiple of 10); `digit-tens` = the partner with each digit taken to 10 (always the answer + 10); the wrong pairs add 110 (`digit-tens`) and 90 (no reason) for 100, ± 1 (no reason) for 10 / 20; 10 / 20 take any first number | the partner and the partner ± 10 stay 11–89 |
 | `double`, `halve`, `near-double` | `double` from 6 (≤ 20) or 11 (≤ 50); `halve` even from 12; `near-double` from 6; `tens-only` / `halve-tens-only` only when the number has a tens and a ones digit (not 0), the plain double of the smaller number is `off-by-one` | a multiple of 10 doubles right either way; a single digit has no tens |
-| `bridge-add` | first number 0–8 tens and a ones digit 2–9, second number 2–9, so the ones always cross a ten (8 + 5 included); **the plan's line picture is not built** (the number-entry card has no picture slot; same decision as `round-ten` in W1): the story and demo name the jump to the ten | no platform change in this iteration |
+| `bridge-add` | first number 0–8 tens and a ones digit 2–9, second number 2–9, so the ones always cross a ten (8 + 5 included); **line picture built in `m15.3`** (not in `m13.11`): the card shows "38 + 7" and a line from the first number to the ten after the total (38 to 50, 11–18 gaps), dots on the first number (38) and the next ten (40), never on the total (45) or at the end; the story and demo name the jump to the ten | a fixed function of the numbers (no extra seed draw); `check` re-derives the ends and the dots and fails on a dot or end at the answer |
 | `count-up` | smaller number 11–89 not a multiple of 10, larger in the next ten and not on it, difference 2–`maxDiff`; `off-by-ten` = answer + 10 | the plan names no direction |
 | `tens-hundreds`, `compensate` | 3-digit numbers, no carry or borrow (the changing digit 0–8 to add, 1–9 / 2–9 to take away); `compensate` ones 2–8, n 12–98 (102–998 to take away 99), text "Add 10, then take 1 away." / "Take away 100, then add 1 back." + "What is it?" | one concept per item |
 | `equals-balance` | both addends ≥ 2, sum 4–`max`, the number after the equals sign is neither addend, the left sum is `answer-next` | no copy of an addend as the answer |
@@ -202,8 +203,8 @@ Code: `packages/subject-math/src/content/templates/` (`groups`, `array`, `fact`,
 | `fact` tables | 0–10 (the lesson `mt-7-mixed` drills ×0 / ×1); `fact-missing`, `fact-choice`, `fact-tf` take 1–10 | 0 × ? = 0 has every number as an answer; a table 0 has no neighbour fact |
 | Drawn facts | uniform over the tables × b range; `fact-choice` skips facts without 3 distinct answers (1 × 1, 2 × 2), `fact-tf` facts without a neighbour; params that leave no fact are refused | an item always has its answer and reasons |
 | `fact-missing` | "6 × ? = 42", the missing number b; the reason `neighbour` is b − 1 (b + 1 at b = 1) | one wrong value the child types |
-| `groups` card | "3 groups of 4" with one emoji of the thing, the same for the same numbers; k and n from 2 | the card's `emoji` holds 16 UTF-16 units (8 emoji): the groups cannot be drawn; the fixed picture lets the expander tell a repeat |
-| `groups-choice` | `maxGroups` / `maxSize` 3–4; card "3 groups of 4" too; 2 groups of 2 is never drawn; options: the sum of k n's, the added factors `k + n`, and the other way round (4 groups of 3: no reason, the wrong-answer note) or, for k = n, the same number one term more (one fewer when that is 5 terms) with `neighbour` | a card holds 16 characters: 5 terms are 17; "2 + 2" would be the answer and the added factors; the card lets the `check` read k and n |
+| `groups` card | "3 groups of 4" and k clusters of n shapes (`prompt.shapes`, card kit tokens; one kind and one colour per item, a fixed function of k and n: the same numbers, the same picture; k 2–5, n 2–9, so at most 5 of the row's 8 tokens; each cluster on its own tile, 112 px at 1024 × 768 and 54–97 px on a phone, `m15.3`); `m15.3` replaced the one emoji of the thing (`m13.14`: the card's `emoji` holds 8 emoji, too few to draw the groups) | the fixed picture lets the expander tell a repeat; an extra seed draw would move every later item of the entry |
+| `groups-choice` | `maxGroups` / `maxSize` 3–4; card "3 groups of 4" too, with its clusters unless `picture: false` (`mt-groups` sets it on the scored sums: both items come from one entry and the second is among the last 2 scored, which are symbols only, §1); 2 groups of 2 is never drawn; options: the sum of k n's, the added factors `k + n`, and the other way round (4 groups of 3: no reason, the wrong-answer note) or, for k = n, the same number one term more (one fewer when that is 5 terms) with `neighbour` | a card holds 16 characters: 5 terms are 17; "2 + 2" would be the answer and the added factors; the card lets the `check` read k and n |
 | `array-build` | card "3 × 4" (as the array samples); `fixed-rows` written only when `false` ("Make an array for 3 times 4."); reasons: both (r, c − 1) and (r, c + 1) on the grid, each `neighbour`; the turned array has the kind's own "same number" note | the `check` reads the shape from the card; "×" is not spoken |
 | `array-commute` | two different factors from 2 to `max` (3–10), true half the time; "3 × 4 = 3 + 4" speaks `add-factors` | 3 × 3 = 3 × 3 says nothing |
 | Array voice | the kind's notes and hints join the voice inventory when the content has an array exercise: wrong note (plain, and with the easier offer), hints 1–3 (hint 2 per distinct `cols`), the turned-round note where it can happen, each reason (plain, and with the offer where the exercise has an easier variant), praise | `pnpm voice:check` covers exactly what can be spoken |
@@ -286,6 +287,8 @@ Columns: generated id (`<stem>-<n>`, from the entry's `id`); template and stored
 
 #### `pv-round`
 
+The `round-ten` cards also draw a number line from the ten below to the ten above with a dot at the number (`m15.3`); `round-hundred` and `round-tf` are symbols.
+
 | id | template, seed | card | answer / options | practises |
 |---|---|---|---|---|
 | `round-g-1` (guided) | `round-ten` @2 | 73 | **70** 80 | nearest ten: one down, one up |
@@ -344,6 +347,8 @@ Same columns; seeds and counts are frozen by `src/content/mental-mountain.test.t
 
 #### `mm-bridge`
 
+The `bridge-add` cards also draw a number line from the first number to the ten after the total, dots on the first number and the next ten, never on the total (`m15.3`); `count-up` is symbols.
+
 | id | template, seed | card | answer / options | practises |
 |---|---|---|---|---|
 | `bridge-g-1` (guided) | `bridge-add` @1 | 7 + 5 | 12 | make a ten first, within 20 |
@@ -398,21 +403,21 @@ Demos (a worked example with its card): `64 + 36 = 100`, `35 + 36`, `38 + 7`, `4
 
 ### W3 (`m13.14`)
 
-Reasons per card (not in the tables): every `fact` speaks `add-factors` (a + b), `neighbour` (the fact one step along) and `digit-swap` (a 2-digit answer, digits swapped) where they exist (§3); the missing number speaks `neighbour` (± 1); a `fact-choice` marks its `neighbour` and `add-factors` options; a false `fact-tf` / `array-commute` claim speaks `neighbour` / `add-factors`; an array speaks `neighbour` for one dot more or fewer in a row. The card's emoji is the thing counted (one per `groups` item).
+Reasons per card (not in the tables): every `fact` speaks `add-factors` (a + b), `neighbour` (the fact one step along) and `digit-swap` (a 2-digit answer, digits swapped) where they exist (§3); the missing number speaks `neighbour` (± 1); a `fact-choice` marks its `neighbour` and `add-factors` options; a false `fact-tf` / `array-commute` claim speaks `neighbour` / `add-factors`; an array speaks `neighbour` for one dot more or fewer in a row. The card's shapes are the thing counted (k clusters of n, one kind and colour per `groups` item, `m15.3`).
 
 #### `mt-groups`
 
 | id | template, seed | card | answer / options | practises |
 |---|---|---|---|---|
-| `gr-g-1` (guided) | `groups` @1 | ⭐ 3 groups of 2 | 6 | a first picture of groups: 3 groups of 2, added up (3 + 2 = 5 speaks `add-factors`) |
-| `gr-gc-1` (guided) | `groups-choice` @7 | 2 groups of 3 | 2 + 2 + 2 2 + 3 **3 + 3** | which sum shows 2 groups of 3 (guided): 3 + 3; 2 + 2 + 2 (the other way round) and 2 + 3 (`add-factors`) are the wrong ones |
-| `gr-total-1` | `groups` @32 | 🐟 3 groups of 4 | 12 | groups of 4, how many in all |
-| `gr-total-2` | `groups` @32 | 🐞 2 groups of 4 | 8 | 2 groups of 4 |
-| `gr-big-1` | `groups` @5 | 🍪 4 groups of 5 | 20 | the biggest groups (4 groups of 5; easier: `gr-easy-1`) |
+| `gr-g-1` (guided) | `groups` @1 | 3 groups of 2 · 3 clusters of 2 blue diamonds | 6 | a first picture of groups: 3 groups of 2, added up (3 + 2 = 5 speaks `add-factors`) |
+| `gr-gc-1` (guided) | `groups-choice` @7 | 2 groups of 3 · 2 clusters of 3 yellow stars | 2 + 2 + 2 2 + 3 **3 + 3** | which sum shows 2 groups of 3 (guided): 3 + 3; 2 + 2 + 2 (the other way round) and 2 + 3 (`add-factors`) are the wrong ones |
+| `gr-total-1` | `groups` @32 | 3 groups of 4 · 3 clusters of 4 orange squares | 12 | groups of 4, how many in all |
+| `gr-total-2` | `groups` @32 | 2 groups of 4 · 2 clusters of 4 purple hearts | 8 | 2 groups of 4 |
+| `gr-big-1` | `groups` @5 | 4 groups of 5 · 4 clusters of 5 yellow diamonds | 20 | the biggest groups (4 groups of 5; easier: `gr-easy-1`) |
 | `gr-sum-1` | `groups-choice` @1 | 4 groups of 2 | 4 + 4 4 + 2 **2 + 2 + 2 + 2** | which sum shows 4 groups of 2: 2 + 2 + 2 + 2; 4 + 4 (the other way round) and 4 + 2 (`add-factors`) are wrong |
 | `gr-sum-2` | `groups-choice` @1 | 4 groups of 4 | 4 + 4 **4 + 4 + 4 + 4** 4 + 4 + 4 | k = n: 4 groups of 4 is four 4s; the 3-term sum speaks `neighbour`, 4 + 4 the `add-factors` |
 | `gr-times-1` | `fact` @6 | 2 × 7 | 14 | the first fact as a symbol (symbols only) |
-| `gr-easy-1` (easier) | `groups` @7 | 🍎 2 groups of 2 | 4 | 2 groups of 2, the smallest picture |
+| `gr-easy-1` (easier) | `groups` @7 | 2 groups of 2 · 2 clusters of 2 red triangles | 4 | 2 groups of 2, the smallest picture |
 
 #### `mt-arrays`
 
@@ -541,5 +546,6 @@ CLAUDE.md rule: every choice / true-false / setup text is checked against its ca
 | 45 | No spoken text (inventory: stories, demos, instructions, reasons, notes) contains "×": they say "times" | ok |
 | 46 | Voice (W3): every story, demo, instruction, reason and array note is in the inventory with generated audio (`pnpm voice:check`: 75 clips added, none removed) | ok |
 | 47 | Race to 20 is the W3 world boss (opened by `mt-7-mixed`, bot Hedgie); placement, world test-out, the won boss + badge and the parent unlock run over every world of the content (`src/content/placement.test.ts`); e2e `math/forest.spec.ts` (Journey with every earlier world done; Arrays end to end) and `math/race.spec.ts` (boss node → duel → won) seed every earlier world's lessons and bosses as the content has them | ok |
+| 48 | Pictures (`m15.3`): every `groups` / `groups-choice` card draws k clusters of n (one kind and colour), every `round-ten` card a line between its two tens with a dot at the number, every `bridge-add` card a line from the first number to the ten after the total with dots on the first number and the next ten and none on the answer; each `check` re-derives the picture from the card's numbers; 1 000 seeds per parameter set; no number, id or option changed (the previous build's content equals the new one outside `prompt`) | ok |
 
 Manual checks still open (owner, `docs/release.md` §1): a child's first run of `pv-hto` (blocks on the iPad / Android tablet), the number line with a finger on a phone, a child's first story problems (are the sentences readable aloud and on screen at 8; is the "how many more" comparison understood). Also open for World 3: the dot grid of `mt-arrays` with a finger, and how the voice reads "times" and the sums ("4 plus 4 plus 4").

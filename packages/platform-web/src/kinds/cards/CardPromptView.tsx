@@ -5,7 +5,8 @@ import { usePack } from '../../app/subject.ts';
 import { tContent } from '../../content-text.ts';
 import { animalImage } from '../../ui/art/animal-images.ts';
 import { bigFitCqi } from './big-fit.ts';
-import { humanize, shapeRowLabel } from './item-label.ts';
+import { humanize, lineLabel, shapeRowLabel } from './item-label.ts';
+import { LinePicture } from './LinePicture.tsx';
 import { ShapeRow } from './ShapeToken.tsx';
 
 export interface CardPromptViewProps {
@@ -15,8 +16,9 @@ export interface CardPromptViewProps {
 }
 
 /** The card a kid looks at: a big emoji (96 px), a row of shape tokens, a big short text (3 rem, shrunk to fit the card's width on one
- * line down to 1.5 rem: `.card-big`) and / or an art image from the pack's `art`, centred in a white card that fills the board
- * square. The row is one image named by `shapeRowLabel`. The question itself is the instruction bubble's text. */
+ * line down to 1.5 rem: `.card-big`), a number-line picture and / or an art image from the pack's `art`, centred in a white card that
+ * fills the board square. The row is one image named by `shapeRowLabel`, the line one named by `lineLabel`. The question itself is the
+ * instruction bubble's text. */
 export function CardPromptView({ prompt, compact = false }: CardPromptViewProps): JSX.Element {
   const pack = usePack();
   const { t } = useTranslation();
@@ -55,6 +57,15 @@ export function CardPromptView({ prompt, compact = false }: CardPromptViewProps)
         >
           {prompt.big}
         </p>
+      )}
+      {prompt.line !== undefined && (
+        <div
+          role="img"
+          aria-label={lineLabel((key, options) => tContent(t, key, options), prompt.line)}
+          className={`w-full ${compact ? 'max-w-48' : 'max-w-xl'}`}
+        >
+          <LinePicture line={prompt.line} />
+        </div>
       )}
     </div>
   );

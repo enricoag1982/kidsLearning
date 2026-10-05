@@ -4,11 +4,16 @@ import { useTranslation } from 'react-i18next';
 import type { NumberLineDef } from './def.ts';
 import { keyTarget, nearestInteger, nearestTick, tickValues } from './ticks.ts';
 
-/** The band's height: the line, the marker above it, two rows of numbers below. Fixed, so a hint never moves the line under a finger. */
-const BAND = 'h-[152px]';
-/** Where the line runs, from the band's top (px), and the marker's pin height. */
+/** The design height of the band's stage (px): the line, the marker above it, two rows of numbers below. Fixed, so a hint never moves the
+ * line under a finger. */
+const STAGE_HEIGHT = 152;
+/** Where the line runs, from the stage's top (px), and the marker's pin height. */
 const LINE_Y = 88;
 const PIN_HEIGHT = 56;
+/** Every length of the stage is `scaled(px)`: `px` where the board is small and `px × --nl-scale` on a big board (`lg`: the board slot of a
+ * tablet is 616 px wide, so the line card grows to the slot's height and its line, ticks, numbers and pin grow with it). */
+const SCALE_CLASS = '[--nl-scale:1] lg:[--nl-scale:1.6]';
+const scaled = (px: number): string => `calc(${String(px)}px * var(--nl-scale))`;
 /** More numbered ticks than this: every other number drops to a second row, so the numbers never touch. */
 const STAGGER_ABOVE = 6;
 
@@ -109,7 +114,7 @@ export function NumberLineBand({
       }
       aria-readonly={locked}
       data-testid="number-line"
-      className={`relative w-full touch-none select-none rounded-3xl border-2 bg-card ${BAND} ${
+      className={`relative h-[152px] w-full touch-none select-none rounded-3xl border-2 bg-card lg:h-full lg:min-h-[calc(152px*var(--nl-scale))] ${SCALE_CLASS} ${
         status === 'good' ? 'border-go' : 'border-edge-neutral'
       } ${locked ? '' : 'cursor-pointer'} focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-info`}
       onPointerDown={onPointerDown}
@@ -118,10 +123,15 @@ export function NumberLineBand({
       onPointerCancel={onPointerEnd}
       onKeyDown={onKeyDown}
     >
-      <div ref={trackRef} data-testid="number-line-track" className="absolute inset-y-0 inset-x-8">
+      <div
+        ref={trackRef}
+        data-testid="number-line-track"
+        className="absolute inset-x-8 top-1/2 -translate-y-1/2 lg:inset-x-10"
+        style={{ height: scaled(STAGE_HEIGHT) }}
+      >
         <div
-          className="absolute inset-x-0 h-1.5 -translate-y-1/2 rounded-full bg-ink"
-          style={{ top: LINE_Y }}
+          className="absolute inset-x-0 -translate-y-1/2 rounded-full bg-ink"
+          style={{ top: scaled(LINE_Y), height: scaled(6) }}
         />
         {ticks.map((tick) => {
           const isNumbered = numbered.has(tick);
@@ -132,14 +142,20 @@ export function NumberLineBand({
               aria-hidden="true"
               data-testid={`number-line-tick-${String(tick)}`}
               className="absolute -translate-x-1/2"
-              style={{ left: `${String(percent(tick))}%`, top: LINE_Y - (isNumbered ? 14 : 9) }}
+              style={{
+                left: `${String(percent(tick))}%`,
+                top: scaled(LINE_Y - (isNumbered ? 14 : 9)),
+              }}
             >
-              <div className={`mx-auto w-0.5 bg-ink ${isNumbered ? 'h-7' : 'h-[18px]'}`} />
+              <div
+                className="mx-auto bg-ink"
+                style={{ width: scaled(2), height: scaled(isNumbered ? 28 : 18) }}
+              />
               {isNumbered && (
                 <span
                   data-testid={`number-line-label-${String(tick)}`}
-                  className="absolute left-1/2 -translate-x-1/2 font-display text-xs font-semibold text-ink sm:text-sm"
-                  style={{ top: 28 + row * 20 }}
+                  className="absolute left-1/2 -translate-x-1/2 font-display text-xs font-semibold text-ink sm:text-sm lg:text-[22px]"
+                  style={{ top: scaled(28 + row * 20) }}
                 >
                   {tick}
                 </span>
@@ -153,18 +169,24 @@ export function NumberLineBand({
             data-testid="number-line-marker"
             data-status={status}
             className="pointer-events-none absolute -translate-x-1/2"
-            style={{ left: `${String(percent(marker))}%`, top: LINE_Y - PIN_HEIGHT }}
+            style={{ left: `${String(percent(marker))}%`, top: scaled(LINE_Y - PIN_HEIGHT) }}
           >
             {showValue && (
               <span
                 data-testid="number-line-value"
-                className="absolute -top-6 left-1/2 -translate-x-1/2 font-display text-xl font-bold text-ink"
+                className="absolute -top-6 left-1/2 -translate-x-1/2 font-display text-xl font-bold text-ink lg:-top-10 lg:text-3xl"
               >
                 {marker}
               </span>
             )}
             <div key={shakeKey} className={status === 'wrong' ? 'card-shake' : undefined}>
-              <svg viewBox="0 0 40 56" width="40" height={PIN_HEIGHT} className={PIN_COLOR[status]}>
+              <svg
+                viewBox="0 0 40 56"
+                width="40"
+                height={PIN_HEIGHT}
+                style={{ width: scaled(40), height: scaled(PIN_HEIGHT) }}
+                className={PIN_COLOR[status]}
+              >
                 <path
                   d="M20 55 C20 55 4 35 4 20 a16 16 0 0 1 32 0 C36 35 20 55 20 55 Z"
                   fill="currentColor"

@@ -19,7 +19,13 @@ exercises:
     easier: gr-easy-1
     generate: { template: groups, count: 1, seed: 5, params: { maxGroups: 5, maxSize: 5 } }
   - id: gr-sum
-    generate: { template: groups-choice, count: 2, seed: 1, params: { maxGroups: 4, maxSize: 4 } }
+    generate:
+      {
+        template: groups-choice,
+        count: 2,
+        seed: 1,
+        params: { maxGroups: 4, maxSize: 4, picture: false },
+      }
   - id: gr-times
     generate: { template: fact, count: 1, seed: 6, params: { tables: [2], b: [3, 10] } }
 variants:

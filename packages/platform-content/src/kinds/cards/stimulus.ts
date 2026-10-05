@@ -2,12 +2,13 @@ import type { DemoContent, StimulusContent } from '../../subject.ts';
 import { z } from 'zod';
 import { textRefSchema } from '../../schema.ts';
 import { compilePrompt, promptSchema } from './prompt.ts';
+import { verifyCardLine } from './line-verify.ts';
 import { verifyCardShapes } from './shape-verify.ts';
 
 const withPromptSchema = z.object({ prompt: promptSchema.optional() });
 
-/** The stimulus: an optional `prompt` (`emoji`, `big`, `image`, `shapes`), compiled into the def's head; the shape rules
- * (`shape-verify.ts`) check the compiled def's prompt row and item shapes. */
+/** The stimulus: an optional `prompt` (`emoji`, `big`, `image`, `shapes`, `line`), compiled into the def's head; the shape rules
+ * (`shape-verify.ts`) check the compiled def's prompt row and item shapes, the line rules (`line-verify.ts`) its number line. */
 export const cardStimulus: StimulusContent = {
   compile(raw) {
     const parsed = withPromptSchema.safeParse(raw);
@@ -16,6 +17,7 @@ export const cardStimulus: StimulusContent = {
   },
   check: (def, at) => {
     verifyCardShapes(def, at.where, at.issues);
+    verifyCardLine(def, at.where, at.issues);
   },
 };
 
@@ -34,5 +36,6 @@ export const cardDemo: DemoContent = {
   },
   check: (demo, at) => {
     verifyCardShapes(demo, at.where, at.issues);
+    verifyCardLine(demo, at.where, at.issues);
   },
 };

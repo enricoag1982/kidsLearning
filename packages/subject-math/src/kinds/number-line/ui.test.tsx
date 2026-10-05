@@ -57,6 +57,9 @@ const press = (key: string, init: KeyboardEventInit = {}): void => {
 };
 const markerAt = (): string | null => band().getAttribute('aria-valuetext');
 
+/** A length of the band's stage as the markup writes it: `px` at the base size, times `--nl-scale` on a big board. */
+const scaled = (px: number): string => `calc(${String(px)}px * var(--nl-scale))`;
+
 /** What a child sees: the marker's place on the line (percent of the track), if it is there. */
 const markerLeft = (): string | undefined => marker()?.style.left;
 
@@ -436,6 +439,40 @@ describe('number-line UI: hints', () => {
   });
 });
 
+describe('number-line UI: the line card on a tablet', () => {
+  it('is 152 px on a phone and grows with its slot from `lg`: its stage (line, ticks, numbers, pin) scales by 1.6 and sits in the middle of the card', () => {
+    mount();
+    const card = band();
+    expect(card.className).toContain('h-[152px]');
+    expect(card.className).toContain('[--nl-scale:1]');
+    expect(card.className).toContain('lg:[--nl-scale:1.6]');
+    expect(card.className).toContain('lg:h-full');
+    expect(card.className).toContain('lg:min-h-[calc(152px*var(--nl-scale))]');
+    const track = screen.getByTestId('number-line-track');
+    expect(track.style.height).toBe(scaled(152));
+    expect(track.className).toContain('top-1/2');
+    expect(track.className).toContain('lg:inset-x-10');
+    // The ticks, their numbers and the line are scaled the same way, the marker's pin too.
+    expect(screen.getByTestId('number-line-tick-0').style.top).toBe(scaled(88 - 14));
+    expect(screen.getByTestId('number-line-label-0').className).toContain('lg:text-[22px]');
+    fireEvent.click(screen.getByTestId('number-line-track'));
+    press('Home');
+    const pin = marker()?.querySelector('svg');
+    expect(pin?.style.width).toBe(scaled(40));
+    expect(pin?.style.height).toBe(scaled(56));
+  });
+
+  it('shares the board slot with the prompt card by parts: 2 for the prompt card, 3 for the line card (a phone: the prompt card takes what the line card leaves)', () => {
+    mount();
+    const cardSlot = screen.getByTestId('number-line').parentElement;
+    const promptSlot = cardSlot?.previousElementSibling;
+    expect(promptSlot?.className).toContain('flex-1');
+    expect(promptSlot?.className).toContain('lg:flex-[2]');
+    expect(cardSlot?.className).toContain('lg:flex-[3]');
+    expect(cardSlot?.className).toContain('lg:min-h-0');
+  });
+});
+
 describe('number-line UI: many numbers', () => {
   it('with every tick numbered the numbers alternate between two rows, so they never touch', () => {
     mount();
@@ -443,16 +480,16 @@ describe('number-line UI: many numbers', () => {
     hint();
     const top = (tick: number): string | undefined =>
       screen.getByTestId(`number-line-label-${String(tick)}`).style.top;
-    expect(top(0)).toBe('28px');
-    expect(top(100)).toBe('48px');
-    expect(top(200)).toBe('28px');
-    expect(top(1000)).toBe('28px');
+    expect(top(0)).toBe(scaled(28));
+    expect(top(100)).toBe(scaled(48));
+    expect(top(200)).toBe(scaled(28));
+    expect(top(1000)).toBe(scaled(28));
   });
 
   it('a few numbers stay on one row', () => {
     mount(labelList);
     for (const tick of [0, 500, 1000]) {
-      expect(screen.getByTestId(`number-line-label-${String(tick)}`).style.top).toBe('28px');
+      expect(screen.getByTestId(`number-line-label-${String(tick)}`).style.top).toBe(scaled(28));
     }
   });
 });

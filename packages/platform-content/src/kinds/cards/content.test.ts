@@ -104,7 +104,7 @@ describe('card prompt', () => {
 
   it('rejects an empty prompt, an unknown field, a non-emoji and a long text', () => {
     expect(issuesOf(trueFalse({ prompt: {} }))).toEqual([
-      'prompt needs "emoji", "big", "image" or "shapes"',
+      'prompt needs "emoji", "big", "image", "shapes" or "line"',
     ]);
     expect(issuesOf(trueFalse({ prompt: { emoji: '🍎', color: 'red' } }))).toHaveLength(1);
     expect(issuesOf(trueFalse({ prompt: { emoji: 'apple' } }))).toEqual(['not an emoji']);
@@ -693,6 +693,86 @@ describe('card shapes', () => {
   });
 });
 
+describe('card number line', () => {
+  const line = { from: 40, to: 50, step: 1, marks: [47] };
+  const withLine = (overrides: Record<string, unknown>): Record<string, unknown> =>
+    trueFalse({ prompt: { big: '47', line: { ...line, ...overrides } } });
+
+  it('takes a line alone or beside a big text, and compiles it after the shapes, keys from, to, step, marks', () => {
+    expect(issuesOf(trueFalse({ prompt: { line } }))).toEqual([]);
+    const def = compile(
+      trueFalse({ prompt: { line: { marks: [47], step: 1, to: 50, from: 40 }, big: 47 } }),
+    ) as CardExerciseDef;
+    expect(def.prompt).toEqual({ big: '47', line });
+    expect(Object.keys(def.prompt ?? {})).toEqual(['big', 'line']);
+    expect(Object.keys(def.prompt?.line ?? {})).toEqual(['from', 'to', 'step', 'marks']);
+  });
+
+  it('takes 2 to 20 gaps, ends and negative numbers included', () => {
+    expect(issuesOf(withLine({ to: 42, marks: [41] }))).toEqual([]);
+    expect(issuesOf(withLine({ to: 60, marks: [47, 50] }))).toEqual([]);
+    expect(issuesOf(withLine({ from: -5, to: 5, marks: [-5, 0, 5] }))).toEqual([]);
+    expect(issuesOf(withLine({ from: 0, to: 100, step: 10, marks: [47] }))).toEqual([]);
+  });
+
+  it('rejects an empty line object, a fraction, a zero step, no marks and an unknown field', () => {
+    expect(issuesOf(trueFalse({ prompt: { line: {} } }))).not.toEqual([]);
+    expect(issuesOf(withLine({ from: 40.5 }))).toHaveLength(1);
+    expect(issuesOf(withLine({ step: 0 }))).toHaveLength(1);
+    expect(issuesOf(withLine({ step: 0.5 }))).toHaveLength(1);
+    expect(issuesOf(withLine({ marks: [] }))).toHaveLength(1);
+    expect(issuesOf(withLine({ marks: [47.5] }))).toHaveLength(1);
+    expect(issuesOf(withLine({ colour: 'red' }))).toHaveLength(1);
+  });
+
+  it('rejects a line that does not go up', () => {
+    expect(issuesOf(withLine({ from: 50, to: 40, marks: [47] }))).toEqual([
+      'where: line from 50 to 40 must go up (from < to)',
+    ]);
+    expect(issuesOf(withLine({ from: 47, to: 47, marks: [47] }))).toEqual([
+      'where: line from 47 to 47 must go up (from < to)',
+    ]);
+  });
+
+  it('rejects fewer than 2 and more than 20 gaps, and a step that leaves a part gap', () => {
+    expect(issuesOf(withLine({ to: 41, marks: [40] }))).toEqual([
+      'where: line has 1 gaps, needs 2 to 20',
+    ]);
+    expect(issuesOf(withLine({ to: 61, marks: [47] }))).toEqual([
+      'where: line has 21 gaps, needs 2 to 20',
+    ]);
+    expect(issuesOf(withLine({ to: 50, step: 4, marks: [44] }))).toEqual([
+      'where: line step 4 does not divide from 40 to 50 into whole gaps',
+    ]);
+  });
+
+  it('rejects a mark off the line, each one, the ends being on it', () => {
+    expect(issuesOf(withLine({ marks: [47, 40, 50] }))).toEqual([]);
+    expect(issuesOf(withLine({ marks: [39] }))).toEqual([
+      'where: line mark 39 is off the line from 40 to 50',
+    ]);
+    expect(issuesOf(withLine({ marks: [47, 51, 30] }))).toEqual([
+      'where: line mark 51 is off the line from 40 to 50',
+      'where: line mark 30 is off the line from 40 to 50',
+    ]);
+  });
+
+  it('checks the line of a lesson demo too', () => {
+    const demo = content.demo;
+    const check = (raw: Record<string, unknown>): string[] => {
+      const found = { where: 'demo', issues: [] as string[] };
+      const compiledDemo = demo.compile({ prompt: { line: raw } }, 'lessons:l.demo', found);
+      if (compiledDemo !== null) demo.check?.(compiledDemo, found);
+      return found.issues;
+    };
+    expect(check(line)).toEqual([]);
+    expect(check({ ...line, to: 40 })).toEqual(['demo: line from 40 to 40 must go up (from < to)']);
+    expect(check({ ...line, marks: [60] })).toEqual([
+      'demo: line mark 60 is off the line from 40 to 50',
+    ]);
+  });
+});
+
 describe('card demo', () => {
   const demo = content.demo;
 
@@ -948,6 +1028,11 @@ describe('the card fixture subject', () => {
     expect(spoken.filter((text) => /Row of shapes|a gap|red circle/.test(text))).toEqual([]);
   });
 
+  it('does not voice the number-line label either', () => {
+    const spoken = compiled.voiceTexts.entries.map((entry) => entry.text);
+    expect(spoken.filter((text) => /Number line from|a dot at|dots at/.test(text))).toEqual([]);
+  });
+
   it("voices the duel's lines: turn, result, the game's own hint and the bot's name from the lesson's character", () => {
     const spoken = new Set(compiled.voiceTexts.entries.map((entry) => entry.text));
     for (const text of [
@@ -1039,6 +1124,9 @@ describe('the card fixture subject', () => {
     const platform = loadLocales(PLATFORM_LOCALES_DIR).en?.common ?? {};
     expect(hasKeyPath(platform, 'cards.true')).toBe(true);
     expect(hasKeyPath(platform, 'cards.order-wrong')).toBe(true);
+    // The number-line picture's label has one form per number of dots.
+    expect(hasKeyPath(platform, 'cards.line.label_one')).toBe(true);
+    expect(hasKeyPath(platform, 'cards.line.label_other')).toBe(true);
   });
 });
 

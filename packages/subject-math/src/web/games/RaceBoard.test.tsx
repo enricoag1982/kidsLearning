@@ -162,6 +162,27 @@ describe('the race board alone', () => {
     expect(looks()).toBe(`w${'a'.repeat(20)}`);
   });
 
+  it('draws the stones 56 px tall on a tablet (two rows: the start with the first half, 11 then 10) and 44 px on a phone (two rows of 10 under the start)', async () => {
+    await mountBoard();
+    const track = screen.getByRole('img', { name: 'Total 0 of 20' });
+    // A tablet is 640 px wide and 600 px tall up (the board's own media query); jsdom reads the markup, the e2e measures the pixels.
+    const tablet = '[@media(min-width:640px)_and_(min-height:600px)]';
+    expect(track.style.getPropertyValue('--stones')).toBe('11');
+    expect(track.className).toContain('grid-cols-[repeat(10,minmax(0,1fr))]');
+    expect(track.className).toContain(`${tablet}:grid-cols-[repeat(var(--stones),minmax(0,1fr))]`);
+    expect(stone(7).className).toContain('h-11');
+    expect(stone(7).className).toContain(`${tablet}:h-14`);
+    expect(stone(7).className).toContain(`${tablet}:text-lg`);
+    // The start stone stays alone on the phone's first row (stone 1 starts the second).
+    expect(stone(1).className).toContain('col-start-1');
+    cleanup();
+    const small: RaceState = { total: 4, toMove: 'kid', target: 10, maxStep: 2 };
+    await mountBoard({ state: small, legalMoves: race.moves(small) });
+    expect(
+      screen.getByRole('img', { name: 'Total 4 of 10' }).style.getPropertyValue('--stones'),
+    ).toBe('6');
+  });
+
   it('puts the token on the total and lights the stones the last move walked over: blue with a paw for the bot', async () => {
     await mountBoard({
       state: { total: 7, toMove: 'kid', target: 20, maxStep: 3 },

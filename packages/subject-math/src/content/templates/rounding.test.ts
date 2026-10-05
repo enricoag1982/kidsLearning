@@ -1,7 +1,8 @@
 // round-ten, round-hundred, round-tf over 1 000 seeds per parameter combination of curriculum §2: each item is solved again here from
-// its English sentence by distance (half-way goes up), and every `check` fails on a hand-broken item.
+// its English sentence by distance (half-way goes up), round-ten's number line is read back against the number (the two tens as ends,
+// a dot where the number is), and every `check` fails on a hand-broken item.
 import { describe, expect, it } from 'vitest';
-import type { ChoiceItem, NumberEntryItem, TrueFalseItem } from './items.ts';
+import type { LineChoiceItem, NumberEntryItem, TrueFalseItem } from './items.ts';
 import { checkIssues, draw, overSeeds, sample } from './testing.ts';
 
 /** The nearest multiple of `unit` by distance; a tie (exactly half-way) goes to the larger. */
@@ -18,7 +19,7 @@ describe('round-ten', () => {
 
   describe.each(combos)('max $max, five $five', ({ max, five }) => {
     it('has exactly one nearer ten among the two tens either side, the right reason on the ten below, and a five only when asked', () => {
-      const { problems, items } = overSeeds<ChoiceItem>(
+      const { problems, items } = overSeeds<LineChoiceItem>(
         'round-ten',
         { max, five },
         ({ item, text }) => {
@@ -32,9 +33,17 @@ describe('round-ten', () => {
           const downBug = n % 10 === 5 ? 'bugs.five-down' : 'bugs.truncate';
           return [
             ...(found === null ? [`${item.id}: "${text}" is not the rounding sentence`] : []),
-            ...(item.prompt?.big === String(n)
+            ...(item.prompt.big === String(n)
               ? []
-              : [`${item.id}: big ${item.prompt?.big ?? ''} is not ${String(n)}`]),
+              : [`${item.id}: big ${item.prompt.big} is not ${String(n)}`]),
+            // The picture: the ten below to the ten above, a tick per number, one dot on the number.
+            ...(item.prompt.line.from === low &&
+            item.prompt.line.to === high &&
+            item.prompt.line.step === 1 &&
+            item.prompt.line.marks.join() === String(n) &&
+            high - low === 10
+              ? []
+              : [`${item.id}: line ${JSON.stringify(item.prompt.line)} for ${String(n)}`]),
             ...(n % 10 !== 0 && n > 10 && n < max && (n % 10 === 5) === five
               ? []
               : [
@@ -72,11 +81,11 @@ describe('round-ten', () => {
   });
 
   it('is the curriculum example: 47 → 50, rounding down to 40 is the truncate bug; 45 → 50, down to 40 is five-down', () => {
-    const item = (id: string, n: number, down: number, reason: string): ChoiceItem => ({
+    const item = (id: string, n: number, down: number, reason: string): LineChoiceItem => ({
       id,
       type: 'choice',
       text: `gen.${id}.text`,
-      prompt: { big: String(n) },
+      prompt: { big: String(n), line: { from: down, to: down + 10, step: 1, marks: [n] } },
       options: [
         { id: 'down', big: String(down), reason },
         { id: 'up', big: String(down + 10) },
@@ -110,8 +119,8 @@ describe('round-ten', () => {
 
   describe('check', () => {
     const params = { max: 100, five: false };
-    const up = sample<ChoiceItem>('round-ten', params, (item) => item.answer === 'up');
-    const down = sample<ChoiceItem>('round-ten', params, (item) => item.answer === 'down');
+    const up = sample<LineChoiceItem>('round-ten', params, (item) => item.answer === 'up');
+    const down = sample<LineChoiceItem>('round-ten', params, (item) => item.answer === 'down');
 
     it('accepts good items (rounded up with a reason, rounded down without)', () => {
       expect(checkIssues('round-ten', params, up)).toEqual([]);
@@ -134,17 +143,44 @@ describe('round-ten', () => {
       expect(
         checkIssues('round-ten', params, { ...up, options: up.options.slice(0, 1) }).join(),
       ).toMatch(/not 2 numerals/);
-      expect(checkIssues('round-ten', params, { ...up, prompt: { big: 'x' } }).join()).toMatch(
-        /cannot read the prompt/,
-      );
+      expect(
+        checkIssues('round-ten', params, { ...up, prompt: { ...up.prompt, big: 'x' } }).join(),
+      ).toMatch(/cannot read the prompt/);
     });
 
     it('reports a number that breaks the params: a multiple of ten, a five without `five`, outside max', () => {
-      const at = (n: number): ChoiceItem => ({ ...up, prompt: { big: String(n) } });
+      const at = (n: number): LineChoiceItem => ({
+        ...up,
+        prompt: {
+          big: String(n),
+          line: { from: n - (n % 10), to: n - (n % 10) + 10, step: 1, marks: [n] },
+        },
+      });
       expect(checkIssues('round-ten', params, at(40)).join()).toMatch(/does not fit/);
       expect(checkIssues('round-ten', params, at(45)).join()).toMatch(/does not fit/);
       expect(checkIssues('round-ten', params, at(103)).join()).toMatch(/does not fit/);
       expect(checkIssues('round-ten', { max: 100, five: true }, up).join()).toMatch(/does not fit/);
+    });
+
+    it('reports a number line that does not match the card: none, other ends, a step, no dot, a dot elsewhere, an extra dot', () => {
+      const { line } = up.prompt;
+      const [n = 0] = line.marks;
+      const withLine = (next: Partial<typeof line> | undefined): string =>
+        checkIssues('round-ten', params, {
+          ...up,
+          prompt: {
+            big: up.prompt.big,
+            ...(next === undefined ? {} : { line: { ...line, ...next } }),
+          },
+        }).join();
+      expect(withLine({})).toBe('');
+      expect(withLine(undefined)).toMatch(/has no number line/);
+      expect(withLine({ from: line.from - 10, to: line.to - 10 })).toMatch(/number line/);
+      expect(withLine({ to: line.to + 10 })).toMatch(/number line/);
+      expect(withLine({ step: 5 })).toMatch(/number line/);
+      expect(withLine({ marks: [] })).toMatch(/number line/);
+      expect(withLine({ marks: [line.from] })).toMatch(/number line/);
+      expect(withLine({ marks: [n, line.to] })).toMatch(/number line/);
     });
 
     it('reports a missing, a wrong and a misplaced reason', () => {
